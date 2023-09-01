@@ -11,6 +11,7 @@
         <module>model</module>
         <module>repository</module>
         <module>service</module>
+        <module>web</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
