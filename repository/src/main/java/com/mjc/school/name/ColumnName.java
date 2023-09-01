@@ -84,8 +84,7 @@ public final class ColumnName {
     /**
      * The constant TABLE_NEWS_COUNT_ROWS_AUTHORS_ID.
      */
-    public static final String TABLE_NEWS_COUNT_ROWS_AUTHORS_ID = "COUNT(" +
-            TABLE_NEWS_COLUMN_AUTHORS_ID + ")";
+    public static final String COUNT_ROWS = "count";
 
     private ColumnName() {
     }

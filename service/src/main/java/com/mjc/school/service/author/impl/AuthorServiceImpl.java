@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -116,28 +116,20 @@ public class AuthorServiceImpl implements AuthorService {
      * @return the map
      */
     @Override
-    public List<Map.Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() {
+    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() {
         return authorRepository.selectAllAuthorsWithAmountOfWrittenNews();
     }
 
     /**
      * Sort all authors with amount of written news desc map.
      *
-     * @param authorLongMap the author long map
      * @return the map
      */
     @Override
-    public List<Map.Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc(
-            List<Map.Entry<Author, Long>> authorLongMap)
-            throws SortException {
-        List<Map.Entry<Author, Long>> authorLongMapSorted;
-        if (authorLongMap != null) {
-            authorLongMapSorted = new LinkedList<>(authorLongMap);
-            authorLongMapSorted.sort(
-                    new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
-        } else {
-            throw new SortException("list is null");
-        }
+    public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc() {
+        List<Entry<Author, Long>> authorLongMapSorted = new LinkedList<>(authorRepository.selectAllAuthorsWithAmountOfWrittenNews());
+        authorLongMapSorted.sort(
+                new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
         return authorLongMapSorted;
     }
 }

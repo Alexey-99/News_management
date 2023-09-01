@@ -66,11 +66,9 @@ public interface AuthorService {
     /**
      * Sort all authors with amount of written news desc map.
      *
-     * @param authorLongMap the author long map
      * @return the map
      */
-    public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc(
-            List<Entry<Author, Long>> authorLongMap)
+    public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
             throws SortException;
 
     /**
