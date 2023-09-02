@@ -61,7 +61,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable long id) throws ServiceException { // TODO
+    public ResponseEntity<Boolean> delete(@PathVariable long id)
+            throws ServiceException {
         boolean result = authorService.delete(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -75,7 +76,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @PostMapping("/update")
-    public ResponseEntity<Boolean> update(@RequestBody Author author) throws ServiceException { // TODO
+    public ResponseEntity<Boolean> update(@RequestBody Author author)
+            throws ServiceException {
         boolean result = authorService.update(author);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

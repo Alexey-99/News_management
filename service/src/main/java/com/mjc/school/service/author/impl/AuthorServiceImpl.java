@@ -49,11 +49,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public boolean delete(long id) throws ServiceException {
         try {
-            boolean result = newsRepository.deleteByAuthorId(id);
-            boolean result2 = authorRepository.delete(id);
-
-            return newsRepository.deleteByAuthorId(id)
-                    && authorRepository.delete(id);
+            newsRepository.deleteByAuthorId(id);
+            authorRepository.delete(id);
+            return newsRepository.findNewsByAuthorId(id).isEmpty()
+                    && authorRepository.findById(id) == null;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

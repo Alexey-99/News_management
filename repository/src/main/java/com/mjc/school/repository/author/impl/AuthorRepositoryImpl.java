@@ -81,8 +81,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     private static final String QUERY_UPDATE_AUTHOR = """
             UPDATE authors
-            SET id = :id,
-                name = :name
+            SET name = :name
             WHERE id = :id;
             """;
 

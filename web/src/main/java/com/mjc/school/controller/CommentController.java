@@ -28,7 +28,8 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/get-by-news-id/{newsId}")
-    public List<Comment> findCommentsByNewsId(@PathVariable long newsId) throws ServiceException {
+    public List<Comment> findCommentsByNewsId(@PathVariable long newsId)
+            throws ServiceException {
         return commentService.findCommentsByNewsId(newsId);
     }
 
@@ -40,7 +41,8 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/get-by-id/{id}")
-    public Comment findCommentById(@PathVariable long id) throws ServiceException {
+    public Comment findCommentById(@PathVariable long id)
+            throws ServiceException {
         return commentService.findCommentById(id);
     }
 
@@ -53,8 +55,9 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort?by={sortBy}&type={sortType}")
-    public List<Comment> sortByCreatedDateTimeAsc(@PathVariable String sortBy,
-                                                  @PathVariable String sortType) throws ServiceException {
+    public List<Comment> sortByCreatedDateTimeAsc(
+            @PathVariable String sortBy, @PathVariable String sortType)
+            throws ServiceException {
         System.out.println(sortBy);
         System.out.println(sortType);
         return commentService.sortByCreatedDateTimeAsc(commentService.findAllComments());
