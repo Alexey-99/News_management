@@ -54,12 +54,10 @@ public class CommentController {
      * @return the list
      * @throws ServiceException the service exception
      */
-    @GetMapping("/sort?by={sortBy}&type={sortType}")
+    @GetMapping("/sort/created/asc")
     public List<Comment> sortByCreatedDateTimeAsc(
             @PathVariable String sortBy, @PathVariable String sortType)
             throws ServiceException {
-        System.out.println(sortBy);
-        System.out.println(sortType);
         return commentService.sortByCreatedDateTimeAsc(commentService.findAllComments());
     }
 
