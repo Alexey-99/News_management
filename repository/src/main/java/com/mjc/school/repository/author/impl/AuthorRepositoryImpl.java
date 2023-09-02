@@ -3,9 +3,11 @@ package com.mjc.school.repository.author.impl;
 import com.mjc.school.config.mapper.AuthorMapper;
 import com.mjc.school.config.mapper.AuthorWithAmountOfWrittenNewsMapper;
 import com.mjc.school.entity.Author;
+import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.author.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -42,10 +44,14 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @return the boolean
      */
     @Override
-    public boolean create(Author author) {
-        return jdbcTemplate.update(QUERY_INSERT_AUTHOR,
-                new MapSqlParameterSource()
-                        .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName())) > 0;
+    public boolean create(Author author) throws RepositoryException {
+        try {
+            return jdbcTemplate.update(QUERY_INSERT_AUTHOR,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName())) > 0;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     private static final String QUERY_DELETE_AUTHOR = """
@@ -61,10 +67,15 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @return the boolean
      */
     @Override
-    public boolean delete(long id) {
-        return jdbcTemplate.update(QUERY_DELETE_AUTHOR,
-                new MapSqlParameterSource()
-                        .addValue(TABLE_AUTHORS_COLUMN_ID, id)) > 0;
+    public boolean delete(long id) throws RepositoryException {
+        try {
+            return jdbcTemplate.update(QUERY_DELETE_AUTHOR,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_AUTHORS_COLUMN_ID, id)) > 0;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
+
     }
 
     private static final String QUERY_UPDATE_AUTHOR = """
@@ -82,11 +93,15 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @return the boolean
      */
     @Override
-    public boolean update(Author author) {
-        return jdbcTemplate.update(QUERY_UPDATE_AUTHOR,
-                new MapSqlParameterSource()
-                        .addValue(TABLE_AUTHORS_COLUMN_ID, author.getId())
-                        .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName())) > 0;
+    public boolean update(Author author) throws RepositoryException {
+        try {
+            return jdbcTemplate.update(QUERY_UPDATE_AUTHOR,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_AUTHORS_COLUMN_ID, author.getId())
+                            .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName())) > 0;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     private static final String QUERY_SELECT_ALL_AUTHORS = """
@@ -100,8 +115,12 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @return the list
      */
     @Override
-    public List<Author> findAllAuthors() {
-        return jdbcTemplate.query(QUERY_SELECT_ALL_AUTHORS, authorMapper);
+    public List<Author> findAllAuthors() throws RepositoryException {
+        try {
+            return jdbcTemplate.query(QUERY_SELECT_ALL_AUTHORS, authorMapper);
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     private static final String QUERY_SELECT_AUTHOR_BY_ID = """
@@ -117,11 +136,15 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @return the author
      */
     @Override
-    public Author findById(long id) {
-        List<Author> authorListResult = jdbcTemplate.query(QUERY_SELECT_AUTHOR_BY_ID,
-                new MapSqlParameterSource()
-                        .addValue(TABLE_AUTHORS_COLUMN_ID, id), authorMapper);
-        return !authorListResult.isEmpty() ? authorListResult.get(0) : null;
+    public Author findById(long id) throws RepositoryException {
+        try {
+            List<Author> authorListResult = jdbcTemplate.query(QUERY_SELECT_AUTHOR_BY_ID,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_AUTHORS_COLUMN_ID, id), authorMapper);
+            return !authorListResult.isEmpty() ? authorListResult.get(0) : null;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     private static final String QUERY_SELECT_AUTHOR_BY_NAME = """
@@ -138,11 +161,16 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @return the author
      */
     @Override
-    public Author findByNewsId(long newsId) {
-        List<Author> authorListResult = jdbcTemplate.query(QUERY_SELECT_AUTHOR_BY_NAME,
-                new MapSqlParameterSource()
-                        .addValue(TABLE_NEWS_COLUMN_ID, newsId), authorMapper);
-        return !authorListResult.isEmpty() ? authorListResult.get(0) : null;
+    public Author findByNewsId(long newsId) throws RepositoryException {
+        try {
+            List<Author> authorListResult = jdbcTemplate.query(QUERY_SELECT_AUTHOR_BY_NAME,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_NEWS_COLUMN_ID, newsId), authorMapper);
+            return !authorListResult.isEmpty() ? authorListResult.get(0) : null;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
+
     }
 
     private static final String QUERY_SELECT_ALL_AUTHORS_WITH_AMOUNT_WRITTEN_NEWS = """
@@ -158,9 +186,13 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @return the map
      */
     @Override
-    public List<Map.Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() {
-        return jdbcTemplate.query(
-                QUERY_SELECT_ALL_AUTHORS_WITH_AMOUNT_WRITTEN_NEWS,
-                authorWithAmountOfWrittenNewsMapper);
+    public List<Map.Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() throws RepositoryException {
+        try {
+            return jdbcTemplate.query(
+                    QUERY_SELECT_ALL_AUTHORS_WITH_AMOUNT_WRITTEN_NEWS,
+                    authorWithAmountOfWrittenNewsMapper);
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
     }
 }

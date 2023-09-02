@@ -1,6 +1,8 @@
 package com.mjc.school.service.author;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.exception.RepositoryException;
+import com.mjc.school.exception.ServiceException;
 import com.mjc.school.exception.SortException;
 
 import java.util.List;
@@ -13,7 +15,7 @@ public interface AuthorService {
      * @param author the author
      * @return the boolean
      */
-    public boolean create(Author author);
+    public boolean create(Author author) throws ServiceException;
 
     /**
      * Delete author.
@@ -21,7 +23,7 @@ public interface AuthorService {
      * @param id the id
      * @return the boolean
      */
-    public boolean delete(long id);
+    public boolean delete(long id) throws ServiceException;
 
     /**
      * Update author.
@@ -29,14 +31,14 @@ public interface AuthorService {
      * @param author the author
      * @return the boolean
      */
-    public boolean update(Author author);
+    public boolean update(Author author) throws ServiceException;
 
     /**
      * Find all authors list.
      *
      * @return the list
      */
-    public List<Author> findAllAuthors();
+    public List<Author> findAllAuthors() throws ServiceException;
 
     /**
      * Find by id author.
@@ -44,7 +46,7 @@ public interface AuthorService {
      * @param id the id
      * @return the author
      */
-    public Author findById(long id);
+    public Author findById(long id) throws ServiceException;
 
 
     /**
@@ -53,7 +55,7 @@ public interface AuthorService {
      * @param partOfName the part of name
      * @return the list
      */
-    public List<Author> findByPartOfName(String partOfName);
+    public List<Author> findByPartOfName(String partOfName) throws ServiceException;
 
     /**
      * Find by news id author.
@@ -61,7 +63,7 @@ public interface AuthorService {
      * @param newsId the news id
      * @return the author
      */
-    public Author findByNewsId(long newsId);
+    public Author findByNewsId(long newsId) throws ServiceException;
 
     /**
      * Sort all authors with amount of written news desc map.
@@ -69,12 +71,12 @@ public interface AuthorService {
      * @return the map
      */
     public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
-            throws SortException;
+            throws ServiceException;
 
     /**
      * Select all authors with amount of written news map.
      *
      * @return the map
      */
-    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews();
+    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() throws ServiceException;
 }

@@ -1,6 +1,7 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.exception.ServiceException;
 import com.mjc.school.exception.SortException;
 import com.mjc.school.service.author.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,48 +28,56 @@ public class AuthorController {
     @Autowired
     private AuthorService authorService;
 
+
     /**
      * Select all authors with amount of written news list.
      *
      * @return the list
+     * @throws ServiceException the service exception
      */
     @GetMapping("/amount-news")
-    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() {
+    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() throws ServiceException {
         return authorService.selectAllAuthorsWithAmountOfWrittenNews();
     }
+
 
     /**
      * Create author.
      *
      * @param author the author
      * @return the response entity
+     * @throws ServiceException the service exception
      */
     @PutMapping("/create")
-    public ResponseEntity<String> create(@RequestBody Author author) { //TODO
+    public ResponseEntity<String> create(@RequestBody Author author) throws ServiceException { //TODO
         authorService.create(author);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
+
 
     /**
      * Delete author.
      *
      * @param id the id
      * @return the response entity
+     * @throws ServiceException the service exception
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id) { //TODO
+    public ResponseEntity<String> delete(@PathVariable long id) throws ServiceException { //TODO
         authorService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Success");
     }
+
 
     /**
      * Update author.
      *
      * @param author the author
      * @return the response entity
+     * @throws ServiceException the service exception
      */
     @PostMapping("/update")
-    public ResponseEntity<String> update(@RequestBody Author author) { //TODO
+    public ResponseEntity<String> update(@RequestBody Author author) throws ServiceException { //TODO
         authorService.update(author);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
@@ -77,54 +86,62 @@ public class AuthorController {
      * Find all authors list.
      *
      * @return the list
+     * @throws ServiceException the service exception
      */
     @GetMapping("/all")
-    public List<Author> findAllAuthors() {
+    public List<Author> findAllAuthors() throws ServiceException {
         return authorService.findAllAuthors();
     }
+
 
     /**
      * Find by id author.
      *
      * @param id the id
      * @return the author
+     * @throws ServiceException the service exception
      */
     @GetMapping("/get-by-id/{id}")
-    public Author findById(@PathVariable long id) {
+    public Author findById(@PathVariable long id) throws ServiceException {
         return authorService.findById(id);
     }
 
+
     /**
-     * Find authors by part of name.
+     * Find by part of name list.
      *
      * @param partOfName the part of name
      * @return the list
+     * @throws ServiceException the service exception
      */
     @GetMapping("/get-by-name/{partOfName}")
-    public List<Author> findByPartOfName(@PathVariable String partOfName) {
+    public List<Author> findByPartOfName(@PathVariable String partOfName) throws ServiceException {
         return authorService.findByPartOfName(partOfName);
     }
+
 
     /**
      * Find by news id author.
      *
      * @param newsId the news id
      * @return the author
+     * @throws ServiceException the service exception
      */
     @GetMapping("/get-by-news-id/{newsId}")
-    public Author findByNewsId(@PathVariable long newsId) {
+    public Author findByNewsId(@PathVariable long newsId) throws ServiceException {
         return authorService.findByNewsId(newsId);
     }
 
+
     /**
-     * Sort all authors with amount of written news desc map.
+     * Sort all authors with amount of written news desc list.
      *
-     * @return the map
-     * @throws SortException the sort exception
+     * @return the list
+     * @throws ServiceException the service exception
      */
     @GetMapping("/sort")
     public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
-            throws SortException {
+            throws ServiceException {
         return authorService.sortAllAuthorsWithAmountOfWrittenNewsDesc();
     }
 }

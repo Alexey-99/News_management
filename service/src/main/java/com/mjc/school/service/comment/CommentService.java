@@ -1,6 +1,7 @@
 package com.mjc.school.service.comment;
 
 import com.mjc.school.entity.Comment;
+import com.mjc.school.exception.ServiceException;
 import com.mjc.school.exception.SortException;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
 
@@ -15,75 +16,79 @@ public interface CommentService {
      *
      * @param newsId the news id
      * @return the list
+     * @throws ServiceException the service exception
      */
-    public List<Comment> findCommentsByNewsId(long newsId);
+    public List<Comment> findCommentsByNewsId(long newsId) throws ServiceException;
 
     /**
      * Find all comments list.
      *
      * @return the list
+     * @throws ServiceException the service exception
      */
-    public List<Comment> findAllComments();
+    public List<Comment> findAllComments() throws ServiceException;
 
     /**
      * Find comment by id comment.
      *
      * @param id the id
      * @return the comment
+     * @throws ServiceException the service exception
      */
-    public Comment findCommentById(long id);
+    public Comment findCommentById(long id) throws ServiceException;
 
     /**
-     * Sort comment list.
+     * Sort list.
      *
-     * @param list       the comments list
+     * @param list       the list
      * @param comparator the comparator
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
-    public List<Comment> sort(List<Comment> list, SortCommentComparator comparator) throws SortException;
+    public List<Comment> sort(List<Comment> list, SortCommentComparator comparator) throws ServiceException;
 
     /**
-     * Sort comment by created date time asc list.
+     * Sort by created date time asc list.
      *
-     * @param list the comments list
+     * @param list the list
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
-    public List<Comment> sortByCreatedDateTimeAsc(List<Comment> list) throws SortException;
+    public List<Comment> sortByCreatedDateTimeAsc(List<Comment> list) throws ServiceException;
 
     /**
-     * Sort comment by created date time desc list.
+     * Sort by created date time desc list.
      *
-     * @param list the comments list
+     * @param list the list
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
-    public List<Comment> sortByCreatedDateTimeDesc(List<Comment> list) throws SortException;
+    public List<Comment> sortByCreatedDateTimeDesc(List<Comment> list) throws ServiceException;
 
     /**
-     * Sort comment by modified date time asc list.
+     * Sort by modified date time asc list.
      *
-     * @param list the comments list
+     * @param list the list
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
-    public List<Comment> sortByModifiedDateTimeAsc(List<Comment> list) throws SortException;
+    public List<Comment> sortByModifiedDateTimeAsc(List<Comment> list) throws ServiceException;
 
     /**
-     * Sort comment by modified date time desc list.
+     * Sort by modified date time desc list.
      *
-     * @param list the comments list
+     * @param list the list
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
-    public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list) throws SortException;
+    public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list) throws ServiceException;
 
     /**
-     * Delete by news id comment.
+     * Delete by news id boolean.
      *
      * @param newsId the news id
      * @return the boolean
+     * @throws ServiceException the service exception
      */
-    public boolean deleteByNewsId(long newsId);
+    public boolean deleteByNewsId(long newsId) throws ServiceException;
 }

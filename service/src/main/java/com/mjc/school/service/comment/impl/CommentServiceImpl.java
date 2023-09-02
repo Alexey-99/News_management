@@ -1,7 +1,8 @@
 package com.mjc.school.service.comment.impl;
 
 import com.mjc.school.entity.Comment;
-import com.mjc.school.exception.SortException;
+import com.mjc.school.exception.RepositoryException;
+import com.mjc.school.exception.ServiceException;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
@@ -28,20 +29,30 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param newsId the news id
      * @return the list
+     * @throws ServiceException the service exception
      */
     @Override
-    public List<Comment> findCommentsByNewsId(long newsId) {
-        return commentRepository.findCommentsByNewsId(newsId);
+    public List<Comment> findCommentsByNewsId(long newsId) throws ServiceException {
+        try {
+            return commentRepository.findCommentsByNewsId(newsId);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     /**
      * Find all comments list.
      *
      * @return the list
+     * @throws ServiceException the service exception
      */
     @Override
-    public List<Comment> findAllComments() {
-        return commentRepository.findAllComments();
+    public List<Comment> findAllComments() throws ServiceException {
+        try {
+            return commentRepository.findAllComments();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     /**
@@ -49,10 +60,15 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param id the id
      * @return the comment
+     * @throws ServiceException the service exception
      */
     @Override
-    public Comment findCommentById(long id) {
-        return commentRepository.findCommentById(id);
+    public Comment findCommentById(long id) throws ServiceException {
+        try {
+            return commentRepository.findCommentById(id);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     /**
@@ -61,21 +77,21 @@ public class CommentServiceImpl implements CommentService {
      * @param list       the comments list
      * @param comparator the comparator
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Comment> sort(List<Comment> list, SortCommentComparator comparator)
-            throws SortException {
+            throws ServiceException {
         List<Comment> sortedList;
         if (list != null) {
             if (comparator != null) {
                 sortedList = new LinkedList<>(list);
                 sortedList.sort(comparator);
             } else {
-                throw new SortException("comparator is null");
+                throw new ServiceException("comparator is null");
             }
         } else {
-            throw new SortException("list is null");
+            throw new ServiceException("list is null");
         }
         return sortedList;
     }
@@ -85,11 +101,11 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param list the comments list
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Comment> sortByCreatedDateTimeAsc(List<Comment> list)
-            throws SortException {
+            throws ServiceException {
         return sort(list, new SortCommentComparatorByCreatedDateTimeAsc());
     }
 
@@ -98,11 +114,11 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param list the comments list
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Comment> sortByCreatedDateTimeDesc(List<Comment> list)
-            throws SortException {
+            throws ServiceException {
         return sort(list, new SortCommentComparatorByCreatedDateTimeDesc());
     }
 
@@ -111,11 +127,11 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param list the comments list
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Comment> sortByModifiedDateTimeAsc(List<Comment> list)
-            throws SortException {
+            throws ServiceException {
         return sort(list, new SortCommentComparatorByModifiedDateTimeAsc());
     }
 
@@ -124,11 +140,11 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param list the comments list
      * @return the list
-     * @throws SortException the sort exception
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list)
-            throws SortException {
+            throws ServiceException {
         return sort(list, new SortCommentComparatorByModifiedDateTimeDesc());
     }
 
@@ -137,9 +153,14 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param newsId the news id
      * @return the boolean
+     * @throws ServiceException the service exception
      */
     @Override
-    public boolean deleteByNewsId(long newsId) {
-        return commentRepository.deleteByNewsId(newsId);
+    public boolean deleteByNewsId(long newsId) throws ServiceException {
+        try {
+            return commentRepository.deleteByNewsId(newsId);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 }
