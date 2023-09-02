@@ -2,7 +2,6 @@ package com.mjc.school.service.comment;
 
 import com.mjc.school.entity.Comment;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.exception.SortException;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
 
 import java.util.List;

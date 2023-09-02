@@ -2,7 +2,6 @@ package com.mjc.school.controller;
 
 import com.mjc.school.entity.Author;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.exception.SortException;
 import com.mjc.school.service.author.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

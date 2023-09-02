@@ -2,9 +2,7 @@ package com.mjc.school.controller;
 
 import com.mjc.school.entity.Comment;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.exception.SortException;
 import com.mjc.school.service.comment.CommentService;
-import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

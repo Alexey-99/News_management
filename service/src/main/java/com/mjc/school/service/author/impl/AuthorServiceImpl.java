@@ -3,7 +3,6 @@ package com.mjc.school.service.author.impl;
 import com.mjc.school.entity.Author;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.exception.SortException;
 import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
@@ -15,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * The type Author service.

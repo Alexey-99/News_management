@@ -1,9 +1,7 @@
 package com.mjc.school.service.author;
 
 import com.mjc.school.entity.Author;
-import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.exception.SortException;
 
 import java.util.List;
 import java.util.Map.Entry;
