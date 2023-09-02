@@ -1,9 +1,11 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.Comment;
+import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +27,13 @@ public class CommentController {
      *
      * @param newsId the news id
      * @return the list
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/get-by-news-id/{newsId}")
     public List<Comment> findCommentsByNewsId(@PathVariable long newsId)
-            throws ServiceException {
-        return commentService.findCommentsByNewsId(newsId);
+            throws ServiceException, IncorrectParameterException {
+        return commentService.findByNewsId(newsId);
     }
 
     /**
@@ -38,12 +41,13 @@ public class CommentController {
      *
      * @param id the id
      * @return the comment
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/get-by-id/{id}")
     public Comment findCommentById(@PathVariable long id)
-            throws ServiceException {
-        return commentService.findCommentById(id);
+            throws ServiceException, IncorrectParameterException {
+        return commentService.findById(id);
     }
 
     /**
@@ -58,7 +62,7 @@ public class CommentController {
     public List<Comment> sortByCreatedDateTimeAsc(
             @PathVariable String sortBy, @PathVariable String sortType)
             throws ServiceException {
-        return commentService.sortByCreatedDateTimeAsc(commentService.findAllComments());
+        return commentService.sortByCreatedDateTimeAsc(commentService.findAll());
     }
 
     /**
@@ -68,6 +72,7 @@ public class CommentController {
      * @return the list
      * @throws ServiceException the service exception
      */
+    @GetMapping("/sort/created/desc")
     public List<Comment> sortByCreatedDateTimeDesc(List<Comment> list) throws ServiceException {
         return commentService.sortByCreatedDateTimeDesc(list);
     }
@@ -79,6 +84,7 @@ public class CommentController {
      * @return the list
      * @throws ServiceException the service exception
      */
+    @GetMapping("/sort/modified/asc")
     public List<Comment> sortByModifiedDateTimeAsc(List<Comment> list) throws ServiceException {
         return commentService.sortByModifiedDateTimeAsc(list);
     }
@@ -90,6 +96,7 @@ public class CommentController {
      * @return the list
      * @throws ServiceException the service exception
      */
+    @GetMapping("/sort/modified/desc")
     public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list) throws ServiceException {
         return commentService.sortByModifiedDateTimeDesc(list);
     }
@@ -99,10 +106,11 @@ public class CommentController {
      *
      * @param newsId the news id
      * @return the boolean
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
-
-    public boolean deleteByNewsId(long newsId) throws ServiceException {
+    @DeleteMapping("/delete/{newsId}")
+    public boolean deleteByNewsId(long newsId) throws ServiceException, IncorrectParameterException {
         return commentService.deleteByNewsId(newsId);
     }
 }
