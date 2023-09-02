@@ -100,6 +100,7 @@ public class CommentController {
      * @return the boolean
      * @throws ServiceException the service exception
      */
+
     public boolean deleteByNewsId(long newsId) throws ServiceException {
         return commentService.deleteByNewsId(newsId);
     }

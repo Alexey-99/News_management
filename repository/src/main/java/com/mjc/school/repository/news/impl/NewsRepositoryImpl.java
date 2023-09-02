@@ -34,7 +34,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     @Autowired
     private NewsMapper newsMapper;
 
-    private static final String SQL_CREATE_NEWS = """
+    private static final String QUERY_CREATE_NEWS = """
             INSERT INTO news (title, content, authors_id, created, modified)
             VALUE (:title, :content, :authors_id, :created, :modified);
             """;
@@ -49,7 +49,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     @Override
     public boolean create(News news) throws RepositoryException {
         try {
-            return jdbcTemplate.update(SQL_CREATE_NEWS,
+            return jdbcTemplate.update(QUERY_CREATE_NEWS,
                     new MapSqlParameterSource()
                             .addValue(TABLE_NEWS_COLUMN_TITLE, news.getTitle())
                             .addValue(TABLE_NEWS_COLUMN_CONTENT, news.getContent())
@@ -61,7 +61,7 @@ public class NewsRepositoryImpl implements NewsRepository {
         }
     }
 
-    private static final String SQL_DELETE_NEWS = """
+    private static final String QUERY_DELETE_NEWS = """
             DELETE FROM news
             WHERE id = :id;
             """;
@@ -76,7 +76,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     @Override
     public boolean deleteById(long newsId) throws RepositoryException {
         try {
-            return jdbcTemplate.update(SQL_DELETE_NEWS,
+            return jdbcTemplate.update(QUERY_DELETE_NEWS,
                     new MapSqlParameterSource()
                             .addValue(TABLE_NEWS_COLUMN_ID, newsId))
                     > 0;
@@ -85,7 +85,7 @@ public class NewsRepositoryImpl implements NewsRepository {
         }
     }
 
-    private static final String SQL_DELETE_NEWS_BY_AUTHOR_ID = """
+    private static final String QUERY_DELETE_NEWS_BY_AUTHOR_ID = """
             DELETE FROM news
             WHERE authors_id = :authors_id;
             """;
@@ -100,7 +100,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     @Override
     public boolean deleteByAuthorId(long authorId) throws RepositoryException {
         try {
-            return jdbcTemplate.update(SQL_DELETE_NEWS_BY_AUTHOR_ID,
+            return jdbcTemplate.update(QUERY_DELETE_NEWS_BY_AUTHOR_ID,
                     new MapSqlParameterSource()
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, authorId))
                     > 0;
@@ -135,7 +135,7 @@ public class NewsRepositoryImpl implements NewsRepository {
         }
     }
 
-    private static final String SQL_UPDATE_NEWS = """
+    private static final String QUERY_UPDATE_NEWS = """
             UPDATE news
             SET title = :title,
                 content = :content,
@@ -144,7 +144,6 @@ public class NewsRepositoryImpl implements NewsRepository {
                 modified = :modified
             WHERE news.id = :news.id;
             """;
-
 
     /**
      * Update news.
@@ -156,7 +155,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     @Override
     public boolean update(News news) throws RepositoryException {
         try {
-            return jdbcTemplate.update(SQL_UPDATE_NEWS,
+            return jdbcTemplate.update(QUERY_UPDATE_NEWS,
                     new MapSqlParameterSource()
                             .addValue(TABLE_NEWS_COLUMN_ID, news.getId())
                             .addValue(TABLE_NEWS_COLUMN_TITLE, news.getTitle())

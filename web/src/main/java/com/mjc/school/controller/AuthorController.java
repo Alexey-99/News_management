@@ -6,15 +6,16 @@ import com.mjc.school.service.author.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -27,7 +28,6 @@ public class AuthorController {
     @Autowired
     private AuthorService authorService;
 
-
     /**
      * Select all authors with amount of written news list.
      *
@@ -39,7 +39,6 @@ public class AuthorController {
         return authorService.selectAllAuthorsWithAmountOfWrittenNews();
     }
 
-
     /**
      * Create author.
      *
@@ -47,10 +46,10 @@ public class AuthorController {
      * @return the response entity
      * @throws ServiceException the service exception
      */
-    @PutMapping("/create")
-    public ResponseEntity<String> create(@RequestBody Author author) throws ServiceException { //TODO
-        authorService.create(author);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    @PostMapping("/create")
+    public ResponseEntity<Boolean> create(@RequestBody Author author) throws ServiceException {
+        boolean result = authorService.create(author);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
 
@@ -62,9 +61,9 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id) throws ServiceException { //TODO
-        authorService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Success");
+    public ResponseEntity<Boolean> delete(@PathVariable long id) throws ServiceException { // TODO
+        boolean result = authorService.delete(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
@@ -76,9 +75,9 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @PostMapping("/update")
-    public ResponseEntity<String> update(@RequestBody Author author) throws ServiceException { //TODO
-        authorService.update(author);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    public ResponseEntity<Boolean> update(@RequestBody Author author) throws ServiceException { // TODO
+        boolean result = authorService.update(author);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -91,7 +90,6 @@ public class AuthorController {
     public List<Author> findAllAuthors() throws ServiceException {
         return authorService.findAllAuthors();
     }
-
 
     /**
      * Find by id author.

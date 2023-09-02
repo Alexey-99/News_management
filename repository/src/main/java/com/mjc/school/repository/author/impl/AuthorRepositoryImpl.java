@@ -71,7 +71,8 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         try {
             return jdbcTemplate.update(QUERY_DELETE_AUTHOR,
                     new MapSqlParameterSource()
-                            .addValue(TABLE_AUTHORS_COLUMN_ID, id)) > 0;
+                            .addValue(TABLE_AUTHORS_COLUMN_ID, id))
+                    > 0;
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
         }
