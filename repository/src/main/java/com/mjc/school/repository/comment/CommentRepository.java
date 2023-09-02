@@ -17,6 +17,13 @@ public interface CommentRepository {
     public List<Comment> findCommentsByNewsId(long newsId);
 
     /**
+     * Find all comments list.
+     *
+     * @return the list
+     */
+    public List<Comment> findAllComments();
+
+    /**
      * Find comment by id comment.
      *
      * @param id the id

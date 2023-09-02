@@ -45,6 +45,23 @@ public class CommentRepositoryImpl implements CommentRepository {
                 commentsMapper);
     }
 
+    private static final String SELECT_ALL_COMMENTS = """
+            SELECT id, content, news_id, created, modified
+            FROM comments;
+            """;
+
+    /**
+     * Find all comments list.
+     *
+     * @return the list
+     */
+    @Override
+    public List<Comment> findAllComments() {
+        return jdbcTemplate.query(SELECT_ALL_COMMENTS,
+                commentsMapper);
+    }
+
+
     private static final String SELECT_COMMENT_BY_ID = """
             SELECT id, content, news_id, created, modified
             FROM comments

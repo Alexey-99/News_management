@@ -35,6 +35,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
+     * Find all comments list.
+     *
+     * @return the list
+     */
+    @Override
+    public List<Comment> findAllComments() {
+        return commentRepository.findAllComments();
+    }
+
+    /**
      * Find comment by id comment.
      *
      * @param id the id

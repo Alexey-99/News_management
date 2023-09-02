@@ -6,6 +6,9 @@ import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
 
 import java.util.List;
 
+/**
+ * The interface Comment service.
+ */
 public interface CommentService {
     /**
      * Find comments by news id list.
@@ -14,6 +17,13 @@ public interface CommentService {
      * @return the list
      */
     public List<Comment> findCommentsByNewsId(long newsId);
+
+    /**
+     * Find all comments list.
+     *
+     * @return the list
+     */
+    public List<Comment> findAllComments();
 
     /**
      * Find comment by id comment.

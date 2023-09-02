@@ -121,7 +121,8 @@ public class AuthorController {
      * @return the map
      */
     @GetMapping("/sort")
-    public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc() throws SortException { //+
+    public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
+            throws SortException { //+
         return authorService.sortAllAuthorsWithAmountOfWrittenNewsDesc();
     }
 }
