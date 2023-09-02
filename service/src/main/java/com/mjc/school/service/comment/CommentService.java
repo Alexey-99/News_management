@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * The interface Comment service.
  */
-public interface CommentService {
+public interface CommentService { // TODO METHODS CREATE COMMENT, UPDATE, DELETE
     /**
      * Find by news id list.
      *

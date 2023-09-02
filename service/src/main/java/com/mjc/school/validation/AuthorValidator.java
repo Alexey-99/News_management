@@ -4,7 +4,7 @@ import com.mjc.school.entity.Author;
 import com.mjc.school.exception.IncorrectParameterException;
 import org.springframework.stereotype.Component;
 
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
+import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_TITLE;
 
 /**
  * The type Author validator.
@@ -38,7 +38,7 @@ public class AuthorValidator extends Validator {
                 (name.length() >= MIN_LENGTH_NAME && name.length() <= MAX_LENGTH_NAME)) {
             return true;
         } else {
-            throw new IncorrectParameterException(BAD_AUTHOR_NAME);
+            throw new IncorrectParameterException(BAD_NEWS_TITLE);
         }
     }
 }

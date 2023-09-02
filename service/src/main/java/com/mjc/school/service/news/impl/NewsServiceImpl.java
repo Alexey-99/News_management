@@ -1,6 +1,7 @@
 package com.mjc.school.service.news.impl;
 
 import com.mjc.school.entity.News;
+import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.repository.comment.CommentRepository;
@@ -12,9 +13,11 @@ import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparat
 import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparatorByCreatedDateTimeDesc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeAsc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeDesc;
+import com.mjc.school.validation.NewsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -30,6 +33,8 @@ public class NewsServiceImpl implements NewsService {
     private CommentRepository commentRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private NewsValidator newsValidator;
 
     /**
      * Create news.
@@ -39,9 +44,16 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public boolean create(News news) throws ServiceException {
+    public boolean create(News news)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return newsRepository.create(news);
+            if (newsValidator.validate(news)) {
+                news.setCreated(LocalDateTime.now());
+                news.setModified(LocalDateTime.now());
+                return newsRepository.create(news);
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -55,11 +67,17 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public boolean deleteById(long newsId) throws ServiceException {
+    public boolean deleteById(long newsId)
+            throws ServiceException, IncorrectParameterException {
         try {
-            newsRepository.deleteByNewsIdFromTableNewsTags(newsId);
-            commentRepository.deleteByNewsId(newsId);
-            return newsRepository.deleteById(newsId);
+            if (newsValidator.validateId(newsId)) {
+                newsRepository.deleteByNewsIdFromTableNewsTags(newsId);
+                commentRepository.deleteByNewsId(newsId);
+                newsRepository.deleteById(newsId);
+                return newsRepository.findNewsById(newsId) == null;
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -73,20 +91,25 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public boolean deleteByAuthorId(long authorId) throws ServiceException {
+    public boolean deleteByAuthorId(long authorId)
+            throws ServiceException, IncorrectParameterException {
         try {
-            for (News news : newsRepository.findAllNews()
-                    .stream()
-                    .filter(news -> news.getAuthorId() == authorId).toList()) {
-                newsRepository.deleteByNewsIdFromTableNewsTags(news.getId());
-                commentRepository.deleteByNewsId(news.getId());
-                newsRepository.deleteByAuthorId(authorId);
+            if (newsValidator.validateAuthorId(authorId)) {
+                for (News news : newsRepository.findAllNews()
+                        .stream()
+                        .filter(news -> news.getAuthorId() == authorId).toList()) {
+                    newsRepository.deleteByNewsIdFromTableNewsTags(news.getId());
+                    commentRepository.deleteByNewsId(news.getId());
+                    newsRepository.deleteByAuthorId(authorId);
+                }
+                return !newsRepository.findAllNews()
+                        .stream()
+                        .filter(news -> news.getAuthorId() == authorId)
+                        .toList()
+                        .isEmpty();
+            } else {
+                return false;
             }
-            return !newsRepository.findAllNews()
-                    .stream()
-                    .filter(news -> news.getAuthorId() == authorId)
-                    .toList()
-                    .isEmpty();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -100,9 +123,11 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public boolean deleteByNewsIdFromTableNewsTags(long newsId) throws ServiceException {
+    public boolean deleteByIdFromTableNewsTags(long newsId)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return newsRepository.deleteByNewsIdFromTableNewsTags(newsId);
+            return newsValidator.validateId(newsId) &&
+                    newsRepository.deleteByNewsIdFromTableNewsTags(newsId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -116,9 +141,15 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public boolean update(News news) throws ServiceException {
+    public boolean update(News news)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return newsRepository.update(news);
+            if (newsValidator.validateId(news.getId()) && newsValidator.validate(news)) {
+                news.setModified(LocalDateTime.now());
+                return newsRepository.update(news);
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -133,7 +164,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> sortNews(List<News> newsList, SortNewsComparator comparator)
+    public List<News> sort(List<News> newsList, SortNewsComparator comparator)
             throws ServiceException {
         List<News> sortedNewsList;
         if (newsList != null) {
@@ -157,9 +188,9 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> sortNewsByCreatedDateTimeAsc(List<News> newsList)
+    public List<News> sortByCreatedDateTimeAsc(List<News> newsList)
             throws ServiceException {
-        return sortNews(newsList, new SortNewsComparatorByCreatedDateTimeAsc());
+        return sort(newsList, new SortNewsComparatorByCreatedDateTimeAsc());
     }
 
     /**
@@ -170,9 +201,9 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> sortNewsByCreatedDateTimeDesc(List<News> newsList)
+    public List<News> sortByCreatedDateTimeDesc(List<News> newsList)
             throws ServiceException {
-        return sortNews(newsList, new SortNewsComparatorByCreatedDateTimeDesc());
+        return sort(newsList, new SortNewsComparatorByCreatedDateTimeDesc());
     }
 
     /**
@@ -183,9 +214,9 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> sortNewsByModifiedDateTimeAsc(List<News> newsList)
+    public List<News> sortByModifiedDateTimeAsc(List<News> newsList)
             throws ServiceException {
-        return sortNews(newsList, new SortNewsComparatorByModifiedDateTimeAsc());
+        return sort(newsList, new SortNewsComparatorByModifiedDateTimeAsc());
     }
 
     /**
@@ -196,9 +227,9 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> sortNewsByModifiedDateTimeDesc(List<News> newsList)
+    public List<News> sortByModifiedDateTimeDesc(List<News> newsList)
             throws ServiceException {
-        return sortNews(newsList, new SortNewsComparatorByModifiedDateTimeDesc());
+        return sort(newsList, new SortNewsComparatorByModifiedDateTimeDesc());
     }
 
     /**
@@ -208,7 +239,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> findAllNews() throws ServiceException {
+    public List<News> findAll() throws ServiceException {
         try {
             List<News> newsList = newsRepository.findAllNews();
             for (News news : newsList) {
@@ -230,14 +261,18 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public News findNewsById(long newsId) throws ServiceException {
+    public News findById(long newsId) throws ServiceException, IncorrectParameterException {
         try {
-            News news = newsRepository.findNewsById(newsId);
-            if (news != null) {
-                news.setComments(commentRepository.findCommentsByNewsId(news.getId()));
-                news.setTags(tagRepository.findByNewsId(news.getId()));
+            if (newsValidator.validateId(newsId)) {
+                News news = newsRepository.findNewsById(newsId);
+                if (news != null) {
+                    news.setComments(commentRepository.findCommentsByNewsId(news.getId()));
+                    news.setTags(tagRepository.findByNewsId(news.getId()));
+                }
+                return news;
+            } else {
+                return null;
             }
-            return news;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -251,7 +286,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> findNewsByTagName(String tagName) throws ServiceException {
+    public List<News> findByTagName(String tagName) throws ServiceException {
         try {
             List<News> newsList = newsRepository.findNewsByTagName(tagName);
             for (News news : newsList) {
@@ -272,7 +307,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> findNewsByTagId(long tagId) throws ServiceException {
+    public List<News> findByTagId(long tagId) throws ServiceException {
         try {
             List<News> newsList = newsRepository.findNewsByTagId(tagId);
             for (News news : newsList) {
@@ -293,7 +328,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> findNewsByAuthorName(String authorName) throws ServiceException {
+    public List<News> findByAuthorName(String authorName) throws ServiceException {
         try {
             List<News> newsList = newsRepository.findNewsByAuthorName(authorName);
             for (News news : newsList) {
@@ -314,10 +349,10 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> findNewsByPartOfTitle(String partOfTitle) throws ServiceException {
+    public List<News> findByPartOfTitle(String partOfTitle) throws ServiceException {
         try {
             Pattern p = Pattern.compile(partOfTitle);
-            List<News> newsList = findAllNews()
+            List<News> newsList = findAll()
                     .stream()
                     .filter(news ->
                             (p.matcher(news.getTitle()).find()) ||
@@ -342,10 +377,10 @@ public class NewsServiceImpl implements NewsService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<News> findNewsByPartOfContent(String partOfContent) throws ServiceException {
+    public List<News> findByPartOfContent(String partOfContent) throws ServiceException {
         try {
             Pattern p = Pattern.compile(partOfContent);
-            List<News> newsList = findAllNews()
+            List<News> newsList = findAll()
                     .stream()
                     .filter(news ->
                             (p.matcher(news.getContent()).find()) ||

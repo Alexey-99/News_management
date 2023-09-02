@@ -55,14 +55,11 @@ public class CommentController {
     /**
      * Sort by created date time asc list.
      *
-     * @param sortBy   the sort by
-     * @param sortType the sort type
      * @return the list
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/asc")
-    public List<Comment> sortByCreatedDateTimeAsc(
-            @PathVariable String sortBy, @PathVariable String sortType)
+    public List<Comment> sortByCreatedDateTimeAsc()
             throws ServiceException {
         return commentService.sortByCreatedDateTimeAsc(commentService.findAll());
     }
@@ -70,40 +67,37 @@ public class CommentController {
     /**
      * Sort by created date time desc list.
      *
-     * @param list the list
      * @return the list
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/desc")
-    public List<Comment> sortByCreatedDateTimeDesc(List<Comment> list)
+    public List<Comment> sortByCreatedDateTimeDesc()
             throws ServiceException {
-        return commentService.sortByCreatedDateTimeDesc(list);
+        return commentService.sortByCreatedDateTimeDesc(commentService.findAll());
     }
 
     /**
      * Sort by modified date time asc list.
      *
-     * @param list the list
      * @return the list
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/asc")
-    public List<Comment> sortByModifiedDateTimeAsc(List<Comment> list)
+    public List<Comment> sortByModifiedDateTimeAsc()
             throws ServiceException {
-        return commentService.sortByModifiedDateTimeAsc(list);
+        return commentService.sortByModifiedDateTimeAsc(commentService.findAll());
     }
 
     /**
      * Sort by modified date time desc list.
      *
-     * @param list the list
      * @return the list
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/desc")
-    public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list)
+    public List<Comment> sortByModifiedDateTimeDesc()
             throws ServiceException {
-        return commentService.sortByModifiedDateTimeDesc(list);
+        return commentService.sortByModifiedDateTimeDesc(commentService.findAll());
     }
 
     /**
@@ -115,7 +109,7 @@ public class CommentController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @DeleteMapping("/delete/{newsId}")
-    public ResponseEntity<Boolean> deleteByNewsId(long newsId)
+    public ResponseEntity<Boolean> deleteByNewsId(@PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteByNewsId(newsId);
         return new ResponseEntity<>(result, HttpStatus.OK);

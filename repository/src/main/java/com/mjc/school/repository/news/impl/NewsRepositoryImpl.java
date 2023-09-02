@@ -55,8 +55,8 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_TITLE, news.getTitle())
                             .addValue(TABLE_NEWS_COLUMN_CONTENT, news.getContent())
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, news.getAuthorId())
-                            .addValue(TABLE_NEWS_COLUMN_CREATED, news.getCreated())
-                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified())) > 0;
+                            .addValue(TABLE_NEWS_COLUMN_CREATED, news.getCreated().toString())
+                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified().toString())) > 0;
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
         }
@@ -141,7 +141,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             SET title = :title,
                 content = :content,
                 authors_id = :authors_id,
-                created = :created,
                 modified = :modified
             WHERE news.id = :news.id;
             """;
@@ -162,8 +161,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_TITLE, news.getTitle())
                             .addValue(TABLE_NEWS_COLUMN_CONTENT, news.getContent())
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, news.getAuthorId())
-                            .addValue(TABLE_NEWS_COLUMN_CREATED, news.getCreated())
-                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified()))
+                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified().toString()))
                     > 0;
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
