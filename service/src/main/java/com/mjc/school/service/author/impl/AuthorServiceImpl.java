@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
+
 /**
  * The type Author service.
  */
@@ -132,19 +134,24 @@ public class AuthorServiceImpl implements AuthorService {
      *
      * @param partOfName the part of name
      * @return the list
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public List<Author> findByPartOfName(String partOfName) throws ServiceException {
+    public List<Author> findByPartOfName(String partOfName) throws ServiceException, IncorrectParameterException {
         try {
-            Pattern p = Pattern.compile(partOfName.toLowerCase());
-            return authorRepository.findAllAuthors()
-                    .stream()
-                    .filter(author ->
-                            (p.matcher(author.getName().toLowerCase()).find())
-                                    || (p.matcher(author.getName().toLowerCase()).lookingAt())
-                                    || (author.getName().toLowerCase().matches(partOfName.toLowerCase()))
-                    ).toList();
+            if (partOfName != null) {
+                Pattern p = Pattern.compile(partOfName.toLowerCase());
+                return authorRepository.findAllAuthors()
+                        .stream()
+                        .filter(author ->
+                                (p.matcher(author.getName().toLowerCase()).find())
+                                        || (p.matcher(author.getName().toLowerCase()).lookingAt())
+                                        || (author.getName().toLowerCase().matches(partOfName.toLowerCase()))
+                        ).toList();
+            } else {
+                throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

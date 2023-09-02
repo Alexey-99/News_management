@@ -5,6 +5,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.news.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_COMMENT_CONTENT;
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_COMMENT_NEWS_ID;
@@ -12,6 +13,7 @@ import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BA
 /**
  * The type Comment validator.
  */
+@Component
 public class CommentValidator extends Validator {
     private static final int MAX_LENGTH_NAME = 255;
     private static final int MIN_LENGTH_NAME = 3;
@@ -26,8 +28,10 @@ public class CommentValidator extends Validator {
      * @throws IncorrectParameterException the incorrect parameter exception
      * @throws RepositoryException         the repository exception
      */
-    public boolean validate(Comment comment) throws IncorrectParameterException, RepositoryException {
-        return validateContent(comment.getContent()) && validateNewsId(comment.getNewsId());
+    public boolean validate(Comment comment)
+            throws IncorrectParameterException, RepositoryException {
+        return validateContent(comment.getContent()) &&
+                validateNewsId(comment.getNewsId());
     }
 
     /**
@@ -37,9 +41,11 @@ public class CommentValidator extends Validator {
      * @return the boolean
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean validateContent(String content) throws IncorrectParameterException {
+    public boolean validateContent(String content)
+            throws IncorrectParameterException {
         if (content != null &&
-                (content.length() >= MIN_LENGTH_NAME && content.length() <= MAX_LENGTH_NAME)) {
+                (content.length() >= MIN_LENGTH_NAME &&
+                        content.length() <= MAX_LENGTH_NAME)) {
             return true;
         } else {
             throw new IncorrectParameterException(BAD_COMMENT_CONTENT);
@@ -54,7 +60,8 @@ public class CommentValidator extends Validator {
      * @throws IncorrectParameterException the incorrect parameter exception
      * @throws RepositoryException         the repository exception
      */
-    public boolean validateNewsId(long newsId) throws IncorrectParameterException, RepositoryException {
+    public boolean validateNewsId(long newsId)
+            throws IncorrectParameterException, RepositoryException {
         if (validateId(newsId) && newsRepository.findNewsById(newsId) != null) {
             return true;
         } else {

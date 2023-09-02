@@ -72,7 +72,7 @@ public interface AuthorService {
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<Author> findByPartOfName(String partOfName) throws ServiceException;
+    public List<Author> findByPartOfName(String partOfName) throws ServiceException, IncorrectParameterException;
 
     /**
      * Find by news id author.

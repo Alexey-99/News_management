@@ -1,6 +1,7 @@
 package com.mjc.school.service.comment.impl;
 
 import com.mjc.school.entity.Comment;
+import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.repository.comment.CommentRepository;
@@ -10,6 +11,7 @@ import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentCo
 import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentComparatorByCreatedDateTimeDesc;
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeDesc;
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeAsc;
+import com.mjc.school.validation.CommentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,31 +25,36 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private CommentValidator commentValidator;
 
     /**
-     * Find comments by news id list.
+     * Find by news id list.
      *
      * @param newsId the news id
      * @return the list
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public List<Comment> findCommentsByNewsId(long newsId) throws ServiceException {
+    public List<Comment> findByNewsId(long newsId)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return commentRepository.findCommentsByNewsId(newsId);
+            return commentValidator.validateNewsId(newsId) ?
+                    commentRepository.findCommentsByNewsId(newsId) : null;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     /**
-     * Find all comments list.
+     * Find all list.
      *
      * @return the list
      * @throws ServiceException the service exception
      */
     @Override
-    public List<Comment> findAllComments() throws ServiceException {
+    public List<Comment> findAll() throws ServiceException {
         try {
             return commentRepository.findAllComments();
         } catch (RepositoryException e) {
@@ -56,25 +63,28 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Find comment by id comment.
+     * Find by id comment.
      *
      * @param id the id
      * @return the comment
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public Comment findCommentById(long id) throws ServiceException {
+    public Comment findById(long id)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return commentRepository.findCommentById(id);
+            return commentValidator.validateId(id) ?
+                    commentRepository.findCommentById(id) : null;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     /**
-     * Sort comment list.
+     * Sort list.
      *
-     * @param list       the comments list
+     * @param list       the list
      * @param comparator the comparator
      * @return the list
      * @throws ServiceException the service exception
@@ -97,9 +107,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Sort comment by created date time asc list.
+     * Sort by created date time asc list.
      *
-     * @param list the comments list
+     * @param list the list
      * @return the list
      * @throws ServiceException the service exception
      */
@@ -110,9 +120,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Sort comment by created date time desc list.
+     * Sort by created date time desc list.
      *
-     * @param list the comments list
+     * @param list the list
      * @return the list
      * @throws ServiceException the service exception
      */
@@ -123,9 +133,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Sort comment by modified date time asc list.
+     * Sort by modified date time asc list.
      *
-     * @param list the comments list
+     * @param list the list
      * @return the list
      * @throws ServiceException the service exception
      */
@@ -136,9 +146,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Sort comment by modified date time desc list.
+     * Sort by modified date time desc list.
      *
-     * @param list the comments list
+     * @param list the list
      * @return the list
      * @throws ServiceException the service exception
      */
@@ -153,12 +163,15 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param newsId the news id
      * @return the boolean
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean deleteByNewsId(long newsId) throws ServiceException {
+    public boolean deleteByNewsId(long newsId)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return commentRepository.deleteByNewsId(newsId);
+            return commentValidator.validateNewsId(newsId) &&
+                    commentRepository.deleteByNewsId(newsId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
