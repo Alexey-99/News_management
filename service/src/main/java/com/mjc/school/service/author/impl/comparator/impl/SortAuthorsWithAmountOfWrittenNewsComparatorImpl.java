@@ -1,6 +1,7 @@
 package com.mjc.school.service.author.impl.comparator.impl;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.service.author.impl.comparator.SortAuthorsWithAmountOfWrittenNewsComparator;
 
 import java.util.Map.Entry;
@@ -30,7 +31,7 @@ public class SortAuthorsWithAmountOfWrittenNewsComparatorImpl
      * imposes orderings that are inconsistent with equals."
      */
     @Override
-    public int compare(Entry<Author, Long> o1, Entry<Author, Long> o2) {
-        return (int) (o2.getValue() - o1.getValue());
+    public int compare(AuthorIdWithAmountOfWrittenNews o1, AuthorIdWithAmountOfWrittenNews o2) {
+        return (int) (o2.getAmountOfWrittenNews() - o1.getAmountOfWrittenNews());
     }
 }

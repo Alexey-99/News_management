@@ -72,13 +72,7 @@ public class Tag {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null) {
-            return false;
-        }
-        if (!this.getClass().equals(object.getClass())) {
+        if (!super.equals(object)) {
             return false;
         }
         Tag otherTag = (Tag) object;

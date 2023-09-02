@@ -1,6 +1,7 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.author.AuthorService;
@@ -34,9 +35,9 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/amount-news")
-    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews()
+    public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsWithAmountOfWrittenNews()
             throws ServiceException {
-        return authorService.selectAllAuthorsWithAmountOfWrittenNews();
+        return authorService.selectAllAuthorsIdWithAmountOfWrittenNews();
     }
 
     /**
@@ -44,7 +45,8 @@ public class AuthorController {
      *
      * @param author the author
      * @return the response entity
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @PostMapping("/create")
     public ResponseEntity<Boolean> create(@RequestBody Author author)
@@ -53,13 +55,13 @@ public class AuthorController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-
     /**
      * Delete author.
      *
      * @param id the id
      * @return the response entity
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable long id)
@@ -68,13 +70,13 @@ public class AuthorController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
     /**
      * Update author.
      *
      * @param author the author
      * @return the response entity
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @PostMapping("/update")
     public ResponseEntity<Boolean> update(@RequestBody Author author)
@@ -99,14 +101,14 @@ public class AuthorController {
      *
      * @param id the id
      * @return the author
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/get-by-id/{id}")
     public Author findById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return authorService.findById(id);
     }
-
 
     /**
      * Find by part of name list.
@@ -121,20 +123,19 @@ public class AuthorController {
         return authorService.findByPartOfName(partOfName);
     }
 
-
     /**
      * Find by news id author.
      *
      * @param newsId the news id
      * @return the author
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/get-by-news-id/{newsId}")
     public Author findByNewsId(@PathVariable long newsId)
-            throws ServiceException {
+            throws ServiceException, IncorrectParameterException {
         return authorService.findByNewsId(newsId);
     }
-
 
     /**
      * Sort all authors with amount of written news desc list.
@@ -143,8 +144,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort")
-    public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
+    public List<AuthorIdWithAmountOfWrittenNews> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
             throws ServiceException {
-        return authorService.sortAllAuthorsWithAmountOfWrittenNewsDesc();
+        return authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc();
     }
 }

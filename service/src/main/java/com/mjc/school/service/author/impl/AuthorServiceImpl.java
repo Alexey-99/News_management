@@ -1,6 +1,7 @@
 package com.mjc.school.service.author.impl;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
@@ -169,34 +170,34 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     /**
-     * Sort all authors with amount of written news desc map.
+     * Select all authors id with amount of written news list.
      *
-     * @return the map
+     * @return the list
      * @throws ServiceException the service exception
      */
     @Override
-    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews()
+    public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsIdWithAmountOfWrittenNews()
             throws ServiceException {
         try {
-            return authorRepository.selectAllAuthorsWithAmountOfWrittenNews();
+            return authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     /**
-     * Select all authors with amount of written news map.
+     * Sort all authors id with amount of written news desc list.
      *
-     * @return the map
+     * @return the list
      * @throws ServiceException the service exception
      */
     @Override
-    public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
+    public List<AuthorIdWithAmountOfWrittenNews> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
             throws ServiceException {
         try {
-            List<Entry<Author, Long>> authorLongMapSorted =
+            List<AuthorIdWithAmountOfWrittenNews> authorLongMapSorted =
                     new LinkedList<>(
-                            authorRepository.selectAllAuthorsWithAmountOfWrittenNews());
+                            authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews());
             authorLongMapSorted.sort(
                     new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
             return authorLongMapSorted;

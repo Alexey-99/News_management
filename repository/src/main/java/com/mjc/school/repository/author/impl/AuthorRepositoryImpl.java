@@ -1,8 +1,9 @@
 package com.mjc.school.repository.author.impl;
 
 import com.mjc.school.config.mapper.AuthorMapper;
-import com.mjc.school.config.mapper.AuthorWithAmountOfWrittenNewsMapper;
+import com.mjc.school.config.mapper.AuthorIdWithAmountOfWrittenNewsMapper;
 import com.mjc.school.entity.Author;
+import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.author.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     @Autowired
     private AuthorMapper authorMapper;
     @Autowired
-    private AuthorWithAmountOfWrittenNewsMapper authorWithAmountOfWrittenNewsMapper;
+    private AuthorIdWithAmountOfWrittenNewsMapper authorIdWithAmountOfWrittenNewsMapper;
 
     private static final String QUERY_INSERT_AUTHOR = """
             INSERT INTO authors(name)
@@ -173,24 +174,26 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     }
 
-    private static final String QUERY_SELECT_ALL_AUTHORS_WITH_AMOUNT_WRITTEN_NEWS = """
-            SELECT authors.id, authors.name, COUNT(news.authors_id)
+    private static final String QUERY_SELECT_ALL_AUTHORS_ID_WITH_AMOUNT_WRITTEN_NEWS = """
+            SELECT authors.id, COUNT(news.authors_id)
             FROM authors LEFT JOIN news
             ON authors.id = news.authors_id
             GROUP BY authors.id;
             """;
 
     /**
-     * Select all authors with amount of written news map.
+     * Select all authors id with amount of written news list.
      *
-     * @return the map
+     * @return the list
+     * @throws RepositoryException the repository exception
      */
     @Override
-    public List<Map.Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() throws RepositoryException {
+    public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsIdWithAmountOfWrittenNews()
+            throws RepositoryException {
         try {
             return jdbcTemplate.query(
-                    QUERY_SELECT_ALL_AUTHORS_WITH_AMOUNT_WRITTEN_NEWS,
-                    authorWithAmountOfWrittenNewsMapper);
+                    QUERY_SELECT_ALL_AUTHORS_ID_WITH_AMOUNT_WRITTEN_NEWS,
+                    authorIdWithAmountOfWrittenNewsMapper);
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
         }

@@ -1,6 +1,7 @@
 package com.mjc.school.service.author;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 
@@ -85,20 +86,20 @@ public interface AuthorService {
             throws ServiceException, IncorrectParameterException;
 
     /**
-     * Sort all authors with amount of written news desc map.
+     * Select all authors id with amount of written news list.
      *
-     * @return the map
+     * @return the list
      * @throws ServiceException the service exception
      */
-    public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
+    public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsIdWithAmountOfWrittenNews()
             throws ServiceException;
 
     /**
-     * Select all authors with amount of written news map.
+     * Sort all authors id with amount of written news desc list.
      *
-     * @return the map
+     * @return the list
      * @throws ServiceException the service exception
      */
-    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews()
+    public List<AuthorIdWithAmountOfWrittenNews> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
             throws ServiceException;
 }

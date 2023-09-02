@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "comments",
         schema = "news_management")
-public class Comment {
+public class Comment extends NewsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -136,13 +136,7 @@ public class Comment {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null) {
-            return false;
-        }
-        if (!this.getClass().equals(object.getClass())) {
+        if (!super.equals(object)) {
             return false;
         }
         Comment otherComment = (Comment) object;

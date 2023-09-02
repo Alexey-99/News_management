@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "news",
         schema = "news_management")
-public class News {
+public class News extends NewsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -208,13 +208,7 @@ public class News {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null) {
-            return false;
-        }
-        if (!this.getClass().equals(object.getClass())) {
+        if (!super.equals(object)) {
             return false;
         }
         News otherNews = (News) object;

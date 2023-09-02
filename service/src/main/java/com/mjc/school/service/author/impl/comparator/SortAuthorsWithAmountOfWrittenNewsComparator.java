@@ -1,12 +1,13 @@
 package com.mjc.school.service.author.impl.comparator;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 
 import java.util.Comparator;
 import java.util.Map.Entry;
 
 public interface SortAuthorsWithAmountOfWrittenNewsComparator
-        extends Comparator<Entry<Author, Long>> {
+        extends Comparator<AuthorIdWithAmountOfWrittenNews> {
     /**
      * Compares its two arguments for order.  Returns a negative integer,
      * zero, or a positive integer as the first argument is less than, equal
@@ -30,5 +31,5 @@ public interface SortAuthorsWithAmountOfWrittenNewsComparator
      * imposes orderings that are inconsistent with equals."
      */
     @Override
-    public int compare(Entry<Author, Long> o1, Entry<Author, Long> o2) ;
+    public int compare(AuthorIdWithAmountOfWrittenNews o1, AuthorIdWithAmountOfWrittenNews o2);
 }
