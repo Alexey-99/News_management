@@ -119,7 +119,7 @@ public class AuthorController {
      */
     @GetMapping("/get-by-name/{partOfName}")
     public List<Author> findByPartOfName(@PathVariable String partOfName)
-            throws ServiceException {
+            throws ServiceException, IncorrectParameterException {
         return authorService.findByPartOfName(partOfName);
     }
 

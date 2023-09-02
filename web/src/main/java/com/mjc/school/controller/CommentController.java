@@ -5,6 +5,8 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,7 +75,8 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/desc")
-    public List<Comment> sortByCreatedDateTimeDesc(List<Comment> list) throws ServiceException {
+    public List<Comment> sortByCreatedDateTimeDesc(List<Comment> list)
+            throws ServiceException {
         return commentService.sortByCreatedDateTimeDesc(list);
     }
 
@@ -85,7 +88,8 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/asc")
-    public List<Comment> sortByModifiedDateTimeAsc(List<Comment> list) throws ServiceException {
+    public List<Comment> sortByModifiedDateTimeAsc(List<Comment> list)
+            throws ServiceException {
         return commentService.sortByModifiedDateTimeAsc(list);
     }
 
@@ -97,7 +101,8 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/desc")
-    public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list) throws ServiceException {
+    public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list)
+            throws ServiceException {
         return commentService.sortByModifiedDateTimeDesc(list);
     }
 
@@ -110,7 +115,9 @@ public class CommentController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @DeleteMapping("/delete/{newsId}")
-    public boolean deleteByNewsId(long newsId) throws ServiceException, IncorrectParameterException {
-        return commentService.deleteByNewsId(newsId);
+    public ResponseEntity<Boolean> deleteByNewsId(long newsId)
+            throws ServiceException, IncorrectParameterException {
+        boolean result = commentService.deleteByNewsId(newsId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
