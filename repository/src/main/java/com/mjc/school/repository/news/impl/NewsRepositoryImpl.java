@@ -68,7 +68,7 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     private static final String SQL_DELETE_NEWS_BY_AUTHOR_ID = """
             DELETE FROM news
-            WHERE author_id = :author_id;
+            WHERE authors_id = :authors_id;
             """;
 
     /**

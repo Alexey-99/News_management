@@ -32,7 +32,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     private static final String QUERY_INSERT_AUTHOR = """
             INSERT INTO authors(name)
-            VALUE (:name);
+            VALUES (:name);
             """;
 
     /**
@@ -128,7 +128,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             SELECT authors.id , authors.name
             FROM authors INNER JOIN news
             ON authors.id = news.authors_id
-            WHERE news.id = :news.id;
+            WHERE news.id = :id;
             """;
 
     /**

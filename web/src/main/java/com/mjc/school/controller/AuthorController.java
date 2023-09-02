@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +28,12 @@ public class AuthorController {
     private AuthorService authorService;
 
     /**
-     * Select all authors with amount of written news map.
+     * Select all authors with amount of written news list.
      *
-     * @return the map
+     * @return the list
      */
-    @GetMapping("/author-amount-news")
-    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() { // +
+    @GetMapping("/amount-news")
+    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() {
         return authorService.selectAllAuthorsWithAmountOfWrittenNews();
     }
 
@@ -40,10 +41,10 @@ public class AuthorController {
      * Create author.
      *
      * @param author the author
-     * @return the boolean
+     * @return the response entity
      */
-    @PostMapping("/create")
-    public ResponseEntity<String> create(@RequestBody Author author) {
+    @PutMapping("/create")
+    public ResponseEntity<String> create(@RequestBody Author author) { //TODO
         authorService.create(author);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
@@ -52,10 +53,10 @@ public class AuthorController {
      * Delete author.
      *
      * @param id the id
-     * @return the boolean
+     * @return the response entity
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id) { // +
+    public ResponseEntity<String> delete(@PathVariable long id) { //TODO
         authorService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Success");
     }
@@ -64,10 +65,10 @@ public class AuthorController {
      * Update author.
      *
      * @param author the author
-     * @return the boolean
+     * @return the response entity
      */
     @PostMapping("/update")
-    public ResponseEntity<String> update(@RequestBody Author author) {
+    public ResponseEntity<String> update(@RequestBody Author author) { //TODO
         authorService.update(author);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
@@ -78,7 +79,7 @@ public class AuthorController {
      * @return the list
      */
     @GetMapping("/all")
-    public List<Author> findAllAuthors() { // +
+    public List<Author> findAllAuthors() {
         return authorService.findAllAuthors();
     }
 
@@ -89,7 +90,7 @@ public class AuthorController {
      * @return the author
      */
     @GetMapping("/get-by-id/{id}")
-    public Author findById(@PathVariable long id) { //+
+    public Author findById(@PathVariable long id) {
         return authorService.findById(id);
     }
 
@@ -99,7 +100,7 @@ public class AuthorController {
      * @param partOfName the part of name
      * @return the list
      */
-    @GetMapping("/get-by-name/{partOfName}") // +
+    @GetMapping("/get-by-name/{partOfName}")
     public List<Author> findByPartOfName(@PathVariable String partOfName) {
         return authorService.findByPartOfName(partOfName);
     }
@@ -110,7 +111,7 @@ public class AuthorController {
      * @param newsId the news id
      * @return the author
      */
-    @GetMapping("/get-by-news-id/{newsId}") // +
+    @GetMapping("/get-by-news-id/{newsId}")
     public Author findByNewsId(@PathVariable long newsId) {
         return authorService.findByNewsId(newsId);
     }
@@ -119,10 +120,11 @@ public class AuthorController {
      * Sort all authors with amount of written news desc map.
      *
      * @return the map
+     * @throws SortException the sort exception
      */
     @GetMapping("/sort")
     public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
-            throws SortException { //+
+            throws SortException {
         return authorService.sortAllAuthorsWithAmountOfWrittenNewsDesc();
     }
 }
