@@ -1,12 +1,12 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.author.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -35,7 +34,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/amount-news")
-    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews() throws ServiceException {
+    public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews()
+            throws ServiceException {
         return authorService.selectAllAuthorsWithAmountOfWrittenNews();
     }
 
@@ -47,7 +47,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @PostMapping("/create")
-    public ResponseEntity<Boolean> create(@RequestBody Author author) throws ServiceException {
+    public ResponseEntity<Boolean> create(@RequestBody Author author)
+            throws ServiceException, IncorrectParameterException {
         boolean result = authorService.create(author);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -62,7 +63,7 @@ public class AuthorController {
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable long id)
-            throws ServiceException {
+            throws ServiceException, IncorrectParameterException {
         boolean result = authorService.delete(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -77,7 +78,7 @@ public class AuthorController {
      */
     @PostMapping("/update")
     public ResponseEntity<Boolean> update(@RequestBody Author author)
-            throws ServiceException {
+            throws ServiceException, IncorrectParameterException {
         boolean result = authorService.update(author);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -101,7 +102,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/get-by-id/{id}")
-    public Author findById(@PathVariable long id) throws ServiceException {
+    public Author findById(@PathVariable long id)
+            throws ServiceException, IncorrectParameterException {
         return authorService.findById(id);
     }
 
@@ -114,7 +116,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/get-by-name/{partOfName}")
-    public List<Author> findByPartOfName(@PathVariable String partOfName) throws ServiceException {
+    public List<Author> findByPartOfName(@PathVariable String partOfName)
+            throws ServiceException {
         return authorService.findByPartOfName(partOfName);
     }
 
@@ -127,7 +130,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/get-by-news-id/{newsId}")
-    public Author findByNewsId(@PathVariable long newsId) throws ServiceException {
+    public Author findByNewsId(@PathVariable long newsId)
+            throws ServiceException {
         return authorService.findByNewsId(newsId);
     }
 

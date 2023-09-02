@@ -1,12 +1,14 @@
 package com.mjc.school.service.author.impl;
 
 import com.mjc.school.entity.Author;
+import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
+import com.mjc.school.validation.AuthorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +26,22 @@ public class AuthorServiceImpl implements AuthorService {
     private AuthorRepository authorRepository;
     @Autowired
     private NewsRepository newsRepository;
+    @Autowired
+    private AuthorValidator authorValidator;
 
     /**
      * Create author.
      *
      * @param author the author
      * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean create(Author author) throws ServiceException {
+    public boolean create(Author author)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return authorRepository.create(author);
+            return authorValidator.validate(author) && authorRepository.create(author);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -45,14 +52,21 @@ public class AuthorServiceImpl implements AuthorService {
      *
      * @param id the id
      * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean delete(long id) throws ServiceException {
+    public boolean delete(long id)
+            throws ServiceException, IncorrectParameterException {
         try {
-            newsRepository.deleteByAuthorId(id);
-            authorRepository.delete(id);
-            return newsRepository.findNewsByAuthorId(id).isEmpty()
-                    && authorRepository.findById(id) == null;
+            if (authorValidator.validateId(id)) {
+                newsRepository.deleteByAuthorId(id);
+                authorRepository.delete(id);
+                return newsRepository.findNewsByAuthorId(id).isEmpty()
+                        && authorRepository.findById(id) == null;
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -63,11 +77,16 @@ public class AuthorServiceImpl implements AuthorService {
      *
      * @param author the author
      * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean update(Author author) throws ServiceException {
+    public boolean update(Author author)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return authorRepository.update(author);
+            return authorValidator.validateId(author.getId()) &&
+                    authorValidator.validate(author) &&
+                    authorRepository.update(author);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -77,6 +96,7 @@ public class AuthorServiceImpl implements AuthorService {
      * Find all authors list.
      *
      * @return the list
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Author> findAllAuthors() throws ServiceException {
@@ -92,11 +112,15 @@ public class AuthorServiceImpl implements AuthorService {
      *
      * @param id the id
      * @return the author
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public Author findById(long id) throws ServiceException {
+    public Author findById(long id)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return authorRepository.findById(id);
+            return authorValidator.validateId(id) ?
+                    authorRepository.findById(id) : null;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -107,6 +131,7 @@ public class AuthorServiceImpl implements AuthorService {
      *
      * @param partOfName the part of name
      * @return the list
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Author> findByPartOfName(String partOfName) throws ServiceException {
@@ -124,26 +149,30 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-
     /**
      * Find by news id author.
      *
      * @param newsId the news id
      * @return the author
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public Author findByNewsId(long newsId) throws ServiceException {
+    public Author findByNewsId(long newsId)
+            throws ServiceException, IncorrectParameterException {
         try {
-            return authorRepository.findByNewsId(newsId);
+            return authorValidator.validateId(newsId) ?
+                    authorRepository.findByNewsId(newsId) : null;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     /**
-     * Select all authors with amount of written news map.
+     * Sort all authors with amount of written news desc map.
      *
      * @return the map
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Entry<Author, Long>> selectAllAuthorsWithAmountOfWrittenNews()
@@ -156,16 +185,18 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     /**
-     * Sort all authors with amount of written news desc map.
+     * Select all authors with amount of written news map.
      *
      * @return the map
+     * @throws ServiceException the service exception
      */
     @Override
     public List<Entry<Author, Long>> sortAllAuthorsWithAmountOfWrittenNewsDesc()
             throws ServiceException {
         try {
             List<Entry<Author, Long>> authorLongMapSorted =
-                    new LinkedList<>(authorRepository.selectAllAuthorsWithAmountOfWrittenNews());
+                    new LinkedList<>(
+                            authorRepository.selectAllAuthorsWithAmountOfWrittenNews());
             authorLongMapSorted.sort(
                     new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
             return authorLongMapSorted;
