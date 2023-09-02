@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.mjc.school.name.ColumnName.TABLE_AUTHORS_COLUMN_NAME;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_AUTHORS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_CONTENT;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_CREATED;
@@ -269,10 +270,11 @@ public class NewsRepositoryImpl implements NewsRepository {
         }
     }
 
-    private static final String SELECT_FIND_NEWS_BY_AUTHOR_ID = """
+    private static final String SELECT_FIND_NEWS_BY_AUTHORS_NAME = """
             SELECT id, title, content, authors_id, modified
-            FROM news
-            WHERE authors_id = :authors_id;
+            FROM news INNER JOIN authors
+            ON news.authors_id = authors.id
+            WHERE authors.name = :name;
             """;
 
     /**
@@ -285,9 +287,34 @@ public class NewsRepositoryImpl implements NewsRepository {
     @Override
     public List<News> findNewsByAuthorName(String authorName) throws RepositoryException {
         try {
-            return jdbcTemplate.query(SELECT_FIND_NEWS_BY_AUTHOR_ID,
+            return jdbcTemplate.query(SELECT_FIND_NEWS_BY_AUTHORS_NAME,
                     new MapSqlParameterSource()
-                            .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, authorName),
+                            .addValue(TABLE_AUTHORS_COLUMN_NAME, authorName),
+                    newsMapper);
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    private static final String SELECT_FIND_NEWS_BY_AUTHORS_ID = """
+            SELECT id, title, content, authors_id, modified
+            FROM news
+            WHERE authors_id = :authors_id;
+            """;
+
+    /**
+     * Find news by author id list.
+     *
+     * @param authorId the author id
+     * @return the list
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public List<News> findNewsByAuthorId(long authorId) throws RepositoryException {
+        try {
+            return jdbcTemplate.query(SELECT_FIND_NEWS_BY_AUTHORS_ID,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, authorId),
                     newsMapper);
         } catch (DataAccessException e) {
             throw new RepositoryException(e);

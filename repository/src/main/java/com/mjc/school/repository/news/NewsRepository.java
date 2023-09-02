@@ -97,4 +97,13 @@ public interface NewsRepository {
      * @throws RepositoryException the repository exception
      */
     public List<News> findNewsByAuthorName(String authorName) throws RepositoryException;
+
+    /**
+     * Find news by author id list.
+     *
+     * @param authorId the author id
+     * @return the list
+     * @throws RepositoryException the repository exception
+     */
+    public List<News> findNewsByAuthorId(long authorId) throws RepositoryException;
 }
