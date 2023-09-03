@@ -190,7 +190,7 @@ public class TagController {
                                long numberElementsReturn,
                                @RequestParam(value = "number-page",
                                        required = false,
-                                       defaultValue = "0")
+                                       defaultValue = "1")
                                long numberPage) throws ServiceException {
         return tagService.getEntity(tagService.findAllTags(),
                 numberElementsReturn, numberPage);

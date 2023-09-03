@@ -188,7 +188,7 @@ public class CommentController {
                                    long numberElementsReturn,
                                    @RequestParam(value = "number-page",
                                            required = false,
-                                           defaultValue = "0")
+                                           defaultValue = "1")
                                    long numberPage) throws ServiceException {
         return commentService.getEntity(commentService.findAll(),
                 numberElementsReturn, numberPage);

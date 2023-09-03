@@ -161,7 +161,7 @@ public class AuthorController {
                                   long numberElementsReturn,
                                   @RequestParam(value = "number-page",
                                           required = false,
-                                          defaultValue = "0")
+                                          defaultValue = "1")
                                   long numberPage) throws ServiceException {
         return authorService.getEntity(authorService.findAllAuthors(),
                 numberElementsReturn, numberPage);
