@@ -21,7 +21,7 @@ import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_NAME;
  * The type Tag repository.
  */
 @Repository
-public class TagRepositoryImpl implements TagRepository {
+public class TagRepositoryImpl implements TagRepository { //TODO ADD_TO_NEWS
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -29,7 +29,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     private static final String QUERY_INSERT_TAG = """
             INSERT INTO tags (name)
-            VALUE(:name);
+            VALUES (:name);
             """;
 
     /**
@@ -102,7 +102,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     private static final String QUERY_UPDATE_TAG = """
-            UPDATE INTO tags
+            UPDATE tags
             SET name = :name
             WHERE id = :id;
             """;

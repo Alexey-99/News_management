@@ -80,7 +80,7 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<Boolean> update(@RequestBody Tag tag)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.update(tag);

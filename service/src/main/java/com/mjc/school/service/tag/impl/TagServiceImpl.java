@@ -57,7 +57,7 @@ public class TagServiceImpl implements TagService {
             if (tagValidator.validateId(tagId)) {
                 tagRepository.deleteByTagIdFromTableTagsNews(tagId);
                 tagRepository.deleteById(tagId);
-                return tagRepository.findById(tagId) != null;
+                return tagRepository.findById(tagId) == null;
             } else {
                 return false;
             }
@@ -77,7 +77,8 @@ public class TagServiceImpl implements TagService {
     @Override
     public boolean deleteByTagIdFromTableTagsNews(long tagId) throws ServiceException, IncorrectParameterException {
         try {
-            return tagValidator.validateId(tagId) && tagRepository.deleteByTagIdFromTableTagsNews(tagId);
+            return tagValidator.validateId(tagId) &&
+                    tagRepository.deleteByTagIdFromTableTagsNews(tagId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
