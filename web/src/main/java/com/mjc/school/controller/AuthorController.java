@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * The type Author controller.
@@ -117,7 +116,7 @@ public class AuthorController {
      * @return the list
      * @throws ServiceException the service exception
      */
-    @GetMapping("/get-by-name/{partOfName}")
+    @GetMapping("/get-by-part-of-name/{partOfName}")
     public List<Author> findByPartOfName(@PathVariable String partOfName)
             throws ServiceException, IncorrectParameterException {
         return authorService.findByPartOfName(partOfName);
@@ -143,7 +142,7 @@ public class AuthorController {
      * @return the list
      * @throws ServiceException the service exception
      */
-    @GetMapping("/sort")
+    @GetMapping("/sort-amount-news")
     public List<AuthorIdWithAmountOfWrittenNews> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
             throws ServiceException {
         return authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc();
