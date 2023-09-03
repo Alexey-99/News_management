@@ -5,7 +5,6 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.tag.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * The type Tag controller.
@@ -38,7 +40,7 @@ public class TagController {
     public ResponseEntity<Boolean> create(@RequestBody Tag tag)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.create(tag);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(result, CREATED);
     }
 
     /**
@@ -53,7 +55,7 @@ public class TagController {
     public ResponseEntity<Boolean> deleteById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.deleteById(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 
 
@@ -69,7 +71,7 @@ public class TagController {
     public ResponseEntity<Boolean> deleteByTagIdFromTableTagsNews(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.deleteByTagIdFromTableTagsNews(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**
@@ -84,7 +86,7 @@ public class TagController {
     public ResponseEntity<Boolean> update(@RequestBody Tag tag)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.update(tag);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**

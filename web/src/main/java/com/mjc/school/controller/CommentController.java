@@ -5,15 +5,19 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * The type Comment controller.
@@ -101,7 +105,52 @@ public class CommentController {
     }
 
     /**
-     * Delete by news id comment.
+     * Create comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @PostMapping("/create")
+    public ResponseEntity<Boolean> create(@RequestBody Comment comment)
+            throws ServiceException, IncorrectParameterException {
+        boolean result = commentService.create(comment);
+        return new ResponseEntity<>(result, CREATED);
+    }
+
+    /**
+     * Update comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @PostMapping("/update")
+    public ResponseEntity<Boolean> update(@RequestBody Comment comment)
+            throws ServiceException, IncorrectParameterException {
+        boolean result = commentService.update(comment);
+        return new ResponseEntity<>(result, OK);
+    }
+
+    /**
+     * Delete comment by id.
+     *
+     * @param id the id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @DeleteMapping("/delete-by-id")
+    public ResponseEntity<Boolean> deleteById(@PathVariable long id)
+            throws ServiceException, IncorrectParameterException {
+        boolean result = commentService.deleteById(id);
+        return new ResponseEntity<>(result, OK);
+    }
+
+    /**
+     * Delete comment by news id .
      *
      * @param newsId the news id
      * @return the boolean
@@ -112,6 +161,6 @@ public class CommentController {
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteByNewsId(newsId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 }
