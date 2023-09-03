@@ -199,7 +199,7 @@ public class NewsServiceImpl implements NewsService {
         try {
             List<News> newsList = newsRepository.findAllNews();
             for (News news : newsList) {
-                news.setComments(commentRepository.findCommentsByNewsId(news.getId()));
+                news.setComments(commentRepository.findByNewsId(news.getId()));
                 news.setTags(tagRepository.findByNewsId(news.getId()));
             }
             return newsList;
@@ -224,7 +224,7 @@ public class NewsServiceImpl implements NewsService {
                 News news = newsRepository.findNewsById(newsId);
                 if (news != null) {
                     news.setComments(commentRepository
-                            .findCommentsByNewsId(news.getId()));
+                            .findByNewsId(news.getId()));
                     news.setTags(tagRepository
                             .findByNewsId(news.getId()));
                 }
@@ -252,7 +252,7 @@ public class NewsServiceImpl implements NewsService {
             if (tagValidator.validateName(tagName)) {
                 List<News> newsList = newsRepository.findNewsByTagName(tagName);
                 for (News news : newsList) {
-                    news.setComments(commentRepository.findCommentsByNewsId(news.getId()));
+                    news.setComments(commentRepository.findByNewsId(news.getId()));
                     news.setTags(tagRepository.findByNewsId(news.getId()));
                 }
                 return newsList;
@@ -279,7 +279,7 @@ public class NewsServiceImpl implements NewsService {
             if (tagValidator.validateId(tagId)) {
                 List<News> newsList = newsRepository.findNewsByTagId(tagId);
                 for (News news : newsList) {
-                    news.setComments(commentRepository.findCommentsByNewsId(news.getId()));
+                    news.setComments(commentRepository.findByNewsId(news.getId()));
                     news.setTags(tagRepository.findByNewsId(news.getId()));
                 }
                 return newsList;
@@ -306,7 +306,7 @@ public class NewsServiceImpl implements NewsService {
             if (authorValidator.validateName(authorName)) {
                 List<News> newsList = newsRepository.findNewsByAuthorName(authorName);
                 for (News news : newsList) {
-                    news.setComments(commentRepository.findCommentsByNewsId(news.getId()));
+                    news.setComments(commentRepository.findByNewsId(news.getId()));
                     news.setTags(tagRepository.findByNewsId(news.getId()));
                 }
                 return newsList;
@@ -340,7 +340,7 @@ public class NewsServiceImpl implements NewsService {
                                         (news.getTitle().toLowerCase().matches(partOfTitle.toLowerCase()))
                         ).toList();
                 for (News news : newsList) {
-                    news.setComments(commentRepository.findCommentsByNewsId(news.getId()));
+                    news.setComments(commentRepository.findByNewsId(news.getId()));
                     news.setTags(tagRepository.findByNewsId(news.getId()));
                 }
                 return newsList;
@@ -374,7 +374,7 @@ public class NewsServiceImpl implements NewsService {
                                         (news.getContent().toLowerCase().matches(partOfContent.toLowerCase()))
                         ).toList();
                 for (News news : newsList) {
-                    news.setComments(commentRepository.findCommentsByNewsId(news.getId()));
+                    news.setComments(commentRepository.findByNewsId(news.getId()));
                     news.setTags(tagRepository.findByNewsId(news.getId()));
                 }
                 return newsList;

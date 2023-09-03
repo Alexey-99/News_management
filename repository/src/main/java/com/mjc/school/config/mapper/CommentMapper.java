@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_CONTENT;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_CREATED;
@@ -36,12 +35,8 @@ public class CommentMapper implements RowMapper<Comment> {
                 .setId(resultSet.getLong(TABLE_COMMENTS_COLUMN_ID))
                 .setContent(resultSet.getString(TABLE_COMMENTS_COLUMN_CONTENT))
                 .setNewsId(resultSet.getLong(TABLE_COMMENTS_COLUMN_NEWS_ID))
-                .setCreated(LocalDateTime.of(
-                        resultSet.getDate(TABLE_COMMENTS_COLUMN_CREATED).toLocalDate(),
-                        resultSet.getTime(TABLE_COMMENTS_COLUMN_CREATED).toLocalTime()))
-                .setModified(LocalDateTime.of(
-                        resultSet.getDate(TABLE_COMMENTS_COLUMN_MODIFIED).toLocalDate(),
-                        resultSet.getTime(TABLE_COMMENTS_COLUMN_MODIFIED).toLocalTime()))
+                .setCreated(resultSet.getString(TABLE_COMMENTS_COLUMN_CREATED))
+                .setModified(resultSet.getString(TABLE_COMMENTS_COLUMN_MODIFIED))
                 .build();
     }
 }

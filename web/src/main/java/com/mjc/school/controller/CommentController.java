@@ -29,6 +29,17 @@ public class CommentController {
     private CommentService commentService;
 
     /**
+     * Find all list.
+     *
+     * @return the list
+     * @throws ServiceException the service exception
+     */
+    @GetMapping("/all")
+    public List<Comment> findAll() throws ServiceException {
+        return commentService.findAll();
+    }
+
+    /**
      * Find comments by news id list.
      *
      * @param newsId the news id
@@ -37,7 +48,7 @@ public class CommentController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/get-by-news-id/{newsId}")
-    public List<Comment> findCommentsByNewsId(@PathVariable long newsId)
+    public List<Comment> findByNewsId(@PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         return commentService.findByNewsId(newsId);
     }
@@ -51,7 +62,7 @@ public class CommentController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/get-by-id/{id}")
-    public Comment findCommentById(@PathVariable long id)
+    public Comment findById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return commentService.findById(id);
     }
