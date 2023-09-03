@@ -61,4 +61,8 @@ public final class ExceptionIncorrectParameterMessageCode {
      * Keys for exception messages associated with {@link Tag}.
      */
     public static final String BAD_TAG_NAME = "40008";
+    /**
+     * The constant BAD_PARAMETER_PART_OF_TAG_NAME.
+     */
+    public static final String BAD_PARAMETER_PART_OF_TAG_NAME = "40011";
 }

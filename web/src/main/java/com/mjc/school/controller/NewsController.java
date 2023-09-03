@@ -4,7 +4,6 @@ import com.mjc.school.entity.News;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.news.NewsService;
-import com.mjc.school.service.news.impl.comparator.SortNewsComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -203,8 +202,10 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/asc")
-    public List<News> sortNewsByCreatedDateTimeAsc() throws ServiceException {
-        return newsService.sortByCreatedDateTimeAsc(newsService.findAll());
+    public List<News> sortNewsByCreatedDateTimeAsc()
+            throws ServiceException {
+        return newsService.sortByCreatedDateTimeAsc(
+                newsService.findAll());
     }
 
     /**
@@ -214,8 +215,10 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/desc")
-    public List<News> sortNewsByCreatedDateTimeDesc() throws ServiceException {
-        return newsService.sortByCreatedDateTimeDesc(newsService.findAll());
+    public List<News> sortNewsByCreatedDateTimeDesc()
+            throws ServiceException {
+        return newsService.sortByCreatedDateTimeDesc(
+                newsService.findAll());
     }
 
     /**
@@ -225,8 +228,10 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/asc")
-    public List<News> sortNewsByModifiedDateTimeAsc() throws ServiceException {
-        return newsService.sortByModifiedDateTimeAsc(newsService.findAll());
+    public List<News> sortNewsByModifiedDateTimeAsc()
+            throws ServiceException {
+        return newsService.sortByModifiedDateTimeAsc(
+                newsService.findAll());
     }
 
     /**
@@ -236,7 +241,9 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/desc")
-    public List<News> sortNewsByModifiedDateTimeDesc() throws ServiceException {
-        return newsService.sortByModifiedDateTimeDesc(newsService.findAll());
+    public List<News> sortNewsByModifiedDateTimeDesc()
+            throws ServiceException {
+        return newsService.sortByModifiedDateTimeDesc(
+                newsService.findAll());
     }
 }

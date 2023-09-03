@@ -1,6 +1,7 @@
 package com.mjc.school.repository.tag;
 
 import com.mjc.school.entity.Tag;
+import com.mjc.school.exception.RepositoryException;
 
 import java.util.List;
 
@@ -13,53 +14,60 @@ public interface TagRepository {
      *
      * @param tag the tag
      * @return the boolean
+     * @throws RepositoryException the repository exception
      */
-    public boolean create(Tag tag);
+    public boolean create(Tag tag) throws RepositoryException;
 
     /**
-     * Delete by id boolean.
+     * Delete tag by id.
      *
      * @param tagId the tag id
      * @return the boolean
+     * @throws RepositoryException the repository exception
      */
-    public boolean deleteById(long tagId);
+    public boolean deleteById(long tagId) throws RepositoryException;
 
     /**
-     * Delete tags by tag id from table tags news.
+     * Delete by tag id from table tags news tag.
      *
      * @param tagId the tag id
      * @return the boolean
+     * @throws RepositoryException the repository exception
      */
-    public boolean deleteByTagIdFromTableTagsNews(long tagId);
+    public boolean deleteByTagIdFromTableTagsNews(long tagId) throws RepositoryException;
 
     /**
      * Update tag.
      *
      * @param tag the tag
      * @return the boolean
+     * @throws RepositoryException the repository exception
      */
-    public boolean update(Tag tag);
+    public boolean update(Tag tag) throws RepositoryException;
 
     /**
      * Find all tags list.
      *
      * @return the list
+     * @throws RepositoryException the repository exception
      */
-    public List<Tag> findAllTags();
+    public List<Tag> findAllTags() throws RepositoryException;
 
     /**
-     * Find tags by id tag.
+     * Find by id tag.
      *
      * @param id the id
      * @return the tag
+     * @throws RepositoryException the repository exception
      */
-    public Tag findById(long id);
+    public Tag findById(long id) throws RepositoryException;
 
     /**
-     * Find tags by news id list.
+     * Find by news id list.
      *
      * @param newsId the news id
      * @return the list
+     * @throws RepositoryException the repository exception
      */
-    public List<Tag> findByNewsId(long newsId);
+    public List<Tag> findByNewsId(long newsId) throws RepositoryException;
 }
