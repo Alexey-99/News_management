@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS news(
 	authors_id BIGINT,
 	FOREIGN KEY(authors_id)
 		REFERENCES authors(id),
-	created TIMESTAMP,
-	modified TIMESTAMP
+	created VARCHAR(30),
+	modified VARCHAR(30)
 );
 
 CREATE TABLE IF NOT EXISTS comments(
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS comments(
 	news_id BIGINT,
 	FOREIGN KEY (news_id)
 		REFERENCES news (id),
-	created TIMESTAMP,
-	modified TIMESTAMP
+	created VARCHAR(30),
+	modified VARCHAR(30)
 );
 
 CREATE TABLE if NOT EXISTS tags(

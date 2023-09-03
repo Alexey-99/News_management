@@ -37,7 +37,7 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     private static final String QUERY_CREATE_NEWS = """
             INSERT INTO news (title, content, authors_id, created, modified)
-            VALUE (:title, :content, :authors_id, :created, :modified);
+            VALUES (:title, :content, :authors_id, :created, :modified);
             """;
 
     /**
@@ -56,7 +56,8 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_CONTENT, news.getContent())
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, news.getAuthorId())
                             .addValue(TABLE_NEWS_COLUMN_CREATED, news.getCreated().toString())
-                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified().toString())) > 0;
+                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified().toString()))
+                    > 0;
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
         }
