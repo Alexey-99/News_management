@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.mjc.school.name.ColumnName.TABLE_NEWS_TAGS_COLUMN_NEWS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_TAGS_COLUMN_TAGS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_NAME;
@@ -144,7 +145,7 @@ public class TagRepositoryImpl implements TagRepository {
             SELECT tags.id, tags.name
             FROM tags INNER JOIN news_tags
             ON tags.id = news_tags.tags_id
-            WHERE news_tags.news_id = :news_tags.news_id;
+            WHERE news_tags.news_id = :news_id;
             """;
 
     /**
@@ -155,6 +156,9 @@ public class TagRepositoryImpl implements TagRepository {
      */
     @Override
     public List<Tag> findByNewsId(long newsId) {
-        return jdbcTemplate.query(QUERY_SELECT_TAG_BY_NEWS_ID, tagMapper);
+        return jdbcTemplate.query(QUERY_SELECT_TAG_BY_NEWS_ID,
+                new MapSqlParameterSource()
+                        .addValue(TABLE_NEWS_TAGS_COLUMN_NEWS_ID, newsId),
+                tagMapper);
     }
 }

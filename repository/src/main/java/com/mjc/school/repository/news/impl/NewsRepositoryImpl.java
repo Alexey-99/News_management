@@ -55,8 +55,8 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_TITLE, news.getTitle())
                             .addValue(TABLE_NEWS_COLUMN_CONTENT, news.getContent())
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, news.getAuthorId())
-                            .addValue(TABLE_NEWS_COLUMN_CREATED, news.getCreated().toString())
-                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified().toString()))
+                            .addValue(TABLE_NEWS_COLUMN_CREATED, news.getCreated())
+                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified()))
                     > 0;
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
@@ -143,7 +143,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                 content = :content,
                 authors_id = :authors_id,
                 modified = :modified
-            WHERE news.id = :news.id;
+            WHERE id = :id;
             """;
 
     /**
@@ -162,7 +162,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_TITLE, news.getTitle())
                             .addValue(TABLE_NEWS_COLUMN_CONTENT, news.getContent())
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, news.getAuthorId())
-                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified().toString()))
+                            .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified()))
                     > 0;
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
@@ -170,7 +170,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     private static final String SELECT_ALL_NEWS = """
-            SELECT id, title, content, authors_id, modified
+            SELECT id, title, content, authors_id, created, modified
             FROM news;
             """;
 
@@ -190,7 +190,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     private static final String SELECT_FIND_NEWS_BY_ID = """
-            SELECT id, title, content, authors_id, modified
+            SELECT id, title, content, authors_id, created, modified
             FROM news
             WHERE id = :id;
             """;
@@ -216,10 +216,16 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     private static final String SELECT_FIND_NEWS_BY_TAG_NAME = """
-            SELECT news.id, news.title, news.content, news.authors_id, news.modified
-            FROM news INNER JOIN news_tags INNER JOIN tags
-            ON news.id = news_tags.news_id AND news_tags.tags_id = tags.id
-            WHERE news_tags.id = news_tags.tags_id AND tags.name = :tags.name;
+            SELECT news.id, news.title, news.content, news.authors_id,
+            news.created, news.modified
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE
+                news_tags.tags_id = tags.id
+                AND tags.name = :name;
             """;
 
 
@@ -243,11 +249,17 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     private static final String SELECT_FIND_NEWS_BY_TAG_ID = """
-            SELECT news.id, news.title, news.content, news.authors_id, news.modified
-            FROM news INNER JOIN news_tags INNER JOIN tags
-            ON news.id = news_tags.news_id AND news_tags.tags_id = tags.id
-            WHERE news_tags.id = news_tags.tags_id AND tags.id = :tags.id;
-            """;
+            SELECT news.id, news.title, news.content, news.authors_id,
+            news.created, news.modified
+             FROM news
+                 INNER JOIN news_tags
+                     ON news.id = news_tags.news_id
+                 INNER JOIN tags
+                     ON news_tags.tags_id = tags.id
+             WHERE
+                 news_tags.tags_id = tags.id
+                 AND tags.id = :id;
+             """;
 
 
     /**
@@ -270,9 +282,11 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     private static final String SELECT_FIND_NEWS_BY_AUTHORS_NAME = """
-            SELECT id, title, content, authors_id, modified
-            FROM news INNER JOIN authors
-            ON news.authors_id = authors.id
+            SELECT news.id, news.title, news.content, news.authors_id,
+            news.created, news.modified
+            FROM news
+                INNER JOIN authors
+                    ON news.authors_id = authors.id
             WHERE authors.name = :name;
             """;
 
@@ -296,7 +310,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     private static final String SELECT_FIND_NEWS_BY_AUTHORS_ID = """
-            SELECT id, title, content, authors_id, modified
+            SELECT id, title, content, authors_id, created, modified
             FROM news
             WHERE authors_id = :authors_id;
             """;

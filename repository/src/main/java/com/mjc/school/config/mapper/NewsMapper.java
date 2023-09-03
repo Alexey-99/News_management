@@ -38,12 +38,8 @@ public class NewsMapper implements RowMapper<News> {
                 .setTitle(resultSet.getString(TABLE_NEWS_COLUMN_TITLE))
                 .setContent(resultSet.getString(TABLE_NEWS_COLUMN_CONTENT))
                 .setAuthorId(resultSet.getLong(TABLE_NEWS_COLUMN_AUTHORS_ID))
-                .setCreated(LocalDateTime.of(
-                        resultSet.getDate(TABLE_NEWS_COLUMN_CREATED).toLocalDate(),
-                        resultSet.getTime(TABLE_NEWS_COLUMN_CREATED).toLocalTime()))
-                .setModified(LocalDateTime.of(
-                        resultSet.getDate(TABLE_NEWS_COLUMN_MODIFIED).toLocalDate(),
-                        resultSet.getTime(TABLE_NEWS_COLUMN_MODIFIED).toLocalTime()))
+                .setCreated(resultSet.getString(TABLE_NEWS_COLUMN_CREATED))
+                .setModified(resultSet.getString(TABLE_NEWS_COLUMN_MODIFIED))
                 .build();
     }
 }

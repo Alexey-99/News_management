@@ -4,6 +4,7 @@ import com.mjc.school.entity.News;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.logic.handler.DateHandler;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
@@ -45,6 +46,8 @@ public class NewsServiceImpl implements NewsService {
     private TagValidator tagValidator;
     @Autowired
     private AuthorValidator authorValidator;
+    @Autowired
+    private DateHandler dateHandler;
 
     /**
      * Create news.
@@ -59,8 +62,8 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (newsValidator.validate(news)) {
-                news.setCreated(LocalDateTime.now());
-                news.setModified(LocalDateTime.now());
+                news.setCreated(dateHandler.getCurrentDate());
+                news.setModified(dateHandler.getCurrentDate());
                 return newsRepository.create(news);
             } else {
                 return false;
@@ -115,7 +118,7 @@ public class NewsServiceImpl implements NewsService {
                     commentRepository.deleteByNewsId(news.getId());
                     newsRepository.deleteByAuthorId(authorId);
                 }
-                return !newsRepository.findAllNews()
+                return newsRepository.findAllNews()
                         .stream()
                         .filter(news -> news.getAuthorId() == authorId)
                         .toList()
@@ -140,8 +143,22 @@ public class NewsServiceImpl implements NewsService {
     public boolean deleteByIdFromTableNewsTags(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
-            return newsValidator.validateId(newsId) &&
-                    newsRepository.deleteByNewsIdFromTableNewsTags(newsId);
+            if (newsValidator.validateId(newsId)) {
+                newsRepository.deleteByNewsIdFromTableNewsTags(newsId);
+                return findAll()
+                        .stream()
+                        .filter(news -> !news.getTags()
+                                .isEmpty())
+                        .toList()
+                        .isEmpty();
+            } else {
+                return findAll()
+                        .stream()
+                        .filter(news -> !news.getTags()
+                                .isEmpty())
+                        .toList()
+                        .isEmpty();
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -159,8 +176,9 @@ public class NewsServiceImpl implements NewsService {
     public boolean update(News news)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (newsValidator.validateId(news.getId()) && newsValidator.validate(news)) {
-                news.setModified(LocalDateTime.now());
+            if (newsValidator.validateId(news.getId()) &&
+                    newsValidator.validate(news)) {
+                news.setModified(dateHandler.getCurrentDate());
                 return newsRepository.update(news);
             } else {
                 return false;
@@ -282,7 +300,8 @@ public class NewsServiceImpl implements NewsService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public List<News> findByAuthorName(String authorName) throws ServiceException, IncorrectParameterException {
+    public List<News> findByAuthorName(String authorName)
+            throws ServiceException, IncorrectParameterException {
         try {
             if (authorValidator.validateName(authorName)) {
                 List<News> newsList = newsRepository.findNewsByAuthorName(authorName);
@@ -346,13 +365,13 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (partOfContent != null) {
-                Pattern p = Pattern.compile(partOfContent);
+                Pattern p = Pattern.compile(partOfContent.toLowerCase());
                 List<News> newsList = findAll()
                         .stream()
                         .filter(news ->
-                                (p.matcher(news.getContent()).find()) ||
-                                        (p.matcher(news.getContent()).lookingAt()) ||
-                                        (news.getContent().matches(partOfContent))
+                                (p.matcher(news.getContent().toLowerCase()).find()) ||
+                                        (p.matcher(news.getContent().toLowerCase()).lookingAt()) ||
+                                        (news.getContent().toLowerCase().matches(partOfContent.toLowerCase()))
                         ).toList();
                 for (News news : newsList) {
                     news.setComments(commentRepository.findCommentsByNewsId(news.getId()));

@@ -191,69 +191,52 @@ public class NewsController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/get-by-part-of-content/{partOfContent}")
-    public List<News> findNewsByPartOfContent(String partOfContent)
+    public List<News> findNewsByPartOfContent(@PathVariable String partOfContent)
             throws ServiceException, IncorrectParameterException {
         return newsService.findByPartOfContent(partOfContent);
     }
 
     /**
-     * Sort news list.
-     *
-     * @param newsList   the news list
-     * @param comparator the comparator
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<News> sortNews(List<News> newsList,
-                               SortNewsComparator comparator) throws ServiceException {
-        return newsService.sort(newsList, comparator);
-    }
-
-    /**
      * Sort news by created date time asc list.
      *
-     * @param newsList the news list
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<News> sortNewsByCreatedDateTimeAsc(List<News> newsList)
-            throws ServiceException {
-        return newsService.sortByCreatedDateTimeAsc(newsList);
+    @GetMapping("/sort/created/asc")
+    public List<News> sortNewsByCreatedDateTimeAsc() throws ServiceException {
+        return newsService.sortByCreatedDateTimeAsc(newsService.findAll());
     }
 
     /**
      * Sort news by created date time desc list.
      *
-     * @param newsList the news list
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<News> sortNewsByCreatedDateTimeDesc(List<News> newsList)
-            throws ServiceException {
-        return newsService.sortByCreatedDateTimeDesc(newsList);
+    @GetMapping("/sort/created/desc")
+    public List<News> sortNewsByCreatedDateTimeDesc() throws ServiceException {
+        return newsService.sortByCreatedDateTimeDesc(newsService.findAll());
     }
 
     /**
      * Sort news by modified date time asc list.
      *
-     * @param newsList the news list
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<News> sortNewsByModifiedDateTimeAsc(List<News> newsList)
-            throws ServiceException {
-        return newsService.sortByModifiedDateTimeAsc(newsList);
+    @GetMapping("/sort/modified/asc")
+    public List<News> sortNewsByModifiedDateTimeAsc() throws ServiceException {
+        return newsService.sortByModifiedDateTimeAsc(newsService.findAll());
     }
 
     /**
      * Sort news by modified date time desc list.
      *
-     * @param newsList the news list
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<News> sortNewsByModifiedDateTimeDesc(List<News> newsList)
-            throws ServiceException {
-        return newsService.sortByModifiedDateTimeDesc(newsList);
+    @GetMapping("/sort/modified/desc")
+    public List<News> sortNewsByModifiedDateTimeDesc() throws ServiceException {
+        return newsService.sortByModifiedDateTimeDesc(newsService.findAll());
     }
 }

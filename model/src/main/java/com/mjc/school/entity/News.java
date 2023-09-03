@@ -38,11 +38,11 @@ public class News extends NewsEntity {
     private long authorId;
     @Column(name = "created",
             nullable = false)
-    private LocalDateTime created;
+    private String created;
 
     @Column(name = "modified",
             nullable = false)
-    private LocalDateTime modified;
+    private String modified;
     private List<Comment> comments;
     private List<Tag> tags;
 
@@ -123,7 +123,7 @@ public class News extends NewsEntity {
      *
      * @return the created
      */
-    public LocalDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
@@ -132,7 +132,7 @@ public class News extends NewsEntity {
      *
      * @param created the created
      */
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
@@ -141,7 +141,7 @@ public class News extends NewsEntity {
      *
      * @return the modified
      */
-    public LocalDateTime getModified() {
+    public String getModified() {
         return modified;
     }
 
@@ -151,7 +151,7 @@ public class News extends NewsEntity {
      *
      * @param modified the modified
      */
-    public void setModified(LocalDateTime modified) {
+    public void setModified(String modified) {
         this.modified = modified;
     }
 
@@ -339,7 +339,7 @@ public class News extends NewsEntity {
          * @param created the created
          * @return the created
          */
-        public NewsBuilder setCreated(LocalDateTime created) {
+        public NewsBuilder setCreated(String created) {
             this.news.setCreated(created);
             return this;
         }
@@ -350,7 +350,7 @@ public class News extends NewsEntity {
          * @param modified the modified
          * @return the modified
          */
-        public NewsBuilder setModified(LocalDateTime modified) {
+        public NewsBuilder setModified(String modified) {
             this.news.setModified(modified);
             return this;
         }

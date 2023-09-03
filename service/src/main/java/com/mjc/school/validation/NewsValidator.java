@@ -24,7 +24,7 @@ public class NewsValidator extends Validator {
     private AuthorRepository authorRepository;
 
     /**
-     * Validate boolean.
+     * Validate author.
      *
      * @param news the news
      * @return the boolean

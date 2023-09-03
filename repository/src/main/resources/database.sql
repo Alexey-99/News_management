@@ -46,3 +46,7 @@ CREATE TABLE IF NOT EXISTS news_tags(
 	FOREIGN KEY (tags_id)
 	REFERENCES tags (id)
 );
+
+GRANT ALL PRIVILEGES ON DATABASE "news_management" to root;
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "root";
