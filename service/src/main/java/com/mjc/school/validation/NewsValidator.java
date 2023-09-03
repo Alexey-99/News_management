@@ -7,7 +7,6 @@ import com.mjc.school.repository.author.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_AUTHOR_ID;
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_CONTENT;
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_TITLE;

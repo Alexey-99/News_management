@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,7 +93,8 @@ public class TagController {
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<Tag> findAllTags() throws ServiceException {
+    @GetMapping("/all")
+    public List<Tag> findAll() throws ServiceException {
         return tagService.findAllTags();
     }
 
@@ -104,7 +106,8 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public Tag findById(long id)
+    @GetMapping("/get-by-id/{id}")
+    public Tag findById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return tagService.findById(id);
     }
@@ -117,7 +120,8 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public List<Tag> findByPartOfName(String partOfName)
+    @GetMapping("/get-by-part-of-name/{partOfName}")
+    public List<Tag> findByPartOfName(@PathVariable String partOfName)
             throws ServiceException, IncorrectParameterException {
         return tagService.findByPartOfName(partOfName);
     }
@@ -130,7 +134,8 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public List<Tag> findByNewsId(long newsId)
+    @GetMapping("/get-by-news-id/{newsId}")
+    public List<Tag> findByNewsId(@PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         return tagService.findByNewsId(newsId);
     }
