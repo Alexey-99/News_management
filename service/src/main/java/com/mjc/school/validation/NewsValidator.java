@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_AUTHOR_ID;
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_CONTENT;
+import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_TITLE;
 
 /**
  * The type News validator.
@@ -52,7 +53,7 @@ public class NewsValidator extends Validator {
                         title.length() <= MAX_LENGTH_TITLE)) {
             return true;
         } else {
-            throw new IncorrectParameterException(BAD_AUTHOR_NAME);
+            throw new IncorrectParameterException(BAD_NEWS_TITLE);
         }
     }
 
