@@ -29,7 +29,7 @@ public class CommentController {
     private CommentService commentService;
 
     /**
-     * Find all list.
+     * Find all comments.
      *
      * @return the list
      * @throws ServiceException the service exception
@@ -40,7 +40,7 @@ public class CommentController {
     }
 
     /**
-     * Find comments by news id list.
+     * Find comments by news id.
      *
      * @param newsId the news id
      * @return the list
@@ -54,7 +54,7 @@ public class CommentController {
     }
 
     /**
-     * Find comment by id comment.
+     * Find comment by id.
      *
      * @param id the id
      * @return the comment
@@ -68,7 +68,7 @@ public class CommentController {
     }
 
     /**
-     * Sort by created date time asc list.
+     * Sort comments by created date time asc.
      *
      * @return the list
      * @throws ServiceException the service exception
@@ -80,7 +80,7 @@ public class CommentController {
     }
 
     /**
-     * Sort by created date time desc list.
+     * Sort comments by created date time desc list.
      *
      * @return the list
      * @throws ServiceException the service exception
@@ -92,7 +92,7 @@ public class CommentController {
     }
 
     /**
-     * Sort by modified date time asc list.
+     * Sort comments by modified date time asc.
      *
      * @return the list
      * @throws ServiceException the service exception
@@ -104,7 +104,7 @@ public class CommentController {
     }
 
     /**
-     * Sort by modified date time desc list.
+     * Sort comments by modified date time desc.
      *
      * @return the list
      * @throws ServiceException the service exception
@@ -153,7 +153,7 @@ public class CommentController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete-by-id")
+    @DeleteMapping("/delete-by-id/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteById(id);
