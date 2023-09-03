@@ -5,6 +5,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
+import com.mjc.school.logic.pagination.Pagination;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
@@ -30,6 +31,8 @@ public class CommentServiceImpl implements CommentService {
     private CommentValidator commentValidator;
     @Autowired
     private DateHandler dateHandler;
+    @Autowired
+    private Pagination<Comment> commentPagination;
 
     /**
      * Find by news id list.
@@ -246,5 +249,18 @@ public class CommentServiceImpl implements CommentService {
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
+    }
+
+    /**
+     * Get objects from list.
+     *
+     * @param list                 the list
+     * @param numberElementsReturn the number elements return
+     * @param numberPage           the number page
+     * @return the entity
+     */
+    @Override
+    public List<Comment> getEntity(List<Comment> list, long numberElementsReturn, long numberPage) {
+        return commentPagination.getEntity(list, numberElementsReturn, numberPage);
     }
 }

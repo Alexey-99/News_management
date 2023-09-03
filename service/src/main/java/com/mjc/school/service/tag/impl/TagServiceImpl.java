@@ -4,6 +4,7 @@ import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.logic.pagination.Pagination;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
 import com.mjc.school.service.tag.TagService;
@@ -28,6 +29,8 @@ public class TagServiceImpl implements TagService {
     private NewsRepository newsRepository;
     @Autowired
     private TagValidator tagValidator;
+    @Autowired
+    private Pagination<Tag> tagPagination;
 
     /**
      * Create tag.
@@ -38,9 +41,11 @@ public class TagServiceImpl implements TagService {
      * @throws ServiceException            the service exception
      */
     @Override
-    public boolean create(Tag tag) throws IncorrectParameterException, ServiceException {
+    public boolean create(Tag tag)
+            throws IncorrectParameterException, ServiceException {
         try {
-            return tagValidator.validate(tag) && tagRepository.create(tag);
+            return tagValidator.validate(tag) &&
+                    tagRepository.create(tag);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -99,7 +104,8 @@ public class TagServiceImpl implements TagService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean deleteById(long tagId) throws ServiceException, IncorrectParameterException {
+    public boolean deleteById(long tagId)
+            throws ServiceException, IncorrectParameterException {
         try {
             if (tagValidator.validateId(tagId)) {
                 tagRepository.deleteByTagIdFromTableTagsNews(tagId);
@@ -122,7 +128,8 @@ public class TagServiceImpl implements TagService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean deleteByTagIdFromTableTagsNews(long tagId) throws ServiceException, IncorrectParameterException {
+    public boolean deleteByTagIdFromTableTagsNews(long tagId)
+            throws ServiceException, IncorrectParameterException {
         try {
             return tagValidator.validateId(tagId) &&
                     tagRepository.deleteByTagIdFromTableTagsNews(tagId);
@@ -140,7 +147,8 @@ public class TagServiceImpl implements TagService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean update(Tag tag) throws ServiceException, IncorrectParameterException {
+    public boolean update(Tag tag)
+            throws ServiceException, IncorrectParameterException {
         try {
             return tagValidator.validateId(tag.getId()) &&
                     tagValidator.validate(tag) &&
@@ -209,7 +217,8 @@ public class TagServiceImpl implements TagService {
                         })
                         .toList();
             } else {
-                throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_TAG_NAME);
+                throw new IncorrectParameterException(
+                        BAD_PARAMETER_PART_OF_TAG_NAME);
             }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
@@ -226,7 +235,8 @@ public class TagServiceImpl implements TagService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public List<Tag> findByNewsId(long newsId) throws ServiceException, IncorrectParameterException {
+    public List<Tag> findByNewsId(long newsId)
+            throws ServiceException, IncorrectParameterException {
         try {
             return tagValidator.validateId(newsId) ?
                     tagRepository.findByNewsId(newsId) :
@@ -234,5 +244,18 @@ public class TagServiceImpl implements TagService {
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
+    }
+
+    /**
+     * Get objects from list.
+     *
+     * @param list                 the list
+     * @param numberElementsReturn the number elements return
+     * @param numberPage           the number page
+     * @return the entity
+     */
+    @Override
+    public List<Tag> getEntity(List<Tag> list, long numberElementsReturn, long numberPage) {
+        return tagPagination.getEntity(list, numberElementsReturn, numberPage);
     }
 }

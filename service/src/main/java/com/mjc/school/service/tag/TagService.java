@@ -3,13 +3,14 @@ package com.mjc.school.service.tag;
 import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.logic.pagination.Pagination;
 
 import java.util.List;
 
 /**
  * The interface Tag service.
  */
-public interface TagService {
+public interface TagService extends Pagination<Tag> {
     /**
      * Create tag.
      *
@@ -30,7 +31,8 @@ public interface TagService {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean addToNews(long tagId, long newsId) throws ServiceException, IncorrectParameterException;
+    public boolean addToNews(long tagId, long newsId)
+            throws ServiceException, IncorrectParameterException;
 
     /**
      * Remove tag from news.
@@ -41,7 +43,8 @@ public interface TagService {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean removeTagFromNews(long tagId, long newsId) throws ServiceException, IncorrectParameterException;
+    public boolean removeTagFromNews(long tagId, long newsId)
+            throws ServiceException, IncorrectParameterException;
 
     /**
      * Delete tag by id.

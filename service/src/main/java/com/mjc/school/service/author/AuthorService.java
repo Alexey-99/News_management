@@ -4,14 +4,14 @@ import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.logic.pagination.Pagination;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * The interface Author service.
  */
-public interface AuthorService {
+public interface AuthorService extends Pagination<Author> {
 
     /**
      * Create author.
@@ -62,7 +62,8 @@ public interface AuthorService {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public Author findById(long id) throws ServiceException, IncorrectParameterException;
+    public Author findById(long id)
+            throws ServiceException, IncorrectParameterException;
 
 
     /**
@@ -72,7 +73,8 @@ public interface AuthorService {
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<Author> findByPartOfName(String partOfName) throws ServiceException, IncorrectParameterException;
+    public List<Author> findByPartOfName(String partOfName)
+            throws ServiceException, IncorrectParameterException;
 
     /**
      * Find by news id author.

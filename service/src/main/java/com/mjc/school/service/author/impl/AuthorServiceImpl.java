@@ -5,6 +5,7 @@ import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.logic.pagination.Pagination;
 import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
@@ -31,6 +32,8 @@ public class AuthorServiceImpl implements AuthorService {
     private NewsRepository newsRepository;
     @Autowired
     private AuthorValidator authorValidator;
+    @Autowired
+    private Pagination<Author> authorPagination;
 
     /**
      * Create author.
@@ -211,5 +214,18 @@ public class AuthorServiceImpl implements AuthorService {
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
+    }
+
+    /**
+     * Get objects from list.
+     *
+     * @param list                 the list
+     * @param numberElementsReturn the number elements return
+     * @param numberPage           the number page
+     * @return the entity
+     */
+    @Override
+    public List<Author> getEntity(List<Author> list, long numberElementsReturn, long numberPage) {
+        return authorPagination.getEntity(list, numberElementsReturn, numberPage);
     }
 }

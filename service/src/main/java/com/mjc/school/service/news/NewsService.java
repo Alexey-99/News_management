@@ -3,6 +3,7 @@ package com.mjc.school.service.news;
 import com.mjc.school.entity.News;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.logic.pagination.Pagination;
 import com.mjc.school.service.news.impl.comparator.SortNewsComparator;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * The interface News service.
  */
-public interface NewsService {
+public interface NewsService extends Pagination<News> {
     /**
      * Create news.
      *
@@ -19,7 +20,8 @@ public interface NewsService {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean create(News news) throws ServiceException, IncorrectParameterException;
+    public boolean create(News news)
+            throws ServiceException, IncorrectParameterException;
 
     /**
      * Delete by id news.
@@ -29,7 +31,8 @@ public interface NewsService {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean deleteById(long newsId) throws ServiceException, IncorrectParameterException;
+    public boolean deleteById(long newsId)
+            throws ServiceException, IncorrectParameterException;
 
     /**
      * Delete by author id news.
@@ -39,7 +42,8 @@ public interface NewsService {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean deleteByAuthorId(long authorId) throws ServiceException, IncorrectParameterException;
+    public boolean deleteByAuthorId(long authorId)
+            throws ServiceException, IncorrectParameterException;
 
     /**
      * Delete by id from table news tags news.

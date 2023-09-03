@@ -5,6 +5,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
+import com.mjc.school.logic.pagination.Pagination;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
@@ -20,7 +21,6 @@ import com.mjc.school.validation.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +48,8 @@ public class NewsServiceImpl implements NewsService {
     private AuthorValidator authorValidator;
     @Autowired
     private DateHandler dateHandler;
+    @Autowired
+    private Pagination<News> newsPagination;
 
     /**
      * Create news.
@@ -461,5 +463,18 @@ public class NewsServiceImpl implements NewsService {
     public List<News> sortByModifiedDateTimeDesc(List<News> newsList)
             throws ServiceException {
         return sort(newsList, new SortNewsComparatorByModifiedDateTimeDesc());
+    }
+
+    /**
+     * Get objects from list.
+     *
+     * @param list                 the list
+     * @param numberElementsReturn the number elements return
+     * @param numberPage           the number page
+     * @return the entity
+     */
+    @Override
+    public List<News> getEntity(List<News> list, long numberElementsReturn, long numberPage) {
+        return newsPagination.getEntity(list, numberElementsReturn, numberPage);
     }
 }

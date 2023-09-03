@@ -54,8 +54,10 @@ public class TagController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/add-to_news")
-    public boolean addToNews(@RequestParam(value = "tag-id") long tagId,
-                             @RequestParam(value = "news-id") long newsId)
+    public boolean addToNews(@RequestParam(value = "tag-id")
+                             long tagId,
+                             @RequestParam(value = "news-id")
+                             long newsId)
             throws ServiceException, IncorrectParameterException {
         return tagService.addToNews(tagId, newsId);
     }
@@ -70,8 +72,10 @@ public class TagController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/remove-from-news")
-    public boolean removeTagFromNews(@RequestParam(value = "tag-id") long tagId,
-                                     @RequestParam(value = "news-id") long newsId)
+    public boolean removeTagFromNews(@RequestParam(value = "tag-id")
+                                     long tagId,
+                                     @RequestParam(value = "news-id")
+                                     long newsId)
             throws ServiceException, IncorrectParameterException {
         return tagService.removeTagFromNews(tagId, newsId);
     }
@@ -173,5 +177,22 @@ public class TagController {
     public List<Tag> findByNewsId(@PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         return tagService.findByNewsId(newsId);
+    }
+
+    /**
+     * Get objects from list.
+     *
+     * @param numberElementsReturn the number elements return
+     * @param numberPage           the number page
+     * @return the entity
+     */
+    public List<Tag> getEntity(@RequestParam(value = "count-elements-on-page")
+                               long numberElementsReturn,
+                               @RequestParam(value = "number-page",
+                                       required = false,
+                                       defaultValue = "0")
+                               long numberPage) throws ServiceException {
+        return tagService.getEntity(tagService.findAllTags(),
+                numberElementsReturn, numberPage);
     }
 }

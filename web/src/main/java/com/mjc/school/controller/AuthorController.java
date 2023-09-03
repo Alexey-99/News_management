@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -146,5 +147,23 @@ public class AuthorController {
     public List<AuthorIdWithAmountOfWrittenNews>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc() throws ServiceException {
         return authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc();
+    }
+
+    /**
+     * Get objects from list.
+     *
+     * @param numberElementsReturn the number elements return
+     * @param numberPage           the number page
+     * @return the entity
+     */
+    @GetMapping("/pagination")
+    public List<Author> getEntity(@RequestParam(value = "count-elements-on-page")
+                                  long numberElementsReturn,
+                                  @RequestParam(value = "number-page",
+                                          required = false,
+                                          defaultValue = "0")
+                                  long numberPage) throws ServiceException {
+        return authorService.getEntity(authorService.findAllAuthors(),
+                numberElementsReturn, numberPage);
     }
 }
