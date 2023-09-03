@@ -4,6 +4,7 @@ import com.mjc.school.entity.Comment;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.logic.handler.DateHandler;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
@@ -27,6 +28,8 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private CommentValidator commentValidator;
+    @Autowired
+    private DateHandler dateHandler;
 
     /**
      * Find by news id list.
@@ -41,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
             throws ServiceException, IncorrectParameterException {
         try {
             return commentValidator.validateNewsId(newsId) ?
-                    commentRepository.findCommentsByNewsId(newsId) : null;
+                    commentRepository.findByNewsId(newsId) : null;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -56,7 +59,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> findAll() throws ServiceException {
         try {
-            return commentRepository.findAllComments();
+            return commentRepository.findAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -75,7 +78,7 @@ public class CommentServiceImpl implements CommentService {
             throws ServiceException, IncorrectParameterException {
         try {
             return commentValidator.validateId(id) ?
-                    commentRepository.findCommentById(id) : null;
+                    commentRepository.findById(id) : null;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -156,6 +159,74 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list)
             throws ServiceException {
         return sort(list, new SortCommentComparatorByModifiedDateTimeDesc());
+    }
+
+    /**
+     * Create comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @Override
+    public boolean create(Comment comment)
+            throws ServiceException, IncorrectParameterException {
+        try {
+            if (comment != null &&
+                    commentValidator.validate(comment)) {
+                comment.setCreated(dateHandler.getCurrentDate());
+                comment.setModified(dateHandler.getCurrentDate());
+                return commentRepository.create(comment);
+            }
+            return false;
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    /**
+     * Update comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @Override
+    public boolean update(Comment comment)
+            throws ServiceException, IncorrectParameterException {
+        try {
+            if (comment != null &&
+                    (commentValidator.validateId(comment.getId()) &&
+                            commentValidator.validate(comment))) {
+                comment.setModified(dateHandler.getCurrentDate());
+                return commentRepository.update(comment);
+            } else {
+                return false;
+            }
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    /**
+     * Delete comment by id.
+     *
+     * @param id the id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @Override
+    public boolean deleteById(long id)
+            throws ServiceException, IncorrectParameterException {
+        try {
+            return commentValidator.validateId(id) &&
+                    commentRepository.deleteById(id);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     /**

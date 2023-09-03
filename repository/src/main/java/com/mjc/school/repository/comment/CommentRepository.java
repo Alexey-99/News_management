@@ -17,7 +17,7 @@ public interface CommentRepository {
      * @return the list
      * @throws RepositoryException the repository exception
      */
-    public List<Comment> findCommentsByNewsId(long newsId) throws RepositoryException;
+    public List<Comment> findByNewsId(long newsId) throws RepositoryException;
 
     /**
      * Find all comments list.
@@ -25,7 +25,7 @@ public interface CommentRepository {
      * @return the list
      * @throws RepositoryException the repository exception
      */
-    public List<Comment> findAllComments() throws RepositoryException;
+    public List<Comment> findAll() throws RepositoryException;
 
     /**
      * Find comment by id comment.
@@ -34,10 +34,37 @@ public interface CommentRepository {
      * @return the comment
      * @throws RepositoryException the repository exception
      */
-    public Comment findCommentById(long id) throws RepositoryException;
+    public Comment findById(long id) throws RepositoryException;
 
     /**
-     * Delete by news id boolean.
+     * Create comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    public boolean create(Comment comment) throws RepositoryException;
+
+    /**
+     * Update comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    public boolean update(Comment comment) throws RepositoryException;
+
+    /**
+     * Delete comment by id.
+     *
+     * @param id the id
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    public boolean deleteById(long id) throws RepositoryException;
+
+    /**
+     * Delete comments by news id.
      *
      * @param newsId the news id
      * @return the boolean

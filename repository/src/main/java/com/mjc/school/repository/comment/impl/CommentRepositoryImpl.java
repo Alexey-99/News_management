@@ -13,7 +13,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_CONTENT;
+import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_CREATED;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_ID;
+import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_MODIFIED;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_NEWS_ID;
 
 /**
@@ -41,7 +44,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<Comment> findCommentsByNewsId(long newsId) throws RepositoryException {
+    public List<Comment> findByNewsId(long newsId) throws RepositoryException {
         try {
             return jdbcTemplate.query(SELECT_COMMENT_BY_NEWS_ID,
                     new MapSqlParameterSource()
@@ -65,7 +68,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<Comment> findAllComments() throws RepositoryException {
+    public List<Comment> findAll() throws RepositoryException {
         try {
             return jdbcTemplate.query(SELECT_ALL_COMMENTS,
                     commentsMapper);
@@ -89,7 +92,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public Comment findCommentById(long id) throws RepositoryException {
+    public Comment findById(long id) throws RepositoryException {
         try {
             List<Comment> commentListResult = jdbcTemplate.query(SELECT_COMMENT_BY_ID,
                     new MapSqlParameterSource()
@@ -101,11 +104,88 @@ public class CommentRepositoryImpl implements CommentRepository {
         }
     }
 
-    private static final String QUERY_DELETE_COMMENT_NEWS_ID = """
-            DELETE FROM comments
-            WHERE news_id = :news_id;
+    private static final String QUERY_INSERT_COMMENT = """
+            INSERT INTO comments (content, news_id, created, modified)
+            VALUES (:content, :news_id, :created, :modified);
             """;
 
+    /**
+     * Create comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public boolean create(Comment comment) throws RepositoryException {
+        try {
+            return jdbcTemplate.update(
+                    QUERY_INSERT_COMMENT,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_COMMENTS_COLUMN_CONTENT, comment.getContent())
+                            .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, comment.getNewsId())
+                            .addValue(TABLE_COMMENTS_COLUMN_CREATED, comment.getCreated())
+                            .addValue(TABLE_COMMENTS_COLUMN_MODIFIED, comment.getModified()))
+                    > 0;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    private static final String QUERY_UPDATE_COMMENT = """
+            UPDATE comments
+            SET content = :content,
+                news_id = :news_id,
+                modified = :modified
+            WHERE id = :id;
+            """;
+
+    /**
+     * Update comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public boolean update(Comment comment) throws RepositoryException {
+        return jdbcTemplate.update(
+                QUERY_UPDATE_COMMENT,
+                new MapSqlParameterSource()
+                        .addValue(TABLE_COMMENTS_COLUMN_CONTENT, comment.getContent())
+                        .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, comment.getNewsId())
+                        .addValue(TABLE_COMMENTS_COLUMN_MODIFIED, comment.getModified())
+                        .addValue(TABLE_COMMENTS_COLUMN_ID, comment.getId()))
+                > 0;
+    }
+
+    private static final String QUERY_DELETE_COMMENT_BY_ID = """
+            DELETE
+            FROM comments
+            WHERE id = :id;
+            """;
+
+    /**
+     * Delete comment by id.
+     *
+     * @param id the id
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public boolean deleteById(long id) throws RepositoryException {
+        return jdbcTemplate.update(
+                QUERY_DELETE_COMMENT_BY_ID,
+                new MapSqlParameterSource()
+                        .addValue(TABLE_COMMENTS_COLUMN_ID, id))
+                > 0;
+    }
+
+    private static final String QUERY_DELETE_COMMENT_BY_NEWS_ID = """
+            DELETE
+            FROM comments
+            WHERE news_id = :news_id;
+            """;
 
     /**
      * Delete by news id comment.
@@ -117,7 +197,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public boolean deleteByNewsId(long newsId) throws RepositoryException {
         try {
-            return jdbcTemplate.update(QUERY_DELETE_COMMENT_NEWS_ID,
+            return jdbcTemplate.update(QUERY_DELETE_COMMENT_BY_NEWS_ID,
                     new MapSqlParameterSource()
                             .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, newsId)) > 0;
         } catch (DataAccessException e) {

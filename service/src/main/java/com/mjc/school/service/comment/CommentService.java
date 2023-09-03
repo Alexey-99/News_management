@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * The interface Comment service.
  */
-public interface CommentService { // TODO METHODS CREATE COMMENT, UPDATE, DELETE
+public interface CommentService {
     /**
      * Find by news id list.
      *
@@ -94,7 +94,40 @@ public interface CommentService { // TODO METHODS CREATE COMMENT, UPDATE, DELETE
             throws ServiceException;
 
     /**
-     * Delete by news id comment.
+     * Create comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    public boolean create(Comment comment)
+            throws ServiceException, IncorrectParameterException;
+
+    /**
+     * Update comment.
+     *
+     * @param comment the comment
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    public boolean update(Comment comment)
+            throws ServiceException, IncorrectParameterException;
+
+    /**
+     * Delete comment by id.
+     *
+     * @param id the id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    public boolean deleteById(long id)
+            throws ServiceException, IncorrectParameterException;
+
+    /**
+     * Delete comment by news id.
      *
      * @param newsId the news id
      * @return the boolean
