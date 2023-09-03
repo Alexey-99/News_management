@@ -78,7 +78,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     private static final String SELECT_COMMENT_BY_ID = """
             SELECT id, content, news_id, created, modified
             FROM comments
-            WHERE comments.id = :comments.id;
+            WHERE id = :id;
             """;
 
     /**

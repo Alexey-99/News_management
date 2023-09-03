@@ -143,8 +143,8 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort-amount-news")
-    public List<AuthorIdWithAmountOfWrittenNews> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
-            throws ServiceException {
+    public List<AuthorIdWithAmountOfWrittenNews>
+    sortAllAuthorsIdWithAmountOfWrittenNewsDesc() throws ServiceException {
         return authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc();
     }
 }

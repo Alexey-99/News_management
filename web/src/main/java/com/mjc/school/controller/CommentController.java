@@ -108,7 +108,7 @@ public class CommentController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete/{newsId}")
+    @DeleteMapping("/delete-by-news-id/{newsId}")
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteByNewsId(newsId);
