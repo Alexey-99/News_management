@@ -21,7 +21,7 @@ import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_NAME;
  * The type Tag repository.
  */
 @Repository
-public class TagRepositoryImpl implements TagRepository { //TODO ADD_TO_NEWS
+public class TagRepositoryImpl implements TagRepository {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -46,6 +46,61 @@ public class TagRepositoryImpl implements TagRepository { //TODO ADD_TO_NEWS
                     new MapSqlParameterSource()
                             .addValue(TABLE_TAGS_COLUMN_NAME, tag.getName()))
                     > 0;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    private static final String QUERY_INSERT_TAG_TO_NEWS = """
+            INSERT INTO news_tags (news_id, tags_id)
+            VALUES (:news_id, :tags_id);
+            """;
+
+    /**
+     * Add tag to news by id.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public boolean addToNews(long tagId, long newsId) throws RepositoryException {
+        try {
+            return jdbcTemplate.update(
+                    QUERY_INSERT_TAG_TO_NEWS,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_NEWS_TAGS_COLUMN_NEWS_ID, newsId)
+                            .addValue(TABLE_NEWS_TAGS_COLUMN_TAGS_ID, tagId))
+                    > 0;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    private static final String QUERY_DELETE_TAG_FROM_NEWS = """
+            DELETE
+            FROM news_tags
+            WHERE news_id = :news_id
+                AND tags_id = :tags_id;
+            """;
+
+    /**
+     * Remove tag from news by id.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public boolean removeTagFromNews(long tagId, long newsId) throws RepositoryException {
+        try {
+            return jdbcTemplate.update(
+                    QUERY_DELETE_TAG_FROM_NEWS,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_NEWS_TAGS_COLUMN_NEWS_ID, newsId)
+                            .addValue(TABLE_NEWS_TAGS_COLUMN_TAGS_ID, tagId)) > 0;
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
         }

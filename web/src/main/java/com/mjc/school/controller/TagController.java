@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -41,6 +42,38 @@ public class TagController {
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.create(tag);
         return new ResponseEntity<>(result, CREATED);
+    }
+
+    /**
+     * Add tag to news.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @GetMapping("/add-to_news")
+    public boolean addToNews(@RequestParam(value = "tag-id") long tagId,
+                             @RequestParam(value = "news-id") long newsId)
+            throws ServiceException, IncorrectParameterException {
+        return tagService.addToNews(tagId, newsId);
+    }
+
+    /**
+     * Remove tag from news.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @GetMapping("/remove-tag-from-news")
+    public boolean removeTagFromNews(@RequestParam(value = "tag-id") long tagId,
+                                     @RequestParam(value = "news-id") long newsId)
+            throws ServiceException, IncorrectParameterException {
+        return tagService.removeTagFromNews(tagId, newsId);
     }
 
     /**

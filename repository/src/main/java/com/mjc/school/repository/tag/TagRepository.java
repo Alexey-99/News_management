@@ -19,6 +19,26 @@ public interface TagRepository {
     public boolean create(Tag tag) throws RepositoryException;
 
     /**
+     * Add tag to news by id.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    public boolean addToNews(long tagId, long newsId) throws RepositoryException;
+
+    /**
+     * Remove tag from news by id.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    public boolean removeTagFromNews(long tagId, long newsId) throws RepositoryException;
+
+    /**
      * Delete tag by id.
      *
      * @param tagId the tag id

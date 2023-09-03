@@ -4,6 +4,7 @@ import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.TagValidator;
@@ -24,6 +25,8 @@ public class TagServiceImpl implements TagService {
     @Autowired
     private TagRepository tagRepository;
     @Autowired
+    private NewsRepository newsRepository;
+    @Autowired
     private TagValidator tagValidator;
 
     /**
@@ -38,6 +41,50 @@ public class TagServiceImpl implements TagService {
     public boolean create(Tag tag) throws IncorrectParameterException, ServiceException {
         try {
             return tagValidator.validate(tag) && tagRepository.create(tag);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    /**
+     * Add tag to news.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @Override
+    public boolean addToNews(long tagId, long newsId)
+            throws ServiceException, IncorrectParameterException {
+        try {
+            return (tagValidator.validateId(tagId) &&
+                    tagValidator.validateId(newsId)) &&
+                    (tagRepository.findById(tagId) != null
+                            && newsRepository.findNewsById(newsId) != null) &&
+                    tagRepository.addToNews(tagId, newsId);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    /**
+     * Remove tag from news.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    @Override
+    public boolean removeTagFromNews(long tagId, long newsId)
+            throws ServiceException, IncorrectParameterException {
+        try {
+            return (tagValidator.validateId(tagId) &&
+                    tagValidator.validateId(newsId)) &&
+                    tagRepository.removeTagFromNews(tagId, newsId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

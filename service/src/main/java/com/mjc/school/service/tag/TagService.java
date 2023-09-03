@@ -22,6 +22,28 @@ public interface TagService {
             throws IncorrectParameterException, ServiceException;
 
     /**
+     * Add tag to news.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    public boolean addToNews(long tagId, long newsId) throws ServiceException, IncorrectParameterException;
+
+    /**
+     * Remove tag from news.
+     *
+     * @param tagId  the tag id
+     * @param newsId the news id
+     * @return the boolean
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
+     */
+    public boolean removeTagFromNews(long tagId, long newsId) throws ServiceException, IncorrectParameterException;
+
+    /**
      * Delete tag by id.
      *
      * @param tagId the tag id
