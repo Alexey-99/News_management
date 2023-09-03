@@ -69,7 +69,7 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/remove-tag-from-news")
+    @GetMapping("/remove-from-news")
     public boolean removeTagFromNews(@RequestParam(value = "tag-id") long tagId,
                                      @RequestParam(value = "news-id") long newsId)
             throws ServiceException, IncorrectParameterException {
