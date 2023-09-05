@@ -39,9 +39,17 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/amount-news")
-    public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsWithAmountOfWrittenNews()
-            throws ServiceException { //TODO include PAGINATION
-        return authorService.selectAllAuthorsIdWithAmountOfWrittenNews();
+    public Pagination<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsWithAmountOfWrittenNews(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long numberElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage) throws ServiceException {
+        return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
+                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(), numberElementsReturn, numberPage);
     }
 
     /**
@@ -151,22 +159,5 @@ public class AuthorController {
     public List<AuthorIdWithAmountOfWrittenNews>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc() throws ServiceException {  //TODO include PAGINATION
         return authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc();
-    }
-
-    /**
-     * Get objects from list.
-     *
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
-    public Pagination<Author> getEntity(@RequestParam(value = "count-elements-on-page")
-                                        long numberElementsReturn,
-                                        @RequestParam(value = "number-page",
-                                                required = false,
-                                                defaultValue = "1")
-                                        long numberPage) throws ServiceException {
-        return authorService.getPagination(authorService.findAllAuthors(),
-                numberElementsReturn, numberPage);
     }
 }

@@ -1,6 +1,7 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.Comment;
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.comment.CommentService;
@@ -36,7 +37,15 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/all")
-    public List<Comment> findAll() throws ServiceException {
+    public List<Comment> findAll(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long numberElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage) throws ServiceException {
         return commentService.findAll();
     }
 
@@ -174,23 +183,5 @@ public class CommentController {
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteByNewsId(newsId);
         return new ResponseEntity<>(result, OK);
-    }
-
-    /**
-     * Get objects from list.
-     *
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
-    @GetMapping("/pagination")
-    public List<Comment> getEntity(@RequestParam(value = "count-elements-on-page",
-            required = false, defaultValue = "5") long numberElementsReturn,
-                                   @RequestParam(value = "number-page",
-                                           required = false,
-                                           defaultValue = "1")
-                                   long numberPage) throws ServiceException {
-        return commentService.getEntity(commentService.findAll(),
-                numberElementsReturn, numberPage);
     }
 }

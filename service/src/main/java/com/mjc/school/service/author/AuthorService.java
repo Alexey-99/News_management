@@ -2,6 +2,7 @@ package com.mjc.school.service.author;
 
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.pagination.PaginationService;
@@ -104,4 +105,7 @@ public interface AuthorService extends PaginationService<Author> {
      */
     public List<AuthorIdWithAmountOfWrittenNews> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
             throws ServiceException;
+
+    public Pagination<AuthorIdWithAmountOfWrittenNews> getPaginationAuthorIdWithAmountOfWrittenNews
+            (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn, long numberPage);
 }

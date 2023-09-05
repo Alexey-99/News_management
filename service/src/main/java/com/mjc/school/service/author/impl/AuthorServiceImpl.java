@@ -34,6 +34,8 @@ public class AuthorServiceImpl implements AuthorService {
     private AuthorValidator authorValidator;
     @Autowired
     private PaginationService<Author> authorPagination;
+    @Autowired
+    private PaginationService<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsPagination;
 
     /**
      * Create author.
@@ -227,5 +229,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Pagination<Author> getPagination(List<Author> list, long numberElementsReturn, long numberPage) {
         return authorPagination.getPagination(list, numberElementsReturn, numberPage);
+    }
+
+    public Pagination<AuthorIdWithAmountOfWrittenNews> getPaginationAuthorIdWithAmountOfWrittenNews
+            (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn, long numberPage) {
+        return authorIdWithAmountOfWrittenNewsPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }

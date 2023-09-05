@@ -1,6 +1,7 @@
 package com.mjc.school.service.comment.impl;
 
 import com.mjc.school.entity.Comment;
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
@@ -260,7 +261,8 @@ public class CommentServiceImpl implements CommentService {
      * @return the entity
      */
     @Override
-    public List<Comment> getEntity(List<Comment> list, long numberElementsReturn, long numberPage) {
-        return commentPagination.getEntity(list, numberElementsReturn, numberPage);
+    public Pagination<Comment> getPagination(
+            List<Comment> list, long numberElementsReturn, long numberPage) {
+        return commentPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }
