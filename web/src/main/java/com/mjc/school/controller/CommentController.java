@@ -39,6 +39,8 @@ public class CommentController {
     /**
      * Find all comments.
      *
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
      * @return the list
      * @throws ServiceException the service exception
      */
@@ -62,7 +64,9 @@ public class CommentController {
     /**
      * Find comments by news id.
      *
-     * @param newsId the news id
+     * @param newsId              the news id
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
      * @return the list•
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
@@ -99,6 +103,16 @@ public class CommentController {
         return commentService.findById(id);
     }
 
+    /**
+     * Sort pagination.
+     *
+     * @param countElementsReturn the count elements on page
+     * @param numberPage          the number page
+     * @param sortingField        the sorting field
+     * @param sortingType         the sorting type
+     * @return the pagination
+     * @throws ServiceException the service exception
+     */
     @GetMapping("/sort")
     public Pagination<Comment> sort(
             @RequestParam(value = "count-elements-on-page",
@@ -151,102 +165,6 @@ public class CommentController {
         }
         return sortedList;
     }
-
-//    /**
-//     * Sort comments by created date time asc.
-//     *
-//     * @return the list
-//     * @throws ServiceException the service exception
-//     */
-//    @GetMapping("/sort/created/asc")
-//    public Pagination<Comment> sortByCreatedDateTimeAsc(
-//            @RequestParam(value = "count-elements-on-page",
-//                    required = false,
-//                    defaultValue = "5")
-//            long countElementsReturn,
-//            @RequestParam(value = "number-page",
-//                    required = false,
-//                    defaultValue = "1")
-//            long numberPage)
-//            throws ServiceException {
-//        return commentService.getPagination(
-//                commentService.sortByCreatedDateTimeAsc(
-//                        commentService.findAll()),
-//                countElementsReturn,
-//                numberPage);
-//    }
-//
-//    /**
-//     * Sort comments by created date time desc list.
-//     *
-//     * @return the list
-//     * @throws ServiceException the service exception
-//     */
-//    @GetMapping("/sort/created/desc")
-//    public Pagination<Comment> sortByCreatedDateTimeDesc(
-//            @RequestParam(value = "count-elements-on-page",
-//                    required = false,
-//                    defaultValue = "5")
-//            long countElementsReturn,
-//            @RequestParam(value = "number-page",
-//                    required = false,
-//                    defaultValue = "1")
-//            long numberPage)
-//            throws ServiceException {
-//        return commentService.getPagination(
-//                commentService.sortByCreatedDateTimeDesc(
-//                        commentService.findAll()),
-//                countElementsReturn,
-//                numberPage);
-//    }
-//
-//    /**
-//     * Sort comments by modified date time asc.
-//     *
-//     * @return the list
-//     * @throws ServiceException the service exception
-//     */
-//    @GetMapping("/sort/modified/{searchType}")
-//    public Pagination<Comment> sortByModifiedDateTimeAsc(
-//            @RequestParam(value = "count-elements-on-page",
-//                    required = false,
-//                    defaultValue = "5")
-//            long countElementsReturn,
-//            @RequestParam(value = "number-page",
-//                    required = false,
-//                    defaultValue = "1")
-//            long numberPage)
-//            throws ServiceException {
-//        return commentService.getPagination(
-//                commentService.sortByModifiedDateTimeAsc(
-//                        commentService.findAll()),
-//                countElementsReturn,
-//                numberPage);
-//    }
-//
-//    /**
-//     * Sort comments by modified date time desc.
-//     *
-//     * @return the list
-//     * @throws ServiceException the service exception
-//     */
-//    @GetMapping("/sort/modified/desc")
-//    public Pagination<Comment> sortByModifiedDateTimeDesc(
-//            @RequestParam(value = "count-elements-on-page",
-//                    required = false,
-//                    defaultValue = "5")
-//            long countElementsReturn,
-//            @RequestParam(value = "number-page",
-//                    required = false,
-//                    defaultValue = "1")
-//            long numberPage)
-//            throws ServiceException {
-//        return commentService.getPagination(
-//                commentService.sortByModifiedDateTimeDesc(
-//                        commentService.findAll()),
-//                countElementsReturn,
-//                numberPage);
-//    }
 
     /**
      * Create comment.
