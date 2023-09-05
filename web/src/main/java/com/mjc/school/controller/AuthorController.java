@@ -6,18 +6,21 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.author.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * The type Author controller.
@@ -36,7 +39,7 @@ public class AuthorController {
      */
     @GetMapping("/amount-news")
     public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsWithAmountOfWrittenNews()
-            throws ServiceException {
+            throws ServiceException { //TODO include PAGINATION
         return authorService.selectAllAuthorsIdWithAmountOfWrittenNews();
     }
 
@@ -52,7 +55,7 @@ public class AuthorController {
     public ResponseEntity<Boolean> create(@RequestBody Author author)
             throws ServiceException, IncorrectParameterException {
         boolean result = authorService.create(author);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(result, CREATED);
     }
 
     /**
@@ -63,11 +66,11 @@ public class AuthorController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = authorService.delete(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**
@@ -78,11 +81,11 @@ public class AuthorController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Boolean> update(@RequestBody Author author)
             throws ServiceException, IncorrectParameterException {
         boolean result = authorService.update(author);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**
@@ -92,7 +95,7 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/all")
-    public List<Author> findAllAuthors() throws ServiceException {
+    public List<Author> findAllAuthors() throws ServiceException { //TODO include PAGINATION
         return authorService.findAllAuthors();
     }
 
@@ -104,7 +107,7 @@ public class AuthorController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/id/{id}")
     public Author findById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return authorService.findById(id);
@@ -117,9 +120,9 @@ public class AuthorController {
      * @return the list
      * @throws ServiceException the service exception
      */
-    @GetMapping("/get-by-part-of-name/{partOfName}")
+    @GetMapping("/part-of-name/{partOfName}")
     public List<Author> findByPartOfName(@PathVariable String partOfName)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException, IncorrectParameterException { //TODO include PAGINATION
         return authorService.findByPartOfName(partOfName);
     }
 
@@ -131,7 +134,7 @@ public class AuthorController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-news-id/{newsId}")
+    @GetMapping("/news-id/{newsId}")
     public Author findByNewsId(@PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         return authorService.findByNewsId(newsId);
@@ -143,9 +146,9 @@ public class AuthorController {
      * @return the list
      * @throws ServiceException the service exception
      */
-    @GetMapping("/sort-amount-news")
+    @GetMapping("/sort/amount-news")
     public List<AuthorIdWithAmountOfWrittenNews>
-    sortAllAuthorsIdWithAmountOfWrittenNewsDesc() throws ServiceException {
+    sortAllAuthorsIdWithAmountOfWrittenNewsDesc() throws ServiceException {  //TODO include PAGINATION
         return authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc();
     }
 
@@ -162,7 +165,7 @@ public class AuthorController {
                                   @RequestParam(value = "number-page",
                                           required = false,
                                           defaultValue = "1")
-                                  long numberPage) throws ServiceException {
+                                  long numberPage) throws ServiceException { //TODO include PAGINATION
         return authorService.getEntity(authorService.findAllAuthors(),
                 numberElementsReturn, numberPage);
     }

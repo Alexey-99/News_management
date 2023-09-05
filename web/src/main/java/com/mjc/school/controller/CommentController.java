@@ -44,7 +44,7 @@ public class CommentController {
      * Find comments by news id.
      *
      * @param newsId the news id
-     * @return the list
+     * @return the list•
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
@@ -98,7 +98,7 @@ public class CommentController {
      * @return the list
      * @throws ServiceException the service exception
      */
-    @GetMapping("/sort/modified/asc")
+    @GetMapping("/sort/modified/{searchType}")
     public List<Comment> sortByModifiedDateTimeAsc()
             throws ServiceException {
         return commentService.sortByModifiedDateTimeAsc(commentService.findAll());
@@ -184,8 +184,8 @@ public class CommentController {
      * @return the entity
      */
     @GetMapping("/pagination")
-    public List<Comment> getEntity(@RequestParam(value = "count-elements-on-page")
-                                   long numberElementsReturn,
+    public List<Comment> getEntity(@RequestParam(value = "count-elements-on-page",
+            required = false, defaultValue = "5") long numberElementsReturn,
                                    @RequestParam(value = "number-page",
                                            required = false,
                                            defaultValue = "1")

@@ -28,7 +28,6 @@ public class SpringDispatcher
     protected DispatcherServlet createDispatcherServlet(
             WebApplicationContext servletAppContext) {
         DispatcherServlet ds = new DispatcherServlet(servletAppContext);
-        System.out.println("hello");
         ds.setThrowExceptionIfNoHandlerFound(true);
         return ds;
     }
