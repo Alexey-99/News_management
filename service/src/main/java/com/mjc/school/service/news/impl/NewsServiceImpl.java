@@ -143,7 +143,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean deleteByIdFromTableNewsTags(long newsId)
+    public boolean deleteAllTagsFromNewsByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
             if (newsValidator.validateId(newsId)) {

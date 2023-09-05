@@ -34,7 +34,7 @@ public class TagValidator extends Validator {
      * @return the boolean
      * @throws IncorrectParameterException an exception thrown in case incorrect name
      */
-    public boolean validateName(String name) throws IncorrectParameterException {
+    public boolean validateName(String name) throws IncorrectParameterException { // TODO ДОЛЖЕН БЫТЬ УНИКАЛЬНЫМ
         if (name != null &&
                 (name.length() >= MIN_LENGTH_NAME && name.length() <= MAX_LENGTH_NAME)) {
             return true;

@@ -46,7 +46,7 @@ public class NewsValidator extends Validator {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     public boolean validateTitle(String title)
-            throws IncorrectParameterException {
+            throws IncorrectParameterException { // TODO ДОЛЖЕН БЫТЬ УНИКАЛЬНЫМ
         if (title != null &&
                 (title.length() >= MIN_LENGTH_TITLE &&
                         title.length() <= MAX_LENGTH_TITLE)) {

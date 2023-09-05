@@ -53,7 +53,7 @@ public interface NewsService extends PaginationService<News> {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean deleteByIdFromTableNewsTags(long newsId)
+    public boolean deleteAllTagsFromNewsByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException;
 
     /**

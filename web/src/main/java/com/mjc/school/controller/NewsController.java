@@ -4,6 +4,7 @@ import com.mjc.school.entity.News;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.exception.SortingType;
 import com.mjc.school.service.news.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.mjc.school.SortingField.CREATED;
+import static com.mjc.school.SortingField.MODIFIED;
+import static com.mjc.school.exception.SortingType.ASC;
+import static com.mjc.school.exception.SortingType.DESC;
 
 /**
  * The type News controller.
@@ -80,11 +86,11 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/id-with-tags/{newsId}")
+    @DeleteMapping("/tags/news-id/{newsId}")
     public ResponseEntity<Boolean> deleteByNewsIdFromTableNewsTags(
             @PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
-        boolean result = newsService.deleteByIdFromTableNewsTags(newsId);
+        boolean result = newsService.deleteAllTagsFromNewsByNewsId(newsId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -269,14 +275,8 @@ public class NewsController {
                 numberPage);
     }
 
-    /**
-     * Sort news by created date time asc list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/sort/created/asc")
-    public Pagination<News> sortNewsByCreatedDateTimeAsc(
+    @GetMapping("/sort")
+    public Pagination<News> sort(
             @RequestParam(value = "count-elements-on-page",
                     required = false,
                     defaultValue = "5")
@@ -284,84 +284,48 @@ public class NewsController {
             @RequestParam(value = "number-page",
                     required = false,
                     defaultValue = "1")
-            long numberPage)
+            long numberPage,
+            @RequestParam(value = "sorting-field",
+                    required = false,
+                    defaultValue = MODIFIED)
+            String sortingField,
+            @RequestParam(value = "sorting-type",
+                    required = false,
+                    defaultValue = DESC)
+            String sortingType)
             throws ServiceException {
-        return newsService.getPagination(
-                newsService.sortByCreatedDateTimeAsc(
-                        newsService.findAll()),
-                countElementsReturn,
-                numberPage);
-    }
+        Pagination<News> sortedList = null;
+        switch (sortingField) {
+            case CREATED -> {
+                switch (sortingType) {
+                    case ASC -> sortedList = newsService.getPagination(
+                            newsService.sortByCreatedDateTimeAsc(
+                                    newsService.findAll()),
+                            countElementsReturn,
+                            numberPage);
 
-    /**
-     * Sort news by created date time desc list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/sort/created/desc")
-    public Pagination<News> sortNewsByCreatedDateTimeDesc(
-            @RequestParam(value = "count-elements-on-page",
-                    required = false,
-                    defaultValue = "5")
-            long countElementsReturn,
-            @RequestParam(value = "number-page",
-                    required = false,
-                    defaultValue = "1")
-            long numberPage)
-            throws ServiceException {
-        return newsService.getPagination(
-                newsService.sortByCreatedDateTimeDesc(
-                        newsService.findAll()),
-                countElementsReturn,
-                numberPage);
-    }
-
-    /**
-     * Sort news by modified date time asc list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/sort/modified/asc")
-    public Pagination<News> sortNewsByModifiedDateTimeAsc(
-            @RequestParam(value = "count-elements-on-page",
-                    required = false,
-                    defaultValue = "5")
-            long countElementsReturn,
-            @RequestParam(value = "number-page",
-                    required = false,
-                    defaultValue = "1")
-            long numberPage)
-            throws ServiceException {
-        return newsService.getPagination(
-                newsService.sortByModifiedDateTimeAsc(
-                        newsService.findAll()),
-                countElementsReturn,
-                numberPage);
-    }
-
-    /**
-     * Sort news by modified date time desc list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/sort/modified/desc")
-    public Pagination<News> sortNewsByModifiedDateTimeDesc(
-            @RequestParam(value = "count-elements-on-page",
-                    required = false,
-                    defaultValue = "5")
-            long countElementsReturn,
-            @RequestParam(value = "number-page",
-                    required = false,
-                    defaultValue = "1")
-            long numberPage)
-            throws ServiceException {
-        return newsService.getPagination(
-                newsService.sortByModifiedDateTimeDesc(
-                        newsService.findAll()),
-                countElementsReturn,
-                numberPage);
+                    default -> sortedList = newsService.getPagination(
+                            newsService.sortByCreatedDateTimeDesc(
+                                    newsService.findAll()),
+                            countElementsReturn,
+                            numberPage);
+                }
+            }
+            default -> {
+                switch (sortingType) {
+                    case ASC -> sortedList = newsService.getPagination(
+                            newsService.sortByModifiedDateTimeAsc(
+                                    newsService.findAll()),
+                            countElementsReturn,
+                            numberPage);
+                    default -> sortedList = newsService.getPagination(
+                            newsService.sortByModifiedDateTimeDesc(
+                                    newsService.findAll()),
+                            countElementsReturn,
+                            numberPage);
+                }
+            }
+        }
+        return sortedList;
     }
 }
