@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -43,13 +41,16 @@ public class AuthorController {
             @RequestParam(value = "count-elements-on-page",
                     required = false,
                     defaultValue = "5")
-            long numberElementsReturn,
+            long countElementsReturn,
             @RequestParam(value = "number-page",
                     required = false,
                     defaultValue = "1")
-            long numberPage) throws ServiceException {
+            long numberPage)
+            throws ServiceException {
         return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(), numberElementsReturn, numberPage);
+                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -104,8 +105,20 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/all")
-    public List<Author> findAllAuthors() throws ServiceException { //TODO include PAGINATION
-        return authorService.findAllAuthors();
+    public Pagination<Author> findAllAuthors(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
+            throws ServiceException {
+        return authorService.getPagination(
+                authorService.findAllAuthors(),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -130,9 +143,21 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/part-of-name/{partOfName}")
-    public List<Author> findByPartOfName(@PathVariable String partOfName)
-            throws ServiceException, IncorrectParameterException { //TODO include PAGINATION
-        return authorService.findByPartOfName(partOfName);
+    public Pagination<Author> findByPartOfName(
+            @PathVariable String partOfName,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
+            throws ServiceException, IncorrectParameterException {
+        return authorService.getPagination(
+                authorService.findByPartOfName(partOfName),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -156,8 +181,20 @@ public class AuthorController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/amount-news")
-    public List<AuthorIdWithAmountOfWrittenNews>
-    sortAllAuthorsIdWithAmountOfWrittenNewsDesc() throws ServiceException {  //TODO include PAGINATION
-        return authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc();
+    public Pagination<AuthorIdWithAmountOfWrittenNews>
+    sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
+            throws ServiceException {
+        return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
+                authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(),
+                countElementsReturn,
+                numberPage);
     }
 }

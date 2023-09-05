@@ -37,16 +37,20 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/all")
-    public List<Comment> findAll(
+    public Pagination<Comment> findAll(
             @RequestParam(value = "count-elements-on-page",
                     required = false,
                     defaultValue = "5")
-            long numberElementsReturn,
+            long countElementsReturn,
             @RequestParam(value = "number-page",
                     required = false,
                     defaultValue = "1")
-            long numberPage) throws ServiceException {
-        return commentService.findAll();
+            long numberPage)
+            throws ServiceException {
+        return commentService.getPagination(
+                commentService.findAll(),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -57,10 +61,22 @@ public class CommentController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-news-id/{newsId}")
-    public List<Comment> findByNewsId(@PathVariable long newsId)
+    @GetMapping("/news-id/{newsId}")
+    public Pagination<Comment> findByNewsId(
+            @PathVariable long newsId,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException, IncorrectParameterException {
-        return commentService.findByNewsId(newsId);
+        return commentService.getPagination(
+                commentService.findByNewsId(newsId),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -71,7 +87,7 @@ public class CommentController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/id/{id}")
     public Comment findById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return commentService.findById(id);
@@ -84,9 +100,21 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/asc")
-    public List<Comment> sortByCreatedDateTimeAsc()
+    public Pagination<Comment> sortByCreatedDateTimeAsc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException {
-        return commentService.sortByCreatedDateTimeAsc(commentService.findAll());
+        return commentService.getPagination(
+                commentService.sortByCreatedDateTimeAsc(
+                        commentService.findAll()),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -96,9 +124,21 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/desc")
-    public List<Comment> sortByCreatedDateTimeDesc()
+    public Pagination<Comment> sortByCreatedDateTimeDesc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException {
-        return commentService.sortByCreatedDateTimeDesc(commentService.findAll());
+        return commentService.getPagination(
+                commentService.sortByCreatedDateTimeDesc(
+                        commentService.findAll()),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -108,9 +148,21 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/{searchType}")
-    public List<Comment> sortByModifiedDateTimeAsc()
+    public Pagination<Comment> sortByModifiedDateTimeAsc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException {
-        return commentService.sortByModifiedDateTimeAsc(commentService.findAll());
+        return commentService.getPagination(
+                commentService.sortByModifiedDateTimeAsc(
+                        commentService.findAll()),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -120,9 +172,21 @@ public class CommentController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/desc")
-    public List<Comment> sortByModifiedDateTimeDesc()
+    public Pagination<Comment> sortByModifiedDateTimeDesc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException {
-        return commentService.sortByModifiedDateTimeDesc(commentService.findAll());
+        return commentService.getPagination(
+                commentService.sortByModifiedDateTimeDesc(
+                        commentService.findAll()),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -163,7 +227,7 @@ public class CommentController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete-by-id/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteById(id);
