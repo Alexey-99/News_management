@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.mjc.school.name.SortingType.ASC;
-import static com.mjc.school.name.SortingType.DESC;
+import static com.mjc.school.name.SortingField.MODIFIED;
+import static com.mjc.school.name.SortingType.ASCENDING;
+import static com.mjc.school.name.SortingType.DESCENDING;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * The type News controller.
@@ -58,7 +60,7 @@ public class NewsController {
     public ResponseEntity<Boolean> deleteById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteById(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**
@@ -73,7 +75,7 @@ public class NewsController {
     public ResponseEntity<Boolean> deleteByAuthorId(@PathVariable long authorId)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteByAuthorId(authorId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**
@@ -89,7 +91,7 @@ public class NewsController {
             @PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteAllTagsFromNewsByNewsId(newsId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**
@@ -307,18 +309,18 @@ public class NewsController {
             long numberPage,
             @RequestParam(value = "sorting-field",
                     required = false,
-                    defaultValue = SortingField.MODIFIED)
+                    defaultValue = MODIFIED)
             String sortingField,
             @RequestParam(value = "sorting-type",
                     required = false,
-                    defaultValue = DESC)
+                    defaultValue = DESCENDING)
             String sortingType)
             throws ServiceException {
         Pagination<News> sortedList = null;
         switch (sortingField) {
             case SortingField.CREATED -> {
                 switch (sortingType) {
-                    case ASC -> sortedList = newsService.getPagination(
+                    case ASCENDING -> sortedList = newsService.getPagination(
                             newsService.sortByCreatedDateTimeAsc(
                                     newsService.findAll()),
                             countElementsReturn,
@@ -332,7 +334,7 @@ public class NewsController {
             }
             default -> {
                 switch (sortingType) {
-                    case ASC -> sortedList = newsService.getPagination(
+                    case ASCENDING -> sortedList = newsService.getPagination(
                             newsService.sortByModifiedDateTimeAsc(
                                     newsService.findAll()),
                             countElementsReturn,

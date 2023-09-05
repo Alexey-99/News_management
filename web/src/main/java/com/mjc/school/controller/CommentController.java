@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.mjc.school.name.SortingField.MODIFIED;
-import static com.mjc.school.name.SortingType.ASC;
-import static com.mjc.school.name.SortingType.DESC;
+import static com.mjc.school.name.SortingType.ASCENDING;
+import static com.mjc.school.name.SortingType.DESCENDING;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -126,14 +126,14 @@ public class CommentController {
             String sortingField,
             @RequestParam(value = "sorting-type",
                     required = false,
-                    defaultValue = DESC)
+                    defaultValue = DESCENDING)
             String sortingType)
             throws ServiceException {
         Pagination<Comment> sortedList = null;
         switch (sortingField) {
             case SortingField.CREATED -> {
                 switch (sortingType) {
-                    case ASC -> sortedList = commentService.getPagination(
+                    case ASCENDING -> sortedList = commentService.getPagination(
                             commentService.sortByCreatedDateTimeAsc(
                                     commentService.findAll()),
                             countElementsReturn,
@@ -147,7 +147,7 @@ public class CommentController {
             }
             default -> {
                 switch (sortingType) {
-                    case ASC -> sortedList = commentService.getPagination(
+                    case ASCENDING -> sortedList = commentService.getPagination(
                             commentService.sortByModifiedDateTimeAsc(
                                     commentService.findAll()),
                             countElementsReturn,
