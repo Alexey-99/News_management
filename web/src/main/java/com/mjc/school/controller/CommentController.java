@@ -1,9 +1,11 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.Comment;
+import com.mjc.school.entity.News;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.name.SortingField;
 import com.mjc.school.service.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.mjc.school.name.SortingField.MODIFIED;
+import static com.mjc.school.name.SortingType.ASC;
+import static com.mjc.school.name.SortingType.DESC;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -94,14 +99,8 @@ public class CommentController {
         return commentService.findById(id);
     }
 
-    /**
-     * Sort comments by created date time asc.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/sort/created/asc")
-    public Pagination<Comment> sortByCreatedDateTimeAsc(
+    @GetMapping("/sort")
+    public Pagination<Comment> sort(
             @RequestParam(value = "count-elements-on-page",
                     required = false,
                     defaultValue = "5")
@@ -109,86 +108,145 @@ public class CommentController {
             @RequestParam(value = "number-page",
                     required = false,
                     defaultValue = "1")
-            long numberPage)
+            long numberPage,
+            @RequestParam(value = "sorting-field",
+                    required = false,
+                    defaultValue = MODIFIED)
+            String sortingField,
+            @RequestParam(value = "sorting-type",
+                    required = false,
+                    defaultValue = DESC)
+            String sortingType)
             throws ServiceException {
-        return commentService.getPagination(
-                commentService.sortByCreatedDateTimeAsc(
-                        commentService.findAll()),
-                countElementsReturn,
-                numberPage);
+        Pagination<Comment> sortedList = null;
+        switch (sortingField) {
+            case SortingField.CREATED -> {
+                switch (sortingType) {
+                    case ASC -> sortedList = commentService.getPagination(
+                            commentService.sortByCreatedDateTimeAsc(
+                                    commentService.findAll()),
+                            countElementsReturn,
+                            numberPage);
+                    default -> sortedList = commentService.getPagination(
+                            commentService.sortByCreatedDateTimeDesc(
+                                    commentService.findAll()),
+                            countElementsReturn,
+                            numberPage);
+                }
+            }
+            default -> {
+                switch (sortingType) {
+                    case ASC -> sortedList = commentService.getPagination(
+                            commentService.sortByModifiedDateTimeAsc(
+                                    commentService.findAll()),
+                            countElementsReturn,
+                            numberPage);
+                    default -> sortedList = commentService.getPagination(
+                            commentService.sortByModifiedDateTimeDesc(
+                                    commentService.findAll()),
+                            countElementsReturn,
+                            numberPage);
+                }
+            }
+        }
+        return sortedList;
     }
 
-    /**
-     * Sort comments by created date time desc list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/sort/created/desc")
-    public Pagination<Comment> sortByCreatedDateTimeDesc(
-            @RequestParam(value = "count-elements-on-page",
-                    required = false,
-                    defaultValue = "5")
-            long countElementsReturn,
-            @RequestParam(value = "number-page",
-                    required = false,
-                    defaultValue = "1")
-            long numberPage)
-            throws ServiceException {
-        return commentService.getPagination(
-                commentService.sortByCreatedDateTimeDesc(
-                        commentService.findAll()),
-                countElementsReturn,
-                numberPage);
-    }
-
-    /**
-     * Sort comments by modified date time asc.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/sort/modified/{searchType}")
-    public Pagination<Comment> sortByModifiedDateTimeAsc(
-            @RequestParam(value = "count-elements-on-page",
-                    required = false,
-                    defaultValue = "5")
-            long countElementsReturn,
-            @RequestParam(value = "number-page",
-                    required = false,
-                    defaultValue = "1")
-            long numberPage)
-            throws ServiceException {
-        return commentService.getPagination(
-                commentService.sortByModifiedDateTimeAsc(
-                        commentService.findAll()),
-                countElementsReturn,
-                numberPage);
-    }
-
-    /**
-     * Sort comments by modified date time desc.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/sort/modified/desc")
-    public Pagination<Comment> sortByModifiedDateTimeDesc(
-            @RequestParam(value = "count-elements-on-page",
-                    required = false,
-                    defaultValue = "5")
-            long countElementsReturn,
-            @RequestParam(value = "number-page",
-                    required = false,
-                    defaultValue = "1")
-            long numberPage)
-            throws ServiceException {
-        return commentService.getPagination(
-                commentService.sortByModifiedDateTimeDesc(
-                        commentService.findAll()),
-                countElementsReturn,
-                numberPage);
-    }
+//    /**
+//     * Sort comments by created date time asc.
+//     *
+//     * @return the list
+//     * @throws ServiceException the service exception
+//     */
+//    @GetMapping("/sort/created/asc")
+//    public Pagination<Comment> sortByCreatedDateTimeAsc(
+//            @RequestParam(value = "count-elements-on-page",
+//                    required = false,
+//                    defaultValue = "5")
+//            long countElementsReturn,
+//            @RequestParam(value = "number-page",
+//                    required = false,
+//                    defaultValue = "1")
+//            long numberPage)
+//            throws ServiceException {
+//        return commentService.getPagination(
+//                commentService.sortByCreatedDateTimeAsc(
+//                        commentService.findAll()),
+//                countElementsReturn,
+//                numberPage);
+//    }
+//
+//    /**
+//     * Sort comments by created date time desc list.
+//     *
+//     * @return the list
+//     * @throws ServiceException the service exception
+//     */
+//    @GetMapping("/sort/created/desc")
+//    public Pagination<Comment> sortByCreatedDateTimeDesc(
+//            @RequestParam(value = "count-elements-on-page",
+//                    required = false,
+//                    defaultValue = "5")
+//            long countElementsReturn,
+//            @RequestParam(value = "number-page",
+//                    required = false,
+//                    defaultValue = "1")
+//            long numberPage)
+//            throws ServiceException {
+//        return commentService.getPagination(
+//                commentService.sortByCreatedDateTimeDesc(
+//                        commentService.findAll()),
+//                countElementsReturn,
+//                numberPage);
+//    }
+//
+//    /**
+//     * Sort comments by modified date time asc.
+//     *
+//     * @return the list
+//     * @throws ServiceException the service exception
+//     */
+//    @GetMapping("/sort/modified/{searchType}")
+//    public Pagination<Comment> sortByModifiedDateTimeAsc(
+//            @RequestParam(value = "count-elements-on-page",
+//                    required = false,
+//                    defaultValue = "5")
+//            long countElementsReturn,
+//            @RequestParam(value = "number-page",
+//                    required = false,
+//                    defaultValue = "1")
+//            long numberPage)
+//            throws ServiceException {
+//        return commentService.getPagination(
+//                commentService.sortByModifiedDateTimeAsc(
+//                        commentService.findAll()),
+//                countElementsReturn,
+//                numberPage);
+//    }
+//
+//    /**
+//     * Sort comments by modified date time desc.
+//     *
+//     * @return the list
+//     * @throws ServiceException the service exception
+//     */
+//    @GetMapping("/sort/modified/desc")
+//    public Pagination<Comment> sortByModifiedDateTimeDesc(
+//            @RequestParam(value = "count-elements-on-page",
+//                    required = false,
+//                    defaultValue = "5")
+//            long countElementsReturn,
+//            @RequestParam(value = "number-page",
+//                    required = false,
+//                    defaultValue = "1")
+//            long numberPage)
+//            throws ServiceException {
+//        return commentService.getPagination(
+//                commentService.sortByModifiedDateTimeDesc(
+//                        commentService.findAll()),
+//                countElementsReturn,
+//                numberPage);
+//    }
 
     /**
      * Create comment.

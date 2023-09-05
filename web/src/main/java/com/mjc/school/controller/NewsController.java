@@ -4,7 +4,7 @@ import com.mjc.school.entity.News;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.exception.SortingType;
+import com.mjc.school.name.SortingField;
 import com.mjc.school.service.news.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.mjc.school.SortingField.CREATED;
-import static com.mjc.school.SortingField.MODIFIED;
-import static com.mjc.school.exception.SortingType.ASC;
-import static com.mjc.school.exception.SortingType.DESC;
+import static com.mjc.school.name.SortingType.ASC;
+import static com.mjc.school.name.SortingType.DESC;
 
 /**
  * The type News controller.
@@ -111,6 +109,8 @@ public class NewsController {
     /**
      * Find all news list.
      *
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
      * @return the list
      * @throws ServiceException the service exception
      */
@@ -148,7 +148,9 @@ public class NewsController {
     /**
      * Find news by tag name list.
      *
-     * @param tagName the tag name
+     * @param tagName             the tag name
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
      * @return the list
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
@@ -174,7 +176,9 @@ public class NewsController {
     /**
      * Find news by tag id list.
      *
-     * @param tagId the tag id
+     * @param tagId               the tag id
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
      * @return the list
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
@@ -200,7 +204,9 @@ public class NewsController {
     /**
      * Find news by author name list.
      *
-     * @param authorName the author name
+     * @param authorName          the author name
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
      * @return the list
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
@@ -226,7 +232,9 @@ public class NewsController {
     /**
      * Find news by part of title list.
      *
-     * @param partOfTitle the part of title
+     * @param partOfTitle         the part of title
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
      * @return the list
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
@@ -252,7 +260,9 @@ public class NewsController {
     /**
      * Find news by part of content list.
      *
-     * @param partOfContent the part of content
+     * @param partOfContent       the part of content
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
      * @return the list
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
@@ -275,6 +285,16 @@ public class NewsController {
                 numberPage);
     }
 
+    /**
+     * Sort pagination.
+     *
+     * @param countElementsReturn the count elements return
+     * @param numberPage          the number page
+     * @param sortingField        the sorting field
+     * @param sortingType         the sorting type
+     * @return the pagination
+     * @throws ServiceException the service exception
+     */
     @GetMapping("/sort")
     public Pagination<News> sort(
             @RequestParam(value = "count-elements-on-page",
@@ -287,7 +307,7 @@ public class NewsController {
             long numberPage,
             @RequestParam(value = "sorting-field",
                     required = false,
-                    defaultValue = MODIFIED)
+                    defaultValue = SortingField.MODIFIED)
             String sortingField,
             @RequestParam(value = "sorting-type",
                     required = false,
@@ -296,14 +316,13 @@ public class NewsController {
             throws ServiceException {
         Pagination<News> sortedList = null;
         switch (sortingField) {
-            case CREATED -> {
+            case SortingField.CREATED -> {
                 switch (sortingType) {
                     case ASC -> sortedList = newsService.getPagination(
                             newsService.sortByCreatedDateTimeAsc(
                                     newsService.findAll()),
                             countElementsReturn,
                             numberPage);
-
                     default -> sortedList = newsService.getPagination(
                             newsService.sortByCreatedDateTimeDesc(
                                     newsService.findAll()),

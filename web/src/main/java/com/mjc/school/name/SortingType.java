@@ -1,4 +1,4 @@
-package com.mjc.school.exception;
+package com.mjc.school.name;
 
 public final class SortingType {
     public static final String ASC = "ASC";
