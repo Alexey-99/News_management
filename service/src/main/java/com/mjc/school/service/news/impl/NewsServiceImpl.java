@@ -5,7 +5,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
-import com.mjc.school.logic.pagination.Pagination;
+import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
@@ -49,7 +49,7 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     private DateHandler dateHandler;
     @Autowired
-    private Pagination<News> newsPagination;
+    private PaginationService<News> newsPagination;
 
     /**
      * Create news.

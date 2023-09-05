@@ -189,7 +189,6 @@ public class TagController {
      * @param numberPage           the number page
      * @return the entity
      */
-    @GetMapping()
     public List<Tag> getEntity(@RequestParam(value = "count-elements-on-page")
                                long numberElementsReturn,
                                @RequestParam(value = "number-page",

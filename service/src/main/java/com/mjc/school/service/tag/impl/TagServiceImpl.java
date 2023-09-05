@@ -4,7 +4,7 @@ import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.logic.pagination.Pagination;
+import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
 import com.mjc.school.service.tag.TagService;
@@ -30,7 +30,7 @@ public class TagServiceImpl implements TagService {
     @Autowired
     private TagValidator tagValidator;
     @Autowired
-    private Pagination<Tag> tagPagination;
+    private PaginationService<Tag> tagPagination;
 
     /**
      * Create tag.

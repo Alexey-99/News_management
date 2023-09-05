@@ -3,7 +3,7 @@ package com.mjc.school.service.news;
 import com.mjc.school.entity.News;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.logic.pagination.Pagination;
+import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.service.news.impl.comparator.SortNewsComparator;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * The interface News service.
  */
-public interface NewsService extends Pagination<News> {
+public interface NewsService extends PaginationService<News> {
     /**
      * Create news.
      *

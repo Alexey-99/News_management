@@ -4,14 +4,14 @@ import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.logic.pagination.Pagination;
+import com.mjc.school.service.pagination.PaginationService;
 
 import java.util.List;
 
 /**
  * The interface Author service.
  */
-public interface AuthorService extends Pagination<Author> {
+public interface AuthorService extends PaginationService<Author> {
 
     /**
      * Create author.

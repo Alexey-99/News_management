@@ -3,14 +3,14 @@ package com.mjc.school.service.tag;
 import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.logic.pagination.Pagination;
+import com.mjc.school.service.pagination.PaginationService;
 
 import java.util.List;
 
 /**
  * The interface Tag service.
  */
-public interface TagService extends Pagination<Tag> {
+public interface TagService extends PaginationService<Tag> {
     /**
      * Create tag.
      *

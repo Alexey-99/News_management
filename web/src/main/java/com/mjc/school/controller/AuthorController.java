@@ -2,6 +2,7 @@ package com.mjc.school.controller;
 
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.author.AuthorService;
@@ -159,14 +160,13 @@ public class AuthorController {
      * @param numberPage           the number page
      * @return the entity
      */
-    @GetMapping("/pagination")
-    public List<Author> getEntity(@RequestParam(value = "count-elements-on-page")
-                                  long numberElementsReturn,
-                                  @RequestParam(value = "number-page",
-                                          required = false,
-                                          defaultValue = "1")
-                                  long numberPage) throws ServiceException { //TODO include PAGINATION
-        return authorService.getEntity(authorService.findAllAuthors(),
+    public Pagination<Author> getEntity(@RequestParam(value = "count-elements-on-page")
+                                        long numberElementsReturn,
+                                        @RequestParam(value = "number-page",
+                                                required = false,
+                                                defaultValue = "1")
+                                        long numberPage) throws ServiceException {
+        return authorService.getPagination(authorService.findAllAuthors(),
                 numberElementsReturn, numberPage);
     }
 }

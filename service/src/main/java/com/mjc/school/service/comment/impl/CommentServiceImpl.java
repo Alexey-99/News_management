@@ -5,7 +5,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
-import com.mjc.school.logic.pagination.Pagination;
+import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
@@ -32,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private DateHandler dateHandler;
     @Autowired
-    private Pagination<Comment> commentPagination;
+    private PaginationService<Comment> commentPagination;
 
     /**
      * Find by news id list.

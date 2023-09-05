@@ -2,10 +2,11 @@ package com.mjc.school.service.author.impl;
 
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.logic.pagination.Pagination;
+import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
@@ -33,7 +33,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private AuthorValidator authorValidator;
     @Autowired
-    private Pagination<Author> authorPagination;
+    private PaginationService<Author> authorPagination;
 
     /**
      * Create author.
@@ -225,7 +225,7 @@ public class AuthorServiceImpl implements AuthorService {
      * @return the entity
      */
     @Override
-    public List<Author> getEntity(List<Author> list, long numberElementsReturn, long numberPage) {
-        return authorPagination.getEntity(list, numberElementsReturn, numberPage);
+    public Pagination<Author> getPagination(List<Author> list, long numberElementsReturn, long numberPage) {
+        return authorPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }
