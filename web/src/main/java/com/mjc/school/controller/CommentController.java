@@ -1,13 +1,13 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.Comment;
-import com.mjc.school.entity.News;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.name.SortingField;
 import com.mjc.school.service.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 import static com.mjc.school.name.SortingField.MODIFIED;
 import static com.mjc.school.name.SortingType.ASC;
 import static com.mjc.school.name.SortingType.DESC;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -178,7 +175,7 @@ public class CommentController {
     public ResponseEntity<Boolean> create(@RequestBody Comment comment)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.create(comment);
-        return new ResponseEntity<>(result, CREATED);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     /**
