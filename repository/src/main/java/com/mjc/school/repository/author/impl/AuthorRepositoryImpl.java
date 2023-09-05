@@ -6,6 +6,9 @@ import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.author.AuthorRepository;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -19,12 +22,14 @@ import java.util.Map;
 import static com.mjc.school.name.ColumnName.TABLE_AUTHORS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_AUTHORS_COLUMN_NAME;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_ID;
+import static org.apache.logging.log4j.Level.ERROR;
 
 /**
  * The type Author repository.
  */
 @Repository
 public class AuthorRepositoryImpl implements AuthorRepository {
+    private static final Logger log = LogManager.getLogger();
     @Autowired
     @Qualifier("namedJdbcTemplate")
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -51,6 +56,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                     new MapSqlParameterSource()
                             .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName())) > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -75,6 +81,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                             .addValue(TABLE_AUTHORS_COLUMN_ID, id))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
 
@@ -101,6 +108,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                             .addValue(TABLE_AUTHORS_COLUMN_ID, author.getId())
                             .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName())) > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -120,6 +128,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         try {
             return jdbcTemplate.query(QUERY_SELECT_ALL_AUTHORS, authorMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -144,6 +153,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                             .addValue(TABLE_AUTHORS_COLUMN_ID, id), authorMapper);
             return !authorListResult.isEmpty() ? authorListResult.get(0) : null;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -169,8 +179,11 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                     new MapSqlParameterSource()
                             .addValue(TABLE_NEWS_COLUMN_ID, newsId),
                     authorMapper);
-            return !authorListResult.isEmpty() ? authorListResult.get(0) : null;
+            return !authorListResult.isEmpty() ?
+                    authorListResult.get(0) :
+                    null;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
 
@@ -190,13 +203,15 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsIdWithAmountOfWrittenNews()
+    public List<AuthorIdWithAmountOfWrittenNews>
+    selectAllAuthorsIdWithAmountOfWrittenNews()
             throws RepositoryException {
         try {
             return jdbcTemplate.query(
                     QUERY_SELECT_ALL_AUTHORS_ID_WITH_AMOUNT_WRITTEN_NEWS,
                     authorIdWithAmountOfWrittenNewsMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -215,11 +230,17 @@ public class AuthorRepositoryImpl implements AuthorRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public boolean isExistsAuthorWithName(String name) throws RepositoryException {
-        return !jdbcTemplate.query(
-                QUERY_SELECT_AUTHOR_BY_NAME,
-                new MapSqlParameterSource()
-                        .addValue(TABLE_AUTHORS_COLUMN_NAME, name),
-                authorMapper).isEmpty();
+    public boolean isExistsAuthorWithName(String name)
+            throws RepositoryException {
+        try {
+            return !jdbcTemplate.query(
+                    QUERY_SELECT_AUTHOR_BY_NAME,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_AUTHORS_COLUMN_NAME, name),
+                    authorMapper).isEmpty();
+        } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
+            throw new RepositoryException(e);
+        }
     }
 }

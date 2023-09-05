@@ -12,6 +12,8 @@ import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
 import com.mjc.school.validation.AuthorValidator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +22,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
+import static org.apache.logging.log4j.Level.ERROR;
 
 /**
  * The type Author service.
  */
 @Service
 public class AuthorServiceImpl implements AuthorService {
+    private static final Logger log = LogManager.getLogger();
     @Autowired
     private AuthorRepository authorRepository;
     @Autowired
@@ -51,6 +55,7 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             return authorValidator.validate(author) && authorRepository.create(author);
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -76,6 +81,7 @@ public class AuthorServiceImpl implements AuthorService {
                 return false;
             }
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -96,6 +102,7 @@ public class AuthorServiceImpl implements AuthorService {
                     authorValidator.validate(author) &&
                     authorRepository.update(author);
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -107,10 +114,11 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<Author> findAllAuthors() throws ServiceException {
+    public List<Author> findAll() throws ServiceException {
         try {
             return authorRepository.findAllAuthors();
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -128,8 +136,10 @@ public class AuthorServiceImpl implements AuthorService {
             throws ServiceException, IncorrectParameterException {
         try {
             return authorValidator.validateId(id) ?
-                    authorRepository.findById(id) : null;
+                    authorRepository.findById(id) :
+                    null;
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -143,7 +153,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public List<Author> findByPartOfName(String partOfName) throws ServiceException, IncorrectParameterException {
+    public List<Author> findByPartOfName(String partOfName)
+            throws ServiceException, IncorrectParameterException {
         try {
             if (partOfName != null) {
                 Pattern p = Pattern.compile(partOfName.toLowerCase());
@@ -155,9 +166,11 @@ public class AuthorServiceImpl implements AuthorService {
                                         || (author.getName().toLowerCase().matches(partOfName.toLowerCase()))
                         ).toList();
             } else {
+                log.log(ERROR, "Entered part of author name is null");
                 throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
             }
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -175,8 +188,10 @@ public class AuthorServiceImpl implements AuthorService {
             throws ServiceException, IncorrectParameterException {
         try {
             return authorValidator.validateId(newsId) ?
-                    authorRepository.findByNewsId(newsId) : null;
+                    authorRepository.findByNewsId(newsId) :
+                    null;
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -193,6 +208,7 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             return authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews();
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -214,6 +230,7 @@ public class AuthorServiceImpl implements AuthorService {
                     new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
             return authorLongMapSorted;
         } catch (RepositoryException e) {
+            log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
         }
     }
@@ -227,12 +244,23 @@ public class AuthorServiceImpl implements AuthorService {
      * @return the entity
      */
     @Override
-    public Pagination<Author> getPagination(List<Author> list, long numberElementsReturn, long numberPage) {
+    public Pagination<Author> getPagination(
+            List<Author> list, long numberElementsReturn, long numberPage) {
         return authorPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 
+    /**
+     * Gets author id with amount of written news.
+     *
+     * @param list                 the list
+     * @param numberElementsReturn the number elements return
+     * @param numberPage           the number page
+     * @return the pagination author id with amount of written news
+     */
     public Pagination<AuthorIdWithAmountOfWrittenNews> getPaginationAuthorIdWithAmountOfWrittenNews
-            (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn, long numberPage) {
-        return authorIdWithAmountOfWrittenNewsPagination.getPagination(list, numberElementsReturn, numberPage);
+    (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn,
+     long numberPage) {
+        return authorIdWithAmountOfWrittenNewsPagination
+                .getPagination(list, numberElementsReturn, numberPage);
     }
 }

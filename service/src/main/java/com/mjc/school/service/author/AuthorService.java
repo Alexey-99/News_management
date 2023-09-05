@@ -53,7 +53,7 @@ public interface AuthorService extends PaginationService<Author> {
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<Author> findAllAuthors() throws ServiceException;
+    public List<Author> findAll() throws ServiceException;
 
     /**
      * Find by id author.
@@ -72,7 +72,8 @@ public interface AuthorService extends PaginationService<Author> {
      *
      * @param partOfName the part of name
      * @return the list
-     * @throws ServiceException the service exception
+     * @throws ServiceException            the service exception
+     * @throws IncorrectParameterException the incorrect parameter exception
      */
     public List<Author> findByPartOfName(String partOfName)
             throws ServiceException, IncorrectParameterException;
@@ -106,6 +107,14 @@ public interface AuthorService extends PaginationService<Author> {
     public List<AuthorIdWithAmountOfWrittenNews> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
             throws ServiceException;
 
+    /**
+     * Gets author id with amount of written news.
+     *
+     * @param list                 the list
+     * @param numberElementsReturn the number elements return
+     * @param numberPage           the number page
+     * @return the pagination author id with amount of written news
+     */
     public Pagination<AuthorIdWithAmountOfWrittenNews> getPaginationAuthorIdWithAmountOfWrittenNews
-            (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn, long numberPage);
+    (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn, long numberPage);
 }

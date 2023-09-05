@@ -4,7 +4,6 @@ import com.mjc.school.entity.Author;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.author.AuthorRepository;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS;
+import static org.apache.logging.log4j.Level.WARN;
 
 /**
  * The type Author validator.
@@ -51,11 +51,11 @@ public class AuthorValidator extends Validator {
             if (!authorRepository.isExistsAuthorWithName(name)) {
                 return true;
             } else {
-                log.log(Level.WARN, "Author with name '" + name + "' exists.");
+                log.log(WARN, "Author with name '" + name + "' exists.");
                 throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS);
             }
         } else {
-            log.log(Level.WARN, "Incorrect entered author name.");
+            log.log(WARN, "Incorrect entered author name.");
             throw new IncorrectParameterException(BAD_AUTHOR_NAME);
         }
     }

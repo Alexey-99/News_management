@@ -116,7 +116,7 @@ public class AuthorController {
             long numberPage)
             throws ServiceException {
         return authorService.getPagination(
-                authorService.findAllAuthors(),
+                authorService.findAll(),
                 countElementsReturn,
                 numberPage);
     }
