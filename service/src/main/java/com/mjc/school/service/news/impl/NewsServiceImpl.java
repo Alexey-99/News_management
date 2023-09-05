@@ -1,6 +1,7 @@
 package com.mjc.school.service.news.impl;
 
 import com.mjc.school.entity.News;
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
@@ -474,7 +475,9 @@ public class NewsServiceImpl implements NewsService {
      * @return the entity
      */
     @Override
-    public List<News> getEntity(List<News> list, long numberElementsReturn, long numberPage) {
-        return newsPagination.getEntity(list, numberElementsReturn, numberPage);
+    public Pagination<News> getPagination(List<News> list,
+                                          long numberElementsReturn,
+                                          long numberPage) {
+        return newsPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -212,7 +213,7 @@ public class CommentController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Boolean> update(@RequestBody Comment comment)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.update(comment);
@@ -242,7 +243,7 @@ public class CommentController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete-by-news-id/{newsId}")
+    @DeleteMapping("/news-id/{newsId}")
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteByNewsId(newsId);

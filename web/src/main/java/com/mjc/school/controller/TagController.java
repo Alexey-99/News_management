@@ -1,5 +1,6 @@
 package com.mjc.school.controller;
 
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
@@ -55,10 +56,11 @@ public class TagController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/add-to-news")
-    public ResponseEntity<Boolean> addToNews(@RequestParam(value = "tag-id")
-                                             long tagId,
-                                             @RequestParam(value = "news-id")
-                                             long newsId)
+    public ResponseEntity<Boolean> addToNews(
+            @RequestParam(value = "tag-id")
+            long tagId,
+            @RequestParam(value = "news-id")
+            long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.addToNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
@@ -74,10 +76,11 @@ public class TagController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/remove-from-news")
-    public ResponseEntity<Boolean> removeTagFromNews(@RequestParam(value = "tag-id")
-                                                     long tagId,
-                                                     @RequestParam(value = "news-id")
-                                                     long newsId)
+    public ResponseEntity<Boolean> removeTagFromNews(
+            @RequestParam(value = "tag-id")
+            long tagId,
+            @RequestParam(value = "news-id")
+            long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.removeTagFromNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
@@ -108,7 +111,8 @@ public class TagController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @DeleteMapping("/id/table_news_tags/{id}")
-    public ResponseEntity<Boolean> deleteByTagIdFromTableTagsNews(@PathVariable long id)
+    public ResponseEntity<Boolean> deleteByTagIdFromTableTagsNews(
+            @PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.deleteByTagIdFromTableTagsNews(id);
         return new ResponseEntity<>(result, OK);
@@ -136,8 +140,20 @@ public class TagController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/all")
-    public List<Tag> findAll() throws ServiceException { //TODO include PAGINATION
-        return tagService.findAllTags();
+    public Pagination<Tag> findAll(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
+            throws ServiceException {
+        return tagService.getPagination(
+                tagService.findAllTags(),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -163,9 +179,21 @@ public class TagController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/part-of-name/{partOfName}")
-    public List<Tag> findByPartOfName(@PathVariable String partOfName)
-            throws ServiceException, IncorrectParameterException { //TODO include PAGINATION
-        return tagService.findByPartOfName(partOfName);
+    public Pagination<Tag> findByPartOfName(
+            @PathVariable String partOfName,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
+            throws ServiceException, IncorrectParameterException {
+        return tagService.getPagination(
+                tagService.findByPartOfName(partOfName),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -177,25 +205,18 @@ public class TagController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/news-id/{newsId}")
-    public List<Tag> findByNewsId(@PathVariable long newsId)
-            throws ServiceException, IncorrectParameterException { //TODO include PAGINATION
-        return tagService.findByNewsId(newsId);
-    }
-
-    /**
-     * Get objects from list.
-     *
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
-    public List<Tag> getEntity(@RequestParam(value = "count-elements-on-page")
-                               long numberElementsReturn,
-                               @RequestParam(value = "number-page",
-                                       required = false,
-                                       defaultValue = "1")
-                               long numberPage) throws ServiceException {
-        return tagService.getEntity(tagService.findAllTags(),
-                numberElementsReturn, numberPage);
+    public Pagination<Tag> findByNewsId(
+            @PathVariable long newsId,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
+            throws ServiceException, IncorrectParameterException {
+        return tagService.getPagination(
+                tagService.findByNewsId(newsId), countElementsReturn, numberPage);
     }
 }

@@ -1,5 +1,6 @@
 package com.mjc.school.service.tag.impl;
 
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
@@ -255,7 +256,7 @@ public class TagServiceImpl implements TagService {
      * @return the entity
      */
     @Override
-    public List<Tag> getEntity(List<Tag> list, long numberElementsReturn, long numberPage) {
-        return tagPagination.getEntity(list, numberElementsReturn, numberPage);
+    public Pagination<Tag> getPagination(List<Tag> list, long numberElementsReturn, long numberPage) {
+        return tagPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }

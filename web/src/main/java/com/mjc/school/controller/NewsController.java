@@ -1,6 +1,7 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.News;
+import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.news.NewsService;
@@ -11,12 +12,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * The type News controller.
@@ -50,7 +50,7 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete/by-id/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteById(id);
@@ -65,7 +65,7 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete/by-author-id/{authorId}")
+    @DeleteMapping("/author-id/{authorId}")
     public ResponseEntity<Boolean> deleteByAuthorId(@PathVariable long authorId)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteByAuthorId(authorId);
@@ -80,8 +80,9 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete/by-id-with-tags/{newsId}")
-    public ResponseEntity<Boolean> deleteByNewsIdFromTableNewsTags(@PathVariable long newsId)
+    @DeleteMapping("/id-with-tags/{newsId}")
+    public ResponseEntity<Boolean> deleteByNewsIdFromTableNewsTags(
+            @PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteByIdFromTableNewsTags(newsId);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -95,7 +96,7 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     public boolean update(@RequestBody News news)
             throws ServiceException, IncorrectParameterException {
         return newsService.update(news);
@@ -108,8 +109,20 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/all")
-    public List<News> findAllNews() throws ServiceException {
-        return newsService.findAll();
+    public Pagination<News> findAllNews(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
+            throws ServiceException {
+        return newsService.getPagination(
+                newsService.findAll(),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -120,7 +133,7 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/id/{id}")
     public News findNewsById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return newsService.findById(id);
@@ -134,10 +147,22 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-tag-name/{tagName}")
-    public List<News> findNewsByTagName(@PathVariable String tagName)
+    @GetMapping("/tag-name/{tagName}")
+    public Pagination<News> findNewsByTagName(
+            @PathVariable String tagName,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException, IncorrectParameterException {
-        return newsService.findByTagName(tagName);
+        return newsService.getPagination(
+                newsService.findByTagName(tagName),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -148,10 +173,22 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-tag-id/{tagId}")
-    public List<News> findNewsByTagId(@PathVariable long tagId)
+    @GetMapping("/tag-id/{tagId}")
+    public Pagination<News> findNewsByTagId(
+            @PathVariable long tagId,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException, IncorrectParameterException {
-        return newsService.findByTagId(tagId);
+        return newsService.getPagination(
+                newsService.findByTagId(tagId),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -162,10 +199,22 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-author-name/{authorName}")
-    public List<News> findNewsByAuthorName(@PathVariable String authorName)
+    @GetMapping("/author-name/{authorName}")
+    public Pagination<News> findNewsByAuthorName(
+            @PathVariable String authorName,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException, IncorrectParameterException {
-        return newsService.findByAuthorName(authorName);
+        return newsService.getPagination(
+                newsService.findByAuthorName(authorName),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -176,10 +225,22 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-part-of-title/{partOfTitle}")
-    public List<News> findNewsByPartOfTitle(@PathVariable String partOfTitle)
+    @GetMapping("/part-of-title/{partOfTitle}")
+    public Pagination<News> findNewsByPartOfTitle(
+            @PathVariable String partOfTitle,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException, IncorrectParameterException {
-        return newsService.findByPartOfTitle(partOfTitle);
+        return newsService.getPagination(
+                newsService.findByPartOfTitle(partOfTitle),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -190,10 +251,22 @@ public class NewsController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-part-of-content/{partOfContent}")
-    public List<News> findNewsByPartOfContent(@PathVariable String partOfContent)
+    @GetMapping("/part-of-content/{partOfContent}")
+    public Pagination<News> findNewsByPartOfContent(
+            @PathVariable String partOfContent,
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException, IncorrectParameterException {
-        return newsService.findByPartOfContent(partOfContent);
+        return newsService.getPagination(
+                newsService.findByPartOfContent(partOfContent),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -203,10 +276,21 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/asc")
-    public List<News> sortNewsByCreatedDateTimeAsc()
+    public Pagination<News> sortNewsByCreatedDateTimeAsc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException {
-        return newsService.sortByCreatedDateTimeAsc(
-                newsService.findAll());
+        return newsService.getPagination(
+                newsService.sortByCreatedDateTimeAsc(
+                        newsService.findAll()),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -216,10 +300,21 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/created/desc")
-    public List<News> sortNewsByCreatedDateTimeDesc()
+    public Pagination<News> sortNewsByCreatedDateTimeDesc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException {
-        return newsService.sortByCreatedDateTimeDesc(
-                newsService.findAll());
+        return newsService.getPagination(
+                newsService.sortByCreatedDateTimeDesc(
+                        newsService.findAll()),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -229,10 +324,21 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/asc")
-    public List<News> sortNewsByModifiedDateTimeAsc()
+    public Pagination<News> sortNewsByModifiedDateTimeAsc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException {
-        return newsService.sortByModifiedDateTimeAsc(
-                newsService.findAll());
+        return newsService.getPagination(
+                newsService.sortByModifiedDateTimeAsc(
+                        newsService.findAll()),
+                countElementsReturn,
+                numberPage);
     }
 
     /**
@@ -242,27 +348,20 @@ public class NewsController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/sort/modified/desc")
-    public List<News> sortNewsByModifiedDateTimeDesc()
+    public Pagination<News> sortNewsByModifiedDateTimeDesc(
+            @RequestParam(value = "count-elements-on-page",
+                    required = false,
+                    defaultValue = "5")
+            long countElementsReturn,
+            @RequestParam(value = "number-page",
+                    required = false,
+                    defaultValue = "1")
+            long numberPage)
             throws ServiceException {
-        return newsService.sortByModifiedDateTimeDesc(
-                newsService.findAll());
-    }
-
-    /**
-     * Get objects from list.
-     *
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
-    @GetMapping("/pagination")
-    public List<News> getEntity(@RequestParam(value = "count-elements-on-page")
-                                long numberElementsReturn,
-                                @RequestParam(value = "number-page",
-                                        required = false,
-                                        defaultValue = "1")
-                                long numberPage) throws ServiceException {
-        return newsService.getEntity(newsService.findAll(),
-                numberElementsReturn, numberPage);
+        return newsService.getPagination(
+                newsService.sortByModifiedDateTimeDesc(
+                        newsService.findAll()),
+                countElementsReturn,
+                numberPage);
     }
 }
