@@ -148,7 +148,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         }
     }
 
-    private static final String QUERY_SELECT_AUTHOR_BY_NAME = """
+    private static final String QUERY_SELECT_AUTHOR_BY_NEWS_ID = """
             SELECT authors.id , authors.name
             FROM authors INNER JOIN news
             ON authors.id = news.authors_id
@@ -164,9 +164,11 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     @Override
     public Author findByNewsId(long newsId) throws RepositoryException {
         try {
-            List<Author> authorListResult = jdbcTemplate.query(QUERY_SELECT_AUTHOR_BY_NAME,
+            List<Author> authorListResult = jdbcTemplate.query(
+                    QUERY_SELECT_AUTHOR_BY_NEWS_ID,
                     new MapSqlParameterSource()
-                            .addValue(TABLE_NEWS_COLUMN_ID, newsId), authorMapper);
+                            .addValue(TABLE_NEWS_COLUMN_ID, newsId),
+                    authorMapper);
             return !authorListResult.isEmpty() ? authorListResult.get(0) : null;
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
@@ -197,5 +199,27 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
         }
+    }
+
+    private static final String QUERY_SELECT_AUTHOR_BY_NAME = """
+            SELECT id, name
+            FROM authors
+            WHERE id = :id;
+            """;
+
+    /**
+     * Is exists author with name boolean.
+     *
+     * @param name the name
+     * @return true - if exists author with name, false - if not exists
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public boolean isExistsAuthorWithName(String name) throws RepositoryException {
+        return !jdbcTemplate.query(
+                QUERY_SELECT_AUTHOR_BY_NAME,
+                new MapSqlParameterSource()
+                        .addValue(TABLE_AUTHORS_COLUMN_NAME, name),
+                authorMapper).isEmpty();
     }
 }

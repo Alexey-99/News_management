@@ -23,6 +23,10 @@ public final class ExceptionIncorrectParameterMessageCode {
      * The constant BAD_PARAMETER_PART_OF_AUTHOR_NAME.
      */
     public static final String BAD_PARAMETER_PART_OF_AUTHOR_NAME = "40002";
+    /**
+     * The constant BAD_PARAMETER_PART_OF_AUTHOR_NAME.
+     */
+    public static final String BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS = "40012";
 
     /**
      * Keys for exception messages associated with {@link Comment}.

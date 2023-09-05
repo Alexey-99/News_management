@@ -73,4 +73,13 @@ public interface AuthorRepository {
      */
     public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsIdWithAmountOfWrittenNews()
             throws RepositoryException;
+
+    /**
+     * Is exists author with name boolean.
+     *
+     * @param name the name
+     * @return the boolean
+     * @throws RepositoryException the repository exception
+     */
+    public boolean isExistsAuthorWithName(String name) throws RepositoryException;
 }

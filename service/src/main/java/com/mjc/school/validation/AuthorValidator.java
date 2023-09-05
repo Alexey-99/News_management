@@ -2,17 +2,27 @@ package com.mjc.school.validation;
 
 import com.mjc.school.entity.Author;
 import com.mjc.school.exception.IncorrectParameterException;
+import com.mjc.school.exception.RepositoryException;
+import com.mjc.school.repository.author.AuthorRepository;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
+import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS;
 
 /**
  * The type Author validator.
  */
 @Component
 public class AuthorValidator extends Validator {
+    private static final Logger log = LogManager.getLogger();
     private static final int MAX_LENGTH_NAME = 15;
     private static final int MIN_LENGTH_NAME = 3;
+    @Autowired
+    private AuthorRepository authorRepository;
 
     /**
      * Validate author.
@@ -20,24 +30,32 @@ public class AuthorValidator extends Validator {
      * @param author the author
      * @return the boolean
      * @throws IncorrectParameterException the incorrect parameter exception
+     * @throws RepositoryException         the repository exception
      */
     public boolean validate(Author author)
-            throws IncorrectParameterException {
+            throws IncorrectParameterException, RepositoryException {
         return validateName(author.getName());
     }
 
     /**
      * Validate author name.
      *
-     * @param name the author name
+     * @param name the name
      * @return the boolean
-     * @throws IncorrectParameterException an exception thrown in case incorrect name
+     * @throws IncorrectParameterException the incorrect parameter exception
+     * @throws RepositoryException         the repository exception
      */
-    public boolean validateName(String name) throws IncorrectParameterException { // TODO ДОЛЖЕН БЫТЬ УНИКАЛЬНЫМ
+    public boolean validateName(String name) throws IncorrectParameterException, RepositoryException {
         if (name != null &&
                 (name.length() >= MIN_LENGTH_NAME && name.length() <= MAX_LENGTH_NAME)) {
-            return true;
+            if (!authorRepository.isExistsAuthorWithName(name)) {
+                return true;
+            } else {
+                log.log(Level.WARN, "Author with name '" + name + "' exists.");
+                throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS);
+            }
         } else {
+            log.log(Level.WARN, "Incorrect entered author name.");
             throw new IncorrectParameterException(BAD_AUTHOR_NAME);
         }
     }
