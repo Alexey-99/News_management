@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,13 +54,14 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/add-to_news")
-    public boolean addToNews(@RequestParam(value = "tag-id")
-                             long tagId,
-                             @RequestParam(value = "news-id")
-                             long newsId)
+    @GetMapping("/add-to-news")
+    public ResponseEntity<Boolean> addToNews(@RequestParam(value = "tag-id")
+                                             long tagId,
+                                             @RequestParam(value = "news-id")
+                                             long newsId)
             throws ServiceException, IncorrectParameterException {
-        return tagService.addToNews(tagId, newsId);
+        boolean result = tagService.addToNews(tagId, newsId);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**
@@ -72,12 +74,13 @@ public class TagController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @GetMapping("/remove-from-news")
-    public boolean removeTagFromNews(@RequestParam(value = "tag-id")
-                                     long tagId,
-                                     @RequestParam(value = "news-id")
-                                     long newsId)
+    public ResponseEntity<Boolean> removeTagFromNews(@RequestParam(value = "tag-id")
+                                                     long tagId,
+                                                     @RequestParam(value = "news-id")
+                                                     long newsId)
             throws ServiceException, IncorrectParameterException {
-        return tagService.removeTagFromNews(tagId, newsId);
+        boolean result = tagService.removeTagFromNews(tagId, newsId);
+        return new ResponseEntity<>(result, OK);
     }
 
     /**
@@ -88,7 +91,7 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete-by-id/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.deleteById(id);
@@ -104,7 +107,7 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @DeleteMapping("/delete-by-id/table_news_tags/{id}")
+    @DeleteMapping("/id/table_news_tags/{id}")
     public ResponseEntity<Boolean> deleteByTagIdFromTableTagsNews(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.deleteByTagIdFromTableTagsNews(id);
@@ -119,7 +122,7 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Boolean> update(@RequestBody Tag tag)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.update(tag);
@@ -133,7 +136,7 @@ public class TagController {
      * @throws ServiceException the service exception
      */
     @GetMapping("/all")
-    public List<Tag> findAll() throws ServiceException {
+    public List<Tag> findAll() throws ServiceException { //TODO include PAGINATION
         return tagService.findAllTags();
     }
 
@@ -145,7 +148,7 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/id/{id}")
     public Tag findById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return tagService.findById(id);
@@ -159,9 +162,9 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-part-of-name/{partOfName}")
+    @GetMapping("/part-of-name/{partOfName}")
     public List<Tag> findByPartOfName(@PathVariable String partOfName)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException, IncorrectParameterException { //TODO include PAGINATION
         return tagService.findByPartOfName(partOfName);
     }
 
@@ -173,9 +176,9 @@ public class TagController {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    @GetMapping("/get-by-news-id/{newsId}")
+    @GetMapping("/news-id/{newsId}")
     public List<Tag> findByNewsId(@PathVariable long newsId)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException, IncorrectParameterException { //TODO include PAGINATION
         return tagService.findByNewsId(newsId);
     }
 
@@ -186,6 +189,7 @@ public class TagController {
      * @param numberPage           the number page
      * @return the entity
      */
+    @GetMapping()
     public List<Tag> getEntity(@RequestParam(value = "count-elements-on-page")
                                long numberElementsReturn,
                                @RequestParam(value = "number-page",
