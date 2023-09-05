@@ -53,7 +53,8 @@ public class AuthorServiceImpl implements AuthorService {
     public boolean create(Author author)
             throws ServiceException, IncorrectParameterException {
         try {
-            return authorValidator.validate(author) && authorRepository.create(author);
+            return authorValidator.validate(author) &&
+                    authorRepository.create(author);
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
@@ -114,9 +115,14 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<Author> findAll() throws ServiceException {
+    public List<Author> findAll() throws ServiceException, IncorrectParameterException {
         try {
-            return authorRepository.findAllAuthors();
+            List<Author> list = authorRepository.findAllAuthors();
+            if (!list.isEmpty()) {
+                return list;
+            } else {
+                throw new ServiceException("Ytslaclasc");
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
@@ -161,9 +167,12 @@ public class AuthorServiceImpl implements AuthorService {
                 return authorRepository.findAllAuthors()
                         .stream()
                         .filter(author ->
-                                (p.matcher(author.getName().toLowerCase()).find())
-                                        || (p.matcher(author.getName().toLowerCase()).lookingAt())
-                                        || (author.getName().toLowerCase().matches(partOfName.toLowerCase()))
+                                (p.matcher(
+                                        author.getName().toLowerCase()).find())
+                                        || (p.matcher(
+                                        author.getName().toLowerCase()).lookingAt())
+                                        || (author.getName().toLowerCase()
+                                        .matches(partOfName.toLowerCase()))
                         ).toList();
             } else {
                 log.log(ERROR, "Entered part of author name is null");
