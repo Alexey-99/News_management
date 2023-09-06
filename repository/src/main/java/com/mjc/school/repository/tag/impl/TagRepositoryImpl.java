@@ -94,7 +94,7 @@ public class TagRepositoryImpl implements TagRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public boolean removeTagFromNews(long tagId, long newsId) throws RepositoryException {
+    public boolean removeFromNews(long tagId, long newsId) throws RepositoryException {
         try {
             return jdbcTemplate.update(
                     QUERY_DELETE_TAG_FROM_NEWS,
@@ -145,7 +145,7 @@ public class TagRepositoryImpl implements TagRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public boolean deleteByTagIdFromTableTagsNews(long tagId) throws RepositoryException {
+    public boolean deleteAllTagsFromNewsByNewsId(long tagId) throws RepositoryException {
         try {
             return jdbcTemplate.update(QUERY_DELETE_TAG_BY_TAGS_ID_FROM_TABLE_NEWS_TAGS,
                     new MapSqlParameterSource()
@@ -194,7 +194,7 @@ public class TagRepositoryImpl implements TagRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<Tag> findAllTags() throws RepositoryException {
+    public List<Tag> findAll() throws RepositoryException {
         try {
             return jdbcTemplate.query(QUERY_SELECT_ALL_TAGS, tagMapper);
         } catch (DataAccessException e) {

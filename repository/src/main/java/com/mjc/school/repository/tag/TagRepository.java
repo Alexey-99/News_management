@@ -36,7 +36,7 @@ public interface TagRepository {
      * @return the boolean
      * @throws RepositoryException the repository exception
      */
-    public boolean removeTagFromNews(long tagId, long newsId) throws RepositoryException;
+    public boolean removeFromNews(long tagId, long newsId) throws RepositoryException;
 
     /**
      * Delete tag by id.
@@ -54,7 +54,7 @@ public interface TagRepository {
      * @return the boolean
      * @throws RepositoryException the repository exception
      */
-    public boolean deleteByTagIdFromTableTagsNews(long tagId) throws RepositoryException;
+    public boolean deleteAllTagsFromNewsByNewsId(long tagId) throws RepositoryException;
 
     /**
      * Update tag.
@@ -71,7 +71,7 @@ public interface TagRepository {
      * @return the list
      * @throws RepositoryException the repository exception
      */
-    public List<Tag> findAllTags() throws RepositoryException;
+    public List<Tag> findAll() throws RepositoryException;
 
     /**
      * Find by id tag.

@@ -151,7 +151,7 @@ public class TagController {
             long numberPage)
             throws ServiceException {
         return tagService.getPagination(
-                tagService.findAllTags(),
+                tagService.findAll(),
                 countElementsReturn,
                 numberPage);
     }

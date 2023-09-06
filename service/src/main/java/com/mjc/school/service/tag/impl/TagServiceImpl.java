@@ -96,7 +96,7 @@ public class TagServiceImpl implements TagService {
         try {
             return (tagValidator.validateId(tagId) &&
                     tagValidator.validateId(newsId)) &&
-                    tagRepository.removeTagFromNews(tagId, newsId);
+                    tagRepository.removeFromNews(tagId, newsId);
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(e);
@@ -116,7 +116,7 @@ public class TagServiceImpl implements TagService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (tagValidator.validateId(tagId)) {
-                tagRepository.deleteByTagIdFromTableTagsNews(tagId);
+                tagRepository.deleteAllTagsFromNewsByNewsId(tagId);
                 tagRepository.deleteById(tagId);
                 return tagRepository.findById(tagId) == null;
             } else {
@@ -141,7 +141,7 @@ public class TagServiceImpl implements TagService {
             throws ServiceException, IncorrectParameterException {
         try {
             return tagValidator.validateId(tagId) &&
-                    tagRepository.deleteByTagIdFromTableTagsNews(tagId);
+                    tagRepository.deleteAllTagsFromNewsByNewsId(tagId);
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(e);
@@ -178,7 +178,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> findAll() throws ServiceException {
         try {
-            return tagRepository.findAllTags();
+            return tagRepository.findAll();
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(e);
@@ -220,7 +220,7 @@ public class TagServiceImpl implements TagService {
             if (partOfName != null) {
                 String pattern = partOfName.toLowerCase();
                 Pattern p = Pattern.compile(pattern);
-                return tagRepository.findAllTags()
+                return tagRepository.findAll()
                         .stream()
                         .filter(tag -> {
                             String tagName = tag.getName().toLowerCase();
