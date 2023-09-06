@@ -20,15 +20,20 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_COMMENT_NEWS_ID;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.SORT_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.UPDATE_ERROR;
 import static org.apache.logging.log4j.Level.ERROR;
+import static org.apache.logging.log4j.Level.WARN;
 
 /**
  * The type Comment service.
@@ -57,8 +62,17 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> findByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
-            return commentValidator.validateNewsId(newsId) ?
-                    commentRepository.findByNewsId(newsId) : null;
+            if (commentValidator.validateNewsId(newsId)) {
+                List<Comment> commentList = commentRepository.findByNewsId(newsId);
+                if (!commentList.isEmpty()) {
+                    return commentList;
+                } else {
+                    log.log(ERROR, "Not found objects with comment news ID: " + newsId);
+                    throw new ServiceException(NO_ENTITY_WITH_COMMENT_NEWS_ID);
+                }
+            } else {
+                return new ArrayList<>();
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(FIND_ERROR);
@@ -74,7 +88,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> findAll() throws ServiceException {
         try {
-            return commentRepository.findAll();
+            List<Comment> commentList = commentRepository.findAll();
+            if (!commentList.isEmpty()) {
+                return commentList;
+            } else {
+                log.log(WARN, "Not found objects");
+                throw new ServiceException(NO_ENTITY);
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(FIND_ERROR);
@@ -93,8 +113,17 @@ public class CommentServiceImpl implements CommentService {
     public Comment findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
-            return commentValidator.validateId(id) ?
-                    commentRepository.findById(id) : null;
+            if (commentValidator.validateId(id)) {
+                Comment comment = commentRepository.findById(id);
+                if (comment != null) {
+                    return comment;
+                } else {
+                    log.log(WARN, "Not found object with this ID: " + id);
+                    throw new ServiceException(NO_ENTITY_WITH_ID);
+                }
+            } else {
+                return null;
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(FIND_ERROR);

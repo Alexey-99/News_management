@@ -41,6 +41,10 @@ public final class ExceptionServiceMessageCodes {
      * The constant SORT_ERROR.
      */
     public static final String SORT_ERROR = "404008";
+    /**
+     * The constant NO_ENTITY_WITH_AUTHOR_NEWS_ID.
+     */
+    public static final String NO_ENTITY_WITH_COMMENT_NEWS_ID = "404009";
 
     private ExceptionServiceMessageCodes() {
     }
