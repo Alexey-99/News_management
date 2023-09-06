@@ -16,7 +16,7 @@ public final class ExceptionServiceMessageCodes {
     /**
      * The constant NO_ENTITY_WITH_PARAMETERS.
      */
-    public static final String NO_ENTITY_WITH_PARAMETERS = "404002";
+    public static final String NO_ENTITY_WITH_PART_OF_NAME = "404002";
     /**
      * The constant NO_ENTITY_WITH_NAME.
      */

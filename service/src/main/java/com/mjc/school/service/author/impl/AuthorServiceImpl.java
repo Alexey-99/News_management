@@ -24,7 +24,10 @@ import java.util.regex.Pattern;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PARAMETERS;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
 import static org.apache.logging.log4j.Level.ERROR;
+import static org.apache.logging.log4j.Level.WARN;
 
 /**
  * The type Author service.
@@ -119,10 +122,11 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<Author> findAll() throws ServiceException {
         try {
-            List<Author> list = authorRepository.findAllAuthors();
-            if (!list.isEmpty()) {
-                return list;
+            List<Author> authorsList = authorRepository.findAllAuthors();
+            if (!authorsList.isEmpty()) {
+                return authorsList;
             } else {
+                log.log(WARN, "Not found objects");
                 throw new ServiceException(NO_ENTITY);
             }
         } catch (RepositoryException e) {
@@ -148,6 +152,7 @@ public class AuthorServiceImpl implements AuthorService {
                 if (author != null) {
                     return author;
                 } else {
+                    log.log(WARN, "Not found object with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
                 }
             }
@@ -171,7 +176,7 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             if (partOfName != null) {
                 Pattern p = Pattern.compile(partOfName.toLowerCase());
-                return authorRepository.findAllAuthors()
+                List<Author> authorsList = authorRepository.findAllAuthors()
                         .stream()
                         .filter(author ->
                                 (p.matcher(
@@ -181,6 +186,12 @@ public class AuthorServiceImpl implements AuthorService {
                                         || (author.getName().toLowerCase()
                                         .matches(partOfName.toLowerCase()))
                         ).toList();
+                if (!authorsList.isEmpty()) {
+                    return authorsList;
+                } else {
+                    log.log(WARN, "Not found object with this part of name: " + partOfName);
+                    throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
+                }
             } else {
                 log.log(ERROR, "Entered part of author name is null");
                 throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
