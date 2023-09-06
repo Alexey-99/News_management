@@ -36,14 +36,14 @@ public class PaginationServiceImpl<T> implements PaginationService<T> {
             long numberStartElement = validNumberStartElement(numberPage, countElementsReturn);
             paginationResult = new Pagination
                     .PaginationBuilder<T>()
-                    .setList(getListEntity(list, numberStartElement, countElementsReturn))
+                    .setEntity(getListEntity(list, numberStartElement, countElementsReturn))
                     .setNumberPage(numberPage)
                     .setMaxNumberPage(maxNumberPage)
                     .build();
         } else {
             paginationResult = new Pagination
                     .PaginationBuilder<T>()
-                    .setList(new ArrayList<>())
+                    .setEntity(new ArrayList<>())
                     .build();
         }
         return paginationResult;

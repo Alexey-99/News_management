@@ -9,7 +9,7 @@ import java.util.List;
  * @param <T> the type parameter
  */
 public class Pagination<T> extends NewsEntity {
-    private List<T> list;
+    private List<T> entity;
     private long numberPage;
     private long maxNumberPage;
 
@@ -17,27 +17,27 @@ public class Pagination<T> extends NewsEntity {
      * Instantiates a new Pagination.
      */
     public Pagination() {
-        this.list = new ArrayList<>();
+        this.entity = new ArrayList<>();
         this.maxNumberPage = 1;
         this.numberPage = 1;
     }
 
     /**
-     * Gets list.
+     * Gets entity.
      *
      * @return the list
      */
-    public List<T> getList() {
-        return list;
+    public List<T> getEntity() {
+        return entity;
     }
 
     /**
      * Sets list.
      *
-     * @param list the list
+     * @param entity the list
      */
-    public void setList(List<T> list) {
-        this.list = list;
+    public void setEntity(List<T> entity) {
+        this.entity = entity;
     }
 
     /**
@@ -85,7 +85,7 @@ public class Pagination<T> extends NewsEntity {
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
-        result = result * PRIME + (this.list != null ? this.list.hashCode() : 1);
+        result = result * PRIME + (this.entity != null ? this.entity.hashCode() : 1);
         result = result * PRIME + Long.hashCode(this.numberPage);
         result = result * PRIME + Long.hashCode(this.maxNumberPage);
         return result;
@@ -104,11 +104,11 @@ public class Pagination<T> extends NewsEntity {
             return false;
         }
         Pagination<T> otherPagination = (Pagination<T>) object;
-        if (this.list == null) {
-            if (otherPagination.list != null) {
+        if (this.entity == null) {
+            if (otherPagination.entity != null) {
                 return false;
             }
-        } else if (!this.list.equals(otherPagination.list)) {
+        } else if (!this.entity.equals(otherPagination.entity)) {
             return false;
         }
         if (this.numberPage != otherPagination.numberPage) {
@@ -128,7 +128,7 @@ public class Pagination<T> extends NewsEntity {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder("Pagination{");
-        builder.append("list=").append(list);
+        builder.append("list=").append(entity);
         builder.append(", numberPage=").append(numberPage);
         builder.append(", maxNumberPage=").append(maxNumberPage);
         builder.append('}');
@@ -156,8 +156,8 @@ public class Pagination<T> extends NewsEntity {
          * @param list the list
          * @return the list
          */
-        public PaginationBuilder<T> setList(List<T> list) {
-            this.pagination.setList(list);
+        public PaginationBuilder<T> setEntity(List<T> list) {
+            this.pagination.setEntity(list);
             return this;
         }
 
