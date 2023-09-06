@@ -4,6 +4,9 @@ import com.mjc.school.entity.Comment;
 
 import java.util.Comparator;
 
+/**
+ * The interface Sort comment comparator.
+ */
 public interface SortCommentComparator extends Comparator<Comment> {
     /**
      * Compares its two arguments for order.  Returns a negative integer,
