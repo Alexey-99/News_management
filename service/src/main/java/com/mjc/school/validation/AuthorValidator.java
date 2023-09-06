@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS;
+import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
 /**
@@ -51,6 +52,7 @@ public class AuthorValidator extends Validator {
                 (name.length() >= MIN_LENGTH_NAME &&
                         name.length() <= MAX_LENGTH_NAME)) {
             if (!authorRepository.isExistsAuthorWithName(name)) {
+                log.log(INFO, "Correct entered author name:" + name);
                 return true;
             } else {
                 log.log(WARN, "Author with name '" + name + "' exists.");
