@@ -2,7 +2,7 @@ package com.mjc.school.validation;
 
 import com.mjc.school.exception.IncorrectParameterException;
 
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_ID;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 
 /**
  * The type Validator.

@@ -1,11 +1,10 @@
 package com.mjc.school.validation;
 
-import com.mjc.school.entity.Author;
 import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import org.springframework.stereotype.Component;
 
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_TAG_NAME;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_TAG_NAME;
 
 /**
  * The type Tag validator.

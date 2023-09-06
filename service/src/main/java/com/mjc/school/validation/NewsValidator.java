@@ -7,9 +7,9 @@ import com.mjc.school.repository.author.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_AUTHOR_ID;
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_CONTENT;
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_NEWS_TITLE;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_AUTHOR_ID;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_CONTENT;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_TITLE;
 
 /**
  * The type News validator.

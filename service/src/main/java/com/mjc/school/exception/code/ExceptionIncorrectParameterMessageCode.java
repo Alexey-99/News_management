@@ -1,4 +1,4 @@
-package com.mjc.school.exception;
+package com.mjc.school.exception.code;
 
 import com.mjc.school.entity.NewsEntity;
 import com.mjc.school.entity.Author;

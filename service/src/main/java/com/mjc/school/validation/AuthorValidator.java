@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS;
 import static org.apache.logging.log4j.Level.WARN;
 
 /**

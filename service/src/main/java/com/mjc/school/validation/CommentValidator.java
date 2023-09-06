@@ -7,8 +7,8 @@ import com.mjc.school.repository.news.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_COMMENT_CONTENT;
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_COMMENT_NEWS_ID;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_COMMENT_CONTENT;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_COMMENT_NEWS_ID;
 
 /**
  * The type Comment validator.

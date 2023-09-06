@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
     @ExceptionHandler(ServiceException.class)
-    public final ResponseEntity<Object> handleDaoExceptions(ServiceException ex) {
+    public final ResponseEntity<Object> handleServiceExceptions(ServiceException ex) {
         String details = Translator.toLocale(ex.getLocalizedMessage());
         ErrorResponse errorResponse = new ErrorResponse(NOT_FOUND_EXCEPTION.toString(), details);
         return new ResponseEntity<>(errorResponse, NOT_FOUND);

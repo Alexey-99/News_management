@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.mjc.school.exception.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
 import static org.apache.logging.log4j.Level.ERROR;
 
 /**
@@ -115,7 +115,7 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<Author> findAll() throws ServiceException, IncorrectParameterException {
+    public List<Author> findAll() throws ServiceException {
         try {
             List<Author> list = authorRepository.findAllAuthors();
             if (!list.isEmpty()) {

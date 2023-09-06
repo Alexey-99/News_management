@@ -53,7 +53,7 @@ public interface AuthorService extends PaginationService<Author> {
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<Author> findAll() throws ServiceException, IncorrectParameterException;
+    public List<Author> findAll() throws ServiceException;
 
     /**
      * Find by id author.
