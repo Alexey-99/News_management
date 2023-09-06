@@ -385,14 +385,16 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (partOfTitle != null) {
-                Pattern p = Pattern.compile(partOfTitle.toLowerCase());
+                String pattern = partOfTitle.toLowerCase();
+                Pattern p = Pattern.compile(pattern);
                 List<News> newsList = findAll()
                         .stream()
-                        .filter(news ->
-                                (p.matcher(news.getTitle().toLowerCase()).find()) ||
-                                        (p.matcher(news.getTitle().toLowerCase()).lookingAt()) ||
-                                        (news.getTitle().toLowerCase().matches(partOfTitle.toLowerCase()))
-                        ).toList();
+                        .filter(news -> {
+                            String newsTitle = news.getTitle().toLowerCase();
+                            return (p.matcher(newsTitle).find()) ||
+                                    (p.matcher(newsTitle).lookingAt()) ||
+                                    (newsTitle.matches(pattern));
+                        }).toList();
                 if (!newsList.isEmpty()) {
                     for (News news : newsList) {
                         news.setComments(commentRepository.findByNewsId(news.getId()));
@@ -426,14 +428,16 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (partOfContent != null) {
-                Pattern p = Pattern.compile(partOfContent.toLowerCase());
+                String pattern = partOfContent.toLowerCase();
+                Pattern p = Pattern.compile(pattern);
                 List<News> newsList = findAll()
                         .stream()
-                        .filter(news ->
-                                (p.matcher(news.getContent().toLowerCase()).find()) ||
-                                        (p.matcher(news.getContent().toLowerCase()).lookingAt()) ||
-                                        (news.getContent().toLowerCase().matches(partOfContent.toLowerCase()))
-                        ).toList();
+                        .filter(news -> {
+                            String newsContent = news.getTitle().toLowerCase();
+                            return (p.matcher(newsContent).find()) ||
+                                    (p.matcher(newsContent).lookingAt()) ||
+                                    (newsContent.matches(pattern));
+                        }).toList();
                 if (!newsList.isEmpty()) {
                     for (News news : newsList) {
                         news.setComments(commentRepository.findByNewsId(news.getId()));

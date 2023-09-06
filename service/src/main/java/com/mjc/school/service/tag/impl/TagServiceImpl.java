@@ -20,7 +20,13 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_TITLE;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_TAGS_WITH_NEWS_ID;
 import static org.apache.logging.log4j.Level.ERROR;
+import static org.apache.logging.log4j.Level.WARN;
 
 /**
  * The type Tag service.
@@ -91,7 +97,7 @@ public class TagServiceImpl implements TagService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean removeTagFromNews(long tagId, long newsId)
+    public boolean removeFromNews(long tagId, long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
             return (tagValidator.validateId(tagId) &&
@@ -178,7 +184,13 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> findAll() throws ServiceException {
         try {
-            return tagRepository.findAll();
+            List<Tag> tagList = tagRepository.findAll();
+            if (!tagList.isEmpty()) {
+                return tagList;
+            } else {
+                log.log(WARN, "Not found tags");
+                throw new ServiceException(NO_ENTITY);
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(e);
@@ -197,8 +209,17 @@ public class TagServiceImpl implements TagService {
     public Tag findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
-            return tagValidator.validateId(id) ?
-                    tagRepository.findById(id) : null;
+            if (tagValidator.validateId(id)) {
+                Tag tag = tagRepository.findById(id);
+                if (tag != null) {
+                    return tag;
+                } else {
+                    log.log(WARN, "Not found tag with this ID: " + id);
+                    throw new ServiceException(NO_ENTITY_WITH_ID);
+                }
+            } else {
+                return null;
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(e);
@@ -220,7 +241,7 @@ public class TagServiceImpl implements TagService {
             if (partOfName != null) {
                 String pattern = partOfName.toLowerCase();
                 Pattern p = Pattern.compile(pattern);
-                return tagRepository.findAll()
+                List<Tag> tagList = tagRepository.findAll()
                         .stream()
                         .filter(tag -> {
                             String tagName = tag.getName().toLowerCase();
@@ -229,7 +250,15 @@ public class TagServiceImpl implements TagService {
                                     || (tagName.matches(pattern));
                         })
                         .toList();
+                if (!tagList.isEmpty()) {
+                    return tagList;
+                } else {
+                    log.log(WARN,
+                            "Not found tags with this part of name: " + partOfName);
+                    throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
+                }
             } else {
+                log.log(ERROR, "Entered part of tag name is null");
                 throw new IncorrectParameterException(
                         BAD_PARAMETER_PART_OF_TAG_NAME);
             }
@@ -252,9 +281,17 @@ public class TagServiceImpl implements TagService {
     public List<Tag> findByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
-            return tagValidator.validateId(newsId) ?
-                    tagRepository.findByNewsId(newsId) :
-                    new ArrayList<>();
+            if (tagValidator.validateId(newsId)) {
+                List<Tag> tagList = tagRepository.findByNewsId(newsId);
+                if (!tagList.isEmpty()) {
+                    return tagList;
+                } else {
+                    log.log(WARN, "Not found tags with news ID: " + newsId);
+                    throw new ServiceException(NO_TAGS_WITH_NEWS_ID);
+                }
+            } else {
+                return new ArrayList<>();
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(e);

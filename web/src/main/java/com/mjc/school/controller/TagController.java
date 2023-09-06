@@ -80,7 +80,7 @@ public class TagController {
             @RequestParam(value = "news-id")
             long newsId)
             throws ServiceException, IncorrectParameterException {
-        boolean result = tagService.removeTagFromNews(tagId, newsId);
+        boolean result = tagService.removeFromNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
     }
 

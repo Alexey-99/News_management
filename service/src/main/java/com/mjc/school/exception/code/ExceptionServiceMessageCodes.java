@@ -66,6 +66,10 @@ public final class ExceptionServiceMessageCodes {
      * The constant NO_ENTITY_WITH_PART_OF_CONTENT.
      */
     public static final String NO_ENTITY_WITH_PART_OF_CONTENT = "404014";
+    /**
+     * The constant NO_TAGS_WITH_NEWS_ID.
+     */
+    public static final String NO_TAGS_WITH_NEWS_ID = "404015";
 
     private ExceptionServiceMessageCodes() {
     }

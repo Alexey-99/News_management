@@ -43,7 +43,7 @@ public interface TagService extends PaginationService<Tag> {
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean removeTagFromNews(long tagId, long newsId)
+    public boolean removeFromNews(long tagId, long newsId)
             throws ServiceException, IncorrectParameterException;
 
     /**

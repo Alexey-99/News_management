@@ -182,17 +182,16 @@ public class AuthorServiceImpl implements AuthorService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (partOfName != null) {
-                Pattern p = Pattern.compile(partOfName.toLowerCase());
+                String pattern = partOfName.toLowerCase();
+                Pattern p = Pattern.compile(pattern);
                 List<Author> authorsList = authorRepository.findAllAuthors()
                         .stream()
-                        .filter(author ->
-                                (p.matcher(
-                                        author.getName().toLowerCase()).find())
-                                        || (p.matcher(
-                                        author.getName().toLowerCase()).lookingAt())
-                                        || (author.getName().toLowerCase()
-                                        .matches(partOfName.toLowerCase()))
-                        ).toList();
+                        .filter(author -> {
+                            String authorName = author.getName().toLowerCase();
+                            return (p.matcher(authorName).find())
+                                    || (p.matcher(authorName).lookingAt())
+                                    || (authorName.matches(pattern));
+                        }).toList();
                 if (!authorsList.isEmpty()) {
                     return authorsList;
                 } else {
