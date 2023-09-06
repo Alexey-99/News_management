@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_AUTHOR_NEWS_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PARAMETERS;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
@@ -155,6 +155,8 @@ public class AuthorServiceImpl implements AuthorService {
                     log.log(WARN, "Not found object with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
                 }
+            } else {
+                return null;
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
@@ -214,9 +216,15 @@ public class AuthorServiceImpl implements AuthorService {
     public Author findByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
-            return authorValidator.validateId(newsId) ?
-                    authorRepository.findByNewsId(newsId) :
-                    null;
+            if (authorValidator.validateId(newsId)) {
+                Author author = authorRepository.findByNewsId(newsId);
+                if (author != null) {
+                    return author;
+                } else {
+                    log.log(WARN, "Not found objects with author news ID: " + newsId);
+                    throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
+                }
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
             throw new ServiceException(e);
@@ -233,7 +241,13 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsIdWithAmountOfWrittenNews()
             throws ServiceException {
         try {
-            return authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews();
+            List<AuthorIdWithAmountOfWrittenNews> list = authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews();
+            if (!list.isEmpty()) {
+                return list;
+            } else {
+                log.log(WARN, "Not found objects");
+                throw new ServiceException(NO_ENTITY);
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
             throw new ServiceException(e);

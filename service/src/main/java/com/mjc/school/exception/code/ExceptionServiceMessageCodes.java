@@ -14,13 +14,13 @@ public final class ExceptionServiceMessageCodes {
      */
     public static final String NO_ENTITY_WITH_ID = "404001";
     /**
-     * The constant NO_ENTITY_WITH_PARAMETERS.
+     * The constant NO_ENTITY_WITH_PART_OF_NAME.
      */
     public static final String NO_ENTITY_WITH_PART_OF_NAME = "404002";
     /**
      * The constant NO_ENTITY_WITH_NAME.
      */
-    public static final String NO_ENTITY_WITH_NAME = "404003";
+    public static final String NO_ENTITY_WITH_AUTHOR_NEWS_ID = "404003";
     /**
      * The constant SAVING_ERROR.
      */
