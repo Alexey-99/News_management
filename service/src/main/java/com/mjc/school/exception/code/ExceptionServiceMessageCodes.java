@@ -18,13 +18,25 @@ public final class ExceptionServiceMessageCodes {
      */
     public static final String NO_ENTITY_WITH_PART_OF_NAME = "404002";
     /**
-     * The constant NO_ENTITY_WITH_NAME.
+     * The constant NO_ENTITY_WITH_AUTHOR_NEWS_ID.
      */
     public static final String NO_ENTITY_WITH_AUTHOR_NEWS_ID = "404003";
     /**
-     * The constant SAVING_ERROR.
+     * The constant INSERT_ERROR.
      */
-    public static final String SAVING_ERROR = "404004";
+    public static final String INSERT_ERROR = "404004";
+    /**
+     * The constant DELETE_ERROR.
+     */
+    public static final String DELETE_ERROR = "404005";
+    /**
+     * The constant UPDATE_ERROR.
+     */
+    public static final String UPDATE_ERROR = "404006";
+    /**
+     * The constant FIND_ERROR.
+     */
+    public static final String FIND_ERROR = "404007";
 
     private ExceptionServiceMessageCodes() {
     }

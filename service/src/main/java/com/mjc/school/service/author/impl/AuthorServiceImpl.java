@@ -22,10 +22,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_AUTHOR_NEWS_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.UPDATE_ERROR;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
@@ -44,7 +48,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private PaginationService<Author> authorPagination;
     @Autowired
-    private PaginationService<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsPagination;
+    private PaginationService<AuthorIdWithAmountOfWrittenNews>
+            authorIdWithAmountOfWrittenNewsPagination;
 
     /**
      * Create author.
@@ -61,8 +66,8 @@ public class AuthorServiceImpl implements AuthorService {
             return authorValidator.validate(author) &&
                     authorRepository.create(author);
         } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(INSERT_ERROR);
         }
     }
 
@@ -87,8 +92,8 @@ public class AuthorServiceImpl implements AuthorService {
                 return false;
             }
         } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(DELETE_ERROR);
         }
     }
 
@@ -108,8 +113,8 @@ public class AuthorServiceImpl implements AuthorService {
                     authorValidator.validate(author) &&
                     authorRepository.update(author);
         } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(UPDATE_ERROR);
         }
     }
 
@@ -130,8 +135,8 @@ public class AuthorServiceImpl implements AuthorService {
                 throw new ServiceException(NO_ENTITY);
             }
         } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -160,7 +165,7 @@ public class AuthorServiceImpl implements AuthorService {
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -199,8 +204,8 @@ public class AuthorServiceImpl implements AuthorService {
                 throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
             }
         } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -224,10 +229,12 @@ public class AuthorServiceImpl implements AuthorService {
                     log.log(WARN, "Not found objects with author news ID: " + newsId);
                     throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
                 }
+            } else {
+                return null;
             }
         } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -249,8 +256,8 @@ public class AuthorServiceImpl implements AuthorService {
                 throw new ServiceException(NO_ENTITY);
             }
         } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -267,12 +274,17 @@ public class AuthorServiceImpl implements AuthorService {
             List<AuthorIdWithAmountOfWrittenNews> authorLongMapSorted =
                     new LinkedList<>(
                             authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews());
-            authorLongMapSorted.sort(
-                    new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
-            return authorLongMapSorted;
+            if (!authorLongMapSorted.isEmpty()) {
+                authorLongMapSorted.sort(
+                        new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
+                return authorLongMapSorted;
+            } else {
+                log.log(WARN, "Not found objects");
+                throw new ServiceException(NO_ENTITY);
+            }
         } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -298,6 +310,7 @@ public class AuthorServiceImpl implements AuthorService {
      * @param numberPage           the number page
      * @return the pagination author id with amount of written news
      */
+    @Override
     public Pagination<AuthorIdWithAmountOfWrittenNews> getPaginationAuthorIdWithAmountOfWrittenNews
     (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn,
      long numberPage) {
