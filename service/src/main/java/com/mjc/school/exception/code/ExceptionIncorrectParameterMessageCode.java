@@ -26,7 +26,7 @@ public final class ExceptionIncorrectParameterMessageCode {
     /**
      * The constant BAD_PARAMETER_PART_OF_AUTHOR_NAME.
      */
-    public static final String BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS = "40012";
+    public static final String BAD_PARAMETER_AUTHOR_NAME_EXISTS = "40012";
 
     /**
      * Keys for exception messages associated with {@link Comment}.
@@ -39,8 +39,7 @@ public final class ExceptionIncorrectParameterMessageCode {
 
     /**
      * Keys for exception messages associated with {@link News}.
-     */
-    /**
+     * <p>
      * The constant BAD_NEWS_TITLE.
      */
     public static final String BAD_NEWS_TITLE = "40005";
@@ -60,7 +59,10 @@ public final class ExceptionIncorrectParameterMessageCode {
      * The constant BAD_PARAMETER_PART_OF_NEWS_CONTENT.
      */
     public static final String BAD_PARAMETER_PART_OF_NEWS_CONTENT = "40010";
-
+    /**
+     * The constant BAD_PARAMETER_PART_OF_AUTHOR_NAME.
+     */
+    public static final String BAD_PARAMETER_NEWS_TITLE_EXISTS = "40013";
     /**
      * Keys for exception messages associated with {@link Tag}.
      */

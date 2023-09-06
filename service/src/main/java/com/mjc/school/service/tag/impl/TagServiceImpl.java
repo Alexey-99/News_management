@@ -68,7 +68,7 @@ public class TagServiceImpl implements TagService {
             return (tagValidator.validateId(tagId) &&
                     tagValidator.validateId(newsId)) &&
                     (tagRepository.findById(tagId) != null
-                            && newsRepository.findNewsById(newsId) != null) &&
+                            && newsRepository.findById(newsId) != null) &&
                     tagRepository.addToNews(tagId, newsId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);

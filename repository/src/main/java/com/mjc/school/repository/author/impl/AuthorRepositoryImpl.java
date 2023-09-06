@@ -223,7 +223,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             """;
 
     /**
-     * Is exists author with name boolean.
+     * Is exists author with name.
      *
      * @param name the name
      * @return true - if exists author with name, false - if not exists
@@ -234,10 +234,11 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             throws RepositoryException {
         try {
             return !jdbcTemplate.query(
-                    QUERY_SELECT_AUTHOR_BY_NAME,
-                    new MapSqlParameterSource()
-                            .addValue(TABLE_AUTHORS_COLUMN_NAME, name),
-                    authorMapper).isEmpty();
+                            QUERY_SELECT_AUTHOR_BY_NAME,
+                            new MapSqlParameterSource()
+                                    .addValue(TABLE_AUTHORS_COLUMN_NAME, name),
+                            authorMapper)
+                    .isEmpty();
         } catch (DataAccessException e) {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);

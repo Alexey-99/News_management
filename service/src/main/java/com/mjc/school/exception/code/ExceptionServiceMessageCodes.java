@@ -45,6 +45,27 @@ public final class ExceptionServiceMessageCodes {
      * The constant NO_ENTITY_WITH_AUTHOR_NEWS_ID.
      */
     public static final String NO_ENTITY_WITH_COMMENT_NEWS_ID = "404009";
+    /**
+     * The constant NO_AUTHORS_WITH_ID.
+     */
+    public static final String NO_AUTHORS_WITH_ID = "404010";
+
+    /**
+     * The constant NO_NEWS_WITH_TAG_NAME.
+     */
+    public static final String NO_NEWS_WITH_TAG_NAME = "404011";
+    /**
+     * The constant NO_NEWS_WITH_TAG_ID.
+     */
+    public static final String NO_NEWS_WITH_TAG_ID = "404012";
+    /**
+     * The constant NO_ENTITY_WITH_PART_OF_TITLE.
+     */
+    public static final String NO_ENTITY_WITH_PART_OF_TITLE = "404013";
+    /**
+     * The constant NO_ENTITY_WITH_PART_OF_CONTENT.
+     */
+    public static final String NO_ENTITY_WITH_PART_OF_CONTENT = "404014";
 
     private ExceptionServiceMessageCodes() {
     }

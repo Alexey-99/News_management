@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_AUTHOR_NAME_EXISTS;
 import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
@@ -35,7 +35,7 @@ public class AuthorValidator extends Validator {
      */
     public boolean validate(Author author)
             throws IncorrectParameterException, RepositoryException {
-        return validateName(author.getName());
+        return validateName(author.getName()) && isExistsAuthorWithName(author.getName());
     }
 
     /**
@@ -51,16 +51,30 @@ public class AuthorValidator extends Validator {
         if (name != null &&
                 (name.length() >= MIN_LENGTH_NAME &&
                         name.length() <= MAX_LENGTH_NAME)) {
-            if (!authorRepository.isExistsAuthorWithName(name)) {
-                log.log(INFO, "Correct entered author name:" + name);
-                return true;
-            } else {
-                log.log(WARN, "Author with name '" + name + "' exists.");
-                throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS);
-            }
+            log.log(INFO, "Correct entered author name:" + name);
+            return true;
         } else {
             log.log(WARN, "Incorrect entered author name: " + name);
             throw new IncorrectParameterException(BAD_AUTHOR_NAME);
+        }
+    }
+
+    /**
+     * Is exists author with name.
+     *
+     * @param name the name
+     * @return the boolean
+     * @throws IncorrectParameterException the incorrect parameter exception
+     * @throws RepositoryException         the repository exception
+     */
+    public boolean isExistsAuthorWithName(String name)
+            throws IncorrectParameterException, RepositoryException {
+        if (!authorRepository.isExistsAuthorWithName(name)) {
+            log.log(INFO, "Correct entered author name:" + name);
+            return true;
+        } else {
+            log.log(WARN, "Author with name '" + name + "' exists.");
+            throw new IncorrectParameterException(BAD_PARAMETER_AUTHOR_NAME_EXISTS);
         }
     }
 }

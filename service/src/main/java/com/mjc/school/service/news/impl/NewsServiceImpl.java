@@ -19,6 +19,8 @@ import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsCompara
 import com.mjc.school.validation.AuthorValidator;
 import com.mjc.school.validation.NewsValidator;
 import com.mjc.school.validation.TagValidator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +29,30 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_CONTENT;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_TITLE;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_CONTENT;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_TITLE;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_NEWS_WITH_TAG_ID;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_NEWS_WITH_TAG_NAME;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.SORT_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.UPDATE_ERROR;
+import static org.apache.logging.log4j.Level.ERROR;
+import static org.apache.logging.log4j.Level.WARN;
 
 /**
  * The type News service.
  */
 @Service
 public class NewsServiceImpl implements NewsService {
+    private static final Logger log = LogManager.getLogger();
     @Autowired
     private NewsRepository newsRepository;
     @Autowired
@@ -72,7 +90,8 @@ public class NewsServiceImpl implements NewsService {
                 return false;
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(INSERT_ERROR);
         }
     }
 
@@ -89,15 +108,16 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (newsValidator.validateId(newsId)) {
-                newsRepository.deleteByNewsIdFromTableNewsTags(newsId);
+                newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
                 commentRepository.deleteByNewsId(newsId);
                 newsRepository.deleteById(newsId);
-                return newsRepository.findNewsById(newsId) == null;
+                return newsRepository.findById(newsId) == null;
             } else {
                 return false;
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(DELETE_ERROR);
         }
     }
 
@@ -114,14 +134,14 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (newsValidator.validateAuthorId(authorId)) {
-                for (News news : newsRepository.findAllNews()
+                for (News news : newsRepository.findAll()
                         .stream()
                         .filter(news -> news.getAuthorId() == authorId).toList()) {
-                    newsRepository.deleteByNewsIdFromTableNewsTags(news.getId());
+                    newsRepository.deleteAllTagsFromNewsByNewsId(news.getId());
                     commentRepository.deleteByNewsId(news.getId());
                     newsRepository.deleteByAuthorId(authorId);
                 }
-                return newsRepository.findAllNews()
+                return newsRepository.findAll()
                         .stream()
                         .filter(news -> news.getAuthorId() == authorId)
                         .toList()
@@ -130,7 +150,8 @@ public class NewsServiceImpl implements NewsService {
                 return false;
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(DELETE_ERROR);
         }
     }
 
@@ -147,7 +168,7 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (newsValidator.validateId(newsId)) {
-                newsRepository.deleteByNewsIdFromTableNewsTags(newsId);
+                newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
                 return findAll()
                         .stream()
                         .filter(news -> !news.getTags()
@@ -163,7 +184,8 @@ public class NewsServiceImpl implements NewsService {
                         .isEmpty();
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(DELETE_ERROR);
         }
     }
 
@@ -187,7 +209,8 @@ public class NewsServiceImpl implements NewsService {
                 return false;
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(UPDATE_ERROR);
         }
     }
 
@@ -200,43 +223,53 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> findAll() throws ServiceException {
         try {
-            List<News> newsList = newsRepository.findAllNews();
-            for (News news : newsList) {
-                news.setComments(commentRepository.findByNewsId(news.getId()));
-                news.setTags(tagRepository.findByNewsId(news.getId()));
+            List<News> newsList = newsRepository.findAll();
+            if (!newsList.isEmpty()) {
+                for (News news : newsList) {
+                    news.setComments(commentRepository.findByNewsId(news.getId()));
+                    news.setTags(tagRepository.findByNewsId(news.getId()));
+                }
+                return newsList;
+            } else {
+                log.log(WARN, "Not found news");
+                throw new ServiceException(NO_ENTITY);
             }
-            return newsList;
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
     /**
      * Find by id news.
      *
-     * @param newsId the news id
+     * @param id the news id
      * @return the news
      * @throws ServiceException            the service exception
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public News findById(long newsId)
+    public News findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (newsValidator.validateId(newsId)) {
-                News news = newsRepository.findNewsById(newsId);
+            if (newsValidator.validateId(id)) {
+                News news = newsRepository.findById(id);
                 if (news != null) {
                     news.setComments(commentRepository
                             .findByNewsId(news.getId()));
                     news.setTags(tagRepository
                             .findByNewsId(news.getId()));
+                    return news;
+                } else {
+                    log.log(WARN, "Not found news with this ID: " + id);
+                    throw new ServiceException(NO_ENTITY_WITH_ID);
                 }
-                return news;
             } else {
                 return null;
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -253,17 +286,23 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (tagValidator.validateName(tagName)) {
-                List<News> newsList = newsRepository.findNewsByTagName(tagName);
-                for (News news : newsList) {
-                    news.setComments(commentRepository.findByNewsId(news.getId()));
-                    news.setTags(tagRepository.findByNewsId(news.getId()));
+                List<News> newsList = newsRepository.findByTagName(tagName);
+                if (!newsList.isEmpty()) {
+                    for (News news : newsList) {
+                        news.setComments(commentRepository.findByNewsId(news.getId()));
+                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                    }
+                    return newsList;
+                } else {
+                    log.log(WARN, "Not found news with entered tag name: " + tagName);
+                    throw new ServiceException(NO_NEWS_WITH_TAG_NAME);
                 }
-                return newsList;
             } else {
                 return new ArrayList<>();
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -280,17 +319,23 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (tagValidator.validateId(tagId)) {
-                List<News> newsList = newsRepository.findNewsByTagId(tagId);
-                for (News news : newsList) {
-                    news.setComments(commentRepository.findByNewsId(news.getId()));
-                    news.setTags(tagRepository.findByNewsId(news.getId()));
+                List<News> newsList = newsRepository.findByTagId(tagId);
+                if (!newsList.isEmpty()) {
+                    for (News news : newsList) {
+                        news.setComments(commentRepository.findByNewsId(news.getId()));
+                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                    }
+                    return newsList;
+                } else {
+                    log.log(WARN, "Not found news with entered tag ID: " + tagId);
+                    throw new ServiceException(NO_NEWS_WITH_TAG_ID);
                 }
-                return newsList;
             } else {
                 return new ArrayList<>();
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -307,17 +352,23 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException, IncorrectParameterException {
         try {
             if (authorValidator.validateName(authorName)) {
-                List<News> newsList = newsRepository.findNewsByAuthorName(authorName);
-                for (News news : newsList) {
-                    news.setComments(commentRepository.findByNewsId(news.getId()));
-                    news.setTags(tagRepository.findByNewsId(news.getId()));
+                List<News> newsList = newsRepository.findByAuthorName(authorName);
+                if (!newsList.isEmpty()) {
+                    for (News news : newsList) {
+                        news.setComments(commentRepository.findByNewsId(news.getId()));
+                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                    }
+                    return newsList;
+                } else {
+                    log.log(WARN, "Not found news with entered author name: " + authorName);
+                    throw new ServiceException(NO_NEWS_WITH_TAG_NAME);
                 }
-                return newsList;
             } else {
                 return new ArrayList<>();
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -342,16 +393,23 @@ public class NewsServiceImpl implements NewsService {
                                         (p.matcher(news.getTitle().toLowerCase()).lookingAt()) ||
                                         (news.getTitle().toLowerCase().matches(partOfTitle.toLowerCase()))
                         ).toList();
-                for (News news : newsList) {
-                    news.setComments(commentRepository.findByNewsId(news.getId()));
-                    news.setTags(tagRepository.findByNewsId(news.getId()));
+                if (!newsList.isEmpty()) {
+                    for (News news : newsList) {
+                        news.setComments(commentRepository.findByNewsId(news.getId()));
+                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                    }
+                    return newsList;
+                } else {
+                    log.log(WARN, "Not found news with this part of title: " + partOfTitle);
+                    throw new ServiceException(NO_ENTITY_WITH_PART_OF_TITLE);
                 }
-                return newsList;
             } else {
+                log.log(ERROR, "Entered part of news title is null");
                 throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_NEWS_TITLE);
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -376,16 +434,23 @@ public class NewsServiceImpl implements NewsService {
                                         (p.matcher(news.getContent().toLowerCase()).lookingAt()) ||
                                         (news.getContent().toLowerCase().matches(partOfContent.toLowerCase()))
                         ).toList();
-                for (News news : newsList) {
-                    news.setComments(commentRepository.findByNewsId(news.getId()));
-                    news.setTags(tagRepository.findByNewsId(news.getId()));
+                if (!newsList.isEmpty()) {
+                    for (News news : newsList) {
+                        news.setComments(commentRepository.findByNewsId(news.getId()));
+                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                    }
+                    return newsList;
+                } else {
+                    log.log(WARN, "Not found news with this part of content: " + partOfContent);
+                    throw new ServiceException(NO_ENTITY_WITH_PART_OF_CONTENT);
                 }
-                return newsList;
             } else {
+                log.log(ERROR, "Entered part of news content is null");
                 throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_NEWS_CONTENT);
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -406,10 +471,12 @@ public class NewsServiceImpl implements NewsService {
                 sortedNewsList = new LinkedList<>(newsList);
                 sortedNewsList.sort(comparator);
             } else {
-                throw new ServiceException("comparator is null");
+                log.log(ERROR, "comparator is null");
+                throw new ServiceException(SORT_ERROR);
             }
         } else {
-            throw new ServiceException("newsList is null");
+            log.log(ERROR, "list is null");
+            throw new ServiceException(SORT_ERROR);
         }
         return sortedNewsList;
     }

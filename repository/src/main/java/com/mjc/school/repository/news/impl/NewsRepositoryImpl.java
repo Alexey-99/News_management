@@ -4,6 +4,8 @@ import com.mjc.school.config.mapper.NewsMapper;
 import com.mjc.school.entity.News;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.news.NewsRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -23,12 +25,14 @@ import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_TITLE;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_TAGS_COLUMN_NEWS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_NAME;
+import static org.apache.logging.log4j.Level.ERROR;
 
 /**
  * The type News repository.
  */
 @Repository
 public class NewsRepositoryImpl implements NewsRepository {
+    private static final Logger log = LogManager.getLogger();
     @Autowired
     @Qualifier("namedJdbcTemplate")
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -59,6 +63,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified()))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -83,6 +88,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_ID, newsId))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -107,6 +113,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, authorId))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -126,13 +133,14 @@ public class NewsRepositoryImpl implements NewsRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public boolean deleteByNewsIdFromTableNewsTags(long newsId) throws RepositoryException {
+    public boolean deleteAllTagsFromNewsByNewsId(long newsId) throws RepositoryException {
         try {
             return jdbcTemplate.update(QUERY_DELETE_NEWS_ID_BY_TAGS_ID_FROM_TABLE_NEWS_TAGS,
                     new MapSqlParameterSource()
                             .addValue(TABLE_NEWS_TAGS_COLUMN_NEWS_ID, newsId))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -165,6 +173,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified()))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -181,10 +190,11 @@ public class NewsRepositoryImpl implements NewsRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<News> findAllNews() throws RepositoryException {
+    public List<News> findAll() throws RepositoryException {
         try {
             return jdbcTemplate.query(SELECT_ALL_NEWS, newsMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -203,7 +213,7 @@ public class NewsRepositoryImpl implements NewsRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public News findNewsById(long newsId) throws RepositoryException {
+    public News findById(long newsId) throws RepositoryException {
         try {
             List<News> resultQuery = jdbcTemplate.query(SELECT_FIND_NEWS_BY_ID,
                     new MapSqlParameterSource()
@@ -211,6 +221,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                     newsMapper);
             return !resultQuery.isEmpty() ? resultQuery.get(0) : null;
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -237,13 +248,14 @@ public class NewsRepositoryImpl implements NewsRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<News> findNewsByTagName(String tagName) throws RepositoryException {
+    public List<News> findByTagName(String tagName) throws RepositoryException {
         try {
             return jdbcTemplate.query(SELECT_FIND_NEWS_BY_TAG_NAME,
                     new MapSqlParameterSource()
                             .addValue(TABLE_TAGS_COLUMN_NAME, tagName),
                     newsMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -270,13 +282,14 @@ public class NewsRepositoryImpl implements NewsRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<News> findNewsByTagId(long tagId) throws RepositoryException {
+    public List<News> findByTagId(long tagId) throws RepositoryException {
         try {
             return jdbcTemplate.query(SELECT_FIND_NEWS_BY_TAG_ID,
                     new MapSqlParameterSource()
                             .addValue(TABLE_TAGS_COLUMN_ID, tagId),
                     newsMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -298,13 +311,14 @@ public class NewsRepositoryImpl implements NewsRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<News> findNewsByAuthorName(String authorName) throws RepositoryException {
+    public List<News> findByAuthorName(String authorName) throws RepositoryException {
         try {
             return jdbcTemplate.query(SELECT_FIND_NEWS_BY_AUTHORS_NAME,
                     new MapSqlParameterSource()
                             .addValue(TABLE_AUTHORS_COLUMN_NAME, authorName),
                     newsMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
             throw new RepositoryException(e);
         }
     }
@@ -323,13 +337,42 @@ public class NewsRepositoryImpl implements NewsRepository {
      * @throws RepositoryException the repository exception
      */
     @Override
-    public List<News> findNewsByAuthorId(long authorId) throws RepositoryException {
+    public List<News> findByAuthorId(long authorId) throws RepositoryException {
         try {
             return jdbcTemplate.query(SELECT_FIND_NEWS_BY_AUTHORS_ID,
                     new MapSqlParameterSource()
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, authorId),
                     newsMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e);
+            throw new RepositoryException(e);
+        }
+    }
+
+    private static final String SELECT_FIND_NEWS_BY_TITLE = """
+            SELECT id, title, content, authors_id, created, modified
+            FROM news
+            WHERE title = :title;
+            """;
+
+    /**
+     * Is exists news with title.
+     *
+     * @param title the news title
+     * @return true - if exists news with title, false - if not exists
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public boolean isExistsNewsWithTitle(String title) throws RepositoryException {
+        try {
+            return !jdbcTemplate.query(
+                            SELECT_FIND_NEWS_BY_TITLE,
+                            new MapSqlParameterSource()
+                                    .addValue(TABLE_NEWS_COLUMN_TITLE, title),
+                            newsMapper)
+                    .isEmpty();
+        } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }

@@ -71,7 +71,7 @@ public class CommentValidator extends Validator {
     public boolean validateNewsId(long newsId)
             throws IncorrectParameterException, RepositoryException {
         if (validateId(newsId)) {
-            if (newsRepository.findNewsById(newsId) != null) {
+            if (newsRepository.findById(newsId) != null) {
                 log.log(INFO, "Correct entered comment news id: " + newsId);
                 return true;
             } else {

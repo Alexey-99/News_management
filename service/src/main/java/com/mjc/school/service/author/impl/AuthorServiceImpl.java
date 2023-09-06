@@ -86,7 +86,7 @@ public class AuthorServiceImpl implements AuthorService {
             if (authorValidator.validateId(id)) {
                 newsRepository.deleteByAuthorId(id);
                 authorRepository.delete(id);
-                return newsRepository.findNewsByAuthorId(id).isEmpty()
+                return newsRepository.findByAuthorId(id).isEmpty()
                         && authorRepository.findById(id) == null;
             } else {
                 return false;

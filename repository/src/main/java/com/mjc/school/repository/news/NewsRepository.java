@@ -43,7 +43,7 @@ public interface NewsRepository {
      * @return the boolean
      * @throws RepositoryException the repository exception
      */
-    public boolean deleteByNewsIdFromTableNewsTags(long newsId) throws RepositoryException;
+    public boolean deleteAllTagsFromNewsByNewsId(long newsId) throws RepositoryException;
 
     /**
      * Update news.
@@ -60,7 +60,7 @@ public interface NewsRepository {
      * @return the list
      * @throws RepositoryException the repository exception
      */
-    public List<News> findAllNews() throws RepositoryException;
+    public List<News> findAll() throws RepositoryException;
 
     /**
      * Find news by id news.
@@ -69,7 +69,7 @@ public interface NewsRepository {
      * @return the news
      * @throws RepositoryException the repository exception
      */
-    public News findNewsById(long newsId) throws RepositoryException;
+    public News findById(long newsId) throws RepositoryException;
 
     /**
      * Find news by tag name list.
@@ -78,7 +78,7 @@ public interface NewsRepository {
      * @return the list
      * @throws RepositoryException the repository exception
      */
-    public List<News> findNewsByTagName(String tagName) throws RepositoryException;
+    public List<News> findByTagName(String tagName) throws RepositoryException;
 
     /**
      * Find news by tag id list.
@@ -87,7 +87,7 @@ public interface NewsRepository {
      * @return the list
      * @throws RepositoryException the repository exception
      */
-    public List<News> findNewsByTagId(long tagId) throws RepositoryException;
+    public List<News> findByTagId(long tagId) throws RepositoryException;
 
     /**
      * Find news by author name list.
@@ -96,7 +96,7 @@ public interface NewsRepository {
      * @return the list
      * @throws RepositoryException the repository exception
      */
-    public List<News> findNewsByAuthorName(String authorName) throws RepositoryException;
+    public List<News> findByAuthorName(String authorName) throws RepositoryException;
 
     /**
      * Find news by author id list.
@@ -105,5 +105,14 @@ public interface NewsRepository {
      * @return the list
      * @throws RepositoryException the repository exception
      */
-    public List<News> findNewsByAuthorId(long authorId) throws RepositoryException;
+    public List<News> findByAuthorId(long authorId) throws RepositoryException;
+
+    /**
+     * Is exists news with title.
+     *
+     * @param title the news title
+     * @return true - if exists news with title, false - if not exists
+     * @throws RepositoryException the repository exception
+     */
+    public boolean isExistsNewsWithTitle(String title) throws RepositoryException;
 }
