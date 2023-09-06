@@ -85,7 +85,7 @@ public interface TagService extends PaginationService<Tag> {
      * @return the list
      * @throws ServiceException the service exception
      */
-    public List<Tag> findAllTags()
+    public List<Tag> findAll()
             throws ServiceException;
 
     /**

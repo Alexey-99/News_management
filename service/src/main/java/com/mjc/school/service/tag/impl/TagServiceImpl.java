@@ -10,6 +10,8 @@ import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.TagValidator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +20,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
+import static org.apache.logging.log4j.Level.ERROR;
 
 /**
  * The type Tag service.
  */
 @Service
 public class TagServiceImpl implements TagService {
+    private static final Logger log = LogManager.getLogger();
     @Autowired
     private TagRepository tagRepository;
     @Autowired
@@ -48,6 +52,7 @@ public class TagServiceImpl implements TagService {
             return tagValidator.validate(tag) &&
                     tagRepository.create(tag);
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
@@ -71,6 +76,7 @@ public class TagServiceImpl implements TagService {
                             && newsRepository.findById(newsId) != null) &&
                     tagRepository.addToNews(tagId, newsId);
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
@@ -92,6 +98,7 @@ public class TagServiceImpl implements TagService {
                     tagValidator.validateId(newsId)) &&
                     tagRepository.removeTagFromNews(tagId, newsId);
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
@@ -116,6 +123,7 @@ public class TagServiceImpl implements TagService {
                 return false;
             }
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
@@ -135,6 +143,7 @@ public class TagServiceImpl implements TagService {
             return tagValidator.validateId(tagId) &&
                     tagRepository.deleteByTagIdFromTableTagsNews(tagId);
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
@@ -155,6 +164,7 @@ public class TagServiceImpl implements TagService {
                     tagValidator.validate(tag) &&
                     tagRepository.update(tag);
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
@@ -166,10 +176,11 @@ public class TagServiceImpl implements TagService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<Tag> findAllTags() throws ServiceException {
+    public List<Tag> findAll() throws ServiceException {
         try {
             return tagRepository.findAllTags();
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
@@ -189,6 +200,7 @@ public class TagServiceImpl implements TagService {
             return tagValidator.validateId(id) ?
                     tagRepository.findById(id) : null;
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
@@ -222,6 +234,7 @@ public class TagServiceImpl implements TagService {
                         BAD_PARAMETER_PART_OF_TAG_NAME);
             }
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
 
@@ -243,6 +256,7 @@ public class TagServiceImpl implements TagService {
                     tagRepository.findByNewsId(newsId) :
                     new ArrayList<>();
         } catch (RepositoryException e) {
+            log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
