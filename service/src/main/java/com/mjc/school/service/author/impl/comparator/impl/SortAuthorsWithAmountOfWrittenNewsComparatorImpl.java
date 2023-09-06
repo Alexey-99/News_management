@@ -1,11 +1,11 @@
 package com.mjc.school.service.author.impl.comparator.impl;
 
-import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.service.author.impl.comparator.SortAuthorsWithAmountOfWrittenNewsComparator;
 
-import java.util.Map.Entry;
-
+/**
+ * The type Sort authors with amount of written news comparator.
+ */
 public class SortAuthorsWithAmountOfWrittenNewsComparatorImpl
         implements SortAuthorsWithAmountOfWrittenNewsComparator {
     /**

@@ -45,9 +45,11 @@ public class AuthorValidator extends Validator {
      * @throws IncorrectParameterException the incorrect parameter exception
      * @throws RepositoryException         the repository exception
      */
-    public boolean validateName(String name) throws IncorrectParameterException, RepositoryException {
+    public boolean validateName(String name)
+            throws IncorrectParameterException, RepositoryException {
         if (name != null &&
-                (name.length() >= MIN_LENGTH_NAME && name.length() <= MAX_LENGTH_NAME)) {
+                (name.length() >= MIN_LENGTH_NAME &&
+                        name.length() <= MAX_LENGTH_NAME)) {
             if (!authorRepository.isExistsAuthorWithName(name)) {
                 return true;
             } else {
@@ -55,7 +57,7 @@ public class AuthorValidator extends Validator {
                 throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME_EXISTS);
             }
         } else {
-            log.log(WARN, "Incorrect entered author name.");
+            log.log(WARN, "Incorrect entered author name: " + name);
             throw new IncorrectParameterException(BAD_AUTHOR_NAME);
         }
     }

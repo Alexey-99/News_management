@@ -37,6 +37,10 @@ public final class ExceptionServiceMessageCodes {
      * The constant FIND_ERROR.
      */
     public static final String FIND_ERROR = "404007";
+    /**
+     * The constant SORT_ERROR.
+     */
+    public static final String SORT_ERROR = "404008";
 
     private ExceptionServiceMessageCodes() {
     }

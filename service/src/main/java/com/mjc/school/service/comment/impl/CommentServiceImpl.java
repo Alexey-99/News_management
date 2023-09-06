@@ -15,17 +15,27 @@ import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentCo
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeDesc;
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeAsc;
 import com.mjc.school.validation.CommentValidator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.SORT_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.UPDATE_ERROR;
+import static org.apache.logging.log4j.Level.ERROR;
+
 /**
  * The type Comment service.
  */
 @Service
 public class CommentServiceImpl implements CommentService {
+    private static final Logger log = LogManager.getLogger();
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
@@ -50,7 +60,8 @@ public class CommentServiceImpl implements CommentService {
             return commentValidator.validateNewsId(newsId) ?
                     commentRepository.findByNewsId(newsId) : null;
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -65,7 +76,8 @@ public class CommentServiceImpl implements CommentService {
         try {
             return commentRepository.findAll();
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -84,7 +96,8 @@ public class CommentServiceImpl implements CommentService {
             return commentValidator.validateId(id) ?
                     commentRepository.findById(id) : null;
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(FIND_ERROR);
         }
     }
 
@@ -105,10 +118,12 @@ public class CommentServiceImpl implements CommentService {
                 sortedList = new LinkedList<>(list);
                 sortedList.sort(comparator);
             } else {
-                throw new ServiceException("comparator is null");
+                log.log(ERROR, "comparator is null");
+                throw new ServiceException(SORT_ERROR);
             }
         } else {
-            throw new ServiceException("list is null");
+            log.log(ERROR, "list is null");
+            throw new ServiceException(SORT_ERROR);
         }
         return sortedList;
     }
@@ -182,10 +197,12 @@ public class CommentServiceImpl implements CommentService {
                 comment.setCreated(dateHandler.getCurrentDate());
                 comment.setModified(dateHandler.getCurrentDate());
                 return commentRepository.create(comment);
+            } else {
+                return false;
             }
-            return false;
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(INSERT_ERROR);
         }
     }
 
@@ -210,7 +227,8 @@ public class CommentServiceImpl implements CommentService {
                 return false;
             }
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(UPDATE_ERROR);
         }
     }
 
@@ -229,7 +247,8 @@ public class CommentServiceImpl implements CommentService {
             return commentValidator.validateId(id) &&
                     commentRepository.deleteById(id);
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(DELETE_ERROR);
         }
     }
 
@@ -248,7 +267,8 @@ public class CommentServiceImpl implements CommentService {
             return commentValidator.validateNewsId(newsId) &&
                     commentRepository.deleteByNewsId(newsId);
         } catch (RepositoryException e) {
-            throw new ServiceException(e);
+            log.log(ERROR, e);
+            throw new ServiceException(DELETE_ERROR);
         }
     }
 
