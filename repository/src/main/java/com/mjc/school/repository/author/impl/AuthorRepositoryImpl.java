@@ -6,7 +6,6 @@ import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.author.AuthorRepository;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.mjc.school.name.ColumnName.TABLE_AUTHORS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_AUTHORS_COLUMN_NAME;
@@ -84,7 +82,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
-
     }
 
     private static final String QUERY_UPDATE_AUTHOR = """
@@ -92,7 +89,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             SET name = :name
             WHERE id = :id;
             """;
-
 
     /**
      * Update author.

@@ -90,4 +90,13 @@ public interface TagRepository {
      * @throws RepositoryException the repository exception
      */
     public List<Tag> findByNewsId(long newsId) throws RepositoryException;
+
+    /**
+     * Is exists tag with name.
+     *
+     * @param name the tag name
+     * @return true - if exists news with title, false - if not exists
+     * @throws RepositoryException the repository exception
+     */
+    public boolean isExistsTagWithName(String name) throws RepositoryException;
 }

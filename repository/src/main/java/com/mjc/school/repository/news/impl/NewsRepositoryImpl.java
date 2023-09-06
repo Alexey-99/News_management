@@ -63,7 +63,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified()))
                     > 0;
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -88,7 +88,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_ID, newsId))
                     > 0;
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -113,7 +113,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, authorId))
                     > 0;
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -140,7 +140,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_TAGS_COLUMN_NEWS_ID, newsId))
                     > 0;
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -173,7 +173,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified()))
                     > 0;
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -194,7 +194,7 @@ public class NewsRepositoryImpl implements NewsRepository {
         try {
             return jdbcTemplate.query(SELECT_ALL_NEWS, newsMapper);
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -221,7 +221,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                     newsMapper);
             return !resultQuery.isEmpty() ? resultQuery.get(0) : null;
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -255,7 +255,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_TAGS_COLUMN_NAME, tagName),
                     newsMapper);
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -289,7 +289,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_TAGS_COLUMN_ID, tagId),
                     newsMapper);
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -318,7 +318,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_AUTHORS_COLUMN_NAME, authorName),
                     newsMapper);
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -344,7 +344,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, authorId),
                     newsMapper);
         } catch (DataAccessException e) {
-            log.log(ERROR, e);
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }

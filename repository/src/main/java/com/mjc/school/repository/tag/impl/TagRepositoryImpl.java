@@ -4,6 +4,8 @@ import com.mjc.school.config.mapper.TagMapper;
 import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.tag.TagRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,16 +14,19 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_TITLE;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_TAGS_COLUMN_NEWS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_TAGS_COLUMN_TAGS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_NAME;
+import static org.apache.logging.log4j.Level.ERROR;
 
 /**
  * The type Tag repository.
  */
 @Repository
 public class TagRepositoryImpl implements TagRepository {
+    private static final Logger log = LogManager.getLogger();
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -47,6 +52,7 @@ public class TagRepositoryImpl implements TagRepository {
                             .addValue(TABLE_TAGS_COLUMN_NAME, tag.getName()))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -74,6 +80,7 @@ public class TagRepositoryImpl implements TagRepository {
                             .addValue(TABLE_NEWS_TAGS_COLUMN_TAGS_ID, tagId))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -102,6 +109,7 @@ public class TagRepositoryImpl implements TagRepository {
                             .addValue(TABLE_NEWS_TAGS_COLUMN_NEWS_ID, newsId)
                             .addValue(TABLE_NEWS_TAGS_COLUMN_TAGS_ID, tagId)) > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -127,6 +135,7 @@ public class TagRepositoryImpl implements TagRepository {
                             .addValue(TABLE_TAGS_COLUMN_ID, tagId))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -152,6 +161,7 @@ public class TagRepositoryImpl implements TagRepository {
                             .addValue(TABLE_NEWS_TAGS_COLUMN_TAGS_ID, tagId))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -178,6 +188,7 @@ public class TagRepositoryImpl implements TagRepository {
                             .addValue(TABLE_TAGS_COLUMN_NAME, tag.getName()))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -198,6 +209,7 @@ public class TagRepositoryImpl implements TagRepository {
         try {
             return jdbcTemplate.query(QUERY_SELECT_ALL_TAGS, tagMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -224,6 +236,7 @@ public class TagRepositoryImpl implements TagRepository {
                                     .addValue(TABLE_TAGS_COLUMN_ID, id), tagMapper);
             return !tagListResult.isEmpty() ? tagListResult.get(0) : null;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -251,6 +264,35 @@ public class TagRepositoryImpl implements TagRepository {
                             .addValue(TABLE_NEWS_TAGS_COLUMN_NEWS_ID, newsId),
                     tagMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
+            throw new RepositoryException(e);
+        }
+    }
+
+    private static final String QUERY_SELECT_TAG_BY_NAME = """
+            SELECT id, name
+            FROM tags
+            WHERE id = :id;
+            """;
+
+    /**
+     * Is exists tag with name.
+     *
+     * @param name the tag name
+     * @return true - if exists news with title, false - if not exists
+     * @throws RepositoryException the repository exception
+     */
+    @Override
+    public boolean isExistsTagWithName(String name) throws RepositoryException {
+        try {
+            return !jdbcTemplate.query(
+                            QUERY_SELECT_TAG_BY_NAME,
+                            new MapSqlParameterSource()
+                                    .addValue(TABLE_TAGS_COLUMN_NAME, name),
+                            tagMapper)
+                    .isEmpty();
+        } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }

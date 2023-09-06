@@ -77,7 +77,7 @@ public class NewsValidator extends Validator {
      * @throws IncorrectParameterException the incorrect parameter exception
      * @throws RepositoryException         the repository exception
      */
-    public boolean isExistsNewsWithTitle(String title)
+    private boolean isExistsNewsWithTitle(String title)
             throws IncorrectParameterException, RepositoryException {
         if (!newsRepository.isExistsNewsWithTitle(title)) {
             log.log(INFO, "Correct entered news title: " + title);

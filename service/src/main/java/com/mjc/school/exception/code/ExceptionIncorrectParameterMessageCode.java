@@ -71,6 +71,10 @@ public final class ExceptionIncorrectParameterMessageCode {
      * The constant BAD_PARAMETER_PART_OF_TAG_NAME.
      */
     public static final String BAD_PARAMETER_PART_OF_TAG_NAME = "40011";
+    /**
+     * The constant BAD_PARAMETER_PART_OF_AUTHOR_NAME.
+     */
+    public static final String BAD_PARAMETER_TAF_NAME_EXISTS = "40014";
 
     private ExceptionIncorrectParameterMessageCode() {
     }

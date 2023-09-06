@@ -4,6 +4,8 @@ import com.mjc.school.config.mapper.CommentMapper;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.comment.CommentRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -18,12 +20,14 @@ import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_CREATED;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_MODIFIED;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_NEWS_ID;
+import static org.apache.logging.log4j.Level.ERROR;
 
 /**
  * The type Comment repository.
  */
 @Repository
 public class CommentRepositoryImpl implements CommentRepository {
+    private static final Logger log = LogManager.getLogger();
     @Autowired
     @Qualifier("namedJdbcTemplate")
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -51,6 +55,7 @@ public class CommentRepositoryImpl implements CommentRepository {
                             .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, newsId),
                     commentsMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
 
@@ -73,6 +78,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             return jdbcTemplate.query(SELECT_ALL_COMMENTS,
                     commentsMapper);
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -100,6 +106,7 @@ public class CommentRepositoryImpl implements CommentRepository {
                     commentsMapper);
             return !commentListResult.isEmpty() ? commentListResult.get(0) : null;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -128,6 +135,7 @@ public class CommentRepositoryImpl implements CommentRepository {
                             .addValue(TABLE_COMMENTS_COLUMN_MODIFIED, comment.getModified()))
                     > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }
@@ -149,14 +157,19 @@ public class CommentRepositoryImpl implements CommentRepository {
      */
     @Override
     public boolean update(Comment comment) throws RepositoryException {
-        return jdbcTemplate.update(
-                QUERY_UPDATE_COMMENT,
-                new MapSqlParameterSource()
-                        .addValue(TABLE_COMMENTS_COLUMN_CONTENT, comment.getContent())
-                        .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, comment.getNewsId())
-                        .addValue(TABLE_COMMENTS_COLUMN_MODIFIED, comment.getModified())
-                        .addValue(TABLE_COMMENTS_COLUMN_ID, comment.getId()))
-                > 0;
+        try {
+            return jdbcTemplate.update(
+                    QUERY_UPDATE_COMMENT,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_COMMENTS_COLUMN_CONTENT, comment.getContent())
+                            .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, comment.getNewsId())
+                            .addValue(TABLE_COMMENTS_COLUMN_MODIFIED, comment.getModified())
+                            .addValue(TABLE_COMMENTS_COLUMN_ID, comment.getId()))
+                    > 0;
+        } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
+            throw new RepositoryException(e);
+        }
     }
 
     private static final String QUERY_DELETE_COMMENT_BY_ID = """
@@ -174,11 +187,16 @@ public class CommentRepositoryImpl implements CommentRepository {
      */
     @Override
     public boolean deleteById(long id) throws RepositoryException {
-        return jdbcTemplate.update(
-                QUERY_DELETE_COMMENT_BY_ID,
-                new MapSqlParameterSource()
-                        .addValue(TABLE_COMMENTS_COLUMN_ID, id))
-                > 0;
+        try {
+            return jdbcTemplate.update(
+                    QUERY_DELETE_COMMENT_BY_ID,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_COMMENTS_COLUMN_ID, id))
+                    > 0;
+        } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
+            throw new RepositoryException(e);
+        }
     }
 
     private static final String QUERY_DELETE_COMMENT_BY_NEWS_ID = """
@@ -201,6 +219,7 @@ public class CommentRepositoryImpl implements CommentRepository {
                     new MapSqlParameterSource()
                             .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, newsId)) > 0;
         } catch (DataAccessException e) {
+            log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
         }
     }

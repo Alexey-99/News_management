@@ -67,13 +67,13 @@ public class AuthorValidator extends Validator {
      * @throws IncorrectParameterException the incorrect parameter exception
      * @throws RepositoryException         the repository exception
      */
-    public boolean isExistsAuthorWithName(String name)
+    private boolean isExistsAuthorWithName(String name)
             throws IncorrectParameterException, RepositoryException {
         if (!authorRepository.isExistsAuthorWithName(name)) {
             log.log(INFO, "Correct entered author name:" + name);
             return true;
         } else {
-            log.log(WARN, "Author with name '" + name + "' exists.");
+            log.log(WARN, "Author with entered name '" + name + "' already exists");
             throw new IncorrectParameterException(BAD_PARAMETER_AUTHOR_NAME_EXISTS);
         }
     }
