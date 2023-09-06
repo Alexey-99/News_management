@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static org.apache.logging.log4j.Level.ERROR;
 
 /**
@@ -121,7 +123,7 @@ public class AuthorServiceImpl implements AuthorService {
             if (!list.isEmpty()) {
                 return list;
             } else {
-                throw new ServiceException("Ytslaclasc");
+                throw new ServiceException(NO_ENTITY);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
@@ -141,9 +143,14 @@ public class AuthorServiceImpl implements AuthorService {
     public Author findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
-            return authorValidator.validateId(id) ?
-                    authorRepository.findById(id) :
-                    null;
+            if (authorValidator.validateId(id)) {
+                Author author = authorRepository.findById(id);
+                if (author != null) {
+                    return author;
+                } else {
+                    throw new ServiceException(NO_ENTITY_WITH_ID);
+                }
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
             throw new ServiceException(e);

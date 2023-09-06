@@ -1,7 +1,7 @@
 package com.mjc.school.exception.code;
 
 /**
- * Class {@code ExceptionDaoMessageCodes} presents keys by which messages will be taken from properties files.
+ * Class {@code ExceptionServiceMessageCodes} presents keys by which messages will be taken from properties files.
  */
 public final class ExceptionServiceMessageCodes {
 
