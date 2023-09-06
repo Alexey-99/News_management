@@ -1,11 +1,11 @@
 package com.mjc.school.entity;
 
-import javax.persistence.Entity;
+import com.mjc.school.entity.abstation.AbstractEntity;
 
 /**
  * The type Author id with amount of written news.
  */
-public class AuthorIdWithAmountOfWrittenNews extends NewsEntity {
+public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
     private long authorId;
     private long amountOfWrittenNews;
 

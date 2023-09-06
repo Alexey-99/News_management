@@ -1,7 +1,8 @@
 package com.mjc.school.entity;
 
+import com.mjc.school.entity.abstation.AbstractEntity;
+
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,10 +13,10 @@ import javax.persistence.Table;
 /**
  * The type Comment.
  */
-@Entity
+@javax.persistence.Entity
 @Table(name = "comments",
         schema = "news_management")
-public class Comment extends NewsEntity {
+public class Comment extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

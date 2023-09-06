@@ -1,6 +1,6 @@
 package com.mjc.school.exception.code;
 
-import com.mjc.school.entity.NewsEntity;
+import com.mjc.school.entity.abstation.AbstractEntity;
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.entity.News;
@@ -11,7 +11,7 @@ import com.mjc.school.entity.Tag;
  */
 public final class ExceptionIncorrectParameterMessageCode {
     /**
-     * Keys for exception messages associated with {@link NewsEntity}.
+     * Keys for exception messages associated with {@link AbstractEntity}.
      */
     public static final String BAD_ID = "40000";
 

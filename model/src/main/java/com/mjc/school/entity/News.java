@@ -1,5 +1,7 @@
 package com.mjc.school.entity;
 
+import com.mjc.school.entity.abstation.AbstractEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "news",
         schema = "news_management")
-public class News extends NewsEntity {
+public class News extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

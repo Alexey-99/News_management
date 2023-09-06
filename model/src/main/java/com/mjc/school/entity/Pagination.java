@@ -1,5 +1,7 @@
 package com.mjc.school.entity;
 
+import com.mjc.school.entity.abstation.AbstractEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ import java.util.List;
  *
  * @param <T> the type parameter
  */
-public class Pagination<T> extends NewsEntity {
+public class Pagination<T> extends AbstractEntity {
     private List<T> entity;
     private long numberPage;
     private long maxNumberPage;

@@ -1,6 +1,9 @@
-package com.mjc.school.entity;
+package com.mjc.school.entity.abstation;
 
-public abstract class NewsEntity {
+/**
+ * The type Abstract entity.
+ */
+public abstract class AbstractEntity {
     @Override
     public abstract int hashCode();
 
