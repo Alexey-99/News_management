@@ -77,9 +77,9 @@ public class AuthorController {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable long id)
+    public ResponseEntity<Boolean> deleteById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
-        boolean result = authorService.delete(id);
+        boolean result = authorService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
 

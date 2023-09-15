@@ -73,7 +73,8 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         try {
             return jdbcTemplate.update(QUERY_INSERT_AUTHOR,
                     new MapSqlParameterSource()
-                            .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName())) > 0;
+                            .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName()))
+                    > 0;
         } catch (DataAccessException e) {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);

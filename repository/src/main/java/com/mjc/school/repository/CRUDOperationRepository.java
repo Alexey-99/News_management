@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @param <T> the type parameter
  */
-public interface CRUDOperationRepository<T> {
+interface CRUDOperationRepository<T> {
     /**
      * Create entity.
      *

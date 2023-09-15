@@ -3,6 +3,7 @@ package com.mjc.school.service.comment;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.service.CRUDOperationService;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
 
@@ -11,7 +12,8 @@ import java.util.List;
 /**
  * The interface Comment service.
  */
-public interface CommentService extends PaginationService<Comment> {
+public interface CommentService
+        extends PaginationService<Comment>, CRUDOperationService<Comment> {
     /**
      * Find by news id list.
      *
@@ -21,26 +23,6 @@ public interface CommentService extends PaginationService<Comment> {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     public List<Comment> findByNewsId(long newsId)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Find all list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<Comment> findAll()
-            throws ServiceException;
-
-    /**
-     * Find by id comment.
-     *
-     * @param id the id
-     * @return the comment
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public Comment findById(long id)
             throws ServiceException, IncorrectParameterException;
 
     /**
@@ -93,39 +75,6 @@ public interface CommentService extends PaginationService<Comment> {
      */
     public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list)
             throws ServiceException;
-
-    /**
-     * Create comment.
-     *
-     * @param comment the comment
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean create(Comment comment)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Update comment.
-     *
-     * @param comment the comment
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean update(Comment comment)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Delete comment by id.
-     *
-     * @param id the id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean deleteById(long id)
-            throws ServiceException, IncorrectParameterException;
 
     /**
      * Delete comment by news id.

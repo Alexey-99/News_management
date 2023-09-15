@@ -3,6 +3,7 @@ package com.mjc.school.service.news;
 import com.mjc.school.entity.News;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.service.CRUDOperationService;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.service.news.impl.comparator.SortNewsComparator;
 
@@ -11,29 +12,8 @@ import java.util.List;
 /**
  * The interface News service.
  */
-public interface NewsService extends PaginationService<News> {
-    /**
-     * Create news.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean create(News news)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Delete by id news.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean deleteById(long newsId)
-            throws ServiceException, IncorrectParameterException;
-
+public interface NewsService
+        extends PaginationService<News>, CRUDOperationService<News> {
     /**
      * Delete by author id news.
      *
@@ -54,36 +34,6 @@ public interface NewsService extends PaginationService<News> {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     public boolean deleteAllTagsFromNewsByNewsId(long newsId)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Update news.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean update(News news)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Find all list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<News> findAll() throws ServiceException;
-
-    /**
-     * Find by id news.
-     *
-     * @param newsId the news id
-     * @return the news
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public News findById(long newsId)
             throws ServiceException, IncorrectParameterException;
 
     /**

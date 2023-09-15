@@ -3,6 +3,7 @@ package com.mjc.school.service.tag;
 import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.service.CRUDOperationService;
 import com.mjc.school.service.pagination.PaginationService;
 
 import java.util.List;
@@ -10,18 +11,8 @@ import java.util.List;
 /**
  * The interface Tag service.
  */
-public interface TagService extends PaginationService<Tag> {
-    /**
-     * Create tag.
-     *
-     * @param tag the tag
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws ServiceException            the service exception
-     */
-    public boolean create(Tag tag)
-            throws IncorrectParameterException, ServiceException;
-
+public interface TagService
+        extends PaginationService<Tag>, CRUDOperationService<Tag> {
     /**
      * Add tag to news.
      *
@@ -47,17 +38,6 @@ public interface TagService extends PaginationService<Tag> {
             throws ServiceException, IncorrectParameterException;
 
     /**
-     * Delete tag by id.
-     *
-     * @param tagId the tag id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean deleteById(long tagId)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
      * Delete tag by id from table tags news.
      *
      * @param tagId the tag id
@@ -66,37 +46,6 @@ public interface TagService extends PaginationService<Tag> {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     public boolean deleteByTagIdFromTableTagsNews(long tagId)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Update tag.
-     *
-     * @param tag the tag
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean update(Tag tag)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Find all tags.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<Tag> findAll()
-            throws ServiceException;
-
-    /**
-     * Find tag by id.
-     *
-     * @param id the id
-     * @return the tag
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public Tag findById(long id)
             throws ServiceException, IncorrectParameterException;
 
     /**

@@ -5,6 +5,7 @@ import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
+import com.mjc.school.service.CRUDOperationService;
 import com.mjc.school.service.pagination.PaginationService;
 
 import java.util.List;
@@ -12,61 +13,8 @@ import java.util.List;
 /**
  * The interface Author service.
  */
-public interface AuthorService extends PaginationService<Author> {
-
-    /**
-     * Create author.
-     *
-     * @param author the author
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean create(Author author)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Delete author.
-     *
-     * @param id the id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean delete(long id)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Update author.
-     *
-     * @param author the author
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public boolean update(Author author)
-            throws ServiceException, IncorrectParameterException;
-
-    /**
-     * Find all authors list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<Author> findAll() throws ServiceException;
-
-    /**
-     * Find by id author.
-     *
-     * @param id the id
-     * @return the author
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public Author findById(long id)
-            throws ServiceException, IncorrectParameterException;
-
-
+public interface AuthorService
+        extends PaginationService<Author>, CRUDOperationService<Author> {
     /**
      * Find authors by part of name.
      *

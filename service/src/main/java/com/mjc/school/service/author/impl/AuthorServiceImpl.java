@@ -80,12 +80,12 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws IncorrectParameterException the incorrect parameter exception
      */
     @Override
-    public boolean delete(long id)
+    public boolean deleteById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
             if (authorValidator.validateId(id)) {
                 newsRepository.deleteByAuthorId(id);
-                authorRepository.delete(id);
+                authorRepository.deleteById(id);
                 return newsRepository.findByAuthorId(id).isEmpty()
                         && authorRepository.findById(id) == null;
             } else {
@@ -127,7 +127,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<Author> findAll() throws ServiceException {
         try {
-            List<Author> authorsList = authorRepository.findAllAuthors();
+            List<Author> authorsList = authorRepository.findAll();
             if (!authorsList.isEmpty()) {
                 return authorsList;
             } else {
@@ -184,7 +184,7 @@ public class AuthorServiceImpl implements AuthorService {
             if (partOfName != null) {
                 String pattern = partOfName.toLowerCase();
                 Pattern p = Pattern.compile(pattern);
-                List<Author> authorsList = authorRepository.findAllAuthors()
+                List<Author> authorsList = authorRepository.findAll()
                         .stream()
                         .filter(author -> {
                             String authorName = author.getName().toLowerCase();
