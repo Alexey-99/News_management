@@ -2,30 +2,14 @@ package com.mjc.school.repository.news;
 
 import com.mjc.school.entity.News;
 import com.mjc.school.exception.RepositoryException;
+import com.mjc.school.repository.CRUDOperationRepository;
 
 import java.util.List;
 
 /**
  * The interface News repository.
  */
-public interface NewsRepository {
-    /**
-     * Create news.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
-    public boolean create(News news) throws RepositoryException;
-
-    /**
-     * Delete by id news.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
-    public boolean deleteById(long newsId) throws RepositoryException;
+public interface NewsRepository extends CRUDOperationRepository<News> {
 
     /**
      * Delete by author id news.
@@ -44,32 +28,6 @@ public interface NewsRepository {
      * @throws RepositoryException the repository exception
      */
     public boolean deleteAllTagsFromNewsByNewsId(long newsId) throws RepositoryException;
-
-    /**
-     * Update news.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
-    public boolean update(News news) throws RepositoryException;
-
-    /**
-     * Find all news list.
-     *
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
-    public List<News> findAll() throws RepositoryException;
-
-    /**
-     * Find news by id news.
-     *
-     * @param newsId the news id
-     * @return the news
-     * @throws RepositoryException the repository exception
-     */
-    public News findById(long newsId) throws RepositoryException;
 
     /**
      * Find news by tag name list.

@@ -3,58 +3,14 @@ package com.mjc.school.repository.author;
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.RepositoryException;
+import com.mjc.school.repository.CRUDOperationRepository;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * The interface Author repository.
  */
-public interface AuthorRepository {
-    /**
-     * Create author.
-     *
-     * @param author the author
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
-    public boolean create(Author author) throws RepositoryException;
-
-    /**
-     * Delete author.
-     *
-     * @param id the id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
-    public boolean delete(long id) throws RepositoryException;
-
-    /**
-     * Update author.
-     *
-     * @param author the author
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
-    public boolean update(Author author) throws RepositoryException;
-
-    /**
-     * Find all authors list.
-     *
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
-    public List<Author> findAllAuthors() throws RepositoryException;
-
-    /**
-     * Find by id author.
-     *
-     * @param id the id
-     * @return the author
-     * @throws RepositoryException the repository exception
-     */
-    public Author findById(long id) throws RepositoryException;
-
+public interface AuthorRepository extends CRUDOperationRepository<Author> {
     /**
      * Find by news id author.
      *

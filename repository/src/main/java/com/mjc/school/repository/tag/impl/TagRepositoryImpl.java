@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_TITLE;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_TAGS_COLUMN_NEWS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_TAGS_COLUMN_TAGS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_ID;
