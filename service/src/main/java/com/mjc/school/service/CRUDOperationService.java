@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @param <T> the type parameter
  */
-interface CRUDOperationService<T> {
+public interface CRUDOperationService<T> {
     /**
      * Create entity.
      *
