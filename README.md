@@ -13,8 +13,10 @@ Business requirements:
     
   − CRUD operations (what_is_CRUD) for News and Comment. If new tags and authors are passed during creation/modification – they should be created in the DB. 
   For update operation – update only fields, that pass in request, others should not be updated. Batch insert is out of scope. 
-  − Get News: 
+  
+  − Get News:
+  
       • get all o by Id o search (all params are optional and can be used in conjunction): 
-      ▪ by tag names and tag ids (many tags) 
-      ▪ by author name (one author) 
-      ▪ by part of Title 
+         - by tag names and tag ids (many tags) 
+         - by author name (one author) 
+         - by part of Title 
