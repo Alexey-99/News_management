@@ -3,4 +3,5 @@ News Management
 
 Business requirements:  
  1. Develop web service for News Management system with the following entities: 
-![image](https://github.com/Alexey-99/News_management_maven/assets/96728779/47f7bbe7-c57a-4c2a-817f-316f19cbb9fc)
+![image](https://github.com/Alexey-99/News_management_maven/assets/96728779/140934c4-653f-445d-9f66-c413553de0fb)
+
