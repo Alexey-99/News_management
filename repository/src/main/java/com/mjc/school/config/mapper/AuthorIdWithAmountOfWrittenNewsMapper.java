@@ -1,18 +1,13 @@
 package com.mjc.school.config.mapper;
 
-import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import static com.mjc.school.name.ColumnName.TABLE_AUTHORS_COLUMN_ID;
-import static com.mjc.school.name.ColumnName.TABLE_AUTHORS_COLUMN_NAME;
 import static com.mjc.school.name.ColumnName.COUNT_ROWS;
 
 /**

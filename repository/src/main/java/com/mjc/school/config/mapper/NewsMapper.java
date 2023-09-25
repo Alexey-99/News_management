@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_AUTHORS_ID;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_CONTENT;
