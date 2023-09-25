@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -16,8 +15,8 @@ import jakarta.persistence.Table;
         schema = "news_management")
 public class Tag {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @OneToMany(mappedBy = "tagId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @OneToMany(mappedBy = "tagId")
     private long id;
     @Column(name = "name",
             nullable = false,
@@ -115,7 +114,7 @@ public class Tag {
          * Set id.
          *
          * @param id the id
-         * @return the id
+         * @return the Tag builder
          */
         public TagBuilder setId(long id) {
             this.tag.setId(id);
@@ -126,7 +125,7 @@ public class Tag {
          * Set name.
          *
          * @param name the name
-         * @return the name
+         * @return the Tag builder
          */
         public TagBuilder setName(String name) {
             this.tag.setName(name);
@@ -136,7 +135,7 @@ public class Tag {
         /**
          * Build tag.
          *
-         * @return the tag
+         * @return the Tag
          */
         public Tag build() {
             return this.tag;

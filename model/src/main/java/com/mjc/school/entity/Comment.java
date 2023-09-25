@@ -18,14 +18,14 @@ import jakarta.persistence.Table;
         schema = "news_management")
 public class Comment extends AbstractEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "content", nullable = false, length = 255)
     private String content;
     @ManyToOne
     @JoinColumn(name = "news_id")
-    private long newsId;
+    private News news;
     @Column(name = "created", nullable = false)
     private String created;
     @Column(name = "modified", nullable = false)
@@ -68,21 +68,21 @@ public class Comment extends AbstractEntity {
     }
 
     /**
-     * Get news id.
+     * Get news.
      *
-     * @return the news id
+     * @return the news
      */
-    public long getNewsId() {
-        return newsId;
+    public News getNews() {
+        return news;
     }
 
     /**
-     * Set news id.
+     * Set news.
      *
-     * @param newsId the news id
+     * @param news the news
      */
-    public void setNewsId(long newsId) {
-        this.newsId = newsId;
+    public void setNews(News news) {
+        this.news = news;
     }
 
     /**
@@ -128,7 +128,7 @@ public class Comment extends AbstractEntity {
         int result = 1;
         result = result * PRIME + Long.hashCode(this.id);
         result = result * PRIME + (this.content != null ? this.content.hashCode() : 1);
-        result = result * PRIME + Long.hashCode(this.newsId);
+        result = result * PRIME + (this.news != null ? this.news.hashCode() : 1);
         result = result * PRIME + (this.created != null ? this.created.hashCode() : 1);
         result = result * PRIME + (this.modified != null ? this.modified.hashCode() : 1);
         return result;
@@ -150,7 +150,11 @@ public class Comment extends AbstractEntity {
         } else if (!this.content.equals(otherComment.content)) {
             return false;
         }
-        if (this.newsId != otherComment.newsId) {
+        if (this.news == null) {
+            if (otherComment.news != null) {
+                return false;
+            }
+        } else if (!this.news.equals(otherComment.news)) {
             return false;
         }
         if (this.created == null) {
@@ -175,7 +179,7 @@ public class Comment extends AbstractEntity {
         final StringBuilder sb = new StringBuilder("Comment{");
         sb.append("id=").append(id);
         sb.append(", content='").append(content).append('\'');
-        sb.append(", newsId=").append(newsId);
+        sb.append(", news=").append(news);
         sb.append(", created=").append(created);
         sb.append(", modified=").append(modified);
         sb.append('}');
@@ -199,7 +203,7 @@ public class Comment extends AbstractEntity {
          * Set id.
          *
          * @param id the id
-         * @return the id
+         * @return the Comment builder
          */
         public CommentBuilder setId(long id) {
             this.comment.setId(id);
@@ -210,7 +214,7 @@ public class Comment extends AbstractEntity {
          * Set content.
          *
          * @param content the content
-         * @return the content
+         * @return the Comment builder
          */
         public CommentBuilder setContent(String content) {
             this.comment.setContent(content);
@@ -218,13 +222,13 @@ public class Comment extends AbstractEntity {
         }
 
         /**
-         * Set news id.
+         * Set news.
          *
-         * @param newsId the news id
-         * @return the news id
+         * @param news the news
+         * @return the Comment builder
          */
-        public CommentBuilder setNewsId(long newsId) {
-            this.comment.setNewsId(newsId);
+        public CommentBuilder setNews(News news) {
+            this.comment.setNews(news);
             return this;
         }
 
@@ -232,7 +236,7 @@ public class Comment extends AbstractEntity {
          * Set created.
          *
          * @param created the created
-         * @return the created
+         * @return the Comment builder
          */
         public CommentBuilder setCreated(String created) {
             this.comment.setCreated(created);
@@ -243,7 +247,7 @@ public class Comment extends AbstractEntity {
          * Set modified.
          *
          * @param modified the modified
-         * @return the modified
+         * @return the Comment builder
          */
         public CommentBuilder setModified(String modified) {
             this.comment.setModified(modified);

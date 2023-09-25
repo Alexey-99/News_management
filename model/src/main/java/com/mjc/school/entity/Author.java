@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.util.List;
+
 /**
  * The type Author.
  */
@@ -16,15 +18,17 @@ import jakarta.persistence.Table;
         schema = "news_management")
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @OneToMany(mappedBy = "authorId")
     private long id;
     @Column(name = "name",
             nullable = false,
             length = 15,
             unique = true)
     private String name;
+    @OneToMany(mappedBy = "author")
+    private List<News> news;
+
 
     /**
      * Get id.
@@ -62,12 +66,31 @@ public class Author {
         this.name = name;
     }
 
+    /**
+     * Get news.
+     *
+     * @return the news
+     */
+    public List<News> getNews() {
+        return news;
+    }
+
+    /**
+     * Set news.
+     *
+     * @param news the news
+     */
+    public void setNews(List<News> news) {
+        this.news = news;
+    }
+
     @Override
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
         result = result * PRIME + Long.hashCode(this.id);
         result = result * PRIME + (this.name != null ? this.name.hashCode() : 1);
+        result = result * PRIME + (this.news != null ? this.news.hashCode() : 1);
         return result;
     }
 
@@ -93,16 +116,24 @@ public class Author {
         } else if (!this.name.equals(otherAuthor.name)) {
             return false;
         }
+        if (this.news == null) {
+            if (otherAuthor.news != null) {
+                return false;
+            }
+        } else if (!this.news.equals(otherAuthor.news)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        final StringBuilder builder = new StringBuilder("Author{");
-        builder.append("id=").append(id);
-        builder.append(", name='").append(name).append('\'');
-        builder.append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("Author{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", news=").append(news);
+        sb.append('}');
+        return sb.toString();
     }
 
     /**
@@ -122,7 +153,7 @@ public class Author {
          * Set id.
          *
          * @param id the id
-         * @return the id
+         * @return the Author builder
          */
         public AuthorBuilder setId(long id) {
             this.author.setId(id);
@@ -133,7 +164,7 @@ public class Author {
          * Set name.
          *
          * @param name the name
-         * @return the name
+         * @return the Author builder
          */
         public AuthorBuilder setName(String name) {
             this.author.setName(name);
@@ -141,9 +172,20 @@ public class Author {
         }
 
         /**
+         * Set news.
+         *
+         * @param news the news
+         * @return the Author builder
+         */
+        public AuthorBuilder setNews(List<News> news) {
+            this.author.setNews(news);
+            return this;
+        }
+
+        /**
          * Build author.
          *
-         * @return the author
+         * @return the Author
          */
         public Author build() {
             return this.author;

@@ -24,7 +24,6 @@ public class News extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @OneToMany(mappedBy = "newsId")
     private long id;
     @Column(name = "title",
             nullable = false,
@@ -37,14 +36,14 @@ public class News extends AbstractEntity {
     private String content;
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private long authorId;
+    private Author author;
     @Column(name = "created",
             nullable = false)
     private String created;
-
     @Column(name = "modified",
             nullable = false)
     private String modified;
+    @OneToMany(mappedBy = "news")
     private List<Comment> comments;
     private List<Tag> tags;
 
@@ -103,21 +102,21 @@ public class News extends AbstractEntity {
     }
 
     /**
-     * Get author id.
+     * Get author.
      *
-     * @return the author id
+     * @return the author
      */
-    public long getAuthorId() {
-        return authorId;
+    public Author getAuthor() {
+        return author;
     }
 
     /**
-     * Set author id.
+     * Set author.
      *
-     * @param authorId the author id
+     * @param author the author
      */
-    public void setAuthorId(long authorId) {
-        this.authorId = authorId;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     /**
@@ -200,7 +199,7 @@ public class News extends AbstractEntity {
         result = result * PRIME + Long.hashCode(this.id);
         result = result * PRIME + (this.title != null ? this.title.hashCode() : 1);
         result = result * PRIME + (this.content != null ? this.content.hashCode() : 1);
-        result = result * PRIME + Long.hashCode(this.authorId);
+        result = result * PRIME + (this.author != null ? this.author.hashCode() : 1);
         result = result * PRIME + (this.created != null ? this.created.hashCode() : 1);
         result = result * PRIME + (this.modified != null ? this.modified.hashCode() : 1);
         result = result * PRIME + (this.comments != null ? this.comments.hashCode() : 1);
@@ -231,7 +230,14 @@ public class News extends AbstractEntity {
         } else if (!this.content.equals(otherNews.content)) {
             return false;
         }
-        if (this.authorId != otherNews.authorId) {
+        if (this.content == null) {
+            if (otherNews.content != null) {
+                return false;
+            }
+        } else if (!this.content.equals(otherNews.content)) {
+            return false;
+        }
+        if (this.author != otherNews.author) {
             return false;
         }
         if (this.created == null) {
@@ -271,7 +277,7 @@ public class News extends AbstractEntity {
         sb.append("id=").append(id);
         sb.append(", title='").append(title).append('\'');
         sb.append(", content='").append(content).append('\'');
-        sb.append(", authorId=").append(authorId);
+        sb.append(", author=").append(author);
         sb.append(", created=").append(created);
         sb.append(", modified=").append(modified);
         sb.append('}');
@@ -295,7 +301,7 @@ public class News extends AbstractEntity {
          * Set id.
          *
          * @param id the id
-         * @return the id
+         * @return the News builder
          */
         public NewsBuilder setId(long id) {
             this.news.setId(id);
@@ -306,7 +312,7 @@ public class News extends AbstractEntity {
          * Set title.
          *
          * @param title the title
-         * @return the title
+         * @return the News builder
          */
         public NewsBuilder setTitle(String title) {
             this.news.setTitle(title);
@@ -317,7 +323,7 @@ public class News extends AbstractEntity {
          * Set content.
          *
          * @param content the content
-         * @return the content
+         * @return the News builder
          */
         public NewsBuilder setContent(String content) {
             this.news.setContent(content);
@@ -325,13 +331,13 @@ public class News extends AbstractEntity {
         }
 
         /**
-         * Set author id.
+         * Set author.
          *
-         * @param authorId the author id
-         * @return the author id
+         * @param author the author
+         * @return the News builder
          */
-        public NewsBuilder setAuthorId(long authorId) {
-            this.news.setAuthorId(authorId);
+        public NewsBuilder setAuthor(Author author) {
+            this.news.setAuthor(author);
             return this;
         }
 
@@ -339,7 +345,7 @@ public class News extends AbstractEntity {
          * Set created.
          *
          * @param created the created
-         * @return the created
+         * @return the News builder
          */
         public NewsBuilder setCreated(String created) {
             this.news.setCreated(created);
@@ -350,7 +356,7 @@ public class News extends AbstractEntity {
          * Set modified.
          *
          * @param modified the modified
-         * @return the modified
+         * @return the News builder
          */
         public NewsBuilder setModified(String modified) {
             this.news.setModified(modified);
@@ -361,7 +367,7 @@ public class News extends AbstractEntity {
          * Set comments.
          *
          * @param comments the comments
-         * @return the comments
+         * @return the News builder
          */
         public NewsBuilder setComments(List<Comment> comments) {
             this.news.setComments(comments);
@@ -373,7 +379,7 @@ public class News extends AbstractEntity {
          * Set tags.
          *
          * @param tags the tags
-         * @return the tags
+         * @return the News builder
          */
         public NewsBuilder setTags(List<Tag> tags) {
             this.news.setTags(tags);
@@ -383,7 +389,7 @@ public class News extends AbstractEntity {
         /**
          * Build news.
          *
-         * @return the news
+         * @return the News
          */
         public News build() {
             return this.news;
