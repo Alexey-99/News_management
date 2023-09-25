@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 /**
  * The type Tag.
@@ -16,13 +19,14 @@ import jakarta.persistence.Table;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @OneToMany(mappedBy = "tagId")
     private long id;
     @Column(name = "name",
             nullable = false,
             length = 15,
             unique = true)
     private String name;
+    @ManyToMany(mappedBy = "tags")
+    private List<News> news;
 
     /**
      * Get id.
@@ -60,12 +64,31 @@ public class Tag {
         this.name = name;
     }
 
+    /**
+     * Get news.
+     *
+     * @return the news
+     */
+    public List<News> getNews() {
+        return news;
+    }
+
+    /**
+     * Set news.
+     *
+     * @param news the news
+     */
+    public void setNews(List<News> news) {
+        this.news = news;
+    }
+
     @Override
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
         result = result * PRIME + Long.hashCode(this.id);
         result = result * PRIME + (this.name != null ? this.name.hashCode() : 1);
+        result = result * PRIME + (this.news != null ? this.news.hashCode() : 1);
         return result;
     }
 
@@ -85,14 +108,22 @@ public class Tag {
         } else if (!this.name.equals(otherTag.name)) {
             return false;
         }
+        if (this.news == null) {
+            if (otherTag.news != null) {
+                return false;
+            }
+        } else if (!this.news.equals(otherTag.news)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Tag{");
+        final StringBuilder sb = new StringBuilder("Tag{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
+        sb.append(", news=").append(news);
         sb.append('}');
         return sb.toString();
     }
@@ -129,6 +160,17 @@ public class Tag {
          */
         public TagBuilder setName(String name) {
             this.tag.setName(name);
+            return this;
+        }
+
+        /**
+         * Set news.
+         *
+         * @param news the news
+         * @return the Tag builder
+         */
+        public TagBuilder setNews(List<News> news) {
+            this.tag.setNews(news);
             return this;
         }
 

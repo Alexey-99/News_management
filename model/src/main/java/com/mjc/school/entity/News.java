@@ -2,12 +2,15 @@ package com.mjc.school.entity;
 
 import com.mjc.school.entity.abstation.AbstractEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -45,6 +48,12 @@ public class News extends AbstractEntity {
     private String modified;
     @OneToMany(mappedBy = "news")
     private List<Comment> comments;
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "news_tags",
+            joinColumns = {@JoinColumn(name = "news_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tags_id")}
+    )
     private List<Tag> tags;
 
     /**
