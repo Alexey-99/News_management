@@ -37,7 +37,7 @@ public class CommentValidator extends Validator {
     public boolean validate(Comment comment)
             throws IncorrectParameterException, RepositoryException {
         return validateContent(comment.getContent()) &&
-                validateNewsId(comment.getNewsId());
+                validateNewsId(comment.getNews().getId());
     }
 
     /**

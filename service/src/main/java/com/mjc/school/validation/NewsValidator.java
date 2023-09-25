@@ -45,19 +45,18 @@ public class NewsValidator extends Validator {
             throws IncorrectParameterException, RepositoryException {
         return validateTitle(news.getTitle()) && isExistsNewsWithTitle(news.getTitle()) &&
                 validateContent(news.getContent()) &&
-                validateAuthorId(news.getAuthorId());
+                validateAuthorId(news.getAuthor().getId());
     }
 
     /**
-     * Validate title boolean.
+     * Validate title.
      *
      * @param title the title
      * @return the boolean
      * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
      */
     public boolean validateTitle(String title)
-            throws IncorrectParameterException, RepositoryException {
+            throws IncorrectParameterException {
         if (title != null &&
                 (title.length() >= MIN_LENGTH_TITLE &&
                         title.length() <= MAX_LENGTH_TITLE)) {
@@ -89,7 +88,7 @@ public class NewsValidator extends Validator {
     }
 
     /**
-     * Validate content boolean.
+     * Validate content.
      *
      * @param content the content
      * @return the boolean
@@ -109,7 +108,7 @@ public class NewsValidator extends Validator {
     }
 
     /**
-     * Validate author id boolean.
+     * Validate author id.
      *
      * @param authorId the author id
      * @return the boolean
