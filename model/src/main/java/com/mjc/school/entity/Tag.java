@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,13 @@ public class Tag {
     private String name;
     @ManyToMany(mappedBy = "tags")
     private List<News> news;
+
+    /**
+     * Instantiates a new Tag.
+     */
+    public Tag() {
+        this.news = new ArrayList<>();
+    }
 
     /**
      * Get id.

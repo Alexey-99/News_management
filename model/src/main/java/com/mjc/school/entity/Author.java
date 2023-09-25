@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,10 @@ public class Author {
     private String name;
     @OneToMany(mappedBy = "author")
     private List<News> news;
+
+    public Author() {
+        this.news = new ArrayList<>();
+    }
 
 
     /**

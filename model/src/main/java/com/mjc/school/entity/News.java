@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,6 +55,14 @@ public class News extends AbstractEntity {
             joinColumns = {@JoinColumn(name = "news_id")},
             inverseJoinColumns = {@JoinColumn(name = "tags_id")})
     private List<Tag> tags;
+
+    /**
+     * Instantiates a new News.
+     */
+    public News() {
+        this.comments = new ArrayList<>();
+        this.tags = new ArrayList<>();
+    }
 
     /**
      * Get id.
