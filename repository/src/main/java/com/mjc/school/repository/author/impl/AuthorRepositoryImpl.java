@@ -124,7 +124,8 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             return jdbcTemplate.update(QUERY_UPDATE_AUTHOR,
                     new MapSqlParameterSource()
                             .addValue(TABLE_AUTHORS_COLUMN_ID, author.getId())
-                            .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName())) > 0;
+                            .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName()))
+                    > 0;
         } catch (DataAccessException e) {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
@@ -169,7 +170,9 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             List<Author> authorListResult = jdbcTemplate.query(QUERY_SELECT_AUTHOR_BY_ID,
                     new MapSqlParameterSource()
                             .addValue(TABLE_AUTHORS_COLUMN_ID, id), authorMapper);
-            return !authorListResult.isEmpty() ? authorListResult.get(0) : null;
+            return !authorListResult.isEmpty() ?
+                    authorListResult.get(0) :
+                    null;
         } catch (DataAccessException e) {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
