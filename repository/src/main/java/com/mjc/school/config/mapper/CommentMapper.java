@@ -1,6 +1,7 @@
 package com.mjc.school.config.mapper;
 
 import com.mjc.school.entity.Comment;
+import com.mjc.school.entity.News;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,9 @@ public class CommentMapper implements RowMapper<Comment> {
         return new Comment.CommentBuilder()
                 .setId(resultSet.getLong(TABLE_COMMENTS_COLUMN_ID))
                 .setContent(resultSet.getString(TABLE_COMMENTS_COLUMN_CONTENT))
-                .setNewsId(resultSet.getLong(TABLE_COMMENTS_COLUMN_NEWS_ID))
+                .setNews(new News.NewsBuilder()
+                        .setId(resultSet.getLong(TABLE_COMMENTS_COLUMN_NEWS_ID))
+                        .build())
                 .setCreated(resultSet.getString(TABLE_COMMENTS_COLUMN_CREATED))
                 .setModified(resultSet.getString(TABLE_COMMENTS_COLUMN_MODIFIED))
                 .build();

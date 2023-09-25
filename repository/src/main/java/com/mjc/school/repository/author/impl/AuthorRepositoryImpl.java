@@ -41,27 +41,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             VALUES (:name);
             """;
 
-//    private static final String PROCEDURE_NAME_INSERT_AUTHOR = "insert_author";
-//    /**
-//     * Create author.
-//     *
-//     * @param author the author
-//     * @return the boolean
-//     */
-//    @Override
-//    public boolean create(Author author) throws RepositoryException {
-//        try {
-//            new SimpleJdbcCall(jdbcTemplate.getJdbcTemplate())
-//                    .withFunctionName(PROCEDURE_NAME_INSERT_AUTHOR)
-//                    .execute(new MapSqlParameterSource()
-//                            .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName()));
-//            return isExistsAuthorWithName(author.getName());
-//        } catch (DataAccessException e) {
-//            log.log(ERROR, e.getMessage());
-//            throw new RepositoryException(e);
-//        }
-//    }
-
     /**
      * Create author.
      *

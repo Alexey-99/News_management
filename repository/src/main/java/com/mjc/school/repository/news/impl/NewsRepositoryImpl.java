@@ -169,7 +169,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                             .addValue(TABLE_NEWS_COLUMN_ID, news.getId())
                             .addValue(TABLE_NEWS_COLUMN_TITLE, news.getTitle())
                             .addValue(TABLE_NEWS_COLUMN_CONTENT, news.getContent())
-                            .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, news.getAuthorId())
+                            .addValue(TABLE_NEWS_COLUMN_AUTHORS_ID, news.getAuthor().getId())
                             .addValue(TABLE_NEWS_COLUMN_MODIFIED, news.getModified()))
                     > 0;
         } catch (DataAccessException e) {

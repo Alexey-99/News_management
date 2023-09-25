@@ -6,6 +6,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
+import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.repository.news.NewsRepository;
@@ -38,7 +39,6 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_CONTENT;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_TITLE;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_NEWS_WITH_TAG_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_NEWS_WITH_TAG_NAME;
@@ -59,6 +59,8 @@ public class NewsServiceImpl implements NewsService {
     private CommentRepository commentRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
     @Autowired
     private NewsValidator newsValidator;
     @Autowired
@@ -136,14 +138,15 @@ public class NewsServiceImpl implements NewsService {
             if (newsValidator.validateAuthorId(authorId)) {
                 for (News news : newsRepository.findAll()
                         .stream()
-                        .filter(news -> news.getAuthorId() == authorId).toList()) {
+                        .filter(news -> news.getAuthor().getId() == authorId)
+                        .toList()) {
                     newsRepository.deleteAllTagsFromNewsByNewsId(news.getId());
                     commentRepository.deleteByNewsId(news.getId());
                     newsRepository.deleteByAuthorId(authorId);
                 }
                 return newsRepository.findAll()
                         .stream()
-                        .filter(news -> news.getAuthorId() == authorId)
+                        .filter(news -> news.getAuthor().getId() == authorId)
                         .toList()
                         .isEmpty();
             } else {
@@ -226,6 +229,7 @@ public class NewsServiceImpl implements NewsService {
             List<News> newsList = newsRepository.findAll();
             if (!newsList.isEmpty()) {
                 for (News news : newsList) {
+                    news.setAuthor(authorRepository.findById(news.getAuthor().getId()));
                     news.setComments(commentRepository.findByNewsId(news.getId()));
                     news.setTags(tagRepository.findByNewsId(news.getId()));
                 }
@@ -255,10 +259,13 @@ public class NewsServiceImpl implements NewsService {
             if (newsValidator.validateId(id)) {
                 News news = newsRepository.findById(id);
                 if (news != null) {
-                    news.setComments(commentRepository
-                            .findByNewsId(news.getId()));
-                    news.setTags(tagRepository
-                            .findByNewsId(news.getId()));
+                    news.setAuthor(
+                            authorRepository.findById(
+                                    news.getAuthor().getId()));
+                    news.setComments(
+                            commentRepository.findByNewsId(news.getId()));
+                    news.setTags(
+                            tagRepository.findByNewsId(news.getId()));
                     return news;
                 } else {
                     log.log(WARN, "Not found news with this ID: " + id);
@@ -289,8 +296,12 @@ public class NewsServiceImpl implements NewsService {
                 List<News> newsList = newsRepository.findByTagName(tagName);
                 if (!newsList.isEmpty()) {
                     for (News news : newsList) {
-                        news.setComments(commentRepository.findByNewsId(news.getId()));
-                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                        news.setAuthor(
+                                authorRepository.findById(news.getAuthor().getId()));
+                        news.setComments(
+                                commentRepository.findByNewsId(news.getId()));
+                        news.setTags(
+                                tagRepository.findByNewsId(news.getId()));
                     }
                     return newsList;
                 } else {
@@ -322,8 +333,12 @@ public class NewsServiceImpl implements NewsService {
                 List<News> newsList = newsRepository.findByTagId(tagId);
                 if (!newsList.isEmpty()) {
                     for (News news : newsList) {
-                        news.setComments(commentRepository.findByNewsId(news.getId()));
-                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                        news.setAuthor(
+                                authorRepository.findById(news.getAuthor().getId()));
+                        news.setComments(
+                                commentRepository.findByNewsId(news.getId()));
+                        news.setTags(
+                                tagRepository.findByNewsId(news.getId()));
                     }
                     return newsList;
                 } else {
@@ -355,13 +370,17 @@ public class NewsServiceImpl implements NewsService {
                 List<News> newsList = newsRepository.findByAuthorName(authorName);
                 if (!newsList.isEmpty()) {
                     for (News news : newsList) {
-                        news.setComments(commentRepository.findByNewsId(news.getId()));
-                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                        news.setAuthor(
+                                authorRepository.findById(news.getAuthor().getId()));
+                        news.setComments(
+                                commentRepository.findByNewsId(news.getId()));
+                        news.setTags(
+                                tagRepository.findByNewsId(news.getId()));
                     }
                     return newsList;
                 } else {
                     log.log(WARN, "Not found news with entered author name: " + authorName);
-                    throw new ServiceException(NO_NEWS_WITH_TAG_NAME);
+                    throw new ServiceException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
                 }
             } else {
                 return new ArrayList<>();
@@ -397,7 +416,10 @@ public class NewsServiceImpl implements NewsService {
                         }).toList();
                 if (!newsList.isEmpty()) {
                     for (News news : newsList) {
-                        news.setComments(commentRepository.findByNewsId(news.getId()));
+                        news.setAuthor(
+                                authorRepository.findById(news.getAuthor().getId()));
+                        news.setComments(
+                                commentRepository.findByNewsId(news.getId()));
                         news.setTags(tagRepository.findByNewsId(news.getId()));
                     }
                     return newsList;
@@ -440,6 +462,8 @@ public class NewsServiceImpl implements NewsService {
                         }).toList();
                 if (!newsList.isEmpty()) {
                     for (News news : newsList) {
+                        news.setAuthor(
+                                authorRepository.findById(news.getAuthor().getId()));
                         news.setComments(commentRepository.findByNewsId(news.getId()));
                         news.setTags(tagRepository.findByNewsId(news.getId()));
                     }

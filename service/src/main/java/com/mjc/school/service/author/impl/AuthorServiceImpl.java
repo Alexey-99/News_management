@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
@@ -129,6 +130,9 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             List<Author> authorsList = authorRepository.findAll();
             if (!authorsList.isEmpty()) {
+                for (Author author : authorsList) {
+                    author.setNews(newsRepository.findByAuthorId(author.getId()));
+                }
                 return authorsList;
             } else {
                 log.log(WARN, "Not found objects");
@@ -155,13 +159,14 @@ public class AuthorServiceImpl implements AuthorService {
             if (authorValidator.validateId(id)) {
                 Author author = authorRepository.findById(id);
                 if (author != null) {
+                    author.setNews(newsRepository.findByAuthorId(author.getId()));
                     return author;
                 } else {
                     log.log(WARN, "Not found object with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
                 }
             } else {
-                return null;
+                throw new IncorrectParameterException(BAD_ID);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
@@ -193,6 +198,9 @@ public class AuthorServiceImpl implements AuthorService {
                                     || (authorName.matches(pattern));
                         }).toList();
                 if (!authorsList.isEmpty()) {
+                    for (Author author : authorsList) {
+                        author.setNews(newsRepository.findByAuthorId(author.getId()));
+                    }
                     return authorsList;
                 } else {
                     log.log(WARN, "Not found object with this part of name: " + partOfName);
@@ -223,13 +231,15 @@ public class AuthorServiceImpl implements AuthorService {
             if (authorValidator.validateId(newsId)) {
                 Author author = authorRepository.findByNewsId(newsId);
                 if (author != null) {
+                    author.setNews(newsRepository.findByAuthorId(author.getId()));
                     return author;
                 } else {
                     log.log(WARN, "Not found objects with author news ID: " + newsId);
                     throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
                 }
             } else {
-                return null;
+                log.log(ERROR, "Incorrect entered ID:" + newsId);
+                throw new IncorrectParameterException(BAD_ID);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -244,10 +254,12 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsIdWithAmountOfWrittenNews()
+    public List<AuthorIdWithAmountOfWrittenNews>
+    selectAllAuthorsIdWithAmountOfWrittenNews()
             throws ServiceException {
         try {
-            List<AuthorIdWithAmountOfWrittenNews> list = authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews();
+            List<AuthorIdWithAmountOfWrittenNews> list =
+                    authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews();
             if (!list.isEmpty()) {
                 return list;
             } else {
@@ -267,7 +279,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws ServiceException the service exception
      */
     @Override
-    public List<AuthorIdWithAmountOfWrittenNews> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
+    public List<AuthorIdWithAmountOfWrittenNews>
+    sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
             throws ServiceException {
         try {
             List<AuthorIdWithAmountOfWrittenNews> authorLongMapSorted =
@@ -310,7 +323,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @return the pagination author id with amount of written news
      */
     @Override
-    public Pagination<AuthorIdWithAmountOfWrittenNews> getPaginationAuthorIdWithAmountOfWrittenNews
+    public Pagination<AuthorIdWithAmountOfWrittenNews>
+    getPaginationAuthorIdWithAmountOfWrittenNews
     (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn,
      long numberPage) {
         return authorIdWithAmountOfWrittenNewsPagination

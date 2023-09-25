@@ -52,8 +52,7 @@ public class News extends AbstractEntity {
     @JoinTable(
             name = "news_tags",
             joinColumns = {@JoinColumn(name = "news_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tags_id")}
-    )
+            inverseJoinColumns = {@JoinColumn(name = "tags_id")})
     private List<Tag> tags;
 
     /**

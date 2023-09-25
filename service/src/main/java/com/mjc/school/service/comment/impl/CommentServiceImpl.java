@@ -6,6 +6,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
+import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.service.comment.CommentService;
@@ -44,6 +45,8 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
+    private NewsRepository newsRepository;
+    @Autowired
     private CommentValidator commentValidator;
     @Autowired
     private DateHandler dateHandler;
@@ -65,6 +68,9 @@ public class CommentServiceImpl implements CommentService {
             if (commentValidator.validateNewsId(newsId)) {
                 List<Comment> commentList = commentRepository.findByNewsId(newsId);
                 if (!commentList.isEmpty()) {
+                    for (Comment comment : commentList) {
+                        comment.setNews(newsRepository.findById(comment.getNews().getId()));
+                    }
                     return commentList;
                 } else {
                     log.log(ERROR, "Not found objects with comment news ID: " + newsId);
@@ -90,6 +96,9 @@ public class CommentServiceImpl implements CommentService {
         try {
             List<Comment> commentList = commentRepository.findAll();
             if (!commentList.isEmpty()) {
+                for (Comment comment : commentList) {
+                    comment.setNews(newsRepository.findById(comment.getNews().getId()));
+                }
                 return commentList;
             } else {
                 log.log(WARN, "Not found objects");
@@ -116,6 +125,7 @@ public class CommentServiceImpl implements CommentService {
             if (commentValidator.validateId(id)) {
                 Comment comment = commentRepository.findById(id);
                 if (comment != null) {
+                    comment.setNews(newsRepository.findById(comment.getNews().getId()));
                     return comment;
                 } else {
                     log.log(WARN, "Not found object with this ID: " + id);

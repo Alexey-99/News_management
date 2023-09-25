@@ -104,7 +104,8 @@ public class CommentRepositoryImpl implements CommentRepository {
                     new MapSqlParameterSource()
                             .addValue(TABLE_COMMENTS_COLUMN_ID, id),
                     commentsMapper);
-            return !commentListResult.isEmpty() ? commentListResult.get(0) : null;
+            return !commentListResult.isEmpty() ? commentListResult.get(0)
+                    : null;
         } catch (DataAccessException e) {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
@@ -130,7 +131,7 @@ public class CommentRepositoryImpl implements CommentRepository {
                     QUERY_INSERT_COMMENT,
                     new MapSqlParameterSource()
                             .addValue(TABLE_COMMENTS_COLUMN_CONTENT, comment.getContent())
-                            .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, comment.getNewsId())
+                            .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, comment.getNews().getId())
                             .addValue(TABLE_COMMENTS_COLUMN_CREATED, comment.getCreated())
                             .addValue(TABLE_COMMENTS_COLUMN_MODIFIED, comment.getModified()))
                     > 0;
@@ -162,7 +163,7 @@ public class CommentRepositoryImpl implements CommentRepository {
                     QUERY_UPDATE_COMMENT,
                     new MapSqlParameterSource()
                             .addValue(TABLE_COMMENTS_COLUMN_CONTENT, comment.getContent())
-                            .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, comment.getNewsId())
+                            .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, comment.getNews().getId())
                             .addValue(TABLE_COMMENTS_COLUMN_MODIFIED, comment.getModified())
                             .addValue(TABLE_COMMENTS_COLUMN_ID, comment.getId()))
                     > 0;
@@ -217,7 +218,8 @@ public class CommentRepositoryImpl implements CommentRepository {
         try {
             return jdbcTemplate.update(QUERY_DELETE_COMMENT_BY_NEWS_ID,
                     new MapSqlParameterSource()
-                            .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, newsId)) > 0;
+                            .addValue(TABLE_COMMENTS_COLUMN_NEWS_ID, newsId))
+                    > 0;
         } catch (DataAccessException e) {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);

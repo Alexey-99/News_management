@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
@@ -185,6 +186,9 @@ public class TagServiceImpl implements TagService {
         try {
             List<Tag> tagList = tagRepository.findAll();
             if (!tagList.isEmpty()) {
+                for (Tag tag : tagList) {
+                    tag.setNews(newsRepository.findByTagId(tag.getId()));
+                }
                 return tagList;
             } else {
                 log.log(WARN, "Not found tags");
@@ -211,13 +215,15 @@ public class TagServiceImpl implements TagService {
             if (tagValidator.validateId(id)) {
                 Tag tag = tagRepository.findById(id);
                 if (tag != null) {
+                    tag.setNews(newsRepository.findByTagId(tag.getId()));
                     return tag;
                 } else {
                     log.log(WARN, "Not found tag with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
                 }
             } else {
-                return null;
+                log.log(ERROR, "Incorrect entered ID:" + id);
+                throw new IncorrectParameterException(BAD_ID);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -250,6 +256,9 @@ public class TagServiceImpl implements TagService {
                         })
                         .toList();
                 if (!tagList.isEmpty()) {
+                    for (Tag tag : tagList) {
+                        tag.setNews(newsRepository.findByTagId(tag.getId()));
+                    }
                     return tagList;
                 } else {
                     log.log(WARN,
@@ -283,6 +292,9 @@ public class TagServiceImpl implements TagService {
             if (tagValidator.validateId(newsId)) {
                 List<Tag> tagList = tagRepository.findByNewsId(newsId);
                 if (!tagList.isEmpty()) {
+                    for (Tag tag : tagList) {
+                        tag.setNews(newsRepository.findByTagId(tag.getId()));
+                    }
                     return tagList;
                 } else {
                     log.log(WARN, "Not found tags with news ID: " + newsId);
