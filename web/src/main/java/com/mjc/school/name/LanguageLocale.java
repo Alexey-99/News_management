@@ -24,6 +24,6 @@ public enum LanguageLocale {
                 }
             }
         }
-        return currentLocale != null ? currentLocale : RU.getLocale();
+        return currentLocale != null ? currentLocale : EN.getLocale();
     }
 }

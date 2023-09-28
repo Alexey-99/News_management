@@ -14,25 +14,14 @@ import java.util.Locale;
 @Component
 public class Translator {
     private static Locale locale;
-    private static ResourceBundleMessageSource messageSource;
-
     @Autowired
-    public Translator(ResourceBundleMessageSource messageSource) {
-        Translator.messageSource = messageSource;
-    }
+    private static ResourceBundleMessageSource messageSource;
 
     public static void setLocale(Locale locale) {
         Translator.locale = locale;
     }
 
-    /**
-     * Method for getting localized message from property file.
-     *
-     * @param msg code of message to get
-     * @return localized message
-     */
     public static String toLocale(String msg) {
-//        Locale locale = LocaleContextHolder.getLocale();
         return messageSource.getMessage(msg, null, locale);
     }
 }
