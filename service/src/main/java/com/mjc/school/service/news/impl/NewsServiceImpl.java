@@ -1,5 +1,6 @@
 package com.mjc.school.service.news.impl;
 
+import com.mjc.school.converter.NewsConverter;
 import com.mjc.school.entity.News;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
@@ -20,6 +21,7 @@ import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsCompara
 import com.mjc.school.validation.AuthorValidator;
 import com.mjc.school.validation.NewsValidator;
 import com.mjc.school.validation.TagValidator;
+import com.mjc.school.validation.dto.NewsDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_CONTENT;
@@ -47,9 +50,6 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.UPDATE_
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
-/**
- * The type News service.
- */
 @Service
 public class NewsServiceImpl implements NewsService {
     private static final Logger log = LogManager.getLogger();
@@ -68,26 +68,21 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     private AuthorValidator authorValidator;
     @Autowired
+    private NewsConverter newsConverter;
+    @Autowired
     private DateHandler dateHandler;
     @Autowired
-    private PaginationService<News> newsPagination;
+    private PaginationService<NewsDTO> newsPagination;
 
-    /**
-     * Create news.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public boolean create(News news)
+    public boolean create(NewsDTO newsDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (newsValidator.validate(news)) {
-                news.setCreated(dateHandler.getCurrentDate());
-                news.setModified(dateHandler.getCurrentDate());
-                return newsRepository.create(news);
+            if (newsValidator.validate(newsDTO)) {
+                newsDTO.setCreated(dateHandler.getCurrentDate());
+                newsDTO.setModified(dateHandler.getCurrentDate());
+                return newsRepository.create(
+                        newsConverter.toNews(newsDTO));
             } else {
                 return false;
             }
@@ -97,14 +92,6 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Delete by id news.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean deleteById(long newsId)
             throws ServiceException, IncorrectParameterException {
@@ -123,14 +110,6 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Delete by author id news.
-     *
-     * @param authorId the author id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean deleteByAuthorId(long authorId)
             throws ServiceException, IncorrectParameterException {
@@ -158,14 +137,6 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Delete by id from table news tags news.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean deleteAllTagsFromNewsByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
@@ -192,22 +163,15 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Update news.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public boolean update(News news)
+    public boolean update(NewsDTO newsDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (newsValidator.validateId(news.getId()) &&
-                    newsValidator.validate(news)) {
-                news.setModified(dateHandler.getCurrentDate());
-                return newsRepository.update(news);
+            if (newsValidator.validateId(newsDTO.getId()) &&
+                    newsValidator.validate(newsDTO)) {
+                newsDTO.setModified(dateHandler.getCurrentDate());
+                return newsRepository.update(
+                        newsConverter.toNews(newsDTO));
             } else {
                 return false;
             }
@@ -217,14 +181,8 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Find all news list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<News> findAll() throws ServiceException {
+    public List<NewsDTO> findAll() throws ServiceException {
         try {
             List<News> newsList = newsRepository.findAll();
             if (!newsList.isEmpty()) {
@@ -233,7 +191,9 @@ public class NewsServiceImpl implements NewsService {
                     news.setComments(commentRepository.findByNewsId(news.getId()));
                     news.setTags(tagRepository.findByNewsId(news.getId()));
                 }
-                return newsList;
+                return newsList.stream()
+                        .map(news -> newsConverter.toNewsDTO(news))
+                        .toList();
             } else {
                 log.log(WARN, "Not found news");
                 throw new ServiceException(NO_ENTITY);
@@ -244,16 +204,8 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Find by id news.
-     *
-     * @param id the news id
-     * @return the news
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public News findById(long id)
+    public NewsDTO findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
             if (newsValidator.validateId(id)) {
@@ -266,7 +218,7 @@ public class NewsServiceImpl implements NewsService {
                             commentRepository.findByNewsId(news.getId()));
                     news.setTags(
                             tagRepository.findByNewsId(news.getId()));
-                    return news;
+                    return newsConverter.toNewsDTO(news);
                 } else {
                     log.log(WARN, "Not found news with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -280,16 +232,8 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Find by tag name list.
-     *
-     * @param tagName the tag name
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<News> findByTagName(String tagName)
+    public List<NewsDTO> findByTagName(String tagName)
             throws ServiceException, IncorrectParameterException {
         try {
             if (tagValidator.validateName(tagName)) {
@@ -303,7 +247,9 @@ public class NewsServiceImpl implements NewsService {
                         news.setTags(
                                 tagRepository.findByNewsId(news.getId()));
                     }
-                    return newsList;
+                    return newsList.stream()
+                            .map(news -> newsConverter.toNewsDTO(news))
+                            .toList();
                 } else {
                     log.log(WARN, "Not found news with entered tag name: " + tagName);
                     throw new ServiceException(NO_NEWS_WITH_TAG_NAME);
@@ -317,16 +263,8 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Find by tag id list.
-     *
-     * @param tagId the tag id
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<News> findByTagId(long tagId)
+    public List<NewsDTO> findByTagId(long tagId)
             throws ServiceException, IncorrectParameterException {
         try {
             if (tagValidator.validateId(tagId)) {
@@ -340,7 +278,9 @@ public class NewsServiceImpl implements NewsService {
                         news.setTags(
                                 tagRepository.findByNewsId(news.getId()));
                     }
-                    return newsList;
+                    return newsList.stream()
+                            .map(news -> newsConverter.toNewsDTO(news))
+                            .toList();
                 } else {
                     log.log(WARN, "Not found news with entered tag ID: " + tagId);
                     throw new ServiceException(NO_NEWS_WITH_TAG_ID);
@@ -354,16 +294,8 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Find by author name list.
-     *
-     * @param authorName the author name
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<News> findByAuthorName(String authorName)
+    public List<NewsDTO> findByAuthorName(String authorName)
             throws ServiceException, IncorrectParameterException {
         try {
             if (authorValidator.validateName(authorName)) {
@@ -377,7 +309,9 @@ public class NewsServiceImpl implements NewsService {
                         news.setTags(
                                 tagRepository.findByNewsId(news.getId()));
                     }
-                    return newsList;
+                    return newsList.stream()
+                            .map(news -> newsConverter.toNewsDTO(news))
+                            .toList();
                 } else {
                     log.log(WARN, "Not found news with entered author name: " + authorName);
                     throw new ServiceException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
@@ -391,22 +325,14 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Find by part of title list.
-     *
-     * @param partOfTitle the part of title
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<News> findByPartOfTitle(String partOfTitle)
+    public List<NewsDTO> findByPartOfTitle(String partOfTitle)
             throws ServiceException, IncorrectParameterException {
         try {
             if (partOfTitle != null) {
                 String pattern = partOfTitle.toLowerCase();
                 Pattern p = Pattern.compile(pattern);
-                List<News> newsList = findAll()
+                List<NewsDTO> newsList = findAll()
                         .stream()
                         .filter(news -> {
                             String newsTitle = news.getTitle().toLowerCase();
@@ -415,7 +341,7 @@ public class NewsServiceImpl implements NewsService {
                                     (newsTitle.matches(pattern));
                         }).toList();
                 if (!newsList.isEmpty()) {
-                    for (News news : newsList) {
+                    for (NewsDTO news : newsList) {
                         news.setAuthor(
                                 authorRepository.findById(news.getAuthor().getId()));
                         news.setComments(
@@ -437,22 +363,14 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Find by part of content list.
-     *
-     * @param partOfContent the part of content
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<News> findByPartOfContent(String partOfContent)
+    public List<NewsDTO> findByPartOfContent(String partOfContent)
             throws ServiceException, IncorrectParameterException {
         try {
             if (partOfContent != null) {
                 String pattern = partOfContent.toLowerCase();
                 Pattern p = Pattern.compile(pattern);
-                List<News> newsList = findAll()
+                List<NewsDTO> newsList = findAll()
                         .stream()
                         .filter(news -> {
                             String newsContent = news.getTitle().toLowerCase();
@@ -461,7 +379,7 @@ public class NewsServiceImpl implements NewsService {
                                     (newsContent.matches(pattern));
                         }).toList();
                 if (!newsList.isEmpty()) {
-                    for (News news : newsList) {
+                    for (NewsDTO news : newsList) {
                         news.setAuthor(
                                 authorRepository.findById(news.getAuthor().getId()));
                         news.setComments(commentRepository.findByNewsId(news.getId()));
@@ -482,18 +400,10 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    /**
-     * Sort news list.
-     *
-     * @param newsList   the news list
-     * @param comparator the comparator
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<News> sort(List<News> newsList, SortNewsComparator comparator)
+    public List<NewsDTO> sort(List<NewsDTO> newsList, SortNewsComparator comparator)
             throws ServiceException {
-        List<News> sortedNewsList;
+        List<NewsDTO> sortedNewsList;
         if (newsList != null) {
             if (comparator != null) {
                 sortedNewsList = new LinkedList<>(newsList);
@@ -509,70 +419,34 @@ public class NewsServiceImpl implements NewsService {
         return sortedNewsList;
     }
 
-    /**
-     * Sort news by created date time asc list.
-     *
-     * @param newsList the news list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<News> sortByCreatedDateTimeAsc(List<News> newsList)
+    public List<NewsDTO> sortByCreatedDateTimeAsc(List<NewsDTO> newsList)
             throws ServiceException {
         return sort(newsList, new SortNewsComparatorByCreatedDateTimeAsc());
     }
 
-    /**
-     * Sort news by created date time desc list.
-     *
-     * @param newsList the news list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<News> sortByCreatedDateTimeDesc(List<News> newsList)
+    public List<NewsDTO> sortByCreatedDateTimeDesc(List<NewsDTO> newsList)
             throws ServiceException {
         return sort(newsList, new SortNewsComparatorByCreatedDateTimeDesc());
     }
 
-    /**
-     * Sort news by modified date time asc list.
-     *
-     * @param newsList the news list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<News> sortByModifiedDateTimeAsc(List<News> newsList)
+    public List<NewsDTO> sortByModifiedDateTimeAsc(List<NewsDTO> newsList)
             throws ServiceException {
         return sort(newsList, new SortNewsComparatorByModifiedDateTimeAsc());
     }
 
-    /**
-     * Sort news by modified date time desc list.
-     *
-     * @param newsList the news list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<News> sortByModifiedDateTimeDesc(List<News> newsList)
+    public List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList)
             throws ServiceException {
         return sort(newsList, new SortNewsComparatorByModifiedDateTimeDesc());
     }
 
-    /**
-     * Get objects from list.
-     *
-     * @param list                 the list
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
     @Override
-    public Pagination<News> getPagination(List<News> list,
-                                          long numberElementsReturn,
-                                          long numberPage) {
+    public Pagination<NewsDTO> getPagination(List<NewsDTO> list,
+                                             long numberElementsReturn,
+                                             long numberPage) {
         return newsPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }

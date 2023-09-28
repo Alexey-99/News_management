@@ -5,6 +5,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.repository.news.NewsRepository;
+import com.mjc.school.validation.dto.NewsDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,6 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_AUTH
 import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
-/**
- * The type News validator.
- */
 @Component
 public class NewsValidator extends Validator {
     private static final Logger log = LogManager.getLogger();
@@ -33,28 +31,14 @@ public class NewsValidator extends Validator {
     @Autowired
     private NewsRepository newsRepository;
 
-    /**
-     * Validate author.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
-     */
-    public boolean validate(News news)
+    public boolean validate(NewsDTO newsDTO)
             throws IncorrectParameterException, RepositoryException {
-        return validateTitle(news.getTitle()) && isExistsNewsWithTitle(news.getTitle()) &&
-                validateContent(news.getContent()) &&
-                validateAuthorId(news.getAuthor().getId());
+        return validateTitle(newsDTO.getTitle()) &&
+                isExistsNewsWithTitle(newsDTO.getTitle()) &&
+                validateContent(newsDTO.getContent()) &&
+                validateAuthorId(newsDTO.getAuthor().getId());
     }
 
-    /**
-     * Validate title.
-     *
-     * @param title the title
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     public boolean validateTitle(String title)
             throws IncorrectParameterException {
         if (title != null &&
@@ -68,14 +52,6 @@ public class NewsValidator extends Validator {
         }
     }
 
-    /**
-     * Is exists news with title.
-     *
-     * @param title the title
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
-     */
     private boolean isExistsNewsWithTitle(String title)
             throws IncorrectParameterException, RepositoryException {
         if (!newsRepository.isExistsNewsWithTitle(title)) {
@@ -87,13 +63,6 @@ public class NewsValidator extends Validator {
         }
     }
 
-    /**
-     * Validate content.
-     *
-     * @param content the content
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     public boolean validateContent(String content)
             throws IncorrectParameterException {
         if (content != null &&
@@ -107,14 +76,6 @@ public class NewsValidator extends Validator {
         }
     }
 
-    /**
-     * Validate author id.
-     *
-     * @param authorId the author id
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
-     */
     public boolean validateAuthorId(long authorId)
             throws IncorrectParameterException, RepositoryException {
         if (super.validateId(authorId)) {

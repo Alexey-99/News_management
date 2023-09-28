@@ -6,140 +6,47 @@ import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.CRUDOperationService;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.service.news.impl.comparator.SortNewsComparator;
+import com.mjc.school.validation.dto.NewsDTO;
 
 import java.util.List;
 
-/**
- * The interface News service.
- */
 public interface NewsService
-        extends PaginationService<News>, CRUDOperationService<News, News> {
-    /**
-     * Delete by author id news.
-     *
-     * @param authorId the author id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
+        extends PaginationService<NewsDTO>,
+        CRUDOperationService<NewsDTO> {
     public boolean deleteByAuthorId(long authorId)
             throws ServiceException, IncorrectParameterException;
 
-    /**
-     * Delete by id from table news tags news.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     public boolean deleteAllTagsFromNewsByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException;
 
-    /**
-     * Find by tag name list.
-     *
-     * @param tagName the tag name
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public List<News> findByTagName(String tagName)
+    public List<NewsDTO> findByTagName(String tagName)
             throws ServiceException, IncorrectParameterException;
 
-    /**
-     * Find by tag id list.
-     *
-     * @param tagId the tag id
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public List<News> findByTagId(long tagId)
+    public List<NewsDTO> findByTagId(long tagId)
             throws ServiceException, IncorrectParameterException;
 
-    /**
-     * Find by author name list.
-     *
-     * @param authorName the author name
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public List<News> findByAuthorName(String authorName)
+    public List<NewsDTO> findByAuthorName(String authorName)
             throws ServiceException, IncorrectParameterException;
 
-    /**
-     * Find by part of title list.
-     *
-     * @param partOfTitle the part of title
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public List<News> findByPartOfTitle(String partOfTitle)
+    public List<NewsDTO> findByPartOfTitle(String partOfTitle)
             throws ServiceException, IncorrectParameterException;
 
-    /**
-     * Find by part of content list.
-     *
-     * @param partOfContent the part of content
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    public List<News> findByPartOfContent(String partOfContent)
+    public List<NewsDTO> findByPartOfContent(String partOfContent)
             throws ServiceException, IncorrectParameterException;
 
-    /**
-     * Sort list.
-     *
-     * @param newsList   the news list
-     * @param comparator the comparator
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<News> sort(List<News> newsList,
-                           SortNewsComparator comparator)
+    public List<NewsDTO> sort(List<NewsDTO> newsList,
+                              SortNewsComparator comparator)
             throws ServiceException;
 
-    /**
-     * Sort by created date time asc list.
-     *
-     * @param newsList the news list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<News> sortByCreatedDateTimeAsc(List<News> newsList)
+    public List<NewsDTO> sortByCreatedDateTimeAsc(List<NewsDTO> newsList)
             throws ServiceException;
 
-    /**
-     * Sort by created date time desc list.
-     *
-     * @param newsList the news list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<News> sortByCreatedDateTimeDesc(List<News> newsList)
+    public List<NewsDTO> sortByCreatedDateTimeDesc(List<NewsDTO> newsList)
             throws ServiceException;
 
-    /**
-     * Sort by modified date time asc list.
-     *
-     * @param newsList the news list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<News> sortByModifiedDateTimeAsc(List<News> newsList)
+    public List<NewsDTO> sortByModifiedDateTimeAsc(List<NewsDTO> newsList)
             throws ServiceException;
 
-    /**
-     * Sort by modified date time desc list.
-     *
-     * @param newsList the news list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    public List<News> sortByModifiedDateTimeDesc(List<News> newsList)
+    public List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList)
             throws ServiceException;
 }

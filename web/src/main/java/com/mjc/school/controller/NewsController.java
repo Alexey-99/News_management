@@ -6,6 +6,7 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.name.SortingField;
 import com.mjc.school.service.news.NewsService;
+import com.mjc.school.validation.dto.NewsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +32,9 @@ public class NewsController {
     private NewsService newsService;
 
     @PostMapping
-    public ResponseEntity<Boolean> create(@RequestBody News news)
+    public ResponseEntity<Boolean> create(@RequestBody NewsDTO newsDTO)
             throws ServiceException, IncorrectParameterException {
-        boolean result = newsService.create(news);
+        boolean result = newsService.create(newsDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -60,14 +61,14 @@ public class NewsController {
     }
 
     @PutMapping
-    public boolean update(@RequestBody News news)
+    public boolean update(@RequestBody NewsDTO newsDTO)
             throws ServiceException, IncorrectParameterException {
-        return newsService.update(news);
+        return newsService.update(newsDTO);
     }
 
     @GetMapping("/all")
-    public Pagination<News> findAllNews(
-            @RequestParam(value = "count-elements-on-page",
+    public Pagination<NewsDTO> findAllNews(
+            @RequestParam(value = "size",
                     required = false,
                     defaultValue = "5")
             long countElementsReturn,
@@ -83,19 +84,19 @@ public class NewsController {
     }
 
     @GetMapping("/id/{id}")
-    public News findNewsById(@PathVariable long id)
+    public NewsDTO findNewsById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return newsService.findById(id);
     }
 
     @GetMapping("/tag-name/{tagName}")
-    public Pagination<News> findNewsByTagName(
+    public Pagination<NewsDTO> findNewsByTagName(
             @PathVariable String tagName,
-            @RequestParam(value = "count-elements-on-page",
+            @RequestParam(value = "size",
                     required = false,
                     defaultValue = "5")
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
                     defaultValue = "1")
             long numberPage)
@@ -107,13 +108,13 @@ public class NewsController {
     }
 
     @GetMapping("/tag-id/{tagId}")
-    public Pagination<News> findNewsByTagId(
+    public Pagination<NewsDTO> findNewsByTagId(
             @PathVariable long tagId,
-            @RequestParam(value = "count-elements-on-page",
+            @RequestParam(value = "size",
                     required = false,
                     defaultValue = "5")
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
                     defaultValue = "1")
             long numberPage)
@@ -125,13 +126,13 @@ public class NewsController {
     }
 
     @GetMapping("/author-name/{authorName}")
-    public Pagination<News> findNewsByAuthorName(
+    public Pagination<NewsDTO> findNewsByAuthorName(
             @PathVariable String authorName,
-            @RequestParam(value = "count-elements-on-page",
+            @RequestParam(value = "size",
                     required = false,
                     defaultValue = "5")
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
                     defaultValue = "1")
             long numberPage)
@@ -142,14 +143,14 @@ public class NewsController {
                 numberPage);
     }
 
-    @GetMapping("/part-of-title/{partOfTitle}")
-    public Pagination<News> findNewsByPartOfTitle(
+    @GetMapping("/part-title/{partOfTitle}")
+    public Pagination<NewsDTO> findNewsByPartOfTitle(
             @PathVariable String partOfTitle,
-            @RequestParam(value = "count-elements-on-page",
+            @RequestParam(value = "size",
                     required = false,
                     defaultValue = "5")
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
                     defaultValue = "1")
             long numberPage)
@@ -160,14 +161,14 @@ public class NewsController {
                 numberPage);
     }
 
-    @GetMapping("/part-of-content/{partOfContent}")
-    public Pagination<News> findNewsByPartOfContent(
+    @GetMapping("/part-content/{partOfContent}")
+    public Pagination<NewsDTO> findNewsByPartOfContent(
             @PathVariable String partOfContent,
-            @RequestParam(value = "count-elements-on-page",
+            @RequestParam(value = "size",
                     required = false,
                     defaultValue = "5")
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
                     defaultValue = "1")
             long numberPage)
@@ -179,25 +180,25 @@ public class NewsController {
     }
 
     @GetMapping("/sort")
-    public Pagination<News> sort(
-            @RequestParam(value = "count-elements-on-page",
+    public Pagination<NewsDTO> sort(
+            @RequestParam(value = "size",
                     required = false,
                     defaultValue = "5")
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
                     defaultValue = "1")
             long numberPage,
-            @RequestParam(value = "sorting-field",
+            @RequestParam(value = "field",
                     required = false,
                     defaultValue = MODIFIED)
             String sortingField,
-            @RequestParam(value = "sorting-type",
+            @RequestParam(value = "type",
                     required = false,
                     defaultValue = DESCENDING)
             String sortingType)
             throws ServiceException {
-        Pagination<News> sortedList = null;
+        Pagination<NewsDTO> sortedList = null;
         switch (sortingField) {
             case SortingField.CREATED -> {
                 switch (sortingType) {
