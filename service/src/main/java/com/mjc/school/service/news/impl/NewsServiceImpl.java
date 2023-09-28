@@ -380,9 +380,14 @@ public class NewsServiceImpl implements NewsService {
                 if (!newsList.isEmpty()) {
                     for (NewsDTO news : newsList) {
                         news.setAuthor(
-                                authorRepository.findById(news.getAuthor().getId()));
-                        news.setComments(commentRepository.findByNewsId(news.getId()));
-                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                                authorRepository.findById(
+                                        news.getAuthor().getId()));
+                        news.setComments(
+                                commentRepository.findByNewsId(
+                                        news.getId()));
+                        news.setTags(
+                                tagRepository.findByNewsId(
+                                        news.getId()));
                     }
                     return newsList;
                 } else {
