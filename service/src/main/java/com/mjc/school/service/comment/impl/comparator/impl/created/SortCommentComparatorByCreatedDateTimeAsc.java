@@ -1,36 +1,12 @@
 package com.mjc.school.service.comment.impl.comparator.impl.created;
 
-import com.mjc.school.entity.Comment;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
+import com.mjc.school.validation.dto.CommentDTO;
 
-/**
- * The type Sort comments comparator by created date time by Ascending.
- */
 public class SortCommentComparatorByCreatedDateTimeAsc
         implements SortCommentComparator {
-    /**
-     * Compares its two arguments for order.  Returns a negative integer,
-     * zero, or a positive integer as the first argument is less than, equal
-     * to, or greater than the second.<p>
-     * <p>
-     *
-     * @param comment1 the first object to be compared.
-     * @param comment2 the second object to be compared.
-     * @return a negative integer, zero, or a positive integer as the
-     * first argument is less than, equal to, or greater than the
-     * second.
-     * @throws NullPointerException if an argument is null and this
-     *                              comparator does not permit null arguments
-     * @throws ClassCastException   if the arguments' types prevent them from
-     *                              being compared by this comparator.
-     * @apiNote It is generally the case, but <i>not</i> strictly required that
-     * {@code (compare(x, y)==0) == (x.equals(y))}.  Generally speaking,
-     * any comparator that violates this condition should clearly indicate
-     * this fact.  The recommended language is "Note: this comparator
-     * imposes orderings that are inconsistent with equals."
-     */
     @Override
-    public int compare(Comment comment1, Comment comment2) {
+    public int compare(CommentDTO comment1, CommentDTO comment2) {
         return comment1.getCreated().compareTo(comment2.getCreated());
     }
 }

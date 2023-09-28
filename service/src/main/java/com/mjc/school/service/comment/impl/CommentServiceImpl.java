@@ -1,5 +1,6 @@
 package com.mjc.school.service.comment.impl;
 
+import com.mjc.school.converter.CommentConverter;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
@@ -16,6 +17,7 @@ import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentCo
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeDesc;
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeAsc;
 import com.mjc.school.validation.CommentValidator;
+import com.mjc.school.validation.dto.CommentDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +38,6 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.UPDATE_
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
-/**
- * The type Comment service.
- */
 @Service
 public class CommentServiceImpl implements CommentService {
     private static final Logger log = LogManager.getLogger();
@@ -49,29 +48,27 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentValidator commentValidator;
     @Autowired
+    private CommentConverter commentConverter;
+    @Autowired
     private DateHandler dateHandler;
     @Autowired
-    private PaginationService<Comment> commentPagination;
+    private PaginationService<CommentDTO> commentPagination;
 
-    /**
-     * Find by news id list.
-     *
-     * @param newsId the news id
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<Comment> findByNewsId(long newsId)
+    public List<CommentDTO> findByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
             if (commentValidator.validateNewsId(newsId)) {
                 List<Comment> commentList = commentRepository.findByNewsId(newsId);
                 if (!commentList.isEmpty()) {
                     for (Comment comment : commentList) {
-                        comment.setNews(newsRepository.findById(comment.getNews().getId()));
+                        comment.setNews(
+                                newsRepository.findById(
+                                        comment.getNews().getId()));
                     }
-                    return commentList;
+                    return commentList.stream()
+                            .map(comment -> commentConverter.toCommentDTO(comment))
+                            .toList();
                 } else {
                     log.log(ERROR, "Not found objects with comment news ID: " + newsId);
                     throw new ServiceException(NO_ENTITY_WITH_COMMENT_NEWS_ID);
@@ -85,21 +82,19 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    /**
-     * Find all list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<Comment> findAll() throws ServiceException {
+    public List<CommentDTO> findAll() throws ServiceException {
         try {
             List<Comment> commentList = commentRepository.findAll();
             if (!commentList.isEmpty()) {
                 for (Comment comment : commentList) {
-                    comment.setNews(newsRepository.findById(comment.getNews().getId()));
+                    comment.setNews(
+                            newsRepository.findById(
+                                    comment.getNews().getId()));
                 }
-                return commentList;
+                return commentList.stream()
+                        .map(comment -> commentConverter.toCommentDTO(comment))
+                        .toList();
             } else {
                 log.log(WARN, "Not found objects");
                 throw new ServiceException(NO_ENTITY);
@@ -110,23 +105,17 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    /**
-     * Find by id comment.
-     *
-     * @param id the id
-     * @return the comment
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public Comment findById(long id)
+    public CommentDTO findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
             if (commentValidator.validateId(id)) {
                 Comment comment = commentRepository.findById(id);
                 if (comment != null) {
-                    comment.setNews(newsRepository.findById(comment.getNews().getId()));
-                    return comment;
+                    comment.setNews(
+                            newsRepository.findById(
+                                    comment.getNews().getId()));
+                    return commentConverter.toCommentDTO(comment);
                 } else {
                     log.log(WARN, "Not found object with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -140,22 +129,16 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    /**
-     * Sort list.
-     *
-     * @param list       the list
-     * @param comparator the comparator
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<Comment> sort(List<Comment> list, SortCommentComparator comparator)
+    public List<CommentDTO> sort(List<CommentDTO> list,
+                                 SortCommentComparator comparator)
             throws ServiceException {
-        List<Comment> sortedList;
+        List<CommentDTO> sortedList;
         if (list != null) {
             if (comparator != null) {
                 sortedList = new LinkedList<>(list);
                 sortedList.sort(comparator);
+                return sortedList;
             } else {
                 log.log(ERROR, "comparator is null");
                 throw new ServiceException(SORT_ERROR);
@@ -164,78 +147,42 @@ public class CommentServiceImpl implements CommentService {
             log.log(ERROR, "list is null");
             throw new ServiceException(SORT_ERROR);
         }
-        return sortedList;
+
     }
 
-    /**
-     * Sort by created date time asc list.
-     *
-     * @param list the list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<Comment> sortByCreatedDateTimeAsc(List<Comment> list)
+    public List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list)
             throws ServiceException {
         return sort(list, new SortCommentComparatorByCreatedDateTimeAsc());
     }
 
-    /**
-     * Sort by created date time desc list.
-     *
-     * @param list the list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<Comment> sortByCreatedDateTimeDesc(List<Comment> list)
+    public List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list)
             throws ServiceException {
         return sort(list, new SortCommentComparatorByCreatedDateTimeDesc());
     }
 
-    /**
-     * Sort by modified date time asc list.
-     *
-     * @param list the list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<Comment> sortByModifiedDateTimeAsc(List<Comment> list)
+    public List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list)
             throws ServiceException {
         return sort(list, new SortCommentComparatorByModifiedDateTimeAsc());
     }
 
-    /**
-     * Sort by modified date time desc list.
-     *
-     * @param list the list
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<Comment> sortByModifiedDateTimeDesc(List<Comment> list)
+    public List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list)
             throws ServiceException {
         return sort(list, new SortCommentComparatorByModifiedDateTimeDesc());
     }
 
-    /**
-     * Create comment.
-     *
-     * @param comment the comment
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public boolean create(Comment comment)
+    public boolean create(CommentDTO commentDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (comment != null &&
-                    commentValidator.validate(comment)) {
-                comment.setCreated(dateHandler.getCurrentDate());
-                comment.setModified(dateHandler.getCurrentDate());
-                return commentRepository.create(comment);
+            if (commentValidator.validate(commentDTO)) {
+                commentDTO.setCreated(dateHandler.getCurrentDate());
+                commentDTO.setModified(dateHandler.getCurrentDate());
+                return commentRepository.create(
+                        commentConverter.toComment(commentDTO));
             } else {
                 return false;
             }
@@ -245,23 +192,15 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    /**
-     * Update comment.
-     *
-     * @param comment the comment
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public boolean update(Comment comment)
+    public boolean update(CommentDTO commentDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (comment != null &&
-                    (commentValidator.validateId(comment.getId()) &&
-                            commentValidator.validate(comment))) {
-                comment.setModified(dateHandler.getCurrentDate());
-                return commentRepository.update(comment);
+            if (commentValidator.validateId(commentDTO.getId()) &&
+                    commentValidator.validate(commentDTO)) {
+                commentDTO.setModified(dateHandler.getCurrentDate());
+                return commentRepository.update(
+                        commentConverter.toComment(commentDTO));
             } else {
                 return false;
             }
@@ -271,34 +210,21 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    /**
-     * Delete comment by id.
-     *
-     * @param id the id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean deleteById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
-            return commentValidator.validateId(id) &&
-                    commentRepository.deleteById(id);
+            if (commentValidator.validateId(id)) {
+                return commentRepository.deleteById(id);
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(DELETE_ERROR);
         }
     }
 
-    /**
-     * Delete by news id comment.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean deleteByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
@@ -311,17 +237,9 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    /**
-     * Get objects from list.
-     *
-     * @param list                 the list
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
     @Override
-    public Pagination<Comment> getPagination(
-            List<Comment> list, long numberElementsReturn, long numberPage) {
+    public Pagination<CommentDTO> getPagination(
+            List<CommentDTO> list, long numberElementsReturn, long numberPage) {
         return commentPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }

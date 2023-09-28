@@ -12,7 +12,8 @@ import com.mjc.school.validation.dto.AuthorDTO;
 import java.util.List;
 
 public interface AuthorService
-        extends PaginationService<AuthorDTO>, CRUDOperationService<AuthorDTO> {
+        extends PaginationService<AuthorDTO>,
+        CRUDOperationService<AuthorDTO> {
     public List<AuthorDTO> findByPartOfName(String partOfName)
             throws ServiceException, IncorrectParameterException;
 

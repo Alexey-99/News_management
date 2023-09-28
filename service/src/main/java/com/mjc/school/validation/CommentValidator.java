@@ -4,6 +4,7 @@ import com.mjc.school.entity.Comment;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.news.NewsRepository;
+import com.mjc.school.validation.dto.CommentDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,27 +27,12 @@ public class CommentValidator extends Validator {
     @Autowired
     private NewsRepository newsRepository;
 
-    /**
-     * Validate comment.
-     *
-     * @param comment the comment
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
-     */
-    public boolean validate(Comment comment)
+    public boolean validate(CommentDTO commentDTO)
             throws IncorrectParameterException, RepositoryException {
-        return validateContent(comment.getContent()) &&
-                validateNewsId(comment.getNews().getId());
+        return validateContent(commentDTO.getContent()) &&
+                validateNewsId(commentDTO.getNews().getId());
     }
 
-    /**
-     * Validate comment content.
-     *
-     * @param content the content
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     public boolean validateContent(String content)
             throws IncorrectParameterException {
         if (content != null &&
@@ -60,14 +46,6 @@ public class CommentValidator extends Validator {
         }
     }
 
-    /**
-     * Validate comment news id.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
-     */
     public boolean validateNewsId(long newsId)
             throws IncorrectParameterException, RepositoryException {
         if (validateId(newsId)) {
