@@ -30,7 +30,6 @@ import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-//@Validated
 @RestController
 @RequestMapping("/tag")
 public class TagController {
@@ -38,9 +37,13 @@ public class TagController {
     private TagService tagService;
 
     @PostMapping
-    public ResponseEntity<Boolean> create(@Valid @RequestBody @NotNull(message = BAD_REQUEST_PARAMETER) TagDTO tag)
+    public ResponseEntity<Boolean> create(
+            @Valid
+            @RequestBody
+            @NotNull(message = BAD_REQUEST_PARAMETER)
+            TagDTO tagDTO)
             throws ServiceException, IncorrectParameterException {
-        boolean result = tagService.create(tag);
+        boolean result = tagService.create(tagDTO);
         return new ResponseEntity<>(result, CREATED);
     }
 
