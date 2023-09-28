@@ -42,7 +42,7 @@ public class TagServiceImpl implements TagService {
     @Autowired
     private TagConverter tagConverter;
     @Autowired
-    private PaginationService<Tag> tagPagination;
+    private PaginationService<TagDTO> tagPagination;
 
     @Override
     public boolean create(TagDTO tagDTO)
@@ -239,7 +239,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Pagination<Tag> getPagination(List<Tag> list, long numberElementsReturn, long numberPage) {
+    public Pagination<TagDTO> getPagination(List<TagDTO> list, long numberElementsReturn, long numberPage) {
         return tagPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }

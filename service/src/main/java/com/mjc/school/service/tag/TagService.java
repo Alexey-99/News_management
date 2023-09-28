@@ -10,7 +10,7 @@ import com.mjc.school.validation.dto.TagDTO;
 import java.util.List;
 
 public interface TagService
-        extends PaginationService<Tag>, CRUDOperationService<TagDTO> {
+        extends PaginationService<TagDTO>, CRUDOperationService<TagDTO> {
     public boolean addToNews(long tagId, long newsId)
             throws ServiceException, IncorrectParameterException;
 

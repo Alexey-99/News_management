@@ -9,12 +9,6 @@ public class AuthorDTO {
     private String name;
     private List<News> news;
 
-    public AuthorDTO(long id, String name, List<News> news) {
-        this.id = id;
-        this.name = name;
-        this.news = news;
-    }
-
     public long getId() {
         return id;
     }
@@ -37,5 +31,32 @@ public class AuthorDTO {
 
     public void setNews(List<News> news) {
         this.news = news;
+    }
+
+    public static class AuthorDTOBuilder {
+        private final AuthorDTO authorDTO;
+
+        public AuthorDTOBuilder() {
+            this.authorDTO = new AuthorDTO();
+        }
+
+        public AuthorDTOBuilder setId(long id) {
+            this.authorDTO.setId(id);
+            return this;
+        }
+
+        public AuthorDTOBuilder setName(String name) {
+            this.authorDTO.setName(name);
+            return this;
+        }
+
+        public AuthorDTOBuilder setNews(List<News> news) {
+            this.authorDTO.setNews(news);
+            return this;
+        }
+
+        public AuthorDTO build() {
+            return this.authorDTO;
+        }
     }
 }

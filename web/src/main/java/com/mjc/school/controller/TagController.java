@@ -102,7 +102,7 @@ public class TagController {
     }
 
     @GetMapping("/all")
-    public Pagination<Tag> findAll(
+    public Pagination<TagDTO> findAll(
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
@@ -119,7 +119,7 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public Tag findById(
+    public TagDTO findById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
@@ -128,7 +128,7 @@ public class TagController {
     }
 
     @GetMapping("/part-name/{partOfName}")
-    public Pagination<Tag> findByPartOfName(
+    public Pagination<TagDTO> findByPartOfName(
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
             @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
@@ -149,7 +149,7 @@ public class TagController {
     }
 
     @GetMapping("/news/{newsId}")
-    public Pagination<Tag> findByNewsId(
+    public Pagination<TagDTO> findByNewsId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long newsId,
