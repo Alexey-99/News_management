@@ -6,6 +6,9 @@ import com.mjc.school.exception.ServiceException;
 import com.mjc.school.name.SortingField;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
+import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
 import static com.mjc.school.name.SortingField.MODIFIED;
 import static com.mjc.school.name.SortingType.ASCENDING;
 import static com.mjc.school.name.SortingType.DESCENDING;
@@ -51,7 +56,9 @@ public class CommentController {
 
     @GetMapping("/news/{newsId}")
     public Pagination<CommentDTO> findByNewsId(
-            @PathVariable long newsId,
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long newsId,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
@@ -68,7 +75,10 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public CommentDTO findById(@PathVariable long id)
+    public CommentDTO findById(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
         return commentService.findById(id);
     }
@@ -128,16 +138,20 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<Boolean> create(
+            @Valid
             @RequestBody
+            @NotNull(message = BAD_REQUEST_PARAMETER)
             CommentDTO commentDTO)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.create(commentDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<Boolean> update(
+            @Valid
             @RequestBody
+            @NotNull(message = BAD_REQUEST_PARAMETER)
             CommentDTO commentDTO)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.update(commentDTO);
@@ -145,14 +159,20 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable long id)
+    public ResponseEntity<Boolean> deleteById(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
 
     @DeleteMapping("/news/{newsId}")
-    public ResponseEntity<Boolean> deleteByNewsId(@PathVariable long newsId)
+    public ResponseEntity<Boolean> deleteByNewsId(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = commentService.deleteByNewsId(newsId);
         return new ResponseEntity<>(result, OK);
