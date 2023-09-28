@@ -6,6 +6,9 @@ import com.mjc.school.exception.ServiceException;
 import com.mjc.school.name.SortingField;
 import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
 import static com.mjc.school.name.SortingField.MODIFIED;
 import static com.mjc.school.name.SortingType.ASCENDING;
 import static com.mjc.school.name.SortingType.DESCENDING;
@@ -40,14 +45,20 @@ public class NewsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable long id)
+    public ResponseEntity<Boolean> deleteById(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
 
     @DeleteMapping("/author/{authorId}")
-    public ResponseEntity<Boolean> deleteByAuthorId(@PathVariable long authorId)
+    public ResponseEntity<Boolean> deleteByAuthorId(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long authorId)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteByAuthorId(authorId);
         return new ResponseEntity<>(result, OK);
@@ -55,7 +66,9 @@ public class NewsController {
 
     @DeleteMapping("/tags/{newsId}")
     public ResponseEntity<Boolean> deleteByNewsIdFromTableNewsTags(
-            @PathVariable long newsId)
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.deleteAllTagsFromNewsByNewsId(newsId);
         return new ResponseEntity<>(result, OK);
@@ -85,14 +98,20 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public NewsDTO findNewsById(@PathVariable long id)
+    public NewsDTO findNewsById(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
         return newsService.findById(id);
     }
 
     @GetMapping("/tag-name/{tagName}")
     public Pagination<NewsDTO> findNewsByTagName(
-            @PathVariable String tagName,
+            @PathVariable
+            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            String tagName,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
@@ -110,7 +129,9 @@ public class NewsController {
 
     @GetMapping("/tag-id/{tagId}")
     public Pagination<NewsDTO> findNewsByTagId(
-            @PathVariable long tagId,
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long tagId,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
@@ -128,7 +149,10 @@ public class NewsController {
 
     @GetMapping("/author-name/{authorName}")
     public Pagination<NewsDTO> findNewsByAuthorName(
-            @PathVariable String authorName,
+            @PathVariable
+            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            String authorName,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
@@ -146,7 +170,10 @@ public class NewsController {
 
     @GetMapping("/part-title/{partOfTitle}")
     public Pagination<NewsDTO> findNewsByPartOfTitle(
-            @PathVariable String partOfTitle,
+            @PathVariable
+            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            String partOfTitle,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
@@ -164,7 +191,10 @@ public class NewsController {
 
     @GetMapping("/part-content/{partOfContent}")
     public Pagination<NewsDTO> findNewsByPartOfContent(
-            @PathVariable String partOfContent,
+            @PathVariable
+            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            String partOfContent,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
