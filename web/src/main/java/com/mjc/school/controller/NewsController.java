@@ -1,6 +1,5 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.entity.News;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.mjc.school.name.SortingField.MODIFIED;
 import static com.mjc.school.name.SortingType.ASCENDING;
 import static com.mjc.school.name.SortingType.DESCENDING;
+import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER_PAGE;
+import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -52,7 +53,7 @@ public class NewsController {
         return new ResponseEntity<>(result, OK);
     }
 
-    @DeleteMapping("/tags/news/{newsId}")
+    @DeleteMapping("/tags/{newsId}")
     public ResponseEntity<Boolean> deleteByNewsIdFromTableNewsTags(
             @PathVariable long newsId)
             throws ServiceException, IncorrectParameterException {
@@ -70,11 +71,11 @@ public class NewsController {
     public Pagination<NewsDTO> findAllNews(
             @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
             @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException {
         return newsService.getPagination(
@@ -83,7 +84,7 @@ public class NewsController {
                 numberPage);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public NewsDTO findNewsById(@PathVariable long id)
             throws ServiceException, IncorrectParameterException {
         return newsService.findById(id);
@@ -94,11 +95,11 @@ public class NewsController {
             @PathVariable String tagName,
             @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
             @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
@@ -112,11 +113,11 @@ public class NewsController {
             @PathVariable long tagId,
             @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
             @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
@@ -130,11 +131,11 @@ public class NewsController {
             @PathVariable String authorName,
             @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
             @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
@@ -148,11 +149,11 @@ public class NewsController {
             @PathVariable String partOfTitle,
             @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
             @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
@@ -166,11 +167,11 @@ public class NewsController {
             @PathVariable String partOfContent,
             @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
             @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
@@ -183,11 +184,11 @@ public class NewsController {
     public Pagination<NewsDTO> sort(
             @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
             @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage,
             @RequestParam(value = "field",
                     required = false,

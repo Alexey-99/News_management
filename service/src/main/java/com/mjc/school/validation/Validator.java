@@ -9,21 +9,11 @@ import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCo
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.INFO;
 
-/**
- * The type Validator.
- */
 @Validated
 public abstract class Validator {
     private static final Logger log = LogManager.getLogger();
     private static final int MIN_ID = 1;
 
-    /**
-     * Validate ID.
-     *
-     * @param id the id
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     public boolean validateId( long id) throws IncorrectParameterException {
         if (id >= MIN_ID) {
             log.log(INFO, "Correct entered ID:" + id);
