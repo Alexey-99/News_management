@@ -1,7 +1,6 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.entity.Pagination;
-import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.tag.TagService;

@@ -4,6 +4,7 @@ import com.mjc.school.entity.Author;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.author.AuthorRepository;
+import com.mjc.school.validation.dto.AuthorDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,6 @@ import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCo
 import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
-/**
- * The type Author validator.
- */
 @Component
 public class AuthorValidator extends Validator {
     private static final Logger log = LogManager.getLogger();
@@ -25,27 +23,11 @@ public class AuthorValidator extends Validator {
     @Autowired
     private AuthorRepository authorRepository;
 
-    /**
-     * Validate author.
-     *
-     * @param author the author
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
-     */
-    public boolean validate(Author author)
+    public boolean validate(AuthorDTO authorDTO)
             throws IncorrectParameterException, RepositoryException {
-        return validateName(author.getName()) && isExistsAuthorWithName(author.getName());
+        return validateName(authorDTO.getName()) && isExistsAuthorWithName(authorDTO.getName());
     }
 
-    /**
-     * Validate author name.
-     *
-     * @param name the name
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
-     */
     public boolean validateName(String name)
             throws IncorrectParameterException, RepositoryException {
         if (name != null &&
@@ -59,14 +41,6 @@ public class AuthorValidator extends Validator {
         }
     }
 
-    /**
-     * Is exists author with name.
-     *
-     * @param name the name
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws RepositoryException         the repository exception
-     */
     private boolean isExistsAuthorWithName(String name)
             throws IncorrectParameterException, RepositoryException {
         if (!authorRepository.isExistsAuthorWithName(name)) {

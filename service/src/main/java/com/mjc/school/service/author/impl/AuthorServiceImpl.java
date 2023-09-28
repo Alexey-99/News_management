@@ -1,5 +1,6 @@
 package com.mjc.school.service.author.impl;
 
+import com.mjc.school.converter.AuthorConverter;
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.entity.Pagination;
@@ -12,6 +13,7 @@ import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
 import com.mjc.school.validation.AuthorValidator;
+import com.mjc.school.validation.dto.AuthorDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,6 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.UPDATE_
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
-/**
- * The type Author service.
- */
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private static final Logger log = LogManager.getLogger();
@@ -47,39 +46,29 @@ public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private AuthorValidator authorValidator;
     @Autowired
-    private PaginationService<Author> authorPagination;
+    private AuthorConverter authorConverter;
+    @Autowired
+    private PaginationService<AuthorDTO> authorPagination;
     @Autowired
     private PaginationService<AuthorIdWithAmountOfWrittenNews>
             authorIdWithAmountOfWrittenNewsPagination;
 
-    /**
-     * Create author.
-     *
-     * @param author the author
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public boolean create(Author author)
+    public boolean create(AuthorDTO authorDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            return authorValidator.validate(author) &&
-                    authorRepository.create(author);
+            if (authorValidator.validate(authorDTO)) {
+                return authorRepository.create(
+                        authorConverter.toAuthor(authorDTO));
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(INSERT_ERROR);
         }
     }
 
-    /**
-     * Delete author.
-     *
-     * @param id the id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean deleteById(long id)
             throws ServiceException, IncorrectParameterException {
@@ -98,42 +87,35 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    /**
-     * Update author.
-     *
-     * @param author the author
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public boolean update(Author author)
+    public boolean update(AuthorDTO authorDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            return authorValidator.validateId(author.getId()) &&
-                    authorValidator.validate(author) &&
-                    authorRepository.update(author);
+            if (authorValidator.validateId(authorDTO.getId()) &&
+                    authorValidator.validate(authorDTO)) {
+                return authorRepository.update(
+                        authorConverter.toAuthor(authorDTO));
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(UPDATE_ERROR);
         }
     }
 
-    /**
-     * Find all authors list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<Author> findAll() throws ServiceException {
+    public List<AuthorDTO> findAll() throws ServiceException {
         try {
             List<Author> authorsList = authorRepository.findAll();
             if (!authorsList.isEmpty()) {
                 for (Author author : authorsList) {
                     author.setNews(newsRepository.findByAuthorId(author.getId()));
                 }
-                return authorsList;
+                return authorsList
+                        .stream()
+                        .map(author -> authorConverter.toAuthorDTO(author))
+                        .toList();
             } else {
                 log.log(WARN, "Not found objects");
                 throw new ServiceException(NO_ENTITY);
@@ -144,23 +126,15 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    /**
-     * Find by id author.
-     *
-     * @param id the id
-     * @return the author
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public Author findById(long id)
+    public AuthorDTO findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
             if (authorValidator.validateId(id)) {
                 Author author = authorRepository.findById(id);
                 if (author != null) {
                     author.setNews(newsRepository.findByAuthorId(author.getId()));
-                    return author;
+                    return authorConverter.toAuthorDTO(author);
                 } else {
                     log.log(WARN, "Not found object with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -174,16 +148,8 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    /**
-     * Find authors by part of name.
-     *
-     * @param partOfName the part of name
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<Author> findByPartOfName(String partOfName)
+    public List<AuthorDTO> findByPartOfName(String partOfName)
             throws ServiceException, IncorrectParameterException {
         try {
             if (partOfName != null) {
@@ -201,7 +167,9 @@ public class AuthorServiceImpl implements AuthorService {
                     for (Author author : authorsList) {
                         author.setNews(newsRepository.findByAuthorId(author.getId()));
                     }
-                    return authorsList;
+                    return authorsList.stream()
+                            .map(author -> authorConverter.toAuthorDTO(author))
+                            .toList();
                 } else {
                     log.log(WARN, "Not found object with this part of name: " + partOfName);
                     throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
@@ -216,23 +184,15 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    /**
-     * Find by news id author.
-     *
-     * @param newsId the news id
-     * @return the author
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public Author findByNewsId(long newsId)
+    public AuthorDTO findByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
             if (authorValidator.validateId(newsId)) {
                 Author author = authorRepository.findByNewsId(newsId);
                 if (author != null) {
                     author.setNews(newsRepository.findByAuthorId(author.getId()));
-                    return author;
+                    return authorConverter.toAuthorDTO(author);
                 } else {
                     log.log(WARN, "Not found objects with author news ID: " + newsId);
                     throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
@@ -247,12 +207,6 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    /**
-     * Select all authors id with amount of written news list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
     public List<AuthorIdWithAmountOfWrittenNews>
     selectAllAuthorsIdWithAmountOfWrittenNews()
@@ -272,12 +226,6 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    /**
-     * Sort all authors id with amount of written news desc list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
     public List<AuthorIdWithAmountOfWrittenNews>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
@@ -300,33 +248,17 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    /**
-     * Get objects from list.
-     *
-     * @param list                 the list
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
     @Override
-    public Pagination<Author> getPagination(
-            List<Author> list, long numberElementsReturn, long numberPage) {
+    public Pagination<AuthorDTO> getPagination(
+            List<AuthorDTO> list, long numberElementsReturn, long numberPage) {
         return authorPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 
-    /**
-     * Gets author id with amount of written news.
-     *
-     * @param list                 the list
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the pagination author id with amount of written news
-     */
     @Override
     public Pagination<AuthorIdWithAmountOfWrittenNews>
     getPaginationAuthorIdWithAmountOfWrittenNews
-    (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn,
-     long numberPage) {
+            (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn,
+             long numberPage) {
         return authorIdWithAmountOfWrittenNewsPagination
                 .getPagination(list, numberElementsReturn, numberPage);
     }

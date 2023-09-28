@@ -1,11 +1,15 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.author.AuthorService;
+import com.mjc.school.validation.dto.AuthorDTO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,33 +22,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
+import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
+import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER_PAGE;
+import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-/**
- * The type Author controller.
- */
 @RestController
 @RequestMapping("/author")
 public class AuthorController {
     @Autowired
     private AuthorService authorService;
 
-    /**
-     * Select all authors with amount of written news list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @GetMapping("/amount-news")
     public Pagination<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsWithAmountOfWrittenNews(
-            @RequestParam(value = "count-elements-on-page",
+            @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException {
         return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
@@ -53,66 +53,47 @@ public class AuthorController {
                 numberPage);
     }
 
-    /**
-     * Create author.
-     *
-     * @param author the author
-     * @return the response entity
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @PostMapping("/create")
-    public ResponseEntity<Boolean> create(@RequestBody Author author)
+    @PostMapping
+    public ResponseEntity<Boolean> create(
+            @Valid
+            @RequestBody
+            @NotNull(message = BAD_REQUEST_PARAMETER)
+            AuthorDTO authorDTO)
             throws ServiceException, IncorrectParameterException {
-        boolean result = authorService.create(author);
+        boolean result = authorService.create(authorDTO);
         return new ResponseEntity<>(result, CREATED);
     }
 
-    /**
-     * Delete author.
-     *
-     * @param id the id
-     * @return the response entity
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable long id)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteById(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = authorService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
 
-    /**
-     * Update author.
-     *
-     * @param author the author
-     * @return the response entity
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @PutMapping("/update")
-    public ResponseEntity<Boolean> update(@RequestBody Author author)
+    @PutMapping
+    public ResponseEntity<Boolean> update(
+            @Valid
+            @RequestBody
+            @NotNull(message = BAD_REQUEST_PARAMETER)
+            AuthorDTO authorDTO)
             throws ServiceException, IncorrectParameterException {
-        boolean result = authorService.update(author);
+        boolean result = authorService.update(authorDTO);
         return new ResponseEntity<>(result, OK);
     }
 
-    /**
-     * Find all authors list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @GetMapping("/all")
-    public Pagination<Author> findAllAuthors(
-            @RequestParam(value = "count-elements-on-page",
+    public Pagination<AuthorDTO> findAllAuthors(
+            @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException {
         return authorService.getPagination(
@@ -121,37 +102,28 @@ public class AuthorController {
                 numberPage);
     }
 
-    /**
-     * Find by id author.
-     *
-     * @param id the id
-     * @return the author
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @GetMapping("/id/{id}")
-    public Author findById(@PathVariable long id)
+    @GetMapping("/{id}")
+    public AuthorDTO findById(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
         return authorService.findById(id);
     }
 
-    /**
-     * Find by part of name list.
-     *
-     * @param partOfName the part of name
-     * @return the list
-     * @throws ServiceException the service exception
-     */
-    @GetMapping("/part-of-name/{partOfName}")
-    public Pagination<Author> findByPartOfName(
-            @PathVariable String partOfName,
-            @RequestParam(value = "count-elements-on-page",
+    @GetMapping("/part-name/{partOfName}")
+    public Pagination<AuthorDTO> findByPartOfName(
+            @PathVariable
+            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            String partOfName,
+            @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException, IncorrectParameterException {
         return authorService.getPagination(
@@ -160,36 +132,25 @@ public class AuthorController {
                 numberPage);
     }
 
-    /**
-     * Find by news id author.
-     *
-     * @param newsId the news id
-     * @return the author
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @GetMapping("/news-id/{newsId}")
-    public Author findByNewsId(@PathVariable long newsId)
+    @GetMapping("/news/{newsId}")
+    public AuthorDTO findByNewsId(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long newsId)
             throws ServiceException, IncorrectParameterException {
         return authorService.findByNewsId(newsId);
     }
 
-    /**
-     * Sort all authors with amount of written news desc list.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @GetMapping("/sort/amount-news")
     public Pagination<AuthorIdWithAmountOfWrittenNews>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
-            @RequestParam(value = "count-elements-on-page",
+            @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException {
         return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
