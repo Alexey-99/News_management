@@ -13,7 +13,7 @@ import java.util.List;
  * The interface News service.
  */
 public interface NewsService
-        extends PaginationService<News>, CRUDOperationService<News> {
+        extends PaginationService<News>, CRUDOperationService<News, News> {
     /**
      * Delete by author id news.
      *

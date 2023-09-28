@@ -5,6 +5,11 @@ import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.tag.TagService;
+import com.mjc.school.validation.dto.TagDTO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,135 +22,94 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
+import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
+import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER_PAGE;
+import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-/**
- * The type Tag controller.
- */
+//@Validated
 @RestController
 @RequestMapping("/tag")
 public class TagController {
     @Autowired
     private TagService tagService;
 
-    /**
-     * Create tag.
-     *
-     * @param tag the tag
-     * @return the response entity
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @PostMapping("/create")
-    public ResponseEntity<Boolean> create(@RequestBody Tag tag)
+    @PostMapping
+    public ResponseEntity<Boolean> create(@Valid @RequestBody @NotNull(message = BAD_REQUEST_PARAMETER) TagDTO tag)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.create(tag);
         return new ResponseEntity<>(result, CREATED);
     }
 
-    /**
-     * Add tag to news.
-     *
-     * @param tagId  the tag id
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @GetMapping("/add-to-news")
+    @PutMapping("/to-news")
     public ResponseEntity<Boolean> addToNews(
-            @RequestParam(value = "tag-id")
+            @RequestParam(value = "tag")
+            @Min(value = 1, message = BAD_ID)
             long tagId,
-            @RequestParam(value = "news-id")
+            @RequestParam(value = "news")
+            @Min(value = 1, message = BAD_ID)
             long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.addToNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
     }
 
-    /**
-     * Remove tag from news.
-     *
-     * @param tagId  the tag id
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @GetMapping("/remove-from-news")
+    @DeleteMapping("/from-news")
     public ResponseEntity<Boolean> removeTagFromNews(
-            @RequestParam(value = "tag-id")
+            @RequestParam(value = "tag")
+            @Min(value = 1, message = BAD_ID)
             long tagId,
-            @RequestParam(value = "news-id")
+            @RequestParam(value = "news")
+            @Min(value = 1, message = BAD_ID)
             long newsId)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.removeFromNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
     }
 
-    /**
-     * Delete tag by id.
-     *
-     * @param id the tag id
-     * @return the response entity
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable long id)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteById(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
         boolean result = tagService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
 
-
-    /**
-     * Delete tag by id from table tags news.
-     *
-     * @param id the id
-     * @return the response entity
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @DeleteMapping("/id/table_news_tags/{id}")
-    public ResponseEntity<Boolean> deleteByTagIdFromTableTagsNews(
-            @PathVariable long id)
+    @DeleteMapping("/all-news/{id}")
+    public ResponseEntity<Boolean> deleteFromAllNews(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
-        boolean result = tagService.deleteByTagIdFromTableTagsNews(id);
+        boolean result = tagService.deleteFromAllNews(id);
         return new ResponseEntity<>(result, OK);
     }
 
-    /**
-     * Update tag.
-     *
-     * @param tag the tag
-     * @return the response entity
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @PutMapping("/update")
-    public ResponseEntity<Boolean> update(@RequestBody Tag tag)
+    @PutMapping
+    public ResponseEntity<Boolean> update(
+            @Valid
+            @RequestBody
+            @NotNull(message = BAD_REQUEST_PARAMETER)
+            TagDTO tagDTO)
             throws ServiceException, IncorrectParameterException {
-        boolean result = tagService.update(tag);
+        boolean result = tagService.update(tagDTO);
         return new ResponseEntity<>(result, OK);
     }
 
-    /**
-     * Find all tags.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @GetMapping("/all")
     public Pagination<Tag> findAll(
-            @RequestParam(value = "count-elements-on-page",
+            @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException {
         return tagService.getPagination(
@@ -154,38 +118,28 @@ public class TagController {
                 numberPage);
     }
 
-    /**
-     * Find tag by id.
-     *
-     * @param id the id
-     * @return the tag
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @GetMapping("/id/{id}")
-    public Tag findById(@PathVariable long id)
+    @GetMapping("/{id}")
+    public Tag findById(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id)
             throws ServiceException, IncorrectParameterException {
         return tagService.findById(id);
     }
 
-    /**
-     * Find tags by part of tag name.
-     *
-     * @param partOfName the part of name
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @GetMapping("/part-of-name/{partOfName}")
+    @GetMapping("/part-name/{partOfName}")
     public Pagination<Tag> findByPartOfName(
-            @PathVariable String partOfName,
-            @RequestParam(value = "count-elements-on-page",
+            @PathVariable
+            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            String partOfName,
+            @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException, IncorrectParameterException {
         return tagService.getPagination(
@@ -194,24 +148,18 @@ public class TagController {
                 numberPage);
     }
 
-    /**
-     * Find tags by news id.
-     *
-     * @param newsId the news id
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
-    @GetMapping("/news-id/{newsId}")
+    @GetMapping("/news/{newsId}")
     public Pagination<Tag> findByNewsId(
-            @PathVariable long newsId,
-            @RequestParam(value = "count-elements-on-page",
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long newsId,
+            @RequestParam(value = "size",
                     required = false,
-                    defaultValue = "5")
+                    defaultValue = DEFAULT_SIZE)
             long countElementsReturn,
-            @RequestParam(value = "number-page",
+            @RequestParam(value = "page",
                     required = false,
-                    defaultValue = "1")
+                    defaultValue = DEFAULT_NUMBER_PAGE)
             long numberPage)
             throws ServiceException, IncorrectParameterException {
         return tagService.getPagination(

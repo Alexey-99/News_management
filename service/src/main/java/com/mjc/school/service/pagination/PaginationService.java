@@ -4,19 +4,8 @@ import com.mjc.school.entity.Pagination;
 
 import java.util.List;
 
-/**
- * The interface Pagination.
- *
- * @param <T> the type parameter
- */
 public interface PaginationService<T> {
-    /**
-     * Get objects from list.
-     *
-     * @param list                 the list
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
+    String DEFAULT_SIZE = "5";
+    String DEFAULT_NUMBER_PAGE = "1";
     public Pagination<T> getPagination(List<T> list, long numberElementsReturn, long numberPage);
 }

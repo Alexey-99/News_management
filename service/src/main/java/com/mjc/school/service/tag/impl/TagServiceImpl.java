@@ -1,5 +1,6 @@
 package com.mjc.school.service.tag.impl;
 
+import com.mjc.school.converter.TagConverter;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.entity.Tag;
 import com.mjc.school.exception.IncorrectParameterException;
@@ -10,6 +11,7 @@ import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.TagValidator;
+import com.mjc.school.validation.dto.TagDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,6 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_TAGS
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
-/**
- * The type Tag service.
- */
 @Service
 public class TagServiceImpl implements TagService {
     private static final Logger log = LogManager.getLogger();
@@ -41,37 +40,26 @@ public class TagServiceImpl implements TagService {
     @Autowired
     private TagValidator tagValidator;
     @Autowired
+    private TagConverter tagConverter;
+    @Autowired
     private PaginationService<Tag> tagPagination;
 
-    /**
-     * Create tag.
-     *
-     * @param tag the tag
-     * @return the boolean
-     * @throws IncorrectParameterException the incorrect parameter exception
-     * @throws ServiceException            the service exception
-     */
     @Override
-    public boolean create(Tag tag)
+    public boolean create(TagDTO tagDTO)
             throws IncorrectParameterException, ServiceException {
         try {
-            return tagValidator.validate(tag) &&
-                    tagRepository.create(tag);
+            if (tagValidator.validate(tagDTO)) {
+                Tag tag = tagConverter.toTag(tagDTO);
+                return tagRepository.create(tag);
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
 
-    /**
-     * Add tag to news.
-     *
-     * @param tagId  the tag id
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean addToNews(long tagId, long newsId)
             throws ServiceException, IncorrectParameterException {
@@ -87,15 +75,6 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    /**
-     * Remove tag from news.
-     *
-     * @param tagId  the tag id
-     * @param newsId the news id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean removeFromNews(long tagId, long newsId)
             throws ServiceException, IncorrectParameterException {
@@ -109,14 +88,6 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    /**
-     * Delete tag by id.
-     *
-     * @param tagId the tag id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
     public boolean deleteById(long tagId)
             throws ServiceException, IncorrectParameterException {
@@ -134,16 +105,8 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    /**
-     * Delete tag by id from table tags news.
-     *
-     * @param tagId the tag id
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public boolean deleteByTagIdFromTableTagsNews(long tagId)
+    public boolean deleteFromAllNews(long tagId)
             throws ServiceException, IncorrectParameterException {
         try {
             return tagValidator.validateId(tagId) &&
@@ -154,42 +117,32 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    /**
-     * Update tag.
-     *
-     * @param tag the tag
-     * @return the boolean
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public boolean update(Tag tag)
+    public boolean update(TagDTO tagDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            return tagValidator.validateId(tag.getId()) &&
-                    tagValidator.validate(tag) &&
-                    tagRepository.update(tag);
+            if (tagValidator.validateId(tagDTO.getId()) &&
+                    tagValidator.validate(tagDTO)) {
+                Tag tag = tagConverter.toTag(tagDTO);
+                return tagRepository.update(tag);
+            } else {
+                return false;
+            }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(e);
         }
     }
 
-    /**
-     * Find all tags.
-     *
-     * @return the list
-     * @throws ServiceException the service exception
-     */
     @Override
-    public List<Tag> findAll() throws ServiceException {
+    public List<TagDTO> findAll() throws ServiceException {
         try {
             List<Tag> tagList = tagRepository.findAll();
             if (!tagList.isEmpty()) {
                 for (Tag tag : tagList) {
                     tag.setNews(newsRepository.findByTagId(tag.getId()));
                 }
-                return tagList;
+                return tagList.stream().map(tag -> tagConverter.toTagDTO(tag)).toList();
             } else {
                 log.log(WARN, "Not found tags");
                 throw new ServiceException(NO_ENTITY);
@@ -200,29 +153,21 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    /**
-     * Find tag by id.
-     *
-     * @param id the id
-     * @return the tag
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public Tag findById(long id)
+    public TagDTO findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
             if (tagValidator.validateId(id)) {
                 Tag tag = tagRepository.findById(id);
                 if (tag != null) {
                     tag.setNews(newsRepository.findByTagId(tag.getId()));
-                    return tag;
+                    return tagConverter.toTagDTO(tag);
                 } else {
                     log.log(WARN, "Not found tag with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
                 }
             } else {
-                log.log(ERROR, "Incorrect entered ID:" + id);
+                log.log(ERROR, "Incorrect entered ID: " + id);
                 throw new IncorrectParameterException(BAD_ID);
             }
         } catch (RepositoryException e) {
@@ -231,16 +176,8 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    /**
-     * Find tags by part of name.
-     *
-     * @param partOfName the part of name
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<Tag> findByPartOfName(String partOfName)
+    public List<TagDTO> findByPartOfName(String partOfName)
             throws ServiceException, IncorrectParameterException {
         try {
             if (partOfName != null) {
@@ -259,7 +196,7 @@ public class TagServiceImpl implements TagService {
                     for (Tag tag : tagList) {
                         tag.setNews(newsRepository.findByTagId(tag.getId()));
                     }
-                    return tagList;
+                    return tagList.stream().map(tag -> tagConverter.toTagDTO(tag)).toList();
                 } else {
                     log.log(WARN,
                             "Not found tags with this part of name: " + partOfName);
@@ -277,16 +214,8 @@ public class TagServiceImpl implements TagService {
 
     }
 
-    /**
-     * Find tags by news id.
-     *
-     * @param newsId the news id
-     * @return the list
-     * @throws ServiceException            the service exception
-     * @throws IncorrectParameterException the incorrect parameter exception
-     */
     @Override
-    public List<Tag> findByNewsId(long newsId)
+    public List<TagDTO> findByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
             if (tagValidator.validateId(newsId)) {
@@ -295,7 +224,7 @@ public class TagServiceImpl implements TagService {
                     for (Tag tag : tagList) {
                         tag.setNews(newsRepository.findByTagId(tag.getId()));
                     }
-                    return tagList;
+                    return tagList.stream().map(tag -> tagConverter.toTagDTO(tag)).toList();
                 } else {
                     log.log(WARN, "Not found tags with news ID: " + newsId);
                     throw new ServiceException(NO_TAGS_WITH_NEWS_ID);
@@ -309,14 +238,6 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    /**
-     * Get objects from list.
-     *
-     * @param list                 the list
-     * @param numberElementsReturn the number elements return
-     * @param numberPage           the number page
-     * @return the entity
-     */
     @Override
     public Pagination<Tag> getPagination(List<Tag> list, long numberElementsReturn, long numberPage) {
         return tagPagination.getPagination(list, numberElementsReturn, numberPage);

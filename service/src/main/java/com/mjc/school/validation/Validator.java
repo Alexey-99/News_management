@@ -3,6 +3,7 @@ package com.mjc.school.validation;
 import com.mjc.school.exception.IncorrectParameterException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.validation.annotation.Validated;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static org.apache.logging.log4j.Level.ERROR;
@@ -11,6 +12,7 @@ import static org.apache.logging.log4j.Level.INFO;
 /**
  * The type Validator.
  */
+@Validated
 public abstract class Validator {
     private static final Logger log = LogManager.getLogger();
     private static final int MIN_ID = 1;
@@ -22,7 +24,7 @@ public abstract class Validator {
      * @return the boolean
      * @throws IncorrectParameterException the incorrect parameter exception
      */
-    public boolean validateId(long id) throws IncorrectParameterException {
+    public boolean validateId( long id) throws IncorrectParameterException {
         if (id >= MIN_ID) {
             log.log(INFO, "Correct entered ID:" + id);
             return true;

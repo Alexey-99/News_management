@@ -14,7 +14,7 @@ import java.util.List;
  * The interface Author service.
  */
 public interface AuthorService
-        extends PaginationService<Author>, CRUDOperationService<Author> {
+        extends PaginationService<Author>, CRUDOperationService<Author, Author> {
     /**
      * Find authors by part of name.
      *

@@ -13,7 +13,7 @@ import java.util.List;
  * The interface Comment service.
  */
 public interface CommentService
-        extends PaginationService<Comment>, CRUDOperationService<Comment> {
+        extends PaginationService<Comment>, CRUDOperationService<Comment, Comment> {
     /**
      * Find by news id list.
      *

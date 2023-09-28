@@ -61,14 +61,6 @@ public class TagRepositoryImpl implements TagRepository {
             VALUES (:news_id, :tags_id);
             """;
 
-    /**
-     * Add tag to news by id.
-     *
-     * @param tagId  the tag id
-     * @param newsId the news id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean addToNews(long tagId, long newsId) throws RepositoryException {
         try {
@@ -271,7 +263,7 @@ public class TagRepositoryImpl implements TagRepository {
     private static final String QUERY_SELECT_TAG_BY_NAME = """
             SELECT id, name
             FROM tags
-            WHERE id = :id;
+            WHERE name = :name;
             """;
 
     /**

@@ -11,25 +11,33 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.Level;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
 
+import static org.apache.logging.log4j.Level.INFO;
+
 @WebFilter(urlPatterns = {"/news/*", "/author/*", "/comment/*", "/tag/*"})
 public class LanguageFilter implements Filter {
     private static final Logger log = LogManager.getLogger();
+    @Autowired
+    private Translator translator;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest,
+                         ServletResponse servletResponse,
+                         FilterChain filterChain)
+            throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String headerLang = req.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Translator.setLocale(LanguageLocale.getLocale(headerLang));
+        translator.setLocale(LanguageLocale.getLocale(headerLang));
 
-        log.log(Level.INFO, "Request URI is: ", req.getRequestURI());
+        log.log(INFO, "Request URI is: " + req.getRequestURI());
         filterChain.doFilter(servletRequest, servletResponse);
-        log.log(Level.INFO, "Response Status Code is: ", ((HttpServletResponse) servletResponse).getStatus());
+        log.log(INFO, "Response Status Code is: " + ((HttpServletResponse) servletResponse).getStatus());
     }
 }

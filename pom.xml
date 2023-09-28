@@ -20,48 +20,13 @@
     </properties>
 
     <dependencies>
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.slf4j/slf4j-api &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-api</artifactId>-->
-<!--            <version>2.0.9</version>-->
-<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>3.1.4</version>
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.logging.log4j</groupId>-->
-<!--            <artifactId>log4j-api</artifactId>-->
-<!--            <version>2.19.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.logging.log4j</groupId>-->
-<!--            <artifactId>log4j-core</artifactId>-->
-<!--            <version>2.19.0</version>-->
-<!--        </dependency>-->
     </dependencies>
-
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.tomcat.maven/tomcat7-maven-plugin &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.tomcat.maven</groupId>-->
-<!--                <artifactId>tomcat7-maven-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <port>8081</port>-->
-<!--                    <path>/</path>-->
-<!--                </configuration>-->
-<!--                <version>2.2</version>-->
-<!--            </plugin>-->
-
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-war-plugin</artifactId>-->
-<!--                <version>3.3.2</version>-->
-<!--                <configuration>-->
-<!--                    <failOnMissingWebXml>false</failOnMissingWebXml>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
 
 </project>
