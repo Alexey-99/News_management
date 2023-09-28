@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * The type Spring config.
  */
-@Configuration
-@ComponentScan("com.mjc.school")
-@EnableWebMvc
-public class SpringConfig implements WebMvcConfigurer {
+//@Configuration
+//@ComponentScan("com.mjc.school")
+//@EnableWebMvc
+public class SpringConfig  {
 }
