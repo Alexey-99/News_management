@@ -1,9 +1,9 @@
 package com.mjc.school.service.news.impl;
 
-import com.mjc.school.converter.AuthorConverter;
-import com.mjc.school.converter.CommentConverter;
-import com.mjc.school.converter.NewsConverter;
-import com.mjc.school.converter.TagConverter;
+import com.mjc.school.converter.impl.AuthorConverter;
+import com.mjc.school.converter.impl.CommentConverter;
+import com.mjc.school.converter.impl.NewsConverter;
+import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.entity.News;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;

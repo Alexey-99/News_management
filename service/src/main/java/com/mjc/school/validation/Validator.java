@@ -14,7 +14,7 @@ public abstract class Validator {
     private static final Logger log = LogManager.getLogger();
     private static final int MIN_ID = 1;
 
-    public boolean validateId( long id) throws IncorrectParameterException {
+    public boolean validateId(long id) throws IncorrectParameterException {
         if (id >= MIN_ID) {
             log.log(INFO, "Correct entered ID:" + id);
             return true;

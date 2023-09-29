@@ -15,9 +15,6 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTI
 import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
-/**
- * The type Comment validator.
- */
 @Component
 public class CommentValidator extends Validator {
     private static final Logger log = LogManager.getLogger();

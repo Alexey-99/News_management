@@ -1,6 +1,6 @@
 package com.mjc.school.service.comment.impl;
 
-import com.mjc.school.converter.CommentConverter;
+import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;

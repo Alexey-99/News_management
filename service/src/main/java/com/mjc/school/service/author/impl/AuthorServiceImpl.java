@@ -1,6 +1,6 @@
 package com.mjc.school.service.author.impl;
 
-import com.mjc.school.converter.AuthorConverter;
+import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.entity.Pagination;

@@ -1,5 +1,6 @@
-package com.mjc.school.converter;
+package com.mjc.school.converter.impl;
 
+import com.mjc.school.converter.Converter;
 import com.mjc.school.entity.News;
 import com.mjc.school.validation.dto.NewsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
