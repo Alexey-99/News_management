@@ -5,7 +5,7 @@ import java.util.Locale;
 public enum LanguageLocale {
     RU(new Locale("ru")), EN(new Locale("en"));
 
-    private Locale locale;
+    private final Locale locale;
 
     private LanguageLocale(Locale locale) {
         this.locale = locale;

@@ -1,5 +1,7 @@
 package com.mjc.school.validation.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.entity.Tag;
@@ -11,10 +13,24 @@ public class NewsDTO {
     private long id;
     private String title;
     private String content;
+    private long authorId;
+    @JsonIgnore
     private Author author;
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            timezone = "UTC")
     private String created;
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            timezone = "UTC")
     private String modified;
+    private long countComments;
+    @JsonIgnore
     private List<Comment> comments;
+    private long countTags;
+    @JsonIgnore
     private List<Tag> tags;
 
     public NewsDTO() {
@@ -51,13 +67,26 @@ public class NewsDTO {
     }
 
     public void setAuthor(Author author) {
+        if (author != null) {
+            this.setAuthorId(author.getId());
+        }
         this.author = author;
+    }
+
+    public long getAuthorId() {
+        return authorId;
+    }
+
+
+    public void setAuthorId(long authorId) {
+        this.authorId = authorId;
     }
 
     public String getCreated() {
         return created;
     }
 
+    @JsonIgnore
     public void setCreated(String created) {
         this.created = created;
     }
@@ -66,6 +95,7 @@ public class NewsDTO {
         return modified;
     }
 
+    @JsonIgnore
     public void setModified(String modified) {
         this.modified = modified;
     }
@@ -75,6 +105,9 @@ public class NewsDTO {
     }
 
     public void setComments(List<Comment> comments) {
+        if (comments != null) {
+            this.setCountComments(comments.size());
+        }
         this.comments = comments;
     }
 
@@ -83,7 +116,26 @@ public class NewsDTO {
     }
 
     public void setTags(List<Tag> tags) {
+        if (tags != null) {
+            this.setCountTags(tags.size());
+        }
         this.tags = tags;
+    }
+
+    public long getCountComments() {
+        return countComments;
+    }
+
+    public void setCountComments(long countComments) {
+        this.countComments = countComments;
+    }
+
+    public long getCountTags() {
+        return countTags;
+    }
+
+    public void setCountTags(long countTags) {
+        this.countTags = countTags;
     }
 
     public static class NewsDTOBuilder {

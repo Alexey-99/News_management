@@ -3,7 +3,7 @@ package com.mjc.school.controller;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.name.SortingField;
+import com.mjc.school.name.SortField;
 import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
 import jakarta.validation.constraints.Min;
@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
-import static com.mjc.school.name.SortingField.MODIFIED;
-import static com.mjc.school.name.SortingType.ASCENDING;
-import static com.mjc.school.name.SortingType.DESCENDING;
+import static com.mjc.school.name.SortField.MODIFIED;
+import static com.mjc.school.name.SortType.ASCENDING;
+import static com.mjc.school.name.SortType.DESCENDING;
 import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER_PAGE;
 import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.OK;
@@ -127,7 +127,7 @@ public class NewsController {
                 numberPage);
     }
 
-    @GetMapping("/tag-id/{tagId}")
+    @GetMapping("/tag/{tagId}")
     public Pagination<NewsDTO> findNewsByTagId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -231,7 +231,7 @@ public class NewsController {
             throws ServiceException {
         Pagination<NewsDTO> sortedList = null;
         switch (sortingField) {
-            case SortingField.CREATED -> {
+            case SortField.CREATED -> {
                 switch (sortingType) {
                     case ASCENDING -> sortedList = newsService.getPagination(
                             newsService.sortByCreatedDateTimeAsc(
