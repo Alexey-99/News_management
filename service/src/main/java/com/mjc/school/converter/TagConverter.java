@@ -5,20 +5,21 @@ import com.mjc.school.validation.dto.TagDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TagConverter {
-    public Tag toTag(TagDTO tagDTO) {
+public class TagConverter implements Converter<TagDTO, Tag> {
+
+    @Override
+    public Tag fromDTO(TagDTO tagDTO) {
         return new Tag.TagBuilder()
                 .setId(tagDTO.getId())
                 .setName(tagDTO.getName())
-                .setNews(tagDTO.getNews())
                 .build();
     }
 
-    public TagDTO toTagDTO(Tag tag) {
+    public TagDTO toDTO(Tag tag) {
         return new TagDTO.TagDTOBuilder()
                 .setId(tag.getId())
                 .setName(tag.getName())
-                .setNews(tag.getNews())
+                .setCountNews(tag.getNews().size())
                 .build();
     }
 }

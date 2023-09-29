@@ -1,6 +1,9 @@
 package com.mjc.school.service.news.impl;
 
+import com.mjc.school.converter.AuthorConverter;
+import com.mjc.school.converter.CommentConverter;
 import com.mjc.school.converter.NewsConverter;
+import com.mjc.school.converter.TagConverter;
 import com.mjc.school.entity.News;
 import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
@@ -69,6 +72,12 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     private NewsConverter newsConverter;
     @Autowired
+    private AuthorConverter authorConverter;
+    @Autowired
+    private CommentConverter commentConverter;
+    @Autowired
+    private TagConverter tagConverter;
+    @Autowired
     private DateHandler dateHandler;
     @Autowired
     private PaginationService<NewsDTO> newsPagination;
@@ -81,7 +90,7 @@ public class NewsServiceImpl implements NewsService {
                 newsDTO.setCreated(dateHandler.getCurrentDate());
                 newsDTO.setModified(dateHandler.getCurrentDate());
                 return newsRepository.create(
-                        newsConverter.toNews(newsDTO));
+                        newsConverter.fromDTO(newsDTO));
             } else {
                 return false;
             }
@@ -142,20 +151,13 @@ public class NewsServiceImpl implements NewsService {
         try {
             if (newsValidator.validateId(newsId)) {
                 newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
-                return findAll()
-                        .stream()
-                        .filter(news -> !news.getTags()
-                                .isEmpty())
-                        .toList()
-                        .isEmpty();
-            } else {
-                return findAll()
-                        .stream()
-                        .filter(news -> !news.getTags()
-                                .isEmpty())
-                        .toList()
-                        .isEmpty();
             }
+            return findAll()
+                    .stream()
+                    .filter(news -> !news.getTags()
+                            .isEmpty())
+                    .toList()
+                    .isEmpty();
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(DELETE_ERROR);
@@ -170,7 +172,7 @@ public class NewsServiceImpl implements NewsService {
                     newsValidator.validate(newsDTO)) {
                 newsDTO.setModified(dateHandler.getCurrentDate());
                 return newsRepository.update(
-                        newsConverter.toNews(newsDTO));
+                        newsConverter.fromDTO(newsDTO));
             } else {
                 return false;
             }
@@ -191,7 +193,7 @@ public class NewsServiceImpl implements NewsService {
                     news.setTags(tagRepository.findByNewsId(news.getId()));
                 }
                 return newsList.stream()
-                        .map(news -> newsConverter.toNewsDTO(news))
+                        .map(news -> newsConverter.toDTO(news))
                         .toList();
             } else {
                 log.log(WARN, "Not found news");
@@ -217,7 +219,7 @@ public class NewsServiceImpl implements NewsService {
                             commentRepository.findByNewsId(news.getId()));
                     news.setTags(
                             tagRepository.findByNewsId(news.getId()));
-                    return newsConverter.toNewsDTO(news);
+                    return newsConverter.toDTO(news);
                 } else {
                     log.log(WARN, "Not found news with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -247,7 +249,7 @@ public class NewsServiceImpl implements NewsService {
                                 tagRepository.findByNewsId(news.getId()));
                     }
                     return newsList.stream()
-                            .map(news -> newsConverter.toNewsDTO(news))
+                            .map(news -> newsConverter.toDTO(news))
                             .toList();
                 } else {
                     log.log(WARN, "Not found news with entered tag name: " + tagName);
@@ -278,7 +280,7 @@ public class NewsServiceImpl implements NewsService {
                                 tagRepository.findByNewsId(news.getId()));
                     }
                     return newsList.stream()
-                            .map(news -> newsConverter.toNewsDTO(news))
+                            .map(news -> newsConverter.toDTO(news))
                             .toList();
                 } else {
                     log.log(WARN, "Not found news with entered tag ID: " + tagId);
@@ -309,7 +311,7 @@ public class NewsServiceImpl implements NewsService {
                                 tagRepository.findByNewsId(news.getId()));
                     }
                     return newsList.stream()
-                            .map(news -> newsConverter.toNewsDTO(news))
+                            .map(news -> newsConverter.toDTO(news))
                             .toList();
                 } else {
                     log.log(WARN, "Not found news with entered author name: " + authorName);
@@ -340,12 +342,24 @@ public class NewsServiceImpl implements NewsService {
                                     (newsTitle.matches(pattern));
                         }).toList();
                 if (!newsList.isEmpty()) {
-                    for (NewsDTO news : newsList) {
-                        news.setAuthor(
-                                authorRepository.findById(news.getAuthor().getId()));
-                        news.setComments(
-                                commentRepository.findByNewsId(news.getId()));
-                        news.setTags(tagRepository.findByNewsId(news.getId()));
+                    for (NewsDTO newsDTO : newsList) {
+                        newsDTO.setAuthor(
+                                authorConverter.toDTO(
+                                        authorRepository.findById(
+                                                newsDTO.getAuthor().getId())));
+                        newsDTO.setComments(
+                                commentRepository.findByNewsId(
+                                                newsDTO.getId())
+                                        .stream()
+                                        .map(comment ->
+                                                commentConverter.toDTO(comment))
+                                        .toList());
+                        newsDTO.setTags(
+                                tagRepository.findByNewsId(
+                                                newsDTO.getId())
+                                        .stream()
+                                        .map(tag -> tagConverter.toDTO(tag))
+                                        .toList());
                     }
                     return newsList;
                 } else {
@@ -378,16 +392,24 @@ public class NewsServiceImpl implements NewsService {
                                     (newsContent.matches(pattern));
                         }).toList();
                 if (!newsList.isEmpty()) {
-                    for (NewsDTO news : newsList) {
-                        news.setAuthor(
-                                authorRepository.findById(
-                                        news.getAuthor().getId()));
-                        news.setComments(
+                    for (NewsDTO newsDTO : newsList) {
+                        newsDTO.setAuthor(
+                                authorConverter.toDTO(
+                                        authorRepository.findById(
+                                                newsDTO.getAuthor().getId())));
+                        newsDTO.setComments(
                                 commentRepository.findByNewsId(
-                                        news.getId()));
-                        news.setTags(
+                                                newsDTO.getId())
+                                        .stream()
+                                        .map(comment ->
+                                                commentConverter.toDTO(comment))
+                                        .toList());
+                        newsDTO.setTags(
                                 tagRepository.findByNewsId(
-                                        news.getId()));
+                                                newsDTO.getId())
+                                        .stream()
+                                        .map(tag -> tagConverter.toDTO(tag))
+                                        .toList());
                     }
                     return newsList;
                 } else {

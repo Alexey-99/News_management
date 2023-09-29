@@ -1,6 +1,5 @@
 package com.mjc.school.validation;
 
-import com.mjc.school.entity.Comment;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.news.NewsRepository;

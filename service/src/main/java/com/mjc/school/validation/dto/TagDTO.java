@@ -1,13 +1,15 @@
 package com.mjc.school.validation.dto;
 
-import com.mjc.school.entity.News;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
 public class TagDTO {
     private long id;
     private String name;
-    private List<News> news;
+    private long countNews;
+    @JsonIgnore
+    private List<NewsDTO> news;
 
     public long getId() {
         return id;
@@ -25,12 +27,23 @@ public class TagDTO {
         this.name = name;
     }
 
-    public List<News> getNews() {
+    public List<NewsDTO> getNews() {
         return news;
     }
 
-    public void setNews(List<News> news) {
-        this.news = news;
+    public void setNews(List<NewsDTO> newsDTO) {
+        if (newsDTO != null) {
+            this.countNews = newsDTO.size();
+        }
+        this.news = newsDTO;
+    }
+
+    public long getCountNews() {
+        return countNews;
+    }
+
+    public void setCountNews(long countNews) {
+        this.countNews = countNews;
     }
 
     public static class TagDTOBuilder {
@@ -50,8 +63,13 @@ public class TagDTO {
             return this;
         }
 
-        public TagDTOBuilder setNews(List<News> news) {
-            this.tagDTO.setNews(news);
+        public TagDTOBuilder setNews(List<NewsDTO> newsDTO) {
+            this.tagDTO.setNews(newsDTO);
+            return this;
+        }
+
+        public TagDTOBuilder setCountNews(long countNews) {
+            this.tagDTO.setCountNews(countNews);
             return this;
         }
 

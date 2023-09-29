@@ -1,11 +1,13 @@
 package com.mjc.school.validation.dto;
 
-import com.mjc.school.entity.News;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class CommentDTO {
     private long id;
     private String content;
-    private News news;
+    private long newsId;
+    @JsonIgnore
+    private NewsDTO newsDTO;
     private String created;
     private String modified;
 
@@ -25,12 +27,23 @@ public class CommentDTO {
         this.content = content;
     }
 
-    public News getNews() {
-        return news;
+    public NewsDTO getNews() {
+        return newsDTO;
     }
 
-    public void setNews(News news) {
-        this.news = news;
+    public void setNews(NewsDTO newsDTO) {
+        if (newsDTO != null) {
+            this.setNewsId(newsDTO.getId());
+        }
+        this.newsDTO = newsDTO;
+    }
+
+    public long getNewsId() {
+        return newsId;
+    }
+
+    public void setNewsId(long newsId) {
+        this.newsId = newsId;
     }
 
     public String getCreated() {
@@ -66,8 +79,8 @@ public class CommentDTO {
             return this;
         }
 
-        public CommentDTOBuilder setNews(News news) {
-            this.commentDTO.setNews(news);
+        public CommentDTOBuilder setNews(NewsDTO newsDTO) {
+            this.commentDTO.setNews(newsDTO);
             return this;
         }
 
@@ -78,6 +91,11 @@ public class CommentDTO {
 
         public CommentDTOBuilder setModified(String modified) {
             this.commentDTO.setModified(modified);
+            return this;
+        }
+
+        public CommentDTOBuilder setNewsId(long newsId) {
+            this.commentDTO.setNewsId(newsId);
             return this;
         }
 

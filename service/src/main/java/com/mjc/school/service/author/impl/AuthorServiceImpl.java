@@ -59,7 +59,7 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             if (authorValidator.validate(authorDTO)) {
                 return authorRepository.create(
-                        authorConverter.toAuthor(authorDTO));
+                        authorConverter.fromDTO(authorDTO));
             } else {
                 return false;
             }
@@ -94,7 +94,7 @@ public class AuthorServiceImpl implements AuthorService {
             if (authorValidator.validateId(authorDTO.getId()) &&
                     authorValidator.validate(authorDTO)) {
                 return authorRepository.update(
-                        authorConverter.toAuthor(authorDTO));
+                        authorConverter.fromDTO(authorDTO));
             } else {
                 return false;
             }
@@ -114,7 +114,7 @@ public class AuthorServiceImpl implements AuthorService {
                 }
                 return authorsList
                         .stream()
-                        .map(author -> authorConverter.toAuthorDTO(author))
+                        .map(author -> authorConverter.toDTO(author))
                         .toList();
             } else {
                 log.log(WARN, "Not found objects");
@@ -134,7 +134,7 @@ public class AuthorServiceImpl implements AuthorService {
                 Author author = authorRepository.findById(id);
                 if (author != null) {
                     author.setNews(newsRepository.findByAuthorId(author.getId()));
-                    return authorConverter.toAuthorDTO(author);
+                    return authorConverter.toDTO(author);
                 } else {
                     log.log(WARN, "Not found object with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -168,7 +168,7 @@ public class AuthorServiceImpl implements AuthorService {
                         author.setNews(newsRepository.findByAuthorId(author.getId()));
                     }
                     return authorsList.stream()
-                            .map(author -> authorConverter.toAuthorDTO(author))
+                            .map(author -> authorConverter.toDTO(author))
                             .toList();
                 } else {
                     log.log(WARN, "Not found object with this part of name: " + partOfName);
@@ -192,7 +192,7 @@ public class AuthorServiceImpl implements AuthorService {
                 Author author = authorRepository.findByNewsId(newsId);
                 if (author != null) {
                     author.setNews(newsRepository.findByAuthorId(author.getId()));
-                    return authorConverter.toAuthorDTO(author);
+                    return authorConverter.toDTO(author);
                 } else {
                     log.log(WARN, "Not found objects with author news ID: " + newsId);
                     throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);

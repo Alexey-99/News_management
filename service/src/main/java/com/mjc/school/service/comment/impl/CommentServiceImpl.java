@@ -67,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
                                         comment.getNews().getId()));
                     }
                     return commentList.stream()
-                            .map(comment -> commentConverter.toCommentDTO(comment))
+                            .map(comment -> commentConverter.toDTO(comment))
                             .toList();
                 } else {
                     log.log(ERROR, "Not found objects with comment news ID: " + newsId);
@@ -93,7 +93,7 @@ public class CommentServiceImpl implements CommentService {
                                     comment.getNews().getId()));
                 }
                 return commentList.stream()
-                        .map(comment -> commentConverter.toCommentDTO(comment))
+                        .map(comment -> commentConverter.toDTO(comment))
                         .toList();
             } else {
                 log.log(WARN, "Not found objects");
@@ -115,7 +115,7 @@ public class CommentServiceImpl implements CommentService {
                     comment.setNews(
                             newsRepository.findById(
                                     comment.getNews().getId()));
-                    return commentConverter.toCommentDTO(comment);
+                    return commentConverter.toDTO(comment);
                 } else {
                     log.log(WARN, "Not found object with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -182,7 +182,7 @@ public class CommentServiceImpl implements CommentService {
                 commentDTO.setCreated(dateHandler.getCurrentDate());
                 commentDTO.setModified(dateHandler.getCurrentDate());
                 return commentRepository.create(
-                        commentConverter.toComment(commentDTO));
+                        commentConverter.fromDTO(commentDTO));
             } else {
                 return false;
             }
@@ -200,7 +200,7 @@ public class CommentServiceImpl implements CommentService {
                     commentValidator.validate(commentDTO)) {
                 commentDTO.setModified(dateHandler.getCurrentDate());
                 return commentRepository.update(
-                        commentConverter.toComment(commentDTO));
+                        commentConverter.fromDTO(commentDTO));
             } else {
                 return false;
             }

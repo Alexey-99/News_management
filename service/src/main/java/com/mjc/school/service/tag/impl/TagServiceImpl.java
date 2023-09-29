@@ -49,7 +49,7 @@ public class TagServiceImpl implements TagService {
             throws IncorrectParameterException, ServiceException {
         try {
             if (tagValidator.validate(tagDTO)) {
-                Tag tag = tagConverter.toTag(tagDTO);
+                Tag tag = tagConverter.fromDTO(tagDTO);
                 return tagRepository.create(tag);
             } else {
                 return false;
@@ -123,7 +123,7 @@ public class TagServiceImpl implements TagService {
         try {
             if (tagValidator.validateId(tagDTO.getId()) &&
                     tagValidator.validate(tagDTO)) {
-                Tag tag = tagConverter.toTag(tagDTO);
+                Tag tag = tagConverter.fromDTO(tagDTO);
                 return tagRepository.update(tag);
             } else {
                 return false;
@@ -142,7 +142,7 @@ public class TagServiceImpl implements TagService {
                 for (Tag tag : tagList) {
                     tag.setNews(newsRepository.findByTagId(tag.getId()));
                 }
-                return tagList.stream().map(tag -> tagConverter.toTagDTO(tag)).toList();
+                return tagList.stream().map(tag -> tagConverter.toDTO(tag)).toList();
             } else {
                 log.log(WARN, "Not found tags");
                 throw new ServiceException(NO_ENTITY);
@@ -161,7 +161,7 @@ public class TagServiceImpl implements TagService {
                 Tag tag = tagRepository.findById(id);
                 if (tag != null) {
                     tag.setNews(newsRepository.findByTagId(tag.getId()));
-                    return tagConverter.toTagDTO(tag);
+                    return tagConverter.toDTO(tag);
                 } else {
                     log.log(WARN, "Not found tag with this ID: " + id);
                     throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -196,7 +196,9 @@ public class TagServiceImpl implements TagService {
                     for (Tag tag : tagList) {
                         tag.setNews(newsRepository.findByTagId(tag.getId()));
                     }
-                    return tagList.stream().map(tag -> tagConverter.toTagDTO(tag)).toList();
+                    return tagList.stream()
+                            .map(tag -> tagConverter.toDTO(tag))
+                            .toList();
                 } else {
                     log.log(WARN,
                             "Not found tags with this part of name: " + partOfName);
@@ -224,7 +226,9 @@ public class TagServiceImpl implements TagService {
                     for (Tag tag : tagList) {
                         tag.setNews(newsRepository.findByTagId(tag.getId()));
                     }
-                    return tagList.stream().map(tag -> tagConverter.toTagDTO(tag)).toList();
+                    return tagList.stream()
+                            .map(tag -> tagConverter.toDTO(tag))
+                            .toList();
                 } else {
                     log.log(WARN, "Not found tags with news ID: " + newsId);
                     throw new ServiceException(NO_TAGS_WITH_NEWS_ID);
@@ -239,7 +243,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Pagination<TagDTO> getPagination(List<TagDTO> list, long numberElementsReturn, long numberPage) {
+    public Pagination<TagDTO> getPagination(
+            List<TagDTO> list, long numberElementsReturn, long numberPage) {
         return tagPagination.getPagination(list, numberElementsReturn, numberPage);
     }
 }
