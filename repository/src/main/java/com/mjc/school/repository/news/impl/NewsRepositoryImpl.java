@@ -27,9 +27,6 @@ import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_NAME;
 import static org.apache.logging.log4j.Level.ERROR;
 
-/**
- * The type News repository.
- */
 @Repository
 public class NewsRepositoryImpl implements NewsRepository {
     private static final Logger log = LogManager.getLogger();
@@ -44,13 +41,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             VALUES (:title, :content, :authors_id, :created, :modified);
             """;
 
-    /**
-     * Create news.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean create(News news) throws RepositoryException {
         try {
@@ -73,13 +63,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Delete by id news.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean deleteById(long newsId) throws RepositoryException {
         try {
@@ -98,13 +81,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             WHERE authors_id = :authors_id;
             """;
 
-    /**
-     * Delete by author id news.
-     *
-     * @param authorId the author id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean deleteByAuthorId(long authorId) throws RepositoryException {
         try {
@@ -125,13 +101,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             """;
 
 
-    /**
-     * Delete by news id from table news tags news.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean deleteAllTagsFromNewsByNewsId(long newsId) throws RepositoryException {
         try {
@@ -154,13 +123,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Update news.
-     *
-     * @param news the news
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean update(News news) throws RepositoryException {
         try {
@@ -183,12 +145,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             FROM news;
             """;
 
-    /**
-     * Find all news list.
-     *
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<News> findAll() throws RepositoryException {
         try {
@@ -205,13 +161,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Find news by id news.
-     *
-     * @param newsId the news id
-     * @return the news
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public News findById(long newsId) throws RepositoryException {
         try {
@@ -240,13 +189,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             """;
 
 
-    /**
-     * Find news by tag name list.
-     *
-     * @param tagName the tag name
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<News> findByTagName(String tagName) throws RepositoryException {
         try {
@@ -274,13 +216,6 @@ public class NewsRepositoryImpl implements NewsRepository {
              """;
 
 
-    /**
-     * Find news by tag id list.
-     *
-     * @param tagId the tag id
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<News> findByTagId(long tagId) throws RepositoryException {
         try {
@@ -303,13 +238,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             WHERE authors.name = :name;
             """;
 
-    /**
-     * Find news by author name list.
-     *
-     * @param authorName the author name
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<News> findByAuthorName(String authorName) throws RepositoryException {
         try {
@@ -329,13 +257,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             WHERE authors_id = :authors_id;
             """;
 
-    /**
-     * Find news by author id list.
-     *
-     * @param authorId the author id
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<News> findByAuthorId(long authorId) throws RepositoryException {
         try {
@@ -355,13 +276,6 @@ public class NewsRepositoryImpl implements NewsRepository {
             WHERE title = :title;
             """;
 
-    /**
-     * Is exists news with title.
-     *
-     * @param title the news title
-     * @return true - if exists news with title, false - if not exists
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean isExistsNewsWithTitle(String title) throws RepositoryException {
         try {

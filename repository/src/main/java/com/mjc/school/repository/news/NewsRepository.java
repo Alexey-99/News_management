@@ -6,71 +6,19 @@ import com.mjc.school.repository.CRUDOperationRepository;
 
 import java.util.List;
 
-/**
- * The interface News repository.
- */
 public interface NewsRepository extends CRUDOperationRepository<News> {
 
-    /**
-     * Delete by author id news.
-     *
-     * @param authorId the author id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     public boolean deleteByAuthorId(long authorId) throws RepositoryException;
 
-    /**
-     * Delete by news id from table news tags news.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     public boolean deleteAllTagsFromNewsByNewsId(long newsId) throws RepositoryException;
 
-    /**
-     * Find news by tag name list.
-     *
-     * @param tagName the tag name
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     public List<News> findByTagName(String tagName) throws RepositoryException;
 
-    /**
-     * Find news by tag id list.
-     *
-     * @param tagId the tag id
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     public List<News> findByTagId(long tagId) throws RepositoryException;
 
-    /**
-     * Find news by author name list.
-     *
-     * @param authorName the author name
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     public List<News> findByAuthorName(String authorName) throws RepositoryException;
 
-    /**
-     * Find news by author id list.
-     *
-     * @param authorId the author id
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     public List<News> findByAuthorId(long authorId) throws RepositoryException;
 
-    /**
-     * Is exists news with title.
-     *
-     * @param title the news title
-     * @return true - if exists news with title, false - if not exists
-     * @throws RepositoryException the repository exception
-     */
     public boolean isExistsNewsWithTitle(String title) throws RepositoryException;
 }

@@ -2,45 +2,22 @@ package com.mjc.school.entity;
 
 import com.mjc.school.entity.abstation.AbstractEntity;
 
-/**
- * The type Author id with amount of written news.
- */
 public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
     private long authorId;
     private long amountOfWrittenNews;
 
-    /**
-     * Sets author id.
-     *
-     * @param authorId the author id
-     */
     public void setAuthorId(long authorId) {
         this.authorId = authorId;
     }
 
-    /**
-     * Sets amount of written news.
-     *
-     * @param amountOfWrittenNews the amount of written news
-     */
     public void setAmountOfWrittenNews(long amountOfWrittenNews) {
         this.amountOfWrittenNews = amountOfWrittenNews;
     }
 
-    /**
-     * Gets amount of written news.
-     *
-     * @return the amount of written news
-     */
     public long getAmountOfWrittenNews() {
         return amountOfWrittenNews;
     }
 
-    /**
-     * Gets author id.
-     *
-     * @return the author id
-     */
     public long getAuthorId() {
         return authorId;
     }
@@ -79,46 +56,23 @@ public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
         return builder.toString();
     }
 
-    /**
-     * The type Author id with amount of written news builder.
-     */
     public static class AuthorIdWithAmountOfWrittenNewsBuilder {
         private final AuthorIdWithAmountOfWrittenNews authorIdWithAmountOfWrittenNews;
 
-        /**
-         * Instantiates a new Author id with amount of written news builder.
-         */
         public AuthorIdWithAmountOfWrittenNewsBuilder() {
             this.authorIdWithAmountOfWrittenNews = new AuthorIdWithAmountOfWrittenNews();
         }
 
-        /**
-         * Sets author id.
-         *
-         * @param authorId the author id
-         * @return the author id
-         */
         public AuthorIdWithAmountOfWrittenNewsBuilder setAuthorId(long authorId) {
             this.authorIdWithAmountOfWrittenNews.setAuthorId(authorId);
             return this;
         }
 
-        /**
-         * Sets amount of written news.
-         *
-         * @param amountOfWrittenNews the amount of written news
-         * @return the amount of written news
-         */
         public AuthorIdWithAmountOfWrittenNewsBuilder setAmountOfWrittenNews(long amountOfWrittenNews) {
             this.authorIdWithAmountOfWrittenNews.setAmountOfWrittenNews(amountOfWrittenNews);
             return this;
         }
 
-        /**
-         * Build author id with amount of written news.
-         *
-         * @return the author id with amount of written news
-         */
         public AuthorIdWithAmountOfWrittenNews build() {
             return this.authorIdWithAmountOfWrittenNews;
         }

@@ -16,10 +16,10 @@ public abstract class Validator {
 
     public boolean validateId(long id) throws IncorrectParameterException {
         if (id >= MIN_ID) {
-            log.log(INFO, "Correct entered ID:" + id);
+            log.log(INFO, "Correct entered ID: " + id);
             return true;
         } else {
-            log.log(ERROR, "Incorrect entered ID:" + id);
+            log.log(ERROR, "Incorrect entered ID: " + id);
             throw new IncorrectParameterException(BAD_ID);
         }
     }

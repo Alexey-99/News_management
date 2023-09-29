@@ -14,9 +14,6 @@ import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_MODIFIED;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_NEWS_ID;
 
-/**
- * The type Comment mapper.
- */
 @Component
 public class CommentMapper implements RowMapper<Comment> {
     @Override

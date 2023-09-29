@@ -1,8 +1,5 @@
 package com.mjc.school.entity.abstation;
 
-/**
- * The type Abstract entity.
- */
 public abstract class AbstractEntity {
     @Override
     public abstract int hashCode();

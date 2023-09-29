@@ -1,19 +1,15 @@
 package com.mjc.school.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Author.
- */
 @Entity
 @Table(name = "authors",
         schema = "news_management")
@@ -34,57 +30,26 @@ public class Author {
         this.news = new ArrayList<>();
     }
 
-
-    /**
-     * Get id.
-     *
-     * @return the id
-     */
     public long getId() {
         return id;
     }
 
-    /**
-     * Set id.
-     *
-     * @param id the id
-     */
     public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * Get name.
-     *
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Set name.
-     *
-     * @param name the name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * Get news.
-     *
-     * @return the news
-     */
     public List<News> getNews() {
         return news;
     }
 
-    /**
-     * Set news.
-     *
-     * @param news the news
-     */
     public void setNews(List<News> news) {
         this.news = news;
     }
@@ -141,57 +106,28 @@ public class Author {
         return sb.toString();
     }
 
-    /**
-     * The type Author builder.
-     */
     public static class AuthorBuilder {
         private final Author author;
 
-        /**
-         * Instantiates a new Author builder.
-         */
         public AuthorBuilder() {
             this.author = new Author();
         }
 
-        /**
-         * Set id.
-         *
-         * @param id the id
-         * @return the Author builder
-         */
         public AuthorBuilder setId(long id) {
             this.author.setId(id);
             return this;
         }
 
-        /**
-         * Set name.
-         *
-         * @param name the name
-         * @return the Author builder
-         */
         public AuthorBuilder setName(String name) {
             this.author.setName(name);
             return this;
         }
 
-        /**
-         * Set news.
-         *
-         * @param news the news
-         * @return the Author builder
-         */
         public AuthorBuilder setNews(List<News> news) {
             this.author.setNews(news);
             return this;
         }
 
-        /**
-         * Build author.
-         *
-         * @return the Author
-         */
         public Author build() {
             return this.author;
         }

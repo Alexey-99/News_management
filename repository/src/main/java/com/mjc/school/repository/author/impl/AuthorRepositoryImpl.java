@@ -22,9 +22,6 @@ import static com.mjc.school.name.ColumnName.TABLE_AUTHORS_COLUMN_NAME;
 import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_ID;
 import static org.apache.logging.log4j.Level.ERROR;
 
-/**
- * The type Author repository.
- */
 @Repository
 public class AuthorRepositoryImpl implements AuthorRepository {
     private static final Logger log = LogManager.getLogger();
@@ -41,12 +38,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             VALUES (:name);
             """;
 
-    /**
-     * Create author.
-     *
-     * @param author the author
-     * @return the boolean
-     */
     @Override
     public boolean create(Author author) throws RepositoryException {
         try {
@@ -66,12 +57,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Delete author.
-     *
-     * @param id the id
-     * @return the boolean
-     */
     @Override
     public boolean deleteById(long id) throws RepositoryException {
         try {
@@ -91,12 +76,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Update author.
-     *
-     * @param author the author
-     * @return the boolean
-     */
     @Override
     public boolean update(Author author) throws RepositoryException {
         try {
@@ -116,11 +95,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             FROM authors;
             """;
 
-    /**
-     * Find all authors list.
-     *
-     * @return the list
-     */
     @Override
     public List<Author> findAll() throws RepositoryException {
         try {
@@ -137,12 +111,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Find by id author.
-     *
-     * @param id the id
-     * @return the author
-     */
     @Override
     public Author findById(long id) throws RepositoryException {
         try {
@@ -165,12 +133,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             WHERE news.id = :id;
             """;
 
-    /**
-     * Find by news id author.
-     *
-     * @param newsId the news id
-     * @return the author
-     */
     @Override
     public Author findByNewsId(long newsId) throws RepositoryException {
         try {
@@ -196,12 +158,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             GROUP BY authors.id;
             """;
 
-    /**
-     * Select all authors id with amount of written news list.
-     *
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<AuthorIdWithAmountOfWrittenNews>
     selectAllAuthorsIdWithAmountOfWrittenNews()
@@ -222,13 +178,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Is exists author with name.
-     *
-     * @param name the name
-     * @return true - if exists author with name, false - if not exists
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean isExistsAuthorWithName(String name)
             throws RepositoryException {

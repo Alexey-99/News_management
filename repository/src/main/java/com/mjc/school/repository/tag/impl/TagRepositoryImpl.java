@@ -20,9 +20,6 @@ import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_ID;
 import static com.mjc.school.name.ColumnName.TABLE_TAGS_COLUMN_NAME;
 import static org.apache.logging.log4j.Level.ERROR;
 
-/**
- * The type Tag repository.
- */
 @Repository
 public class TagRepositoryImpl implements TagRepository {
     private static final Logger log = LogManager.getLogger();
@@ -36,13 +33,6 @@ public class TagRepositoryImpl implements TagRepository {
             VALUES (:name);
             """;
 
-    /**
-     * Create tag.
-     *
-     * @param tag the tag
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean create(Tag tag) throws RepositoryException {
         try {
@@ -83,14 +73,6 @@ public class TagRepositoryImpl implements TagRepository {
                 AND tags_id = :tags_id;
             """;
 
-    /**
-     * Remove tag from news by id.
-     *
-     * @param tagId  the tag id
-     * @param newsId the news id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean removeFromNews(long tagId, long newsId) throws RepositoryException {
         try {
@@ -111,13 +93,6 @@ public class TagRepositoryImpl implements TagRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Delete tag by id.
-     *
-     * @param tagId the tag id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean deleteById(long tagId) throws RepositoryException {
         try {
@@ -137,13 +112,6 @@ public class TagRepositoryImpl implements TagRepository {
             WHERE tags_id = :tags_id;
             """;
 
-    /**
-     * Delete by tag id from table tags news tag.
-     *
-     * @param tagId the tag id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean deleteAllTagsFromNewsByNewsId(long tagId) throws RepositoryException {
         try {
@@ -163,13 +131,6 @@ public class TagRepositoryImpl implements TagRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Update tag.
-     *
-     * @param tag the tag
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean update(Tag tag) throws RepositoryException {
         try {
@@ -189,12 +150,6 @@ public class TagRepositoryImpl implements TagRepository {
             FROM tags;
             """;
 
-    /**
-     * Find all tags list.
-     *
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<Tag> findAll() throws RepositoryException {
         try {
@@ -211,13 +166,6 @@ public class TagRepositoryImpl implements TagRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Find by id tag.
-     *
-     * @param id the id
-     * @return the tag
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public Tag findById(long id) throws RepositoryException {
         try {
@@ -240,13 +188,6 @@ public class TagRepositoryImpl implements TagRepository {
             WHERE news_tags.news_id = :news_id;
             """;
 
-    /**
-     * Find by news id list.
-     *
-     * @param newsId the news id
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<Tag> findByNewsId(long newsId) throws RepositoryException {
         try {
@@ -266,13 +207,6 @@ public class TagRepositoryImpl implements TagRepository {
             WHERE name = :name;
             """;
 
-    /**
-     * Is exists tag with name.
-     *
-     * @param name the tag name
-     * @return true - if exists news with title, false - if not exists
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean isExistsTagWithName(String name) throws RepositoryException {
         try {

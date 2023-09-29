@@ -2,25 +2,21 @@ package com.mjc.school.entity;
 
 import com.mjc.school.entity.abstation.AbstractEntity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type News.
- */
 @Entity
 @Table(name = "news",
         schema = "news_management")
@@ -56,155 +52,72 @@ public class News extends AbstractEntity {
             inverseJoinColumns = {@JoinColumn(name = "tags_id")})
     private List<Tag> tags;
 
-    /**
-     * Instantiates a new News.
-     */
     public News() {
         this.comments = new ArrayList<>();
         this.tags = new ArrayList<>();
     }
 
-    /**
-     * Get id.
-     *
-     * @return the id
-     */
     public long getId() {
         return id;
     }
 
-    /**
-     * Set id.
-     *
-     * @param id the id
-     */
     public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * Get title.
-     *
-     * @return the title
-     */
     public String getTitle() {
         return title;
     }
 
-    /**
-     * Set title.
-     *
-     * @param title the title
-     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * Get content.
-     *
-     * @return the content
-     */
     public String getContent() {
         return content;
     }
 
-    /**
-     * Set content.
-     *
-     * @param content the content
-     */
     public void setContent(String content) {
         this.content = content;
     }
 
-    /**
-     * Get author.
-     *
-     * @return the author
-     */
     public Author getAuthor() {
         return author;
     }
 
-    /**
-     * Set author.
-     *
-     * @param author the author
-     */
     public void setAuthor(Author author) {
         this.author = author;
     }
 
-    /**
-     * Get created.
-     *
-     * @return the created
-     */
     public String getCreated() {
         return created;
     }
 
-    /**
-     * Set created.
-     *
-     * @param created the created
-     */
     public void setCreated(String created) {
         this.created = created;
     }
 
-    /**
-     * Get modified.
-     *
-     * @return the modified
-     */
     public String getModified() {
         return modified;
     }
 
 
-    /**
-     * Set modified.
-     *
-     * @param modified the modified
-     */
     public void setModified(String modified) {
         this.modified = modified;
     }
 
-    /**
-     * Get comments.
-     *
-     * @return the comments
-     */
     public List<Comment> getComments() {
         return comments;
     }
 
-    /**
-     * Set comments.
-     *
-     * @param comments the comments
-     */
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
-    /**
-     * Get tags.
-     *
-     * @return the tags
-     */
     public List<Tag> getTags() {
         return tags;
     }
 
-    /**
-     * Set tags.
-     *
-     * @param tags the tags
-     */
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
@@ -301,113 +214,54 @@ public class News extends AbstractEntity {
         return sb.toString();
     }
 
-    /**
-     * The type News builder.
-     */
     public static class NewsBuilder {
         private final News news;
 
-        /**
-         * Instantiates a new News builder.
-         */
         public NewsBuilder() {
             this.news = new News();
         }
 
-        /**
-         * Set id.
-         *
-         * @param id the id
-         * @return the News builder
-         */
         public NewsBuilder setId(long id) {
             this.news.setId(id);
             return this;
         }
 
-        /**
-         * Set title.
-         *
-         * @param title the title
-         * @return the News builder
-         */
         public NewsBuilder setTitle(String title) {
             this.news.setTitle(title);
             return this;
         }
 
-        /**
-         * Set content.
-         *
-         * @param content the content
-         * @return the News builder
-         */
         public NewsBuilder setContent(String content) {
             this.news.setContent(content);
             return this;
         }
 
-        /**
-         * Set author.
-         *
-         * @param author the author
-         * @return the News builder
-         */
         public NewsBuilder setAuthor(Author author) {
             this.news.setAuthor(author);
             return this;
         }
 
-        /**
-         * Set created.
-         *
-         * @param created the created
-         * @return the News builder
-         */
         public NewsBuilder setCreated(String created) {
             this.news.setCreated(created);
             return this;
         }
 
-        /**
-         * Set modified.
-         *
-         * @param modified the modified
-         * @return the News builder
-         */
         public NewsBuilder setModified(String modified) {
             this.news.setModified(modified);
             return this;
         }
 
-        /**
-         * Set comments.
-         *
-         * @param comments the comments
-         * @return the News builder
-         */
         public NewsBuilder setComments(List<Comment> comments) {
             this.news.setComments(comments);
             return this;
         }
 
 
-        /**
-         * Set tags.
-         *
-         * @param tags the tags
-         * @return the News builder
-         */
         public NewsBuilder setTags(List<Tag> tags) {
             this.news.setTags(tags);
             return this;
         }
 
-        /**
-         * Build news.
-         *
-         * @return the News
-         */
         public News build() {
             return this.news;
         }

@@ -13,9 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-/**
- * The type Data base config.
- */
 @Configuration
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
@@ -32,11 +29,6 @@ public class DataBaseConfig {
     @Value("${db.driver}")
     private String driverClassName;
 
-    /**
-     * Data source data source.
-     *
-     * @return the data source
-     */
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
@@ -47,23 +39,11 @@ public class DataBaseConfig {
         return new HikariDataSource(config);
     }
 
-    /**
-     * Named jdbc template named parameter jdbc template.
-     *
-     * @param dataSource the data source
-     * @return the named parameter jdbc template
-     */
     @Bean(name = "namedJdbcTemplate")
     public NamedParameterJdbcTemplate namedJdbcTemplate(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
-    /**
-     * Transaction manager platform transaction manager.
-     *
-     * @param dataSource the data source
-     * @return the platform transaction manager
-     */
     @Bean
     public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);

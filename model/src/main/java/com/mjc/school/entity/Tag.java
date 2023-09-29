@@ -1,19 +1,15 @@
 package com.mjc.school.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Tag.
- */
 @Entity
 @Table(name = "tags",
         schema = "news_management")
@@ -29,63 +25,30 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private List<News> news;
 
-    /**
-     * Instantiates a new Tag.
-     */
     public Tag() {
         this.news = new ArrayList<>();
     }
 
-    /**
-     * Get id.
-     *
-     * @return the id
-     */
     public long getId() {
         return id;
     }
 
-    /**
-     * Set id.
-     *
-     * @param id the id
-     */
     public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * Get name.
-     *
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Set name.
-     *
-     * @param name the name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * Get news.
-     *
-     * @return the news
-     */
     public List<News> getNews() {
         return news;
     }
 
-    /**
-     * Set news.
-     *
-     * @param news the news
-     */
     public void setNews(List<News> news) {
         this.news = news;
     }
@@ -136,57 +99,28 @@ public class Tag {
         return sb.toString();
     }
 
-    /**
-     * The type Tag builder.
-     */
     public static class TagBuilder {
         private final Tag tag;
 
-        /**
-         * Instantiates a new Tag builder.
-         */
         public TagBuilder() {
             this.tag = new Tag();
         }
 
-        /**
-         * Set id.
-         *
-         * @param id the id
-         * @return the Tag builder
-         */
         public TagBuilder setId(long id) {
             this.tag.setId(id);
             return this;
         }
 
-        /**
-         * Set name.
-         *
-         * @param name the name
-         * @return the Tag builder
-         */
         public TagBuilder setName(String name) {
             this.tag.setName(name);
             return this;
         }
 
-        /**
-         * Set news.
-         *
-         * @param news the news
-         * @return the Tag builder
-         */
         public TagBuilder setNews(List<News> news) {
             this.tag.setNews(news);
             return this;
         }
 
-        /**
-         * Build tag.
-         *
-         * @return the Tag
-         */
         public Tag build() {
             return this.tag;
         }

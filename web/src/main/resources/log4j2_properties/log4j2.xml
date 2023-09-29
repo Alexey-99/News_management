@@ -13,7 +13,7 @@
 			<PatternLayout pattern="${pattern_console}" />
 		</Console>
 
-		<RollingFile name="LogToRollingFile" fileName="${LOG_FOLDER}/log.txt" append="true" filePattern="${LOG_FOLDER}/${LOG_ARCHIVE}/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}_%i.txt.gz">
+		<RollingFile name="LogToRollingFile" fileName="/${LOG_FOLDER}/log.txt" append="true" filePattern="/${LOG_FOLDER}/${LOG_ARCHIVE}/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}_%i.txt.gz">
 			<PatternLayout pattern="${pattern_file}" />
 			<Policies>
 				<TimeBasedTriggeringPolicy />

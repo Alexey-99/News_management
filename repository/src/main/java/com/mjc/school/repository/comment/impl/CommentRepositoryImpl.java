@@ -22,9 +22,6 @@ import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_MODIFIED;
 import static com.mjc.school.name.ColumnName.TABLE_COMMENTS_COLUMN_NEWS_ID;
 import static org.apache.logging.log4j.Level.ERROR;
 
-/**
- * The type Comment repository.
- */
 @Repository
 public class CommentRepositoryImpl implements CommentRepository {
     private static final Logger log = LogManager.getLogger();
@@ -40,13 +37,6 @@ public class CommentRepositoryImpl implements CommentRepository {
             WHERE news_id = :news_id;
             """;
 
-    /**
-     * Find comments by news id list.
-     *
-     * @param newsId the news id
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<Comment> findByNewsId(long newsId) throws RepositoryException {
         try {
@@ -66,12 +56,6 @@ public class CommentRepositoryImpl implements CommentRepository {
             FROM comments;
             """;
 
-    /**
-     * Find all comments list.
-     *
-     * @return the list
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public List<Comment> findAll() throws RepositoryException {
         try {
@@ -90,13 +74,6 @@ public class CommentRepositoryImpl implements CommentRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Find comment by id comment.
-     *
-     * @param id the id
-     * @return the comment
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public Comment findById(long id) throws RepositoryException {
         try {
@@ -117,13 +94,6 @@ public class CommentRepositoryImpl implements CommentRepository {
             VALUES (:content, :news_id, :created, :modified);
             """;
 
-    /**
-     * Create comment.
-     *
-     * @param comment the comment
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean create(Comment comment) throws RepositoryException {
         try {
@@ -149,13 +119,6 @@ public class CommentRepositoryImpl implements CommentRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Update comment.
-     *
-     * @param comment the comment
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean update(Comment comment) throws RepositoryException {
         try {
@@ -179,13 +142,6 @@ public class CommentRepositoryImpl implements CommentRepository {
             WHERE id = :id;
             """;
 
-    /**
-     * Delete comment by id.
-     *
-     * @param id the id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean deleteById(long id) throws RepositoryException {
         try {
@@ -206,13 +162,6 @@ public class CommentRepositoryImpl implements CommentRepository {
             WHERE news_id = :news_id;
             """;
 
-    /**
-     * Delete by news id comment.
-     *
-     * @param newsId the news id
-     * @return the boolean
-     * @throws RepositoryException the repository exception
-     */
     @Override
     public boolean deleteByNewsId(long newsId) throws RepositoryException {
         try {
