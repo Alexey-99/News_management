@@ -5,7 +5,7 @@ import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.converter.impl.NewsConverter;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.entity.News;
-import com.mjc.school.entity.Pagination;
+import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;

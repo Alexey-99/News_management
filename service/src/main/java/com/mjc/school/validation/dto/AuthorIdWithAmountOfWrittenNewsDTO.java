@@ -1,8 +1,9 @@
-package com.mjc.school.entity;
+package com.mjc.school.validation.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.entity.abstation.AbstractEntity;
 
-public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
+public class AuthorIdWithAmountOfWrittenNewsDTO extends AbstractEntity {
     private long authorId;
     private long amountOfWrittenNews;
 
@@ -10,6 +11,7 @@ public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
         return authorId;
     }
 
+    @JsonIgnore
     public void setAuthorId(long authorId) {
         this.authorId = authorId;
     }
@@ -18,6 +20,7 @@ public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
         return amountOfWrittenNews;
     }
 
+    @JsonIgnore
     public void setAmountOfWrittenNews(long amountOfWrittenNews) {
         this.amountOfWrittenNews = amountOfWrittenNews;
     }
@@ -36,12 +39,12 @@ public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
         if (!super.equals(object)) {
             return false;
         }
-        AuthorIdWithAmountOfWrittenNews otherAuthorIdWithAmountOfWrittenNews =
-                (AuthorIdWithAmountOfWrittenNews) object;
-        if (this.authorId != otherAuthorIdWithAmountOfWrittenNews.authorId) {
+        AuthorIdWithAmountOfWrittenNewsDTO otherAuthorIdWithAmountOfWrittenNewsDTO =
+                (AuthorIdWithAmountOfWrittenNewsDTO) object;
+        if (this.authorId != otherAuthorIdWithAmountOfWrittenNewsDTO.authorId) {
             return false;
         }
-        if (this.amountOfWrittenNews != otherAuthorIdWithAmountOfWrittenNews.amountOfWrittenNews) {
+        if (this.amountOfWrittenNews != otherAuthorIdWithAmountOfWrittenNewsDTO.amountOfWrittenNews) {
             return false;
         }
         return true;
@@ -49,31 +52,31 @@ public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
 
     @Override
     public String toString() {
-        final StringBuilder builder = new StringBuilder("AuthorIdWithAmountOfWrittenNews{");
-        builder.append("authorId=").append(authorId);
-        builder.append(", amountOfWrittenNews=").append(amountOfWrittenNews);
-        builder.append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("AuthorIdWithAmountOfWrittenNewsDTO{");
+        sb.append("authorId=").append(authorId);
+        sb.append(", amountOfWrittenNews=").append(amountOfWrittenNews);
+        sb.append('}');
+        return sb.toString();
     }
 
-    public static class AuthorIdWithAmountOfWrittenNewsBuilder {
-        private final AuthorIdWithAmountOfWrittenNews authorIdWithAmountOfWrittenNews;
+    public static class AuthorIdWithAmountOfWrittenNewsDTOBuilder {
+        private final AuthorIdWithAmountOfWrittenNewsDTO authorIdWithAmountOfWrittenNews;
 
-        public AuthorIdWithAmountOfWrittenNewsBuilder() {
-            this.authorIdWithAmountOfWrittenNews = new AuthorIdWithAmountOfWrittenNews();
+        public AuthorIdWithAmountOfWrittenNewsDTOBuilder() {
+            this.authorIdWithAmountOfWrittenNews = new AuthorIdWithAmountOfWrittenNewsDTO();
         }
 
-        public AuthorIdWithAmountOfWrittenNewsBuilder setAuthorId(long authorId) {
+        public AuthorIdWithAmountOfWrittenNewsDTOBuilder setAuthorId(long authorId) {
             this.authorIdWithAmountOfWrittenNews.setAuthorId(authorId);
             return this;
         }
 
-        public AuthorIdWithAmountOfWrittenNewsBuilder setAmountOfWrittenNews(long amountOfWrittenNews) {
+        public AuthorIdWithAmountOfWrittenNewsDTOBuilder setAmountOfWrittenNews(long amountOfWrittenNews) {
             this.authorIdWithAmountOfWrittenNews.setAmountOfWrittenNews(amountOfWrittenNews);
             return this;
         }
 
-        public AuthorIdWithAmountOfWrittenNews build() {
+        public AuthorIdWithAmountOfWrittenNewsDTO build() {
             return this.authorIdWithAmountOfWrittenNews;
         }
     }

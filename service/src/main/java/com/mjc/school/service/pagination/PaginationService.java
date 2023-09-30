@@ -1,6 +1,6 @@
 package com.mjc.school.service.pagination;
 
-import com.mjc.school.entity.Pagination;
+import com.mjc.school.validation.dto.Pagination;
 
 import java.util.List;
 

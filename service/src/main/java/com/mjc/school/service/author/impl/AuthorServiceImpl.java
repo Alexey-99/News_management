@@ -1,9 +1,10 @@
 package com.mjc.school.service.author.impl;
 
 import com.mjc.school.converter.impl.AuthorConverter;
+import com.mjc.school.converter.impl.AuthorIdWithAmountOfWrittenNewsConverter;
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
-import com.mjc.school.entity.Pagination;
+import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
@@ -14,6 +15,7 @@ import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
 import com.mjc.school.validation.AuthorValidator;
 import com.mjc.school.validation.dto.AuthorDTO;
+import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +50,12 @@ public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private AuthorConverter authorConverter;
     @Autowired
+    private AuthorIdWithAmountOfWrittenNewsConverter
+            authorIdWithAmountOfWrittenNewsConverter;
+    @Autowired
     private PaginationService<AuthorDTO> authorPagination;
     @Autowired
-    private PaginationService<AuthorIdWithAmountOfWrittenNews>
+    private PaginationService<AuthorIdWithAmountOfWrittenNewsDTO>
             authorIdWithAmountOfWrittenNewsPagination;
 
     @Override
@@ -208,14 +213,18 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNews>
+    public List<AuthorIdWithAmountOfWrittenNewsDTO>
     selectAllAuthorsIdWithAmountOfWrittenNews()
             throws ServiceException {
         try {
             List<AuthorIdWithAmountOfWrittenNews> list =
                     authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews();
             if (!list.isEmpty()) {
-                return list;
+                return list.stream()
+                        .map(authorIdWithAmountOfWrittenNews ->
+                                authorIdWithAmountOfWrittenNewsConverter
+                                        .toDTO(authorIdWithAmountOfWrittenNews))
+                        .toList();
             } else {
                 log.log(WARN, "Not found objects");
                 throw new ServiceException(NO_ENTITY);
@@ -227,7 +236,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNews>
+    public List<AuthorIdWithAmountOfWrittenNewsDTO>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
             throws ServiceException {
         try {
@@ -237,7 +246,11 @@ public class AuthorServiceImpl implements AuthorService {
             if (!authorLongMapSorted.isEmpty()) {
                 authorLongMapSorted.sort(
                         new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
-                return authorLongMapSorted;
+                return authorLongMapSorted.stream()
+                        .map(authorIdWithAmountOfWrittenNews ->
+                                authorIdWithAmountOfWrittenNewsConverter
+                                        .toDTO(authorIdWithAmountOfWrittenNews))
+                        .toList();
             } else {
                 log.log(WARN, "Not found objects");
                 throw new ServiceException(NO_ENTITY);
@@ -250,16 +263,17 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Pagination<AuthorDTO> getPagination(
-            List<AuthorDTO> list, long numberElementsReturn, long numberPage) {
-        return authorPagination.getPagination(list, numberElementsReturn, numberPage);
+            List<AuthorDTO> list,
+            long size, long page) {
+        return authorPagination.getPagination(list, size, page);
     }
 
     @Override
-    public Pagination<AuthorIdWithAmountOfWrittenNews>
+    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
     getPaginationAuthorIdWithAmountOfWrittenNews
-            (List<AuthorIdWithAmountOfWrittenNews> list, long numberElementsReturn,
-             long numberPage) {
+            (List<AuthorIdWithAmountOfWrittenNewsDTO> list,
+             long size, long page) {
         return authorIdWithAmountOfWrittenNewsPagination
-                .getPagination(list, numberElementsReturn, numberPage);
+                .getPagination(list, size, page);
     }
 }

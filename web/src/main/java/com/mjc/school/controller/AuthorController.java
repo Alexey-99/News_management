@@ -1,12 +1,11 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
-import com.mjc.school.entity.News;
-import com.mjc.school.entity.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
+import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
+import com.mjc.school.validation.dto.Pagination;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -28,8 +27,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import java.util.List;
-
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
 import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
@@ -39,45 +36,21 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/v1/author")
-@Api(produces = "application/json", value = "Operations for creating, updating, retrieving and deleting news in the application")
+@RequestMapping("/api/v2/author")
+@Api("Operations for authors in the application")
 public class AuthorController {
     @Autowired
     private AuthorService authorService;
 
-    @GetMapping("/amount-news")
-    @ApiOperation(value = "View all news", response = List.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
-    public Pagination<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsWithAmountOfWrittenNews(
-            @RequestParam(value = "size",
-                    required = false,
-                    defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
-            @RequestParam(value = "page",
-                    required = false,
-                    defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
-            throws ServiceException {
-        return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(),
-                countElementsReturn,
-                numberPage);
-    }
-
     @PostMapping
-    @ApiOperation(value = "Create a piece of news", response = News.class)
+    @ApiOperation(value = """
+            Create a author.
+            Response: true if successful created author, false - if don't created author.
+            """, response = Boolean.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully created a piece of news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 201, message = "Successful created a author"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<Boolean> create(
@@ -92,12 +65,14 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "View all news", response = List.class)
+    @ApiOperation(value = """
+            Delete a author by id.
+            Response: true - if successful deleted author, false - if don't deleted author.
+            """, response = Boolean.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 201, message = "Successful deleted a author"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrect"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     }
     )
@@ -111,12 +86,14 @@ public class AuthorController {
     }
 
     @PutMapping
-    @ApiOperation(value = "View all news", response = List.class)
+    @ApiOperation(value = """
+            Update a author by id.
+            Response: true - if successful updated author, false - if don't updated author.
+            """, response = Boolean.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 201, message = "Successful updated a author"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrect"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     }
     )
@@ -131,12 +108,14 @@ public class AuthorController {
     }
 
     @GetMapping("/all")
-    @ApiOperation(value = "View all news", response = List.class)
+    @ApiOperation(value = """
+            View all authors.
+            Response: pagination with authors.
+            """, response = AuthorDTO.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     }
     )
@@ -157,12 +136,11 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "View all news", response = List.class)
+    @ApiOperation(value = "View author by id", response = AuthorDTO.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     }
     )
@@ -175,12 +153,14 @@ public class AuthorController {
     }
 
     @GetMapping("/part-name/{partOfName}")
-    @ApiOperation(value = "View all news", response = List.class)
+    @ApiOperation(value = """
+            View authors by part of name.
+            Response: pagination with authors.
+            """, response = AuthorDTO.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     }
     )
@@ -205,12 +185,13 @@ public class AuthorController {
     }
 
     @GetMapping("/news/{newsId}")
-    @ApiOperation(value = "View all news", response = List.class)
+    @ApiOperation(value = """
+            View author by news id.
+            """, response = AuthorDTO.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     }
     )
@@ -222,17 +203,47 @@ public class AuthorController {
         return authorService.findByNewsId(newsId);
     }
 
-    @GetMapping("/sort/amount-news")
-    @ApiOperation(value = "View all news", response = List.class)
+    @GetMapping("/amount-news")
+    @ApiOperation(value = """
+            View all authors with amount of written news.
+            Response: objects with author id and amount written news, with pagination.
+            """, response = AuthorIdWithAmountOfWrittenNewsDTO.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all news"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     }
     )
-    public Pagination<AuthorIdWithAmountOfWrittenNews>
+    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsWithAmountOfWrittenNews(
+            @RequestParam(value = "size",
+                    required = false,
+                    defaultValue = DEFAULT_SIZE)
+            long countElementsReturn,
+            @RequestParam(value = "page",
+                    required = false,
+                    defaultValue = DEFAULT_NUMBER_PAGE)
+            long numberPage)
+            throws ServiceException {
+        return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
+                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(),
+                countElementsReturn,
+                numberPage);
+    }
+
+    @GetMapping("/sort/amount-news")
+    @ApiOperation(value = """
+            View sorted authors id with amount of written news.
+            Response: pagination with objects with author id and amount written news.
+            """, response = AuthorIdWithAmountOfWrittenNewsDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    }
+    )
+    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
             @RequestParam(value = "size",
                     required = false,

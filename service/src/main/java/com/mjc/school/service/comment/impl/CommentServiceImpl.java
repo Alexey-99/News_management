@@ -2,7 +2,7 @@ package com.mjc.school.service.comment.impl;
 
 import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.entity.Comment;
-import com.mjc.school.entity.Pagination;
+import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;

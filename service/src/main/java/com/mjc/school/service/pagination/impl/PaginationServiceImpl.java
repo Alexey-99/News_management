@@ -1,6 +1,6 @@
 package com.mjc.school.service.pagination.impl;
 
-import com.mjc.school.entity.Pagination;
+import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.service.pagination.PaginationService;
 import org.springframework.stereotype.Component;
 
