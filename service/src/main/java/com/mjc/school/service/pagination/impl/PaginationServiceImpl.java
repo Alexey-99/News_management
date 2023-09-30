@@ -14,17 +14,17 @@ public class PaginationServiceImpl<T> implements PaginationService<T> {
     private static final long NUMBER_ELEMENTS_RETURN = 5;
 
     @Override
-    public Pagination<T> getPagination(List<T> list, long countElementsReturn, long numberPage) {
+    public Pagination<T> getPagination(List<T> list, long size, long page) {
         Pagination<T> paginationResult = null;
         if (list != null && !list.isEmpty()) {
-            countElementsReturn = validCountElementsReturn(countElementsReturn);
-            long maxNumberPage = calcMaxNumberPage(list, countElementsReturn);
-            numberPage = validNumberPage(numberPage, maxNumberPage);
-            long numberStartElement = validNumberStartElement(numberPage, countElementsReturn);
+            size = validCountElementsReturn(size);
+            long maxNumberPage = calcMaxNumberPage(list, size);
+            page = validNumberPage(page, maxNumberPage);
+            long numberStartElement = validNumberStartElement(page, size);
             paginationResult = new Pagination
                     .PaginationBuilder<T>()
-                    .setEntity(getListEntity(list, numberStartElement, countElementsReturn))
-                    .setNumberPage(numberPage)
+                    .setEntity(getListEntity(list, numberStartElement, size))
+                    .setNumberPage(page)
                     .setMaxNumberPage(maxNumberPage)
                     .build();
         } else {
