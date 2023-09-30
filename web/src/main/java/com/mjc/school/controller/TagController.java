@@ -5,6 +5,10 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.TagDTO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,12 +35,23 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/tag")
+@RequestMapping("/api/v2/tag")
+@Api(value = "Operations for tag in the application")
 public class TagController {
     @Autowired
     private TagService tagService;
 
     @PostMapping
+    @ApiOperation(value = """
+            Create a tag.
+            Response: true - if successful created tag, if didn't create tag - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful created a tag"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> create(
             @Valid
             @RequestBody
@@ -48,6 +63,16 @@ public class TagController {
     }
 
     @PutMapping("/to-news")
+    @ApiOperation(value = """
+            Add a tag to news.
+            Response: true - if successful added a tag to news, if didn't add a tag to news - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful added a tag to news"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> addToNews(
             @RequestParam(value = "tag")
             @Min(value = 1, message = BAD_ID)
@@ -61,6 +86,16 @@ public class TagController {
     }
 
     @DeleteMapping("/from-news")
+    @ApiOperation(value = """
+            Delete a tag from news.
+            Response: true - if successful deleted a tag from news, if didn't delete a tag from news - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful deleted a tag from news"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> removeTagFromNews(
             @RequestParam(value = "tag")
             @Min(value = 1, message = BAD_ID)
@@ -74,6 +109,16 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = """
+            Delete a tag by id.
+            Response: true - if successful deleted a tag, if didn't delete a tag - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful deleted a tag"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> deleteById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -84,6 +129,16 @@ public class TagController {
     }
 
     @DeleteMapping("/all-news/{id}")
+    @ApiOperation(value = """
+            Delete a tag from all news by tag id.
+            Response: true - if successful deleted a tag from all news, if didn't delete a tag from all news - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful deleted a tag from all news"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> deleteFromAllNews(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -94,6 +149,16 @@ public class TagController {
     }
 
     @PutMapping
+    @ApiOperation(value = """
+            Update a tag by id.
+            Response: true - if successful updated a tag, if didn't update a tag - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful update a tag"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> update(
             @Valid
             @RequestBody
@@ -105,6 +170,16 @@ public class TagController {
     }
 
     @GetMapping("/all")
+    @ApiOperation(value = """
+            View all tags.
+            Response: pagination of tags.
+            """, response = Pagination.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public Pagination<TagDTO> findAll(
             @RequestParam(value = "size",
                     required = false,
@@ -122,6 +197,16 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = """
+            View tag by id.
+            Response: tags.
+            """, response = TagDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public TagDTO findById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -131,6 +216,16 @@ public class TagController {
     }
 
     @GetMapping("/part-name/{partOfName}")
+    @ApiOperation(value = """
+            View tag by part of name.
+            Response: pagination of tags.
+            """, response = Pagination.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public Pagination<TagDTO> findByPartOfName(
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
@@ -152,6 +247,16 @@ public class TagController {
     }
 
     @GetMapping("/news/{newsId}")
+    @ApiOperation(value = """
+            View tag by news id.
+            Response: pagination of tags.
+            """, response = Pagination.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public Pagination<TagDTO> findByNewsId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)

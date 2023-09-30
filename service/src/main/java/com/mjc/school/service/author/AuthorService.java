@@ -26,5 +26,5 @@ public interface AuthorService
             throws ServiceException;
 
     public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> getPaginationAuthorIdWithAmountOfWrittenNews
-            (List<AuthorIdWithAmountOfWrittenNewsDTO> list, long numberElementsReturn, long numberPage);
+            (List<AuthorIdWithAmountOfWrittenNewsDTO> list, long size, long page);
 }

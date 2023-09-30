@@ -239,7 +239,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Pagination<CommentDTO> getPagination(
-            List<CommentDTO> list, long numberElementsReturn, long numberPage) {
-        return commentPagination.getPagination(list, numberElementsReturn, numberPage);
+            List<CommentDTO> list, long size, long page) {
+        return commentPagination.getPagination(list, size, page);
     }
 }

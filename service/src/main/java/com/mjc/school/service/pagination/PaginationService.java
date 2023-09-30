@@ -10,6 +10,6 @@ public interface PaginationService<T> {
 
     public Pagination<T> getPagination(
             List<T> list,
-            long numberElementsReturn,
-            long numberPage);
+            long size,
+            long page);
 }

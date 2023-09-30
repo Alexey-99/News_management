@@ -45,7 +45,7 @@ public class AuthorController {
     @PostMapping
     @ApiOperation(value = """
             Create a author.
-            Response: true if successful created author, false - if don't created author.
+            Response: true - if successful created author, if didn't create author - false.
             """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful created a author"),
@@ -67,15 +67,14 @@ public class AuthorController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = """
             Delete a author by id.
-            Response: true - if successful deleted author, false - if don't deleted author.
+            Response: true - if successful deleted author, if didn't delete author - false.
             """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful deleted a author"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrect"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
+    })
     public ResponseEntity<Boolean> deleteById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -88,15 +87,14 @@ public class AuthorController {
     @PutMapping
     @ApiOperation(value = """
             Update a author by id.
-            Response: true - if successful updated author, false - if don't updated author.
+            Response: true - if successful updated author, if didn't update author - false.
             """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful updated a author"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrect"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
+    })
     public ResponseEntity<Boolean> update(
             @Valid
             @RequestBody
@@ -111,14 +109,13 @@ public class AuthorController {
     @ApiOperation(value = """
             View all authors.
             Response: pagination with authors.
-            """, response = AuthorDTO.class)
+            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
+    })
     public Pagination<AuthorDTO> findAllAuthors(
             @RequestParam(value = "size",
                     required = false,
@@ -142,8 +139,7 @@ public class AuthorController {
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
+    })
     public AuthorDTO findById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -156,14 +152,13 @@ public class AuthorController {
     @ApiOperation(value = """
             View authors by part of name.
             Response: pagination with authors.
-            """, response = AuthorDTO.class)
+            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
+    })
     public Pagination<AuthorDTO> findByPartOfName(
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
@@ -193,8 +188,7 @@ public class AuthorController {
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
+    })
     public AuthorDTO findByNewsId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -207,14 +201,13 @@ public class AuthorController {
     @ApiOperation(value = """
             View all authors with amount of written news.
             Response: objects with author id and amount written news, with pagination.
-            """, response = AuthorIdWithAmountOfWrittenNewsDTO.class)
+            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
+    })
     public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsWithAmountOfWrittenNews(
             @RequestParam(value = "size",
                     required = false,
@@ -235,14 +228,13 @@ public class AuthorController {
     @ApiOperation(value = """
             View sorted authors id with amount of written news.
             Response: pagination with objects with author id and amount written news.
-            """, response = AuthorIdWithAmountOfWrittenNewsDTO.class)
+            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
-    }
-    )
+    })
     public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
             @RequestParam(value = "size",

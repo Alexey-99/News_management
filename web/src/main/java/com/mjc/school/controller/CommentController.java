@@ -6,6 +6,10 @@ import com.mjc.school.exception.ServiceException;
 import com.mjc.school.name.SortField;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +37,23 @@ import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/api/v2/comment")
+@Api(value = "Operations for comments in the application")
 public class CommentController {
     @Autowired
     private CommentService commentService;
 
     @GetMapping("/all")
+    @ApiOperation(value = """
+            View all comments.
+            Response: pagination of comments.
+            """, response = Pagination.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public Pagination<CommentDTO> findAll(
             @RequestParam(value = "size",
                     required = false,
@@ -56,6 +71,16 @@ public class CommentController {
     }
 
     @GetMapping("/news/{newsId}")
+    @ApiOperation(value = """
+            View comments by news id.
+            Response: pagination of comments.
+            """, response = Pagination.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public Pagination<CommentDTO> findByNewsId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -76,6 +101,15 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = """
+            View comment by id.
+            """, response = CommentDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public CommentDTO findById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -85,6 +119,16 @@ public class CommentController {
     }
 
     @GetMapping("/sort")
+    @ApiOperation(value = """
+            View sorted comments.
+            Response: pagination of comments.
+            """, response = Pagination.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public Pagination<CommentDTO> sort(
             @RequestParam(value = "size",
                     required = false,
@@ -104,40 +148,52 @@ public class CommentController {
             String sortingType)
             throws ServiceException {
         Pagination<CommentDTO> sortedList = null;
-        switch (sortingField) {
-            case SortField.CREATED -> {
-                switch (sortingType) {
-                    case ASCENDING -> sortedList = commentService.getPagination(
-                            commentService.sortByCreatedDateTimeAsc(
-                                    commentService.findAll()),
-                            countElementsReturn,
-                            numberPage);
-                    default -> sortedList = commentService.getPagination(
-                            commentService.sortByCreatedDateTimeDesc(
-                                    commentService.findAll()),
-                            countElementsReturn,
-                            numberPage);
-                }
+        if (sortingField != null &&
+                sortingField.equals(SortField.CREATED)) {
+            if (sortingType != null &&
+                    sortingType.equals(ASCENDING)) {
+                sortedList = commentService.getPagination(
+                        commentService.sortByCreatedDateTimeAsc(
+                                commentService.findAll()),
+                        countElementsReturn,
+                        numberPage);
+            } else {
+                sortedList = commentService.getPagination(
+                        commentService.sortByCreatedDateTimeDesc(
+                                commentService.findAll()),
+                        countElementsReturn,
+                        numberPage);
             }
-            default -> {
-                switch (sortingType) {
-                    case ASCENDING -> sortedList = commentService.getPagination(
-                            commentService.sortByModifiedDateTimeAsc(
-                                    commentService.findAll()),
-                            countElementsReturn,
-                            numberPage);
-                    default -> sortedList = commentService.getPagination(
-                            commentService.sortByModifiedDateTimeDesc(
-                                    commentService.findAll()),
-                            countElementsReturn,
-                            numberPage);
-                }
+        } else {
+            if (sortingType != null &&
+                    sortingType.equals(ASCENDING)) {
+                sortedList = commentService.getPagination(
+                        commentService.sortByModifiedDateTimeAsc(
+                                commentService.findAll()),
+                        countElementsReturn,
+                        numberPage);
+            } else {
+                sortedList = commentService.getPagination(
+                        commentService.sortByModifiedDateTimeDesc(
+                                commentService.findAll()),
+                        countElementsReturn,
+                        numberPage);
             }
         }
         return sortedList;
     }
 
     @PostMapping
+    @ApiOperation(value = """
+            Create a comment.
+            Response: true - if successful created comment, if didn't create comment - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful created a comment"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> create(
             @Valid
             @RequestBody
@@ -149,6 +205,16 @@ public class CommentController {
     }
 
     @PutMapping
+    @ApiOperation(value = """
+            Update a comment.
+            Response: true - if successful updated comment, if didn't update comment - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful updated a comment"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> update(
             @Valid
             @RequestBody
@@ -160,6 +226,16 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = """
+            Delete a comment by id.
+            Response: true - if successful deleted comment, if didn't delete comment - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful deleted a comment"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> deleteById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -170,6 +246,16 @@ public class CommentController {
     }
 
     @DeleteMapping("/news/{newsId}")
+    @ApiOperation(value = """
+            Delete a comment by news id.
+            Response: true - if successful deleted comment, if didn't delete comment - false.
+            """, response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful deleted a comment"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     public ResponseEntity<Boolean> deleteByNewsId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
