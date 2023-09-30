@@ -10,7 +10,7 @@ import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.repository.tag.TagRepository;
 import com.mjc.school.service.tag.TagService;
-import com.mjc.school.validation.TagValidator;
+import com.mjc.school.validation.ext.TagValidator;
 import com.mjc.school.validation.dto.TagDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -21,9 +21,9 @@ import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparat
 import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparatorByCreatedDateTimeDesc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeAsc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeDesc;
-import com.mjc.school.validation.AuthorValidator;
-import com.mjc.school.validation.NewsValidator;
-import com.mjc.school.validation.TagValidator;
+import com.mjc.school.validation.ext.AuthorValidator;
+import com.mjc.school.validation.ext.NewsValidator;
+import com.mjc.school.validation.ext.TagValidator;
 import com.mjc.school.validation.dto.NewsDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

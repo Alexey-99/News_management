@@ -1,6 +1,7 @@
 package com.mjc.school.validation;
 
 import com.mjc.school.exception.IncorrectParameterException;
+import com.mjc.school.exception.RepositoryException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.validation.annotation.Validated;
@@ -10,9 +11,11 @@ import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.INFO;
 
 @Validated
-public abstract class Validator {
+public abstract class Validator<T> {
     private static final Logger log = LogManager.getLogger();
     private static final int MIN_ID = 1;
+
+    public abstract boolean validate(T entity) throws IncorrectParameterException, RepositoryException;
 
     public boolean validateId(long id) throws IncorrectParameterException {
         if (id >= MIN_ID) {

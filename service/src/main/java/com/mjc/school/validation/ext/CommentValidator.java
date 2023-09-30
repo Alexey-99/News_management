@@ -1,8 +1,9 @@
-package com.mjc.school.validation;
+package com.mjc.school.validation.ext;
 
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.news.NewsRepository;
+import com.mjc.school.validation.Validator;
 import com.mjc.school.validation.dto.CommentDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,13 +17,14 @@ import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
 @Component
-public class CommentValidator extends Validator {
+public class CommentValidator extends Validator<CommentDTO> {
     private static final Logger log = LogManager.getLogger();
     private static final int MAX_LENGTH_CONTENT = 255;
     private static final int MIN_LENGTH_CONTENT = 3;
     @Autowired
     private NewsRepository newsRepository;
 
+    @Override
     public boolean validate(CommentDTO commentDTO)
             throws IncorrectParameterException, RepositoryException {
         return validateContent(commentDTO.getContent()) &&

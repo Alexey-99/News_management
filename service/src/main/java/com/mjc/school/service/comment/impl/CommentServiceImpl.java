@@ -16,7 +16,7 @@ import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentCo
 import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentComparatorByCreatedDateTimeDesc;
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeDesc;
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeAsc;
-import com.mjc.school.validation.CommentValidator;
+import com.mjc.school.validation.ext.CommentValidator;
 import com.mjc.school.validation.dto.CommentDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

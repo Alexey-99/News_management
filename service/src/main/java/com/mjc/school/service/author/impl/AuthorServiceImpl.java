@@ -13,7 +13,7 @@ import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
-import com.mjc.school.validation.AuthorValidator;
+import com.mjc.school.validation.ext.AuthorValidator;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import org.apache.logging.log4j.LogManager;

@@ -1,8 +1,9 @@
-package com.mjc.school.validation;
+package com.mjc.school.validation.ext;
 
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.tag.TagRepository;
+import com.mjc.school.validation.Validator;
 import com.mjc.school.validation.dto.TagDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,13 +16,15 @@ import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
 @Component
-public class TagValidator extends Validator {
+public class TagValidator extends Validator<TagDTO> {
     private static final Logger log = LogManager.getLogger();
-    @Autowired
-    private TagRepository tagRepository;
     private static final int MAX_LENGTH_NAME = 15;
     private static final int MIN_LENGTH_NAME = 3;
 
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Override
     public boolean validate(TagDTO tagDTO)
             throws IncorrectParameterException, RepositoryException {
         return validateName(tagDTO.getName()) &&
@@ -30,7 +33,8 @@ public class TagValidator extends Validator {
 
     public boolean validateName(String name) throws IncorrectParameterException {
         if (name != null &&
-                (name.length() >= MIN_LENGTH_NAME && name.length() <= MAX_LENGTH_NAME)) {
+                (name.length() >= MIN_LENGTH_NAME &&
+                        name.length() <= MAX_LENGTH_NAME)) {
             log.log(INFO, "Correct entered tag name:" + name);
             return true;
         } else {
