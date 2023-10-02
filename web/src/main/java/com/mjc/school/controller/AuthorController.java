@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +36,8 @@ import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-@RestController
-@RequestMapping("/api/v2/author")
+@RestController()
+@RequestMapping(value = "/api/v2/author", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api("Operations for authors in the application")
 public class AuthorController {
     @Autowired
@@ -126,12 +127,10 @@ public class AuthorController {
                     defaultValue = DEFAULT_NUMBER_PAGE)
             long page)
             throws ServiceException {
-        return new ResponseEntity<>(
-                authorService.getPagination(
-                        authorService.findAll(),
-                        size,
-                        page),
-                OK);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(authorService.getPagination(
+                        authorService.findAll(), size, page));
     }
 
     @ApiResponses(value = {
