@@ -1,9 +1,6 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.exception.IncorrectParameterException;
-import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.author.AuthorService;
-import com.mjc.school.validation.dto.AuthorDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,70 +17,61 @@ class AuthorControllerTest {
 
     @Test
     @DisplayName(value = """
-                        
             """)
-    void create(AuthorDTO authorDTO) throws ServiceException, IncorrectParameterException {
-    }
+    void create() {
+//        given (что должен вернуть метод?)
 
-    @Test
-    @DisplayName(value = """
-                        
-            """)
-    void deleteById(long id) throws ServiceException, IncorrectParameterException {
-    }
+//        when (вызов тестируемого метода)
 
-    @Test
-    @DisplayName(value = """
-                        
-            """)
-    void update(AuthorDTO authorDTO) throws ServiceException, IncorrectParameterException {
+//        then (тестирование)
 
     }
 
     @Test
     @DisplayName(value = """
-                        
             """)
-    void findAllAuthors(long countElementsReturn, long numberPage) throws ServiceException {
-
+    void deleteById() {
     }
 
     @Test
     @DisplayName(value = """
-                        
             """)
-    void findById(long id) throws ServiceException, IncorrectParameterException {
-
+    void update() {
     }
 
     @Test
     @DisplayName(value = """
-                        
             """)
-    void findByPartOfName(String partOfName, long countElementsReturn, long numberPage) throws ServiceException, IncorrectParameterException {
-
+    void findAll() {
     }
 
     @Test
     @DisplayName(value = """
-                        
             """)
-    void findByNewsId(long newsId) throws ServiceException, IncorrectParameterException {
-
+    void findById() {
     }
 
     @Test
     @DisplayName(value = """
-                        
             """)
-    void selectAllAuthorsWithAmountOfWrittenNews(long countElementsReturn, long numberPage) throws ServiceException {
-
+    void findByPartOfName() {
     }
 
     @Test
     @DisplayName(value = """
-                        
             """)
-    void sortAllAuthorsIdWithAmountOfWrittenNewsDesc(long countElementsReturn, long numberPage) throws ServiceException {
+    void findByNewsId() {
+    }
+
+    @Test
+    @DisplayName(value = """
+            """)
+    void selectAllAuthorsIdWithAmountOfWrittenNews() {
+    }
+
+    @Test
+    @DisplayName(value = """
+            """)
+    void sortAllAuthorsIdWithAmountOfWrittenNewsDesc() {
     }
 }

@@ -116,7 +116,7 @@ public class AuthorController {
             Response: pagination with authors.
             """, response = Pagination.class)
     @GetMapping("/all")
-    public Pagination<AuthorDTO> findAllAuthors(
+    public Pagination<AuthorDTO> findAll(
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
@@ -210,7 +210,7 @@ public class AuthorController {
             Response: objects with author id and amount written news, with pagination.
             """, response = Pagination.class)
     @GetMapping("/amount-news")
-    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsWithAmountOfWrittenNews(
+    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsIdWithAmountOfWrittenNews(
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
