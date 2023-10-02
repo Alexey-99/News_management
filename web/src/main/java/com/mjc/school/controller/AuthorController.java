@@ -116,20 +116,22 @@ public class AuthorController {
             Response: pagination with authors.
             """, response = Pagination.class)
     @GetMapping("/all")
-    public Pagination<AuthorDTO> findAll(
+    public ResponseEntity<Pagination<AuthorDTO>> findAll(
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            long page)
             throws ServiceException {
-        return authorService.getPagination(
-                authorService.findAll(),
-                countElementsReturn,
-                numberPage);
+        return new ResponseEntity<>(
+                authorService.getPagination(
+                        authorService.findAll(),
+                        size,
+                        page),
+                OK);
     }
 
     @ApiResponses(value = {
