@@ -35,9 +35,11 @@ import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER
 import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@RestController()
-@RequestMapping(value = "/api/v2/author", produces = MediaType.APPLICATION_JSON_VALUE)
+@RestController
+@RequestMapping(value = "/api/v2/author"/*, produces = APPLICATION_JSON_VALUE*/)
 @Api("Operations for authors in the application")
 public class AuthorController {
     @Autowired
@@ -116,7 +118,10 @@ public class AuthorController {
             View all authors.
             Response: pagination with authors.
             """, response = Pagination.class)
-    @GetMapping("/all")
+    @GetMapping(
+            value = "/all",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Pagination<AuthorDTO>> findAll(
             @RequestParam(value = "size",
                     required = false,
@@ -127,10 +132,14 @@ public class AuthorController {
                     defaultValue = DEFAULT_NUMBER_PAGE)
             long page)
             throws ServiceException {
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
+       return ResponseEntity.ok()
+                .contentType(APPLICATION_JSON)
                 .body(authorService.getPagination(
-                        authorService.findAll(), size, page));
+                        authorService.findAll(), size, page)
+                );
+//        return authorService.getPagination(
+//                authorService.findAll(), size, page);
+
     }
 
     @ApiResponses(value = {

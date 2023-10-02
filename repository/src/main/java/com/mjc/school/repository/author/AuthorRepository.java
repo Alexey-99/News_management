@@ -10,7 +10,6 @@ import java.util.List;
 public interface AuthorRepository extends CRUDOperationRepository<Author> {
     public Author findByNewsId(long newsId) throws RepositoryException;
 
-
     public List<AuthorIdWithAmountOfWrittenNews> selectAllAuthorsIdWithAmountOfWrittenNews()
             throws RepositoryException;
 

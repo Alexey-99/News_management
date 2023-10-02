@@ -21,7 +21,11 @@ import java.io.IOException;
 
 import static org.apache.logging.log4j.Level.INFO;
 
-@WebFilter(urlPatterns = {"/news/*", "/author/*", "/comment/*", "/tag/*"})
+@WebFilter(urlPatterns = {
+        "/api/v2/news/*",
+        "/api/v2/author/*",
+        "/api/v2/comment/*",
+        "/api/v2/tag/*"})
 public class LanguageFilter implements Filter {
     private static final Logger log = LogManager.getLogger();
     @Autowired

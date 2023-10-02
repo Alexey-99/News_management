@@ -25,8 +25,6 @@ import static org.apache.logging.log4j.Level.ERROR;
 @Repository
 public class AuthorRepositoryImpl implements AuthorRepository {
     private static final Logger log = LogManager.getLogger();
-    @Autowired
-    @Qualifier("namedJdbcTemplate")
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
     private AuthorMapper authorMapper;
@@ -34,17 +32,22 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     private AuthorIdWithAmountOfWrittenNewsMapper authorIdWithAmountOfWrittenNewsMapper;
 
     private static final String QUERY_INSERT_AUTHOR = """
-            INSERT INTO authors(name)
+            INSERT INTO authors (name)
             VALUES (:name);
             """;
+
+    @Autowired
+    public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public boolean create(Author author) throws RepositoryException {
         try {
-            return jdbcTemplate.update(QUERY_INSERT_AUTHOR,
-                    new MapSqlParameterSource()
-                            .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName()))
-                    > 0;
+            System.out.println(jdbcTemplate.hashCode());
+            MapSqlParameterSource object = new MapSqlParameterSource()
+                    .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName());
+            return jdbcTemplate.update(QUERY_INSERT_AUTHOR, object) > 0;
         } catch (DataAccessException e) {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
@@ -175,7 +178,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     private static final String QUERY_SELECT_AUTHOR_BY_NAME = """
             SELECT id, name
             FROM authors
-            WHERE id = :id;
+            WHERE name = :name;
             """;
 
     @Override

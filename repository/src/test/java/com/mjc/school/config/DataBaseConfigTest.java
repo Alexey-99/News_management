@@ -4,19 +4,24 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:application.properties")
+@ComponentScan("com.mjc.school")
+@TestPropertySource("classpath:application.properties")
 @EnableTransactionManagement
-public class DataBaseConfig {
+//@Profile("test")
+public class DataBaseConfigTest {
     @Value("${db.url}")
     private String url;
 
@@ -39,9 +44,9 @@ public class DataBaseConfig {
         return new HikariDataSource(config);
     }
 
-    @Bean(name = "namedJdbcTemplate")
+    @Bean
     public NamedParameterJdbcTemplate namedJdbcTemplate(DataSource dataSource) {
-        System.out.println("NamedParameterJdbcTemplate");
+        System.out.println("namedJdbcTemplate");
         return new NamedParameterJdbcTemplate(dataSource);
     }
 

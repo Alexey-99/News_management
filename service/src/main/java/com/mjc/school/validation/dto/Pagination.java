@@ -1,6 +1,5 @@
 package com.mjc.school.validation.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.entity.abstation.AbstractEntity;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class Pagination<T> extends AbstractEntity {
         return entity;
     }
 
-    @JsonIgnore
+
     public void setEntity(List<T> entity) {
         this.entity = entity;
     }
@@ -30,7 +29,6 @@ public class Pagination<T> extends AbstractEntity {
         return numberPage;
     }
 
-    @JsonIgnore
     public void setNumberPage(long numberPage) {
         this.numberPage = numberPage;
     }
@@ -39,7 +37,6 @@ public class Pagination<T> extends AbstractEntity {
         return maxNumberPage;
     }
 
-    @JsonIgnore
     public void setMaxNumberPage(long maxNumberPage) {
         this.maxNumberPage = maxNumberPage;
     }
