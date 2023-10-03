@@ -41,38 +41,38 @@ public class TagController {
     @Autowired
     private TagService tagService;
 
-    @PostMapping
-    @ApiOperation(value = """
-            Create a tag.
-            Response: true - if successful created tag, if didn't create tag - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful created a tag"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            Create a tag.
+            Response: true - if successful created tag, if didn't create tag - false.
+            """, response = Boolean.class)
+    @PostMapping
     public ResponseEntity<Boolean> create(
             @Valid
             @RequestBody
             @NotNull(message = BAD_REQUEST_PARAMETER)
             TagDTO tagDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = tagService.create(tagDTO);
         return new ResponseEntity<>(result, CREATED);
     }
 
-    @PutMapping("/to-news")
-    @ApiOperation(value = """
-            Add a tag to news.
-            Response: true - if successful added a tag to news, if didn't add a tag to news - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful added a tag to news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            Add a tag to news.
+            Response: true - if successful added a tag to news, if didn't add a tag to news - false.
+            """, response = Boolean.class)
+    @PutMapping("/to-news")
     public ResponseEntity<Boolean> addToNews(
             @RequestParam(value = "tag")
             @Min(value = 1, message = BAD_ID)
@@ -80,22 +80,22 @@ public class TagController {
             @RequestParam(value = "news")
             @Min(value = 1, message = BAD_ID)
             long newsId)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = tagService.addToNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
     }
 
-    @DeleteMapping("/from-news")
-    @ApiOperation(value = """
-            Delete a tag from news.
-            Response: true - if successful deleted a tag from news, if didn't delete a tag from news - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful deleted a tag from news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            Delete a tag from news.
+            Response: true - if successful deleted a tag from news, if didn't delete a tag from news - false.
+            """, response = Boolean.class)
+    @DeleteMapping("/from-news")
     public ResponseEntity<Boolean> removeTagFromNews(
             @RequestParam(value = "tag")
             @Min(value = 1, message = BAD_ID)
@@ -103,129 +103,132 @@ public class TagController {
             @RequestParam(value = "news")
             @Min(value = 1, message = BAD_ID)
             long newsId)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = tagService.removeFromNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
     }
 
-    @DeleteMapping("/{id}")
-    @ApiOperation(value = """
-            Delete a tag by id.
-            Response: true - if successful deleted a tag, if didn't delete a tag - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful deleted a tag"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            Delete a tag by id.
+            Response: true - if successful deleted a tag, if didn't delete a tag - false.
+            """, response = Boolean.class)
+    @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = tagService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
 
-    @DeleteMapping("/all-news/{id}")
-    @ApiOperation(value = """
-            Delete a tag from all news by tag id.
-            Response: true - if successful deleted a tag from all news, if didn't delete a tag from all news - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful deleted a tag from all news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            Delete a tag from all news by tag id.
+            Response: true - if successful deleted a tag from all news, if didn't delete a tag from all news - false.
+            """, response = Boolean.class)
+    @DeleteMapping("/all-news/{id}")
     public ResponseEntity<Boolean> deleteFromAllNews(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = tagService.deleteFromAllNews(id);
         return new ResponseEntity<>(result, OK);
     }
 
-    @PutMapping
-    @ApiOperation(value = """
-            Update a tag by id.
-            Response: true - if successful updated a tag, if didn't update a tag - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful update a tag"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            Update a tag by id.
+            Response: true - if successful updated a tag, if didn't update a tag - false.
+            """, response = Boolean.class)
+    @PutMapping("/{id}")
     public ResponseEntity<Boolean> update(
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id,
             @Valid
             @RequestBody
             @NotNull(message = BAD_REQUEST_PARAMETER)
             TagDTO tagDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
+        tagDTO.setId(id);
         boolean result = tagService.update(tagDTO);
         return new ResponseEntity<>(result, OK);
     }
 
-    @GetMapping("/all")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     @ApiOperation(value = """
             View all tags.
             Response: pagination of tags.
             """, response = Pagination.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful completed request"),
-            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    })
+    @GetMapping("/all")
     public Pagination<TagDTO> findAll(
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            long page)
             throws ServiceException {
         return tagService.getPagination(
                 tagService.findAll(),
-                countElementsReturn,
-                numberPage);
+                size, page);
     }
 
-    @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     @ApiOperation(value = """
             View tag by id.
             Response: tags.
             """, response = TagDTO.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful completed request"),
-            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    })
+    @GetMapping("/{id}")
     public TagDTO findById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         return tagService.findById(id);
     }
 
-    @GetMapping("/part-name/{partOfName}")
-    @ApiOperation(value = """
-            View tag by part of name.
-            Response: pagination of tags.
-            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            View tag by part of name.
+            Response: pagination of tags.
+            """, response = Pagination.class)
+    @GetMapping("/part-name/{partOfName}")
     public Pagination<TagDTO> findByPartOfName(
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
@@ -234,29 +237,28 @@ public class TagController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
-            throws ServiceException, IncorrectParameterException {
+            long page)
+            throws ServiceException {
         return tagService.getPagination(
                 tagService.findByPartOfName(partOfName),
-                countElementsReturn,
-                numberPage);
+                size, page);
     }
 
-    @GetMapping("/news/{newsId}")
-    @ApiOperation(value = """
-            View tag by news id.
-            Response: pagination of tags.
-            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            View tag by news id.
+            Response: pagination of tags.
+            """, response = Pagination.class)
+    @GetMapping("/news/{newsId}")
     public Pagination<TagDTO> findByNewsId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -264,13 +266,14 @@ public class TagController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
-            throws ServiceException, IncorrectParameterException {
+            long page)
+            throws ServiceException {
         return tagService.getPagination(
-                tagService.findByNewsId(newsId), countElementsReturn, numberPage);
+                tagService.findByNewsId(newsId),
+                size, page);
     }
 }

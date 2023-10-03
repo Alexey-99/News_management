@@ -1,6 +1,6 @@
-package com.mjc.school.validation.ext;
+package com.mjc.school.validation.annotation;
 
-import com.mjc.school.validation.ext.impl.IsNotExistsTagNameImpl;
+import com.mjc.school.validation.annotation.impl.IsNotExistsTagNameImpl;
 
 import javax.validation.Constraint;
 import java.lang.annotation.Documented;

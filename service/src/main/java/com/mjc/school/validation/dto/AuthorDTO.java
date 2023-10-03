@@ -1,6 +1,7 @@
 package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mjc.school.validation.annotation.IsNotExistsAuthorName;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_AUTHOR_NAME_EXISTS;
 
 @Validated
 public class AuthorDTO {
@@ -19,6 +21,7 @@ public class AuthorDTO {
     @Size(min = 3,
             max = 15,
             message = "author.name_not_valid")
+    @IsNotExistsAuthorName(message = BAD_PARAMETER_AUTHOR_NAME_EXISTS)
     private String name;
     private int countNews;
     @JsonIgnore

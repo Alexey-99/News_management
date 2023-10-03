@@ -2,7 +2,7 @@ package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mjc.school.validation.ext.IsNotExistsNewsTitle;
+import com.mjc.school.validation.annotation.IsNotExistsNewsTitle;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Min;
@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_AUTHOR_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_CONTENT;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_TITLE;

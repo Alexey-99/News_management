@@ -32,6 +32,7 @@ import javax.validation.constraints.Size;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_CONTENT;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_TITLE;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_TAG_NAME;
 import static com.mjc.school.name.SortField.MODIFIED;
@@ -47,7 +48,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class NewsController {
     @Autowired
     private NewsService newsService;
-
 
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful created a news"),
@@ -65,7 +65,7 @@ public class NewsController {
             @RequestBody
             @NotNull
             NewsDTO newsDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = newsService.create(newsDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -85,7 +85,7 @@ public class NewsController {
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = newsService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
@@ -125,7 +125,7 @@ public class NewsController {
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long newsId)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = newsService.deleteAllTagsFromNewsByNewsId(newsId);
         return new ResponseEntity<>(result, OK);
     }
@@ -147,22 +147,22 @@ public class NewsController {
                           @Valid
                           @RequestBody
                           @NotNull NewsDTO newsDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         newsDTO.setId(id);
         return newsService.update(newsDTO);
     }
 
-    @GetMapping("/all")
-    @ApiOperation(value = """
-            View all news.
-            Response: pagination of news.
-            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            View all news.
+            Response: pagination of news.
+            """, response = Pagination.class)
+    @GetMapping("/all")
     public Pagination<NewsDTO> findAll(
             @RequestParam(value = "size",
                     required = false,
@@ -178,36 +178,36 @@ public class NewsController {
                 size, page);
     }
 
-    @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     @ApiOperation(value = """
             View news by id.
             Response: news.
             """, response = NewsDTO.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful completed request"),
-            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    })
+    @GetMapping("/{id}")
     public NewsDTO findById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         return newsService.findById(id);
     }
 
-    @GetMapping("/tag-name/{tagName}")
-    @ApiOperation(value = """
-            View news by tag name.
-            Response: pagination of news.
-            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            View news by tag name.
+            Response: pagination of news.
+            """, response = Pagination.class)
+    @GetMapping("/tag-name/{tagName}")
     public Pagination<NewsDTO> findNewsByTagName(
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
@@ -222,23 +222,23 @@ public class NewsController {
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
             long page)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         return newsService.getPagination(
                 newsService.findByTagName(tagName),
                 size, page);
     }
 
-    @GetMapping("/tag/{tagId}")
-    @ApiOperation(value = """
-            View news by tag id.
-            Response: pagination of news.
-            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            View news by tag id.
+            Response: pagination of news.
+            """, response = Pagination.class)
+    @GetMapping("/tag/{tagId}")
     public Pagination<NewsDTO> findNewsByTagId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -251,23 +251,23 @@ public class NewsController {
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
             long page)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         return newsService.getPagination(
                 newsService.findByTagId(tagId),
                 size, page);
     }
 
-    @GetMapping("/author-name/{authorName}")
-    @ApiOperation(value = """
-            View news by author name.
-            Response: pagination of news.
-            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            View news by author name.
+            Response: pagination of news.
+            """, response = Pagination.class)
+    @GetMapping("/author-name/{authorName}")
     public Pagination<NewsDTO> findNewsByAuthorName(
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
@@ -282,54 +282,53 @@ public class NewsController {
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
             long page)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         return newsService.getPagination(
                 newsService.findByAuthorName(authorName),
                 size, page);
     }
 
-    @GetMapping("/part-title/{partOfTitle}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
     @ApiOperation(value = """
             View news by part of title.
             Response: pagination of news.
             """, response = Pagination.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful completed request"),
-            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    })
+    @GetMapping("/part-title/{partOfTitle}")
     public Pagination<NewsDTO> findNewsByPartOfTitle(
             @PathVariable
-            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @NotNull(message = BAD_PARAMETER_PART_OF_NEWS_TITLE)
+            @NotBlank(message = BAD_PARAMETER_PART_OF_NEWS_TITLE)
             String partOfTitle,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
-            throws ServiceException, IncorrectParameterException {
+            long page)
+            throws ServiceException {
         return newsService.getPagination(
                 newsService.findByPartOfTitle(partOfTitle),
-                countElementsReturn,
-                numberPage);
+                size, page);
     }
 
-    @GetMapping("/part-content/{partOfContent}")
-    @ApiOperation(value = """
-            View news by part of content.
-            Response: pagination of news.
-            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            View news by part of content.
+            Response: pagination of news.
+            """, response = Pagination.class)
+    @GetMapping("/part-content/{partOfContent}")
     public Pagination<NewsDTO> findNewsByPartOfContent(
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_NEWS_CONTENT)
@@ -343,23 +342,23 @@ public class NewsController {
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
             long page)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         return newsService.getPagination(
                 newsService.findByPartOfContent(partOfContent),
                 size, page);
     }
 
-    @GetMapping("/sort")
-    @ApiOperation(value = """
-            View sorted all news.
-            Response: pagination of news.
-            """, response = Pagination.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            View sorted all news.
+            Response: pagination of news.
+            """, response = Pagination.class)
+    @GetMapping("/sort")
     public Pagination<NewsDTO> sort(
             @RequestParam(value = "size",
                     required = false,

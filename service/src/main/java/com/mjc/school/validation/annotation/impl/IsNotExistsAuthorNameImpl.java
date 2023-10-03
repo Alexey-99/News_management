@@ -1,8 +1,8 @@
-package com.mjc.school.validation.ext.impl;
+package com.mjc.school.validation.annotation.impl;
 
 import com.mjc.school.exception.RepositoryException;
-import com.mjc.school.repository.tag.TagRepository;
-import com.mjc.school.validation.ext.IsNotExistsTagName;
+import com.mjc.school.repository.author.AuthorRepository;
+import com.mjc.school.validation.annotation.IsNotExistsAuthorName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +13,21 @@ import javax.validation.ConstraintValidatorContext;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
-public class IsNotExistsTagNameImpl
-        implements ConstraintValidator<IsNotExistsTagName, String> {
+public class IsNotExistsAuthorNameImpl
+        implements ConstraintValidator<IsNotExistsAuthorName, String> {
     private static final Logger log = LogManager.getLogger();
     @Autowired
-    private TagRepository tagRepository;
+    private AuthorRepository authorRepository;
 
     @Override
     public boolean isValid(String name,
                            ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
         try {
-            if (!tagRepository.isExistsTagWithName(name)) {
+            if (!authorRepository.isExistsAuthorWithName(name)) {
                 result = true;
             } else {
-                log.log(WARN, "Tag with entered name '" + name + "' already exists");
+                log.log(WARN, "Author with entered name '" + name + "' already exists");
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());

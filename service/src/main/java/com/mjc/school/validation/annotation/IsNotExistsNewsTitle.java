@@ -1,7 +1,6 @@
-package com.mjc.school.validation.ext;
+package com.mjc.school.validation.annotation;
 
-import com.mjc.school.validation.ext.impl.IsNotExistsNewsTitleImpl;
-import com.mjc.school.validation.ext.impl.NewsValidator;
+import com.mjc.school.validation.annotation.impl.IsNotExistsNewsTitleImpl;
 
 import javax.validation.Constraint;
 import java.lang.annotation.Documented;

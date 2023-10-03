@@ -1,6 +1,5 @@
 package com.mjc.school.service.news;
 
-import com.mjc.school.entity.News;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.CRUDOperationService;
@@ -17,22 +16,22 @@ public interface NewsService
             throws ServiceException, IncorrectParameterException;
 
     public boolean deleteAllTagsFromNewsByNewsId(long newsId)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public List<NewsDTO> findByTagName(String tagName)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public List<NewsDTO> findByTagId(long tagId)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public List<NewsDTO> findByAuthorName(String authorName)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public List<NewsDTO> findByPartOfTitle(String partOfTitle)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public List<NewsDTO> findByPartOfContent(String partOfContent)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public List<NewsDTO> sort(List<NewsDTO> newsList,
                               SortNewsComparator comparator)

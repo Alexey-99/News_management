@@ -5,12 +5,12 @@ import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.converter.impl.NewsConverter;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.entity.News;
+import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
-import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.comment.CommentRepository;
 import com.mjc.school.repository.news.NewsRepository;
@@ -21,21 +21,17 @@ import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparat
 import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparatorByCreatedDateTimeDesc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeAsc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeDesc;
-import com.mjc.school.validation.ext.TagValidator;
 import com.mjc.school.validation.dto.NewsDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_CONTENT;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_TITLE;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;

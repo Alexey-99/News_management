@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_AUTHOR_NAME_EXISTS;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;
@@ -56,16 +55,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public boolean create(AuthorDTO authorDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (!authorRepository.isExistsAuthorWithName(
-                    authorDTO.getName())) {
-                return authorRepository.create(
-                        authorConverter.fromDTO(authorDTO));
-            } else {
-                log.log(WARN, "Author with entered name '" + authorDTO.getName() + "' already exists");
-                throw new IncorrectParameterException(BAD_PARAMETER_AUTHOR_NAME_EXISTS);
-            }
+            return authorRepository.create(
+                    authorConverter.fromDTO(authorDTO));
+
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(INSERT_ERROR);
@@ -74,7 +68,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public boolean deleteById(long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
             newsRepository.deleteByAuthorId(id);
             authorRepository.deleteById(id);
@@ -88,7 +82,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public boolean update(AuthorDTO authorDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
             return authorRepository.update(
                     authorConverter.fromDTO(authorDTO));
@@ -122,7 +116,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDTO findById(long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
             Author author = authorRepository.findById(id);
             if (author != null) {

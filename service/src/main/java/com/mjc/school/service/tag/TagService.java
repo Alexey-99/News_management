@@ -12,17 +12,17 @@ public interface TagService
         extends PaginationService<TagDTO>,
         CRUDOperationService<TagDTO> {
     public boolean addToNews(long tagId, long newsId)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public boolean removeFromNews(long tagId, long newsId)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public boolean deleteFromAllNews(long tagId)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public List<TagDTO> findByPartOfName(String partOfName)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 
     public List<TagDTO> findByNewsId(long newsId)
-            throws ServiceException, IncorrectParameterException;
+            throws ServiceException;
 }
