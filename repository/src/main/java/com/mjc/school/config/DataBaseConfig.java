@@ -41,7 +41,6 @@ public class DataBaseConfig {
 
     @Bean(name = "namedJdbcTemplate")
     public NamedParameterJdbcTemplate namedJdbcTemplate(DataSource dataSource) {
-        System.out.println("NamedParameterJdbcTemplate");
         return new NamedParameterJdbcTemplate(dataSource);
     }
 

@@ -44,10 +44,12 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     @Override
     public boolean create(Author author) throws RepositoryException {
         try {
-            System.out.println(jdbcTemplate.hashCode());
-            MapSqlParameterSource object = new MapSqlParameterSource()
-                    .addValue(TABLE_AUTHORS_COLUMN_NAME, author.getName());
-            return jdbcTemplate.update(QUERY_INSERT_AUTHOR, object) > 0;
+            return jdbcTemplate.update(
+                    QUERY_INSERT_AUTHOR,
+                    new MapSqlParameterSource()
+                            .addValue(TABLE_AUTHORS_COLUMN_NAME,
+                                    author.getName()))
+                    > 0;
         } catch (DataAccessException e) {
             log.log(ERROR, e.getMessage());
             throw new RepositoryException(e);
