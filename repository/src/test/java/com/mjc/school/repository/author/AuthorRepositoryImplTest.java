@@ -4,6 +4,8 @@ import com.mjc.school.config.DataBaseConfigTest;
 import com.mjc.school.entity.Author;
 import com.mjc.school.exception.RepositoryException;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,11 @@ class AuthorRepositoryImplTest {
     private AuthorRepository authorRepository;
 
     private List<Author> listAllAuthors;
+
+    @BeforeAll
+    static void beforeAll() {
+
+    }
 
     @BeforeEach
     void setUp() throws RepositoryException {
@@ -95,5 +102,10 @@ class AuthorRepositoryImplTest {
         boolean actual = authorRepository.isExistsAuthorWithName(
                 listAllAuthors.get(0).getName());
         assertTrue(actual);
+    }
+
+    @AfterAll
+    static void afterAll() {
+
     }
 }
