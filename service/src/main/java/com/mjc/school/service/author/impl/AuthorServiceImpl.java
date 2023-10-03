@@ -13,7 +13,6 @@ import com.mjc.school.repository.author.AuthorRepository;
 import com.mjc.school.repository.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
-import com.mjc.school.validation.ext.AuthorValidator;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import org.apache.logging.log4j.LogManager;
@@ -25,8 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_AUTHOR_NAME_EXISTS;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;
@@ -46,8 +44,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private NewsRepository newsRepository;
     @Autowired
-    private AuthorValidator authorValidator;
-    @Autowired
     private AuthorConverter authorConverter;
     @Autowired
     private AuthorIdWithAmountOfWrittenNewsConverter
@@ -62,11 +58,13 @@ public class AuthorServiceImpl implements AuthorService {
     public boolean create(AuthorDTO authorDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (authorValidator.validate(authorDTO)) {
+            if (!authorRepository.isExistsAuthorWithName(
+                    authorDTO.getName())) {
                 return authorRepository.create(
                         authorConverter.fromDTO(authorDTO));
             } else {
-                return false;
+                log.log(WARN, "Author with entered name '" + authorDTO.getName() + "' already exists");
+                throw new IncorrectParameterException(BAD_PARAMETER_AUTHOR_NAME_EXISTS);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -78,14 +76,10 @@ public class AuthorServiceImpl implements AuthorService {
     public boolean deleteById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (authorValidator.validateId(id)) {
-                newsRepository.deleteByAuthorId(id);
-                authorRepository.deleteById(id);
-                return newsRepository.findByAuthorId(id).isEmpty()
-                        && authorRepository.findById(id) == null;
-            } else {
-                return false;
-            }
+            newsRepository.deleteByAuthorId(id);
+            authorRepository.deleteById(id);
+            return newsRepository.findByAuthorId(id).isEmpty()
+                    && authorRepository.findById(id) == null;
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(DELETE_ERROR);
@@ -96,13 +90,8 @@ public class AuthorServiceImpl implements AuthorService {
     public boolean update(AuthorDTO authorDTO)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (authorValidator.validateId(authorDTO.getId()) &&
-                    authorValidator.validate(authorDTO)) {
-                return authorRepository.update(
-                        authorConverter.fromDTO(authorDTO));
-            } else {
-                return false;
-            }
+            return authorRepository.update(
+                    authorConverter.fromDTO(authorDTO));
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(UPDATE_ERROR);
@@ -135,17 +124,13 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDTO findById(long id)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (authorValidator.validateId(id)) {
-                Author author = authorRepository.findById(id);
-                if (author != null) {
-                    author.setNews(newsRepository.findByAuthorId(author.getId()));
-                    return authorConverter.toDTO(author);
-                } else {
-                    log.log(WARN, "Not found object with this ID: " + id);
-                    throw new ServiceException(NO_ENTITY_WITH_ID);
-                }
+            Author author = authorRepository.findById(id);
+            if (author != null) {
+                author.setNews(newsRepository.findByAuthorId(author.getId()));
+                return authorConverter.toDTO(author);
             } else {
-                throw new IncorrectParameterException(BAD_ID);
+                log.log(WARN, "Not found object with this ID: " + id);
+                throw new ServiceException(NO_ENTITY_WITH_ID);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e.getMessage());
@@ -157,31 +142,26 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorDTO> findByPartOfName(String partOfName)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (partOfName != null) {
-                String pattern = partOfName.toLowerCase();
-                Pattern p = Pattern.compile(pattern);
-                List<Author> authorsList = authorRepository.findAll()
-                        .stream()
-                        .filter(author -> {
-                            String authorName = author.getName().toLowerCase();
-                            return (p.matcher(authorName).find())
-                                    || (p.matcher(authorName).lookingAt())
-                                    || (authorName.matches(pattern));
-                        }).toList();
-                if (!authorsList.isEmpty()) {
-                    for (Author author : authorsList) {
-                        author.setNews(newsRepository.findByAuthorId(author.getId()));
-                    }
-                    return authorsList.stream()
-                            .map(author -> authorConverter.toDTO(author))
-                            .toList();
-                } else {
-                    log.log(WARN, "Not found object with this part of name: " + partOfName);
-                    throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
+            String pattern = partOfName.toLowerCase();
+            Pattern p = Pattern.compile(pattern);
+            List<Author> authorsList = authorRepository.findAll()
+                    .stream()
+                    .filter(author -> {
+                        String authorName = author.getName().toLowerCase();
+                        return (p.matcher(authorName).find())
+                                || (p.matcher(authorName).lookingAt())
+                                || (authorName.matches(pattern));
+                    }).toList();
+            if (!authorsList.isEmpty()) {
+                for (Author author : authorsList) {
+                    author.setNews(newsRepository.findByAuthorId(author.getId()));
                 }
+                return authorsList.stream()
+                        .map(author -> authorConverter.toDTO(author))
+                        .toList();
             } else {
-                log.log(ERROR, "Entered part of author name is null");
-                throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
+                log.log(WARN, "Not found object with this part of name: " + partOfName);
+                throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -193,18 +173,13 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDTO findByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (authorValidator.validateId(newsId)) {
-                Author author = authorRepository.findByNewsId(newsId);
-                if (author != null) {
-                    author.setNews(newsRepository.findByAuthorId(author.getId()));
-                    return authorConverter.toDTO(author);
-                } else {
-                    log.log(WARN, "Not found objects with author news ID: " + newsId);
-                    throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
-                }
+            Author author = authorRepository.findByNewsId(newsId);
+            if (author != null) {
+                author.setNews(newsRepository.findByAuthorId(author.getId()));
+                return authorConverter.toDTO(author);
             } else {
-                log.log(ERROR, "Incorrect entered ID:" + newsId);
-                throw new IncorrectParameterException(BAD_ID);
+                log.log(WARN, "Not found objects with author news ID: " + newsId);
+                throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);

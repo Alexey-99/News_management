@@ -1,11 +1,24 @@
 package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
+
+@Validated
 public class AuthorDTO {
+    @JsonIgnore
     private long id;
+    @NotNull(message = BAD_AUTHOR_NAME)
+    @NotBlank(message = BAD_AUTHOR_NAME)
+    @Size(min = 3,
+            max = 15,
+            message = "author.name_not_valid")
     private String name;
     private int countNews;
     @JsonIgnore
@@ -23,7 +36,8 @@ public class AuthorDTO {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(
+            String name) {
         this.name = name;
     }
 
@@ -32,9 +46,6 @@ public class AuthorDTO {
     }
 
     public void setNews(List<NewsDTO> news) {
-        if (news != null) {
-            this.countNews = news.size();
-        }
         this.news = news;
     }
 

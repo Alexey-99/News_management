@@ -1,12 +1,6 @@
 package com.mjc.school.exception.code;
 
-import com.mjc.school.entity.abstation.AbstractEntity;
-import com.mjc.school.entity.Author;
-import com.mjc.school.entity.Comment;
-import com.mjc.school.entity.News;
-import com.mjc.school.entity.Tag;
-
-public final class ExceptionIncorrectParameterMessageCode {
+public final class ExceptionIncorrectParameterMessageCode { // author.name_not_valid
     public static final String BAD_ID = "40000";
 
     public static final String BAD_AUTHOR_NAME = "40001";

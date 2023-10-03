@@ -21,8 +21,6 @@ import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparat
 import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparatorByCreatedDateTimeDesc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeAsc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeDesc;
-import com.mjc.school.validation.ext.AuthorValidator;
-import com.mjc.school.validation.ext.NewsValidator;
 import com.mjc.school.validation.ext.TagValidator;
 import com.mjc.school.validation.dto.NewsDTO;
 import org.apache.logging.log4j.LogManager;
@@ -41,6 +39,7 @@ import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCo
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_AUTHORS_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_CONTENT;
@@ -64,12 +63,6 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     private AuthorRepository authorRepository;
     @Autowired
-    private NewsValidator newsValidator;
-    @Autowired
-    private TagValidator tagValidator;
-    @Autowired
-    private AuthorValidator authorValidator;
-    @Autowired
     private NewsConverter newsConverter;
     @Autowired
     private AuthorConverter authorConverter;
@@ -84,9 +77,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean create(NewsDTO newsDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (newsValidator.validate(newsDTO)) {
+            if ((authorRepository.findById(newsDTO.getAuthorId()) != null)) {
                 newsDTO.setCreated(dateHandler.getCurrentDate());
                 newsDTO.setModified(dateHandler.getCurrentDate());
                 return newsRepository.create(
@@ -102,16 +95,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean deleteById(long newsId)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (newsValidator.validateId(newsId)) {
-                newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
-                commentRepository.deleteByNewsId(newsId);
-                newsRepository.deleteById(newsId);
-                return newsRepository.findById(newsId) == null;
-            } else {
-                return false;
-            }
+            newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
+            commentRepository.deleteByNewsId(newsId);
+            newsRepository.deleteById(newsId);
+            return newsRepository.findById(newsId) == null;
         } catch (RepositoryException e) {
             log.log(ERROR, e);
             throw new ServiceException(DELETE_ERROR);
@@ -122,7 +111,7 @@ public class NewsServiceImpl implements NewsService {
     public boolean deleteByAuthorId(long authorId)
             throws ServiceException, IncorrectParameterException {
         try {
-            if (newsValidator.validateAuthorId(authorId)) {
+            if (authorRepository.findById(authorId) != null) {
                 for (News news : newsRepository.findAll()
                         .stream()
                         .filter(news -> news.getAuthor().getId() == authorId)
@@ -137,7 +126,8 @@ public class NewsServiceImpl implements NewsService {
                         .toList()
                         .isEmpty();
             } else {
-                return false;
+                log.log(WARN, "Not found authors with ID: " + authorId);
+                throw new IncorrectParameterException(NO_AUTHORS_WITH_ID);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -147,11 +137,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean deleteAllTagsFromNewsByNewsId(long newsId)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (newsValidator.validateId(newsId)) {
-                newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
-            }
+            newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
             return findAll()
                     .stream()
                     .filter(news -> !news.getTags()
@@ -166,10 +154,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean update(NewsDTO newsDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (newsValidator.validateId(newsDTO.getId()) &&
-                    newsValidator.validate(newsDTO)) {
+            if ((authorRepository.findById(newsDTO.getAuthorId()) != null)) {
                 newsDTO.setModified(dateHandler.getCurrentDate());
                 return newsRepository.update(
                         newsConverter.fromDTO(newsDTO));
@@ -206,26 +193,21 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsDTO findById(long id)
-            throws ServiceException, IncorrectParameterException {
+    public NewsDTO findById(long id) throws ServiceException {
         try {
-            if (newsValidator.validateId(id)) {
-                News news = newsRepository.findById(id);
-                if (news != null) {
-                    news.setAuthor(
-                            authorRepository.findById(
-                                    news.getAuthor().getId()));
-                    news.setComments(
-                            commentRepository.findByNewsId(news.getId()));
-                    news.setTags(
-                            tagRepository.findByNewsId(news.getId()));
-                    return newsConverter.toDTO(news);
-                } else {
-                    log.log(WARN, "Not found news with this ID: " + id);
-                    throw new ServiceException(NO_ENTITY_WITH_ID);
-                }
+            News news = newsRepository.findById(id);
+            if (news != null) {
+                news.setAuthor(
+                        authorRepository.findById(
+                                news.getAuthor().getId()));
+                news.setComments(
+                        commentRepository.findByNewsId(news.getId()));
+                news.setTags(
+                        tagRepository.findByNewsId(news.getId()));
+                return newsConverter.toDTO(news);
             } else {
-                return null;
+                log.log(WARN, "Not found news with this ID: " + id);
+                throw new ServiceException(NO_ENTITY_WITH_ID);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -235,28 +217,25 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByTagName(String tagName)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (tagValidator.validateName(tagName)) {
-                List<News> newsList = newsRepository.findByTagName(tagName);
-                if (!newsList.isEmpty()) {
-                    for (News news : newsList) {
-                        news.setAuthor(
-                                authorRepository.findById(news.getAuthor().getId()));
-                        news.setComments(
-                                commentRepository.findByNewsId(news.getId()));
-                        news.setTags(
-                                tagRepository.findByNewsId(news.getId()));
-                    }
-                    return newsList.stream()
-                            .map(news -> newsConverter.toDTO(news))
-                            .toList();
-                } else {
-                    log.log(WARN, "Not found news with entered tag name: " + tagName);
-                    throw new ServiceException(NO_NEWS_WITH_TAG_NAME);
+            List<News> newsList = newsRepository.findByTagName(tagName);
+            if (!newsList.isEmpty()) {
+                for (News news : newsList) {
+                    news.setAuthor(
+                            authorRepository.findById(
+                                    news.getAuthor().getId()));
+                    news.setComments(
+                            commentRepository.findByNewsId(news.getId()));
+                    news.setTags(
+                            tagRepository.findByNewsId(news.getId()));
                 }
+                return newsList.stream()
+                        .map(news -> newsConverter.toDTO(news))
+                        .toList();
             } else {
-                return new ArrayList<>();
+                log.log(WARN, "Not found news with entered tag name: " + tagName);
+                throw new ServiceException(NO_NEWS_WITH_TAG_NAME);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -266,28 +245,24 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByTagId(long tagId)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (tagValidator.validateId(tagId)) {
-                List<News> newsList = newsRepository.findByTagId(tagId);
-                if (!newsList.isEmpty()) {
-                    for (News news : newsList) {
-                        news.setAuthor(
-                                authorRepository.findById(news.getAuthor().getId()));
-                        news.setComments(
-                                commentRepository.findByNewsId(news.getId()));
-                        news.setTags(
-                                tagRepository.findByNewsId(news.getId()));
-                    }
-                    return newsList.stream()
-                            .map(news -> newsConverter.toDTO(news))
-                            .toList();
-                } else {
-                    log.log(WARN, "Not found news with entered tag ID: " + tagId);
-                    throw new ServiceException(NO_NEWS_WITH_TAG_ID);
+            List<News> newsList = newsRepository.findByTagId(tagId);
+            if (!newsList.isEmpty()) {
+                for (News news : newsList) {
+                    news.setAuthor(
+                            authorRepository.findById(news.getAuthor().getId()));
+                    news.setComments(
+                            commentRepository.findByNewsId(news.getId()));
+                    news.setTags(
+                            tagRepository.findByNewsId(news.getId()));
                 }
+                return newsList.stream()
+                        .map(news -> newsConverter.toDTO(news))
+                        .toList();
             } else {
-                return new ArrayList<>();
+                log.log(WARN, "Not found news with entered tag ID: " + tagId);
+                throw new ServiceException(NO_NEWS_WITH_TAG_ID);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -297,28 +272,24 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByAuthorName(String authorName)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (authorValidator.validateName(authorName)) {
-                List<News> newsList = newsRepository.findByAuthorName(authorName);
-                if (!newsList.isEmpty()) {
-                    for (News news : newsList) {
-                        news.setAuthor(
-                                authorRepository.findById(news.getAuthor().getId()));
-                        news.setComments(
-                                commentRepository.findByNewsId(news.getId()));
-                        news.setTags(
-                                tagRepository.findByNewsId(news.getId()));
-                    }
-                    return newsList.stream()
-                            .map(news -> newsConverter.toDTO(news))
-                            .toList();
-                } else {
-                    log.log(WARN, "Not found news with entered author name: " + authorName);
-                    throw new ServiceException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
+            List<News> newsList = newsRepository.findByAuthorName(authorName);
+            if (!newsList.isEmpty()) {
+                for (News news : newsList) {
+                    news.setAuthor(
+                            authorRepository.findById(news.getAuthor().getId()));
+                    news.setComments(
+                            commentRepository.findByNewsId(news.getId()));
+                    news.setTags(
+                            tagRepository.findByNewsId(news.getId()));
                 }
+                return newsList.stream()
+                        .map(news -> newsConverter.toDTO(news))
+                        .toList();
             } else {
-                return new ArrayList<>();
+                log.log(WARN, "Not found news with entered author name: " + authorName);
+                throw new ServiceException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -328,47 +299,42 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByPartOfTitle(String partOfTitle)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (partOfTitle != null) {
-                String pattern = partOfTitle.toLowerCase();
-                Pattern p = Pattern.compile(pattern);
-                List<NewsDTO> newsList = findAll()
-                        .stream()
-                        .filter(news -> {
-                            String newsTitle = news.getTitle().toLowerCase();
-                            return (p.matcher(newsTitle).find()) ||
-                                    (p.matcher(newsTitle).lookingAt()) ||
-                                    (newsTitle.matches(pattern));
-                        }).toList();
-                if (!newsList.isEmpty()) {
-                    for (NewsDTO newsDTO : newsList) {
-                        newsDTO.setAuthor(
-                                authorConverter.toDTO(
-                                        authorRepository.findById(
-                                                newsDTO.getAuthor().getId())));
-                        newsDTO.setComments(
-                                commentRepository.findByNewsId(
-                                                newsDTO.getId())
-                                        .stream()
-                                        .map(comment ->
-                                                commentConverter.toDTO(comment))
-                                        .toList());
-                        newsDTO.setTags(
-                                tagRepository.findByNewsId(
-                                                newsDTO.getId())
-                                        .stream()
-                                        .map(tag -> tagConverter.toDTO(tag))
-                                        .toList());
-                    }
-                    return newsList;
-                } else {
-                    log.log(WARN, "Not found news with this part of title: " + partOfTitle);
-                    throw new ServiceException(NO_ENTITY_WITH_PART_OF_TITLE);
+            String pattern = partOfTitle.toLowerCase();
+            Pattern p = Pattern.compile(pattern);
+            List<NewsDTO> newsList = findAll()
+                    .stream()
+                    .filter(news -> {
+                        String newsTitle = news.getTitle().toLowerCase();
+                        return (p.matcher(newsTitle).find()) ||
+                                (p.matcher(newsTitle).lookingAt()) ||
+                                (newsTitle.matches(pattern));
+                    }).toList();
+            if (!newsList.isEmpty()) {
+                for (NewsDTO newsDTO : newsList) {
+                    newsDTO.setAuthor(
+                            authorConverter.toDTO(
+                                    authorRepository.findById(
+                                            newsDTO.getAuthor().getId())));
+                    newsDTO.setComments(
+                            commentRepository.findByNewsId(
+                                            newsDTO.getId())
+                                    .stream()
+                                    .map(comment ->
+                                            commentConverter.toDTO(comment))
+                                    .toList());
+                    newsDTO.setTags(
+                            tagRepository.findByNewsId(
+                                            newsDTO.getId())
+                                    .stream()
+                                    .map(tag -> tagConverter.toDTO(tag))
+                                    .toList());
                 }
+                return newsList;
             } else {
-                log.log(ERROR, "Entered part of news title is null");
-                throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_NEWS_TITLE);
+                log.log(WARN, "Not found news with this part of title: " + partOfTitle);
+                throw new ServiceException(NO_ENTITY_WITH_PART_OF_TITLE);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -378,47 +344,42 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByPartOfContent(String partOfContent)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         try {
-            if (partOfContent != null) {
-                String pattern = partOfContent.toLowerCase();
-                Pattern p = Pattern.compile(pattern);
-                List<NewsDTO> newsList = findAll()
-                        .stream()
-                        .filter(news -> {
-                            String newsContent = news.getTitle().toLowerCase();
-                            return (p.matcher(newsContent).find()) ||
-                                    (p.matcher(newsContent).lookingAt()) ||
-                                    (newsContent.matches(pattern));
-                        }).toList();
-                if (!newsList.isEmpty()) {
-                    for (NewsDTO newsDTO : newsList) {
-                        newsDTO.setAuthor(
-                                authorConverter.toDTO(
-                                        authorRepository.findById(
-                                                newsDTO.getAuthor().getId())));
-                        newsDTO.setComments(
-                                commentRepository.findByNewsId(
-                                                newsDTO.getId())
-                                        .stream()
-                                        .map(comment ->
-                                                commentConverter.toDTO(comment))
-                                        .toList());
-                        newsDTO.setTags(
-                                tagRepository.findByNewsId(
-                                                newsDTO.getId())
-                                        .stream()
-                                        .map(tag -> tagConverter.toDTO(tag))
-                                        .toList());
-                    }
-                    return newsList;
-                } else {
-                    log.log(WARN, "Not found news with this part of content: " + partOfContent);
-                    throw new ServiceException(NO_ENTITY_WITH_PART_OF_CONTENT);
+            String pattern = partOfContent.toLowerCase();
+            Pattern p = Pattern.compile(pattern);
+            List<NewsDTO> newsList = findAll()
+                    .stream()
+                    .filter(news -> {
+                        String newsContent = news.getTitle().toLowerCase();
+                        return (p.matcher(newsContent).find()) ||
+                                (p.matcher(newsContent).lookingAt()) ||
+                                (newsContent.matches(pattern));
+                    }).toList();
+            if (!newsList.isEmpty()) {
+                for (NewsDTO newsDTO : newsList) {
+                    newsDTO.setAuthor(
+                            authorConverter.toDTO(
+                                    authorRepository.findById(
+                                            newsDTO.getAuthor().getId())));
+                    newsDTO.setComments(
+                            commentRepository.findByNewsId(
+                                            newsDTO.getId())
+                                    .stream()
+                                    .map(comment ->
+                                            commentConverter.toDTO(comment))
+                                    .toList());
+                    newsDTO.setTags(
+                            tagRepository.findByNewsId(
+                                            newsDTO.getId())
+                                    .stream()
+                                    .map(tag -> tagConverter.toDTO(tag))
+                                    .toList());
                 }
+                return newsList;
             } else {
-                log.log(ERROR, "Entered part of news content is null");
-                throw new IncorrectParameterException(BAD_PARAMETER_PART_OF_NEWS_CONTENT);
+                log.log(WARN, "Not found news with this part of content: " + partOfContent);
+                throw new ServiceException(NO_ENTITY_WITH_PART_OF_CONTENT);
             }
         } catch (RepositoryException e) {
             log.log(ERROR, e);
@@ -470,9 +431,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public Pagination<NewsDTO> getPagination(List<NewsDTO> list,
-                                             long numberElementsReturn,
-                                             long numberPage) {
-        return newsPagination.getPagination(list, numberElementsReturn, numberPage);
+    public Pagination<NewsDTO> getPagination(List<NewsDTO> list, long size,
+                                             long page) {
+        return newsPagination.getPagination(list, size, page);
     }
 }

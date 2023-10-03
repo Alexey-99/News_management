@@ -1,14 +1,9 @@
 package com.mjc.school.repository.author;
 
 import com.mjc.school.config.DataBaseConfigTest;
-import com.mjc.school.config.TestConfig;
 import com.mjc.school.entity.Author;
-import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.exception.RepositoryException;
-import com.mjc.school.repository.author.impl.AuthorRepositoryImpl;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -23,12 +23,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_CONTENT;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
+import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_TAG_NAME;
 import static com.mjc.school.name.SortField.MODIFIED;
 import static com.mjc.school.name.SortType.ASCENDING;
 import static com.mjc.school.name.SortType.DESCENDING;
@@ -43,34 +48,39 @@ public class NewsController {
     @Autowired
     private NewsService newsService;
 
-    @PostMapping
-    @ApiOperation(value = """
-            Create a news.
-            Response: true - if successful created news, if didn't create news - false.
-            """, response = Boolean.class)
+
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful created a news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    public ResponseEntity<Boolean> create(@RequestBody NewsDTO newsDTO)
+    @ApiOperation(value = """
+            Create a news.
+            Response: true - if successful created news, if didn't create news - false.
+            """, response = Boolean.class)
+    @PostMapping
+    public ResponseEntity<Boolean> create(
+            @Valid
+            @RequestBody
+            @NotNull
+            NewsDTO newsDTO)
             throws ServiceException, IncorrectParameterException {
         boolean result = newsService.create(newsDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    @ApiOperation(value = """
-            Delete a news by id.
-            Response: true - if successful deleted news, if didn't delete news - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful deleted a news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            Delete a news by id.
+            Response: true - if successful deleted news, if didn't delete news - false.
+            """, response = Boolean.class)
+    @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -80,17 +90,17 @@ public class NewsController {
         return new ResponseEntity<>(result, OK);
     }
 
-    @DeleteMapping("/author/{authorId}")
-    @ApiOperation(value = """
-            Delete a news by author id.
-            Response: true - if successful deleted news, if didn't delete news - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful deleted a news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
+    @ApiOperation(value = """
+            Delete a news by author id.
+            Response: true - if successful deleted news, if didn't delete news - false.
+            """, response = Boolean.class)
+    @DeleteMapping("/author/{authorId}")
     public ResponseEntity<Boolean> deleteByAuthorId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
@@ -100,18 +110,18 @@ public class NewsController {
         return new ResponseEntity<>(result, OK);
     }
 
-    @DeleteMapping("/tags/{newsId}")
-    @ApiOperation(value = """
-            Delete all tags from news by news id.
-            Response: true - if successful deleted all tags from news, if didn't delete all tags from news - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful deleted all tags from news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    public ResponseEntity<Boolean> deleteByNewsIdFromTableNewsTags(
+    @ApiOperation(value = """
+            Delete all tags from news by news id.
+            Response: true - if successful deleted all tags from news, if didn't delete all tags from news - false.
+            """, response = Boolean.class)
+    @DeleteMapping("/tags/{newsId}")
+    public ResponseEntity<Boolean> deleteAllTagsFromNewsByNewsId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long newsId)
@@ -120,19 +130,25 @@ public class NewsController {
         return new ResponseEntity<>(result, OK);
     }
 
-    @PutMapping
-    @ApiOperation(value = """
-            Update a news.
-            Response: true - if successful updated news, if didn't update news - false.
-            """, response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful updated a news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    public boolean update(@RequestBody NewsDTO newsDTO)
+    @ApiOperation(value = """
+            Update a news.
+            Response: true - if successful updated news, if didn't update news - false.
+            """, response = Boolean.class)
+    @PutMapping(value = "/{id}")
+    public boolean update(@PathVariable
+                          @Min(value = 1, message = BAD_ID)
+                          long id,
+                          @Valid
+                          @RequestBody
+                          @NotNull NewsDTO newsDTO)
             throws ServiceException, IncorrectParameterException {
+        newsDTO.setId(id);
         return newsService.update(newsDTO);
     }
 
@@ -147,20 +163,19 @@ public class NewsController {
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    public Pagination<NewsDTO> findAllNews(
+    public Pagination<NewsDTO> findAll(
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            long page)
             throws ServiceException {
         return newsService.getPagination(
                 newsService.findAll(),
-                countElementsReturn,
-                numberPage);
+                size, page);
     }
 
     @GetMapping("/{id}")
@@ -174,7 +189,7 @@ public class NewsController {
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    public NewsDTO findNewsById(
+    public NewsDTO findById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
@@ -197,20 +212,20 @@ public class NewsController {
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
             @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @Size(min = 3, max = 15, message = BAD_TAG_NAME)
             String tagName,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            long page)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
                 newsService.findByTagName(tagName),
-                countElementsReturn,
-                numberPage);
+                size, page);
     }
 
     @GetMapping("/tag/{tagId}")
@@ -231,16 +246,15 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            long page)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
                 newsService.findByTagId(tagId),
-                countElementsReturn,
-                numberPage);
+                size, page);
     }
 
     @GetMapping("/author-name/{authorName}")
@@ -258,20 +272,20 @@ public class NewsController {
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
             @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @Size(min = 3, max = 15, message = BAD_AUTHOR_NAME)
             String authorName,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            long page)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
                 newsService.findByAuthorName(authorName),
-                countElementsReturn,
-                numberPage);
+                size, page);
     }
 
     @GetMapping("/part-title/{partOfTitle}")
@@ -318,22 +332,21 @@ public class NewsController {
     })
     public Pagination<NewsDTO> findNewsByPartOfContent(
             @PathVariable
-            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+            @NotNull(message = BAD_PARAMETER_PART_OF_NEWS_CONTENT)
+            @NotBlank(message = BAD_PARAMETER_PART_OF_NEWS_CONTENT)
             String partOfContent,
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            long page)
             throws ServiceException, IncorrectParameterException {
         return newsService.getPagination(
                 newsService.findByPartOfContent(partOfContent),
-                countElementsReturn,
-                numberPage);
+                size, page);
     }
 
     @GetMapping("/sort")
@@ -351,11 +364,11 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            long size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage,
+            long page,
             @RequestParam(value = "field",
                     required = false,
                     defaultValue = MODIFIED)
@@ -373,14 +386,12 @@ public class NewsController {
                 sortedList = newsService.getPagination(
                         newsService.sortByCreatedDateTimeAsc(
                                 newsService.findAll()),
-                        countElementsReturn,
-                        numberPage);
+                        size, page);
             } else {
                 sortedList = newsService.getPagination(
                         newsService.sortByCreatedDateTimeDesc(
                                 newsService.findAll()),
-                        countElementsReturn,
-                        numberPage);
+                        size, page);
             }
         } else {
             if (sortingType != null &&
@@ -388,14 +399,12 @@ public class NewsController {
                 sortedList = newsService.getPagination(
                         newsService.sortByModifiedDateTimeAsc(
                                 newsService.findAll()),
-                        countElementsReturn,
-                        numberPage);
+                        size, page);
             } else {
                 sortedList = newsService.getPagination(
                         newsService.sortByModifiedDateTimeDesc(
                                 newsService.findAll()),
-                        countElementsReturn,
-                        numberPage);
+                        size, page);
             }
         }
         return sortedList;

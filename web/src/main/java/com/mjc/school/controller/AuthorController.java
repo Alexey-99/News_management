@@ -38,8 +38,9 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 @RestController
-@RequestMapping(value = "/api/v2/author"/*, produces = APPLICATION_JSON_VALUE*/)
+@RequestMapping(value = "/api/v2/author")
 @Api("Operations for authors in the application")
 public class AuthorController {
     @Autowired
@@ -97,13 +98,17 @@ public class AuthorController {
             Update a author by id.
             Response: true - if successful updated author, if didn't update author - false.
             """, response = Boolean.class)
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Boolean> update(
-            @Valid
+            @PathVariable
+            @Min(value = 1, message = BAD_ID)
+            long id,
             @RequestBody
+            @Valid
             @NotNull(message = BAD_REQUEST_PARAMETER)
             AuthorDTO authorDTO)
             throws ServiceException, IncorrectParameterException {
+        authorDTO.setId(id);
         boolean result = authorService.update(authorDTO);
         return new ResponseEntity<>(result, OK);
     }
@@ -118,10 +123,8 @@ public class AuthorController {
             View all authors.
             Response: pagination with authors.
             """, response = Pagination.class)
-    @GetMapping(
-            value = "/all",
-//            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/all",
+            produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Pagination<AuthorDTO>> findAll(
             @RequestParam(value = "size",
                     required = false,
@@ -132,7 +135,7 @@ public class AuthorController {
                     defaultValue = DEFAULT_NUMBER_PAGE)
             long page)
             throws ServiceException {
-       return ResponseEntity.ok()
+        return ResponseEntity.ok()
                 .contentType(APPLICATION_JSON)
                 .body(authorService.getPagination(
                         authorService.findAll(), size, page)
