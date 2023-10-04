@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,8 +24,9 @@ import static com.mjc.school.name.ColumnName.TABLE_NEWS_COLUMN_ID;
 import static org.apache.logging.log4j.Level.ERROR;
 
 @Repository
-public class AuthorRepositoryImpl implements AuthorRepository {
+public class AuthorRepositoryImpl implements AuthorRepository{
     private static final Logger log = LogManager.getLogger();
+    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
     private AuthorMapper authorMapper;
@@ -35,11 +37,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             INSERT INTO authors (name)
             VALUES (:name);
             """;
-
-    @Autowired
-    public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public boolean create(Author author) throws RepositoryException {

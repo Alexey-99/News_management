@@ -2,8 +2,10 @@ package com.mjc.school.repository.author;
 
 import com.mjc.school.config.DataBaseConfigTest;
 import com.mjc.school.entity.Author;
+import com.mjc.school.entity.News;
 import com.mjc.school.exception.RepositoryException;
 
+import com.mjc.school.repository.news.NewsRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,32 +14,45 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes =
-        DataBaseConfigTest.class,
+@ContextConfiguration(classes = DataBaseConfigTest.class,
         loader = AnnotationConfigContextLoader.class)
 class AuthorRepositoryImplTest {
     @Autowired
+    private NamedParameterJdbcTemplate jdbcTemplate;
+    @Autowired
     private AuthorRepository authorRepository;
-
+    @Autowired
+    private NewsRepository newsRepository;
     private List<Author> listAllAuthors;
-
-    @BeforeAll
-    static void beforeAll() {
-
-    }
 
     @BeforeEach
     void setUp() throws RepositoryException {
+        jdbcTemplate.update("DELETE FROM authors;", new MapSqlParameterSource());
+        Author author1 = new Author.AuthorBuilder().setId(1).setName("Alex").build();
+        Author author2 = new Author.AuthorBuilder().setId(2).setName("Max").build();
+        Author author3 = new Author.AuthorBuilder().setId(3).setName("Jon").build();
+        Author author4 = new Author.AuthorBuilder().setId(4).setName("Tony").build();
+        Author author5 = new Author.AuthorBuilder().setId(5).setName("Tom").build();
+        Author author6 = new Author.AuthorBuilder().setId(6).setName("Alisa").build();
+        authorRepository.create(author1);
+        authorRepository.create(author2);
+        authorRepository.create(author3);
+        authorRepository.create(author4);
+        authorRepository.create(author5);
+        authorRepository.create(author6);
         listAllAuthors = authorRepository.findAll();
     }
 
