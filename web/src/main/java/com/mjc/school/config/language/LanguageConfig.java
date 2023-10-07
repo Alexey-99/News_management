@@ -14,4 +14,6 @@ public class LanguageConfig {
         rs.setUseCodeAsDefaultMessage(true);
         return rs;
     }
+
+
 }
