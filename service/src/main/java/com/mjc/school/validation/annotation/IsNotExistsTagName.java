@@ -3,6 +3,7 @@ package com.mjc.school.validation.annotation;
 import com.mjc.school.validation.annotation.impl.IsNotExistsTagNameImpl;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -17,4 +18,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface IsNotExistsTagName {
     String message() default BAD_PARAMETER_TAF_NAME_EXISTS;
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }
