@@ -66,13 +66,7 @@ public class Author {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null) {
-            return false;
-        }
-        if (!this.getClass().equals(object.getClass())) {
+        if (!super.equals(object)) {
             return false;
         }
         Author otherAuthor = (Author) object;
