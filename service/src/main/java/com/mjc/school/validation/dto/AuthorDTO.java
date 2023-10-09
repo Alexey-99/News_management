@@ -20,7 +20,7 @@ public class AuthorDTO {
     @NotBlank(message = BAD_AUTHOR_NAME)
     @Size(min = 3,
             max = 15,
-            message = "author.name_not_valid")
+            message = BAD_AUTHOR_NAME)//"author.name_not_valid"
     @IsNotExistsAuthorName(message = BAD_PARAMETER_AUTHOR_NAME_EXISTS)
     private String name;
     private int countNews;

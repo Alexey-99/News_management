@@ -61,8 +61,7 @@ public class AuthorController {
             @RequestBody
             @NotNull(message = BAD_REQUEST_PARAMETER)
             AuthorDTO authorDTO)
-            throws ServiceException,
-            IncorrectParameterException {
+            throws ServiceException{
         boolean result = authorService.create(authorDTO);
         return new ResponseEntity<>(result, CREATED);
     }
