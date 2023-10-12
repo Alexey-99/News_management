@@ -1,7 +1,6 @@
 package com.mjc.school.repository.impl.news;
 
 import com.mjc.school.entity.News;
-import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.CRUDOperationRepository;
 
 import java.util.List;

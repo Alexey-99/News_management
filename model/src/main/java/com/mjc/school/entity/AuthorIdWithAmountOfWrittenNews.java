@@ -1,16 +1,9 @@
 package com.mjc.school.entity;
 
-import com.mjc.school.entity.abstation.AbstractEntity;
+import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
-//@Entity
-public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
-    //    private long id;
-//    @Column(name = "authors.id")
+public class AuthorIdWithAmountOfWrittenNews implements Serializable {
     private long authorId;
-    //    @Column(name = "news.authors_id")
     private long amountOfWrittenNews;
 
     public long getAuthorId() {
@@ -27,40 +20,6 @@ public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
 
     public void setAmountOfWrittenNews(long amountOfWrittenNews) {
         this.amountOfWrittenNews = amountOfWrittenNews;
-    }
-
-    @Override
-    public int hashCode() {
-        final int PRIME = 31;
-        int result = 1;
-        result = result * PRIME + Long.hashCode(this.authorId);
-        result = result * PRIME + Long.hashCode(this.amountOfWrittenNews);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (!super.equals(object)) {
-            return false;
-        }
-        AuthorIdWithAmountOfWrittenNews otherAuthorIdWithAmountOfWrittenNews =
-                (AuthorIdWithAmountOfWrittenNews) object;
-        if (this.authorId != otherAuthorIdWithAmountOfWrittenNews.authorId) {
-            return false;
-        }
-        if (this.amountOfWrittenNews != otherAuthorIdWithAmountOfWrittenNews.amountOfWrittenNews) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder("AuthorIdWithAmountOfWrittenNews{");
-        builder.append("authorId=").append(authorId);
-        builder.append(", amountOfWrittenNews=").append(amountOfWrittenNews);
-        builder.append('}');
-        return builder.toString();
     }
 
     public static class AuthorIdWithAmountOfWrittenNewsBuilder {

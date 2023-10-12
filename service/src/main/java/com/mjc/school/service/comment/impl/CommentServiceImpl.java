@@ -4,7 +4,6 @@ import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.IncorrectParameterException;
-import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
 import com.mjc.school.repository.impl.news.NewsRepository;
@@ -25,14 +24,10 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.INSERT_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_COMMENT_NEWS_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.SORT_ERROR;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.UPDATE_ERROR;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 

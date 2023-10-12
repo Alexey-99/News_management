@@ -1,7 +1,5 @@
 package com.mjc.school.entity;
 
-import com.mjc.school.entity.abstation.AbstractEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,9 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "comments")
-public class Comment
-        extends AbstractEntity
-        implements Serializable {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")

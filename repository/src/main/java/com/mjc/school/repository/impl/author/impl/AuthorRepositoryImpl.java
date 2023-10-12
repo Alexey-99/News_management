@@ -2,7 +2,6 @@ package com.mjc.school.repository.impl.author.impl;
 
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.News;
-import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.impl.CRUDOperationRepositoryImpl;
 import com.mjc.school.repository.impl.author.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class AuthorRepositoryImpl
     }
 
     @Override
-    public Author findByNewsId(long newsId) throws RepositoryException {
+    public Author findByNewsId(long newsId) {
         CriteriaBuilder criteriaBuilder =
                 entityManager.getCriteriaBuilder();
         CriteriaQuery<Author> authorCriteriaQuery =

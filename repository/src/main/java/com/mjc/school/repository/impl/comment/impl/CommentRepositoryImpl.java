@@ -1,11 +1,8 @@
 package com.mjc.school.repository.impl.comment.impl;
 
-import com.mjc.school.config.mapper.CommentMapper;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.repository.impl.CRUDOperationRepositoryImpl;
 import com.mjc.school.repository.impl.comment.CommentRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +13,6 @@ import java.util.List;
 public class CommentRepositoryImpl
         extends CRUDOperationRepositoryImpl<Comment>
         implements CommentRepository {
-    private static final Logger log = LogManager.getLogger();
     private final EntityManager entityManager;
 
     @Autowired
@@ -24,9 +20,6 @@ public class CommentRepositoryImpl
         super(entityManager);
         this.entityManager = entityManager;
     }
-
-    @Autowired
-    private CommentMapper commentsMapper;
     private static final String SELECT_COMMENT_BY_NEWS_ID = """
             SELECT id, content, news_id, created, modified
             FROM comments

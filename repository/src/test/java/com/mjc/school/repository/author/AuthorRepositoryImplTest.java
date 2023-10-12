@@ -2,7 +2,6 @@ package com.mjc.school.repository.author;
 
 import com.mjc.school.config.DataBaseConfigTest;
 import com.mjc.school.entity.Author;
-import com.mjc.school.exception.RepositoryException;
 
 import com.mjc.school.repository.impl.author.AuthorRepository;
 import com.mjc.school.repository.impl.news.NewsRepository;
@@ -37,14 +36,14 @@ class AuthorRepositoryImplTest {
     private List<Author> listAllAuthors;
 
     @BeforeEach
-    void setUp() throws RepositoryException {
+    void setUp() {
         jdbcTemplate.update("DELETE FROM authors;", new MapSqlParameterSource());
-        Author author1 = new Author.AuthorBuilder().setId(1).setName("Alex").build();
-        Author author2 = new Author.AuthorBuilder().setId(2).setName("Max").build();
-        Author author3 = new Author.AuthorBuilder().setId(3).setName("Jon").build();
-        Author author4 = new Author.AuthorBuilder().setId(4).setName("Tony").build();
-        Author author5 = new Author.AuthorBuilder().setId(5).setName("Tom").build();
-        Author author6 = new Author.AuthorBuilder().setId(6).setName("Alisa").build();
+        Author author1 = Author.builder().id(1).name("Alex").build();
+        Author author2 = Author.builder().id(2).name("Max").build();
+        Author author3 = Author.builder().id(3).name("Jon").build();
+        Author author4 = Author.builder().id(4).name("Tony").build();
+        Author author5 = Author.builder().id(5).name("Tom").build();
+        Author author6 = Author.builder().id(6).name("Alisa").build();
         authorRepository.create(author1);
         authorRepository.create(author2);
         authorRepository.create(author3);
@@ -58,10 +57,10 @@ class AuthorRepositoryImplTest {
     @DisplayName("""
             create author.
             """)
-    void createTest() throws RepositoryException { // 6
+    void createTest() { // 6
         boolean actualResult = authorRepository.create(
-                new Author.AuthorBuilder()
-                        .setName("Kristina")
+                Author.builder()
+                        .name("Kristina")
                         .build());
         assertTrue(actualResult);
     }
@@ -70,7 +69,7 @@ class AuthorRepositoryImplTest {
     @DisplayName("""
             delete author by id.
             """)
-    void deleteByIdTest() throws RepositoryException { // 6-1
+    void deleteByIdTest() { // 6-1
         boolean actual = authorRepository.deleteById(
                 listAllAuthors.get(0).getId());
         assertTrue(actual);
@@ -78,7 +77,7 @@ class AuthorRepositoryImplTest {
     }
 
     @Test
-    void updateTest() throws RepositoryException { // 5
+    void updateTest() { // 5
         Author authorUpdating = listAllAuthors.get(0);
         authorUpdating.setName("Angel");
         Author actual = authorRepository.update(authorUpdating);
@@ -86,32 +85,32 @@ class AuthorRepositoryImplTest {
     }
 
     @Test
-    void findAllTest() throws RepositoryException { //5
+    void findAllTest() { //5
         List<Author> actual = authorRepository.findAll();
         assertEquals(listAllAuthors, actual);
     }
 
     @Test
-    void findByIdTest() throws RepositoryException { // 5
+    void findByIdTest() { // 5
         Author actual = authorRepository.findById(listAllAuthors.get(0).getId());
         assertEquals(listAllAuthors.get(0), actual);
     }
 
     @Test
-    void findByNewsIdTest() throws RepositoryException { // 5
+    void findByNewsIdTest() { // 5
         Author actual = authorRepository.findByNewsId(0);
         assertEquals(null, actual);
     }
 
     @Test
-    void selectAllAuthorsIdWithAmountOfWrittenNewsTest() throws RepositoryException { // 5
+    void selectAllAuthorsIdWithAmountOfWrittenNewsTest() { // 5
 //        List<AuthorIdWithAmountOfWrittenNews> actual =
 //                authorRepository.selectAllAuthorsIdWithAmountOfWrittenNews();
 //        assertEquals(null, actual);
     }
 
     @Test
-    void isExistsAuthorWithNameTest() throws RepositoryException {
+    void isExistsAuthorWithNameTest() {
         boolean actual = authorRepository.isNotExistsAuthorWithName(
                 listAllAuthors.get(0).getName());
         assertTrue(actual);

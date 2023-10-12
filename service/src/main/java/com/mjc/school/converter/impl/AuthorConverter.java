@@ -6,13 +6,13 @@ import com.mjc.school.validation.dto.AuthorDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthorConverter implements Converter<AuthorDTO, Author> {
+public class AuthorConverter
+        implements Converter<AuthorDTO, Author> {
     @Override
     public Author fromDTO(AuthorDTO authorDTO) {
-        return new Author
-                .AuthorBuilder()
-                .setId(authorDTO.getId())
-                .setName(authorDTO.getName())
+        return Author.builder()
+                .id(authorDTO.getId())
+                .name(authorDTO.getName())
                 .build();
     }
 

@@ -1,6 +1,5 @@
 package com.mjc.school.validation.annotation.impl;
 
-import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.impl.news.NewsRepository;
 import com.mjc.school.validation.annotation.IsExistsNewsById;
 import org.apache.logging.log4j.LogManager;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 

@@ -1,20 +1,16 @@
 package com.mjc.school.repository.impl.news.impl;
 
 import com.mjc.school.entity.News;
-import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.repository.impl.CRUDOperationRepositoryImpl;
 import com.mjc.school.repository.impl.news.NewsRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
-
-import static org.apache.logging.log4j.Level.ERROR;
 
 @Repository
 public class NewsRepositoryImpl

@@ -5,8 +5,6 @@ import com.mjc.school.converter.impl.AuthorIdWithAmountOfWrittenNewsConverter;
 import com.mjc.school.entity.Author;
 import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.exception.IncorrectParameterException;
-import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.impl.author.AuthorRepository;
@@ -24,13 +22,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.DELETE_ERROR;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.FIND_ERROR;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_AUTHOR_NEWS_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
-import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
 @Service
@@ -128,7 +123,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorDTO findByNewsId(long newsId)
             throws ServiceException {
-        try {
             Author author = authorRepository.findByNewsId(newsId);
             if (author != null) {
                 return authorConverter.toDTO(author);
@@ -136,10 +130,6 @@ public class AuthorServiceImpl implements AuthorService {
                 log.log(WARN, "Not found objects with author news ID: " + newsId);
                 throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
             }
-        } catch (RepositoryException e) {
-            log.log(ERROR, e);
-            throw new ServiceException(FIND_ERROR);
-        }
     }
 
     @Override
