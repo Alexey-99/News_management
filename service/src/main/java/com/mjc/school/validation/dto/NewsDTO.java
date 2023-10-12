@@ -3,13 +3,14 @@ package com.mjc.school.validation.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.validation.annotation.IsNotExistsNewsTitle;
+import com.mjc.school.validation.dto.abstraction.AbstractEntityDTO;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.io.Serializable;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_AUTHOR_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_CONTENT;
@@ -17,7 +18,9 @@ import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCo
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_NEWS_TITLE_EXISTS;
 
 @Validated
-public class NewsDTO {
+public class NewsDTO
+        extends AbstractEntityDTO
+        implements Serializable {
     @JsonIgnore
     private long id;
     @NotNull(message = BAD_NEWS_TITLE)
@@ -29,8 +32,8 @@ public class NewsDTO {
     private String content;
     @Min(value = 1, message = BAD_NEWS_AUTHOR_ID)
     private long authorId;
-    @JsonIgnore
-    private AuthorDTO author;
+    private long countComments;
+    private long countTags;
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
@@ -41,17 +44,7 @@ public class NewsDTO {
             pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             timezone = "UTC")
     private String modified;
-    private long countComments;
-    @JsonIgnore
-    private List<CommentDTO> comments;
-    private long countTags;
-    @JsonIgnore
-    private List<TagDTO> tags;
 
-    public NewsDTO() {
-        this.comments = new ArrayList<>();
-        this.tags = new ArrayList<>();
-    }
 
     public long getId() {
         return id;
@@ -81,42 +74,8 @@ public class NewsDTO {
         return authorId;
     }
 
-
     public void setAuthorId(long authorId) {
         this.authorId = authorId;
-    }
-
-    public AuthorDTO getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(AuthorDTO authorDTO) {
-        if (authorDTO != null) {
-            this.authorId = authorDTO.getId();
-        }
-        this.author = authorDTO;
-    }
-
-    public List<CommentDTO> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<CommentDTO> commentsDTO) {
-        if (commentsDTO != null) {
-            this.setCountComments(commentsDTO.size());
-        }
-        this.comments = commentsDTO;
-    }
-
-    public List<TagDTO> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<TagDTO> tagsDTO) {
-        if (tagsDTO != null) {
-            this.setCountTags(tagsDTO.size());
-        }
-        this.tags = tagsDTO;
     }
 
     public long getCountComments() {
@@ -153,6 +112,85 @@ public class NewsDTO {
         this.modified = modified;
     }
 
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = result * PRIME + Long.hashCode(this.id);
+        result = result * PRIME + (this.title != null ? this.title.hashCode() : 1);
+        result = result * PRIME + (this.content != null ? this.content.hashCode() : 1);
+        result = result * PRIME + Long.hashCode(this.authorId);
+        result = result * PRIME + Long.hashCode(this.countComments);
+        result = result * PRIME + Long.hashCode(this.countTags);
+        result = result * PRIME + (this.created != null ? this.created.hashCode() : 1);
+        result = result * PRIME + (this.modified != null ? this.modified.hashCode() : 1);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!super.equals(object)) {
+            return false;
+        }
+        NewsDTO otherNewsDTO = (NewsDTO) object;
+        if (this.id != otherNewsDTO.id) {
+            return false;
+        }
+        if (this.title == null) {
+            if (otherNewsDTO.title != null) {
+                return false;
+            }
+        } else if (!this.title.equals(otherNewsDTO.title)) {
+            return false;
+        }
+        if (this.content == null) {
+            if (otherNewsDTO.content != null) {
+                return false;
+            }
+        } else if (!this.content.equals(otherNewsDTO.content)) {
+            return false;
+        }
+        if (this.authorId != otherNewsDTO.authorId) {
+            return false;
+        }
+        if (this.countComments != otherNewsDTO.countComments) {
+            return false;
+        }
+        if (this.countTags != otherNewsDTO.countTags) {
+            return false;
+        }
+        if (this.created == null) {
+            if (otherNewsDTO.created != null) {
+                return false;
+            }
+        } else if (!this.created.equals(otherNewsDTO.created)) {
+            return false;
+        }
+        if (this.modified == null) {
+            if (otherNewsDTO.modified != null) {
+                return false;
+            }
+        } else if (!this.modified.equals(otherNewsDTO.modified)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("NewsDTO{");
+        sb.append("id=").append(id);
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", content='").append(content).append('\'');
+        sb.append(", authorId=").append(authorId);
+        sb.append(", countComments=").append(countComments);
+        sb.append(", countTags=").append(countTags);
+        sb.append(", created='").append(created).append('\'');
+        sb.append(", modified='").append(modified).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
     public static class NewsDTOBuilder {
         private final NewsDTO newsDTO;
 
@@ -175,11 +213,6 @@ public class NewsDTO {
             return this;
         }
 
-        public NewsDTOBuilder setAuthor(AuthorDTO authorDTO) {
-            this.newsDTO.setAuthor(authorDTO);
-            return this;
-        }
-
         public NewsDTOBuilder setCreated(String created) {
             this.newsDTO.setCreated(created);
             return this;
@@ -190,13 +223,18 @@ public class NewsDTO {
             return this;
         }
 
-        public NewsDTOBuilder setComments(List<CommentDTO> commentsDTO) {
-            this.newsDTO.setComments(commentsDTO);
+        public NewsDTOBuilder setCountComments(long countComments) {
+            this.newsDTO.setCountComments(countComments);
             return this;
         }
 
-        public NewsDTOBuilder setTags(List<TagDTO> tagsDTO) {
-            this.newsDTO.setTags(tagsDTO);
+        public NewsDTOBuilder setCountTags(long countTags) {
+            this.newsDTO.setCountTags(countTags);
+            return this;
+        }
+
+        public NewsDTOBuilder setAuthorId(long authorId) {
+            this.newsDTO.setAuthorId(authorId);
             return this;
         }
 

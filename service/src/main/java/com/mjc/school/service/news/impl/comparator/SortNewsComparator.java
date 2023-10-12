@@ -6,5 +6,5 @@ import java.util.Comparator;
 
 public interface SortNewsComparator extends Comparator<NewsDTO> {
     @Override
-    public int compare(NewsDTO news1, NewsDTO news2);
+    int compare(NewsDTO news1, NewsDTO news2);
 }

@@ -1,19 +1,27 @@
 package com.mjc.school.validation.dto;
 
-import com.mjc.school.entity.abstation.AbstractEntity;
+import com.mjc.school.validation.dto.abstraction.AbstractEntityDTO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pagination<T> extends AbstractEntity {
+public class Pagination<T>
+        extends AbstractEntityDTO
+        implements Serializable {
+    private static final int DEFAULT_SIZE = 1;
+    private static final int DEFAULT_NUMBER_PAGE = 1;
     private List<T> entity;
-    private long numberPage;
-    private long maxNumberPage;
+
+    private int size;
+    private int numberPage;
+    private int maxNumberPage;
 
     public Pagination() {
         this.entity = new ArrayList<>();
-        this.maxNumberPage = 1;
-        this.numberPage = 1;
+        this.maxNumberPage = DEFAULT_NUMBER_PAGE;
+        this.numberPage = DEFAULT_NUMBER_PAGE;
+        this.size = DEFAULT_SIZE;
     }
 
     public List<T> getEntity() {
@@ -25,19 +33,27 @@ public class Pagination<T> extends AbstractEntity {
         this.entity = entity;
     }
 
-    public long getNumberPage() {
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getNumberPage() {
         return numberPage;
     }
 
-    public void setNumberPage(long numberPage) {
+    public void setNumberPage(int numberPage) {
         this.numberPage = numberPage;
     }
 
-    public long getMaxNumberPage() {
+    public int getMaxNumberPage() {
         return maxNumberPage;
     }
 
-    public void setMaxNumberPage(long maxNumberPage) {
+    public void setMaxNumberPage(int maxNumberPage) {
         this.maxNumberPage = maxNumberPage;
     }
 
@@ -46,12 +62,14 @@ public class Pagination<T> extends AbstractEntity {
         final int PRIME = 31;
         int result = 1;
         result = result * PRIME + (this.entity != null ? this.entity.hashCode() : 1);
-        result = result * PRIME + Long.hashCode(this.numberPage);
-        result = result * PRIME + Long.hashCode(this.maxNumberPage);
+        result = result * PRIME + this.size;
+        result = result * PRIME + this.numberPage;
+        result = result * PRIME + this.maxNumberPage;
         return result;
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public boolean equals(Object object) {
         if (!super.equals(object)) {
             return false;
@@ -62,6 +80,9 @@ public class Pagination<T> extends AbstractEntity {
                 return false;
             }
         } else if (!this.entity.equals(otherPagination.entity)) {
+            return false;
+        }
+        if (this.size != otherPagination.size) {
             return false;
         }
         if (this.numberPage != otherPagination.numberPage) {
@@ -75,12 +96,13 @@ public class Pagination<T> extends AbstractEntity {
 
     @Override
     public String toString() {
-        final StringBuilder builder = new StringBuilder("Pagination{");
-        builder.append("list=").append(entity);
-        builder.append(", numberPage=").append(numberPage);
-        builder.append(", maxNumberPage=").append(maxNumberPage);
-        builder.append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("Pagination{");
+        sb.append("entity=").append(entity);
+        sb.append(", size=").append(size);
+        sb.append(", numberPage=").append(numberPage);
+        sb.append(", maxNumberPage=").append(maxNumberPage);
+        sb.append('}');
+        return sb.toString();
     }
 
     public static class PaginationBuilder<T> {
@@ -95,12 +117,17 @@ public class Pagination<T> extends AbstractEntity {
             return this;
         }
 
-        public PaginationBuilder<T> setNumberPage(long numberPage) {
+        public PaginationBuilder<T> setSize(int size) {
+            this.pagination.setSize(size);
+            return this;
+        }
+
+        public PaginationBuilder<T> setNumberPage(int numberPage) {
             this.pagination.setNumberPage(numberPage);
             return this;
         }
 
-        public PaginationBuilder<T> setMaxNumberPage(long maxNumberPage) {
+        public PaginationBuilder<T> setMaxNumberPage(int maxNumberPage) {
             this.pagination.setMaxNumberPage(maxNumberPage);
             return this;
         }

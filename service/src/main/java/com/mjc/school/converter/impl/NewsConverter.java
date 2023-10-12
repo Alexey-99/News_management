@@ -2,6 +2,9 @@ package com.mjc.school.converter.impl;
 
 import com.mjc.school.converter.Converter;
 import com.mjc.school.entity.News;
+import com.mjc.school.repository.impl.author.AuthorRepository;
+import com.mjc.school.repository.impl.comment.CommentRepository;
+import com.mjc.school.repository.impl.tag.TagRepository;
 import com.mjc.school.validation.dto.NewsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,12 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class NewsConverter implements Converter<NewsDTO, News> {
     @Autowired
-    private AuthorConverter authorConverter;
+    private AuthorRepository authorRepository;
     @Autowired
-    private CommentConverter commentConverter;
+    private CommentRepository commentRepository;
     @Autowired
-    private TagConverter tagConverter;
+    private TagRepository tagRepository;
 
+    @Override
     public News fromDTO(NewsDTO newsDTO) {
         return new News
                 .NewsBuilder()
@@ -22,44 +26,33 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                 .setTitle(newsDTO.getTitle())
                 .setContent(newsDTO.getContent())
                 .setAuthor(
-                        authorConverter.fromDTO(
-                                newsDTO.getAuthor()))
-                .setComments(
-                        newsDTO.getComments()
-                                .stream()
-                                .map(commentDTO ->
-                                        commentConverter.fromDTO(commentDTO))
-                                .toList())
-                .setTags(
-                        newsDTO.getTags()
-                                .stream()
-                                .map(tagDTO -> tagConverter.fromDTO(tagDTO))
-                                .toList())
+                        authorRepository.findById(
+                                newsDTO.getAuthorId()))
+//                .setComments(
+//                        commentRepository.findByNewsId(
+//                                newsDTO.getId()))
+//                .setTags(
+//                        tagRepository.findByNewsId(
+//                                newsDTO.getId()))
                 .setCreated(newsDTO.getCreated())
                 .setModified(newsDTO.getModified())
                 .build();
     }
 
+    @Override
     public NewsDTO toDTO(News news) {
         return new NewsDTO
                 .NewsDTOBuilder()
                 .setId(news.getId())
                 .setTitle(news.getTitle())
                 .setContent(news.getContent())
-                .setAuthor(
-                        authorConverter.toDTO(
-                                news.getAuthor()))
-                .setComments(
-                        news.getComments()
-                                .stream()
-                                .map(comment ->
-                                        commentConverter.toDTO(comment))
-                                .toList())
-                .setTags(
-                        news.getTags()
-                                .stream()
-                                .map(tag -> tagConverter.toDTO(tag))
-                                .toList())
+                .setAuthorId(news.getAuthor().getId())
+                .setCountComments(news.getComments() != null
+                        ? news.getComments().size()
+                        : 0)
+                .setCountTags(news.getTags() != null
+                        ? news.getTags().size()
+                        : 0)
                 .setCreated(news.getCreated())
                 .setModified(news.getModified())
                 .build();

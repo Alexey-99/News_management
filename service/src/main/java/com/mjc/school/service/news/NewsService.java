@@ -12,40 +12,40 @@ import java.util.List;
 public interface NewsService
         extends PaginationService<NewsDTO>,
         CRUDOperationService<NewsDTO> {
-    public boolean deleteByAuthorId(long authorId)
+    boolean deleteByAuthorId(long authorId)
             throws ServiceException, IncorrectParameterException;
 
-    public boolean deleteAllTagsFromNewsByNewsId(long newsId)
+    boolean deleteAllTagsFromNewsByNewsId(long newsId)
             throws ServiceException;
 
-    public List<NewsDTO> findByTagName(String tagName)
+    List<NewsDTO> findByTagName(String tagName, int page, int size)
             throws ServiceException;
 
-    public List<NewsDTO> findByTagId(long tagId)
+    List<NewsDTO> findByTagId(long tagId, int page, int size)
             throws ServiceException;
 
-    public List<NewsDTO> findByAuthorName(String authorName)
+    List<NewsDTO> findByAuthorName(String authorName, int page, int size)
             throws ServiceException;
 
-    public List<NewsDTO> findByPartOfTitle(String partOfTitle)
+    List<NewsDTO> findByPartOfTitle(String partOfTitle, int page, int size)
             throws ServiceException;
 
-    public List<NewsDTO> findByPartOfContent(String partOfContent)
+    List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size)
             throws ServiceException;
 
-    public List<NewsDTO> sort(List<NewsDTO> newsList,
-                              SortNewsComparator comparator)
+    List<NewsDTO> sort(List<NewsDTO> newsList,
+                       SortNewsComparator comparator)
             throws ServiceException;
 
-    public List<NewsDTO> sortByCreatedDateTimeAsc(List<NewsDTO> newsList)
+    List<NewsDTO> sortByCreatedDateTimeAsc(List<NewsDTO> newsList)
             throws ServiceException;
 
-    public List<NewsDTO> sortByCreatedDateTimeDesc(List<NewsDTO> newsList)
+    List<NewsDTO> sortByCreatedDateTimeDesc(List<NewsDTO> newsList)
             throws ServiceException;
 
-    public List<NewsDTO> sortByModifiedDateTimeAsc(List<NewsDTO> newsList)
+    List<NewsDTO> sortByModifiedDateTimeAsc(List<NewsDTO> newsList)
             throws ServiceException;
 
-    public List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList)
+    List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList)
             throws ServiceException;
 }

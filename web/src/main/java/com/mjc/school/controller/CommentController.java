@@ -58,15 +58,15 @@ public class CommentController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return commentService.getPagination(
-                commentService.findAll(),
-                size, page);
+                commentService.findAll(page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -87,16 +87,15 @@ public class CommentController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            int page)
             throws ServiceException, IncorrectParameterException {
         return commentService.getPagination(
-                commentService.findByNewsId(newsId),
-                countElementsReturn,
-                numberPage);
+                commentService.findByNewsId(newsId, page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -132,11 +131,11 @@ public class CommentController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page,
+            int page,
             @RequestParam(value = "field",
                     required = false,
                     defaultValue = MODIFIED)
@@ -153,12 +152,12 @@ public class CommentController {
                     sortingType.equals(ASCENDING)) {
                 sortedList = commentService.getPagination(
                         commentService.sortByCreatedDateTimeAsc(
-                                commentService.findAll()),
+                                commentService.findAll(page, size)),
                         size, page);
             } else {
                 sortedList = commentService.getPagination(
                         commentService.sortByCreatedDateTimeDesc(
-                                commentService.findAll()),
+                                commentService.findAll(page, size)),
                         size, page);
             }
         } else {
@@ -166,12 +165,12 @@ public class CommentController {
                     sortingType.equals(ASCENDING)) {
                 sortedList = commentService.getPagination(
                         commentService.sortByModifiedDateTimeAsc(
-                                commentService.findAll()),
+                                commentService.findAll(page, size)),
                         size, page);
             } else {
                 sortedList = commentService.getPagination(
                         commentService.sortByModifiedDateTimeDesc(
-                                commentService.findAll()),
+                                commentService.findAll(page, size)),
                         size, page);
             }
         }
@@ -234,7 +233,7 @@ public class CommentController {
             Delete a comment by id.
             Response: true - if successful deleted comment, if didn't delete comment - false.
             """, response = Boolean.class)
-   @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)

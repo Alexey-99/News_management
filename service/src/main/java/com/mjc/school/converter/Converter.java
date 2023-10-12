@@ -1,7 +1,9 @@
 package com.mjc.school.converter;
 
-public interface Converter<D, T> {
-    public T fromDTO(D entityDTO);
+import com.mjc.school.exception.RepositoryException;
 
-    public D toDTO(T entity);
+public interface Converter<D, T> {
+    T fromDTO(D entityDTO) throws RepositoryException;
+
+    D toDTO(T entity);
 }

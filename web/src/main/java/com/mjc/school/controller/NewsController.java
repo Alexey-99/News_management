@@ -167,15 +167,15 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return newsService.getPagination(
-                newsService.findAll(),
-                size, page);
+                newsService.findAll(page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -217,15 +217,15 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return newsService.getPagination(
-                newsService.findByTagName(tagName),
-                size, page);
+                newsService.findByTagName(tagName, page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -246,15 +246,15 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return newsService.getPagination(
-                newsService.findByTagId(tagId),
-                size, page);
+                newsService.findByTagId(tagId, page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -277,15 +277,15 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return newsService.getPagination(
-                newsService.findByAuthorName(authorName),
-                size, page);
+                newsService.findByAuthorName(authorName, page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -307,15 +307,15 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return newsService.getPagination(
-                newsService.findByPartOfTitle(partOfTitle),
-                size, page);
+                newsService.findByPartOfTitle(partOfTitle, page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -337,15 +337,15 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return newsService.getPagination(
-                newsService.findByPartOfContent(partOfContent),
-                size, page);
+                newsService.findByPartOfContent(partOfContent, page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -363,11 +363,11 @@ public class NewsController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page,
+            int page,
             @RequestParam(value = "field",
                     required = false,
                     defaultValue = MODIFIED)
@@ -384,26 +384,26 @@ public class NewsController {
                     sortingType.equals(ASCENDING)) {
                 sortedList = newsService.getPagination(
                         newsService.sortByCreatedDateTimeAsc(
-                                newsService.findAll()),
-                        size, page);
+                                newsService.findAll(page, size)),
+                        page, size);
             } else {
                 sortedList = newsService.getPagination(
                         newsService.sortByCreatedDateTimeDesc(
-                                newsService.findAll()),
-                        size, page);
+                                newsService.findAll(page, size)),
+                        page, size);
             }
         } else {
             if (sortingType != null &&
                     sortingType.equals(ASCENDING)) {
                 sortedList = newsService.getPagination(
                         newsService.sortByModifiedDateTimeAsc(
-                                newsService.findAll()),
-                        size, page);
+                                newsService.findAll(page, size)),
+                        page, size);
             } else {
                 sortedList = newsService.getPagination(
                         newsService.sortByModifiedDateTimeDesc(
-                                newsService.findAll()),
-                        size, page);
+                                newsService.findAll(page, size)),
+                        page, size);
             }
         }
         return sortedList;

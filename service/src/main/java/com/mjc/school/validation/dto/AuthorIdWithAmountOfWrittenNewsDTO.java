@@ -1,9 +1,9 @@
 package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mjc.school.entity.abstation.AbstractEntity;
+import com.mjc.school.validation.dto.abstraction.AbstractEntityDTO;
 
-public class AuthorIdWithAmountOfWrittenNewsDTO extends AbstractEntity {
+public class AuthorIdWithAmountOfWrittenNewsDTO extends AbstractEntityDTO {
     private long authorId;
     private long amountOfWrittenNews;
 

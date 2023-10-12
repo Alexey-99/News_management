@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthorConverter implements Converter<AuthorDTO, Author> {
+    @Override
     public Author fromDTO(AuthorDTO authorDTO) {
         return new Author
                 .AuthorBuilder()
@@ -15,12 +16,15 @@ public class AuthorConverter implements Converter<AuthorDTO, Author> {
                 .build();
     }
 
+    @Override
     public AuthorDTO toDTO(Author author) {
         return new AuthorDTO
                 .AuthorDTOBuilder()
                 .setId(author.getId())
                 .setName(author.getName())
-                .setCountNews(author.getNews().size())
+                .setCountNews(author.getNews() != null
+                        ? author.getNews().size()
+                        : 0)
                 .build();
     }
 }

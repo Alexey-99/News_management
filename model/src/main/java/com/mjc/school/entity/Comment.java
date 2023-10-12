@@ -5,18 +5,22 @@ import com.mjc.school.entity.abstation.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import java.io.Serializable;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Entity
-@Table(name = "comments",
-        schema = "news_management")
-public class Comment extends AbstractEntity {
+@Table(name = "comments")
+public class Comment
+        extends AbstractEntity
+        implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "content", nullable = false, length = 255)

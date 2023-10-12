@@ -8,19 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class PaginationServiceImpl<T> implements PaginationService<T> {
-    private static final long NUMBER_MIN_PAGE = 1;
-    private static final long NUMBER_FIRST_ELEMENT = 0;
-    private static final long NUMBER_ELEMENTS_RETURN = 5;
+public class PaginationServiceImpl<T>
+        implements PaginationService<T> {
+    private static final int NUMBER_MIN_PAGE = 1;
+    private static final int NUMBER_FIRST_ELEMENT = 0;
+    private static final int NUMBER_ELEMENTS_RETURN = 5;
 
     @Override
-    public Pagination<T> getPagination(List<T> list, long size, long page) {
+    public Pagination<T> getPagination(List<T> list, int page, int size) {
         Pagination<T> paginationResult = null;
         if (list != null && !list.isEmpty()) {
             size = validCountElementsReturn(size);
-            long maxNumberPage = calcMaxNumberPage(list, size);
+            int maxNumberPage = calcMaxNumberPage(list, size);
             page = validNumberPage(page, maxNumberPage);
-            long numberStartElement = validNumberStartElement(page, size);
+            int numberStartElement = validNumberStartElement(page, size);
             paginationResult = new Pagination
                     .PaginationBuilder<T>()
                     .setEntity(getListEntity(list, numberStartElement, size))
@@ -36,37 +37,37 @@ public class PaginationServiceImpl<T> implements PaginationService<T> {
         return paginationResult;
     }
 
-    private List<T> getListEntity(List<T> list, long numberFirstElement, long countElementsReturn) {
+    private List<T> getListEntity(List<T> list, int numberFirstElement, int countElementsReturn) {
         List<T> listResult = new ArrayList<>();
-        for (long i = numberFirstElement; i < list.size() &&
+        for (int i = numberFirstElement; i < list.size() &&
                 i < numberFirstElement + countElementsReturn; i++) {
-            listResult.add(list.get((int) i));
+            listResult.add(list.get(i));
         }
         return listResult;
     }
 
-    private long validCountElementsReturn(long countElementsReturn) {
+    private int validCountElementsReturn(int countElementsReturn) {
         return countElementsReturn > 0 ?
                 countElementsReturn :
                 NUMBER_ELEMENTS_RETURN;
     }
 
-    private long calcMaxNumberPage(List<T> list, long countElementsReturn) {
-        long maxNumberPage = (long) Math.ceil((double) list.size() / countElementsReturn);
+    private int calcMaxNumberPage(List<T> list, int countElementsReturn) {
+        int maxNumberPage = (int) Math.ceil((double) list.size() / countElementsReturn);
         return maxNumberPage > 0 ?
                 maxNumberPage :
                 NUMBER_MIN_PAGE;
     }
 
-    private long validNumberPage(long numberPage, long maxNumberPage) {
+    private int validNumberPage(int numberPage, int maxNumberPage) {
         return (numberPage >= NUMBER_MIN_PAGE) &&
                 (numberPage <= maxNumberPage) ?
                 numberPage :
                 NUMBER_MIN_PAGE;
     }
 
-    private long validNumberStartElement(long numberPage, long countElementsReturn) {
-        long numberStartElement = countElementsReturn * (numberPage - 1);
+    private int validNumberStartElement(int numberPage, int countElementsReturn) {
+        int numberStartElement = countElementsReturn * (numberPage - 1);
         return numberStartElement >= 0 ?
                 numberStartElement :
                 NUMBER_FIRST_ELEMENT;

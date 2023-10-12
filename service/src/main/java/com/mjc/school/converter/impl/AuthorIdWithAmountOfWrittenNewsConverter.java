@@ -12,7 +12,8 @@ public class AuthorIdWithAmountOfWrittenNewsConverter
         AuthorIdWithAmountOfWrittenNews> {
 
     @Override
-    public AuthorIdWithAmountOfWrittenNews fromDTO(AuthorIdWithAmountOfWrittenNewsDTO entityDTO) {
+    public AuthorIdWithAmountOfWrittenNews fromDTO(
+            AuthorIdWithAmountOfWrittenNewsDTO entityDTO) {
         return new AuthorIdWithAmountOfWrittenNews
                 .AuthorIdWithAmountOfWrittenNewsBuilder()
                 .setAuthorId(entityDTO.getAuthorId())
@@ -22,7 +23,8 @@ public class AuthorIdWithAmountOfWrittenNewsConverter
     }
 
     @Override
-    public AuthorIdWithAmountOfWrittenNewsDTO toDTO(AuthorIdWithAmountOfWrittenNews entity) {
+    public AuthorIdWithAmountOfWrittenNewsDTO toDTO(
+            AuthorIdWithAmountOfWrittenNews entity) {
         return new AuthorIdWithAmountOfWrittenNewsDTO
                 .AuthorIdWithAmountOfWrittenNewsDTOBuilder()
                 .setAuthorId(entity.getAuthorId())

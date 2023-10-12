@@ -1,6 +1,5 @@
 package com.mjc.school.service.tag;
 
-import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.CRUDOperationService;
 import com.mjc.school.service.pagination.PaginationService;
@@ -11,18 +10,18 @@ import java.util.List;
 public interface TagService
         extends PaginationService<TagDTO>,
         CRUDOperationService<TagDTO> {
-    public boolean addToNews(long tagId, long newsId)
+    boolean addToNews(long tagId, long newsId)
             throws ServiceException;
 
-    public boolean removeFromNews(long tagId, long newsId)
+    boolean removeFromNews(long tagId, long newsId)
             throws ServiceException;
 
-    public boolean deleteFromAllNews(long tagId)
+    boolean deleteFromAllNews(long tagId)
             throws ServiceException;
 
-    public List<TagDTO> findByPartOfName(String partOfName)
+    List<TagDTO> findByPartOfName(String partOfName, int page, int size)
             throws ServiceException;
 
-    public List<TagDTO> findByNewsId(long newsId)
+    List<TagDTO> findByNewsId(long newsId, int page, int size)
             throws ServiceException;
 }

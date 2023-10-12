@@ -5,18 +5,18 @@ import com.mjc.school.exception.ServiceException;
 import java.util.List;
 
 public interface CRUDOperationService<T> {
-    public boolean create(T entity)
+    boolean create(T entity)
             throws ServiceException;
 
-    public boolean deleteById(long id)
+    boolean deleteById(long id)
             throws ServiceException;
 
-    public boolean update(T entity)
+    boolean update(T entity)
             throws ServiceException;
 
-    public List<T> findAll()
+    List<T> findAll(int page, int size)
             throws ServiceException;
 
-    public T findById(long id)
+    T findById(long id)
             throws ServiceException;
 }

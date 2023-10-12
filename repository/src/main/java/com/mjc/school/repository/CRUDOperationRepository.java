@@ -1,17 +1,17 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.exception.RepositoryException;
-
 import java.util.List;
 
 public interface CRUDOperationRepository<T> {
-    public boolean create(T entity) throws RepositoryException;
+    boolean create(T entity);
 
-    public boolean deleteById(long id) throws RepositoryException;
+    boolean deleteById(long id);
 
-    public boolean update(T entity) throws RepositoryException;
+    T update(T entity);
 
-    public List<T> findAll() throws RepositoryException;
+    List<T> findAll(int page, int size);
 
-    public T findById(long id) throws RepositoryException;
+    List<T> findAll();
+
+    T findById(long id);
 }

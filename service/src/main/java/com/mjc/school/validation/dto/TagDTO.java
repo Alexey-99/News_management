@@ -2,17 +2,21 @@ package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.validation.annotation.IsNotExistsTagName;
+import com.mjc.school.validation.dto.abstraction.AbstractEntityDTO;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+
+import java.io.Serializable;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_TAF_NAME_EXISTS;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_TAG_NAME;
 
 @Validated
-public class TagDTO {
+public class TagDTO
+        extends AbstractEntityDTO
+        implements Serializable {
     @JsonIgnore
     private long id;
     @NotNull(message = BAD_TAG_NAME)
@@ -20,8 +24,6 @@ public class TagDTO {
     @IsNotExistsTagName(message = BAD_PARAMETER_TAF_NAME_EXISTS)
     private String name;
     private long countNews;
-    @JsonIgnore
-    private List<NewsDTO> news;
 
     public long getId() {
         return id;
@@ -39,23 +41,54 @@ public class TagDTO {
         this.name = name;
     }
 
-    public List<NewsDTO> getNews() {
-        return news;
-    }
-
-    public void setNews(List<NewsDTO> newsDTO) {
-        if (newsDTO != null) {
-            this.countNews = newsDTO.size();
-        }
-        this.news = newsDTO;
-    }
-
     public long getCountNews() {
         return countNews;
     }
 
     public void setCountNews(long countNews) {
         this.countNews = countNews;
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = result * PRIME + Long.hashCode(this.id);
+        result = result * PRIME + (this.name != null ? this.name.hashCode() : 1);
+        result = result * PRIME + Long.hashCode(this.countNews);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!super.equals(object)) {
+            return false;
+        }
+        TagDTO otherTagDTO = (TagDTO) object;
+        if (this.id != otherTagDTO.id) {
+            return false;
+        }
+        if (this.name == null) {
+            if (otherTagDTO.name != null) {
+                return false;
+            }
+        } else if (!this.name.equals(otherTagDTO.name)) {
+            return false;
+        }
+        if (this.countNews != otherTagDTO.countNews) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TagDTO{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", countNews=").append(countNews);
+        sb.append('}');
+        return sb.toString();
     }
 
     public static class TagDTOBuilder {
@@ -72,11 +105,6 @@ public class TagDTO {
 
         public TagDTOBuilder setName(String name) {
             this.tagDTO.setName(name);
-            return this;
-        }
-
-        public TagDTOBuilder setNews(List<NewsDTO> newsDTO) {
-            this.tagDTO.setNews(newsDTO);
             return this;
         }
 

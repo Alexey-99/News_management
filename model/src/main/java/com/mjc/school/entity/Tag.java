@@ -1,21 +1,26 @@
 package com.mjc.school.entity;
 
+import com.mjc.school.entity.abstation.AbstractEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Entity
-@Table(name = "tags",
-        schema = "news_management")
-public class Tag {
+@Table(name = "tags")
+public class Tag
+        extends AbstractEntity
+        implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private long id;
     @Column(name = "name",
             nullable = false,

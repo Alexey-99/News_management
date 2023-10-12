@@ -6,7 +6,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -14,15 +13,19 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Entity
-@Table(name = "news",
-        schema = "news_management")
-public class News extends AbstractEntity {
+@Table(name = "news")
+public class News
+        extends AbstractEntity
+        implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "title",
@@ -35,7 +38,7 @@ public class News extends AbstractEntity {
             length = 255)
     private String content;
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "authors_id")
     private Author author;
     @Column(name = "created",
             nullable = false)

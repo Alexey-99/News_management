@@ -8,8 +8,7 @@ public interface PaginationService<T> {
     String DEFAULT_SIZE = "5";
     String DEFAULT_NUMBER_PAGE = "1";
 
-    public Pagination<T> getPagination(
+    Pagination<T> getPagination(
             List<T> list,
-            long size,
-            long page);
+            int page, int size);
 }

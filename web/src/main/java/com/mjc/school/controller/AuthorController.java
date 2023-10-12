@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
+
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
 import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
@@ -37,7 +40,7 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-
+@Validated
 @RestController
 @RequestMapping(value = "/api/v2/author")
 @Api("Operations for authors in the application")
@@ -61,7 +64,7 @@ public class AuthorController {
             @RequestBody
             @NotNull(message = BAD_REQUEST_PARAMETER)
             AuthorDTO authorDTO)
-            throws ServiceException{
+            throws ServiceException {
         boolean result = authorService.create(authorDTO);
         return new ResponseEntity<>(result, CREATED);
     }
@@ -81,7 +84,7 @@ public class AuthorController {
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         boolean result = authorService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
@@ -105,7 +108,7 @@ public class AuthorController {
             @Valid
             @NotNull(message = BAD_REQUEST_PARAMETER)
             AuthorDTO authorDTO)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         authorDTO.setId(id);
         boolean result = authorService.update(authorDTO);
         return new ResponseEntity<>(result, OK);
@@ -123,21 +126,19 @@ public class AuthorController {
             """, response = Pagination.class)
     @GetMapping(value = "/all",
             produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Pagination<AuthorDTO>> findAll(
+    public ResponseEntity<List<AuthorDTO>> findAll(
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return ResponseEntity.ok()
                 .contentType(APPLICATION_JSON)
-                .body(authorService.getPagination(
-                        authorService.findAll(), size, page)
-                );
+                .body(authorService.findAll(page, size));
     }
 
     @ApiResponses(value = {
@@ -154,7 +155,7 @@ public class AuthorController {
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
-            throws ServiceException, IncorrectParameterException {
+            throws ServiceException {
         return authorService.findById(id);
     }
 
@@ -177,16 +178,15 @@ public class AuthorController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            int page)
             throws ServiceException, IncorrectParameterException {
         return authorService.getPagination(
-                authorService.findByPartOfName(partOfName),
-                countElementsReturn,
-                numberPage);
+                authorService.findByPartOfName(partOfName, page, size),
+                size, page);
     }
 
     @ApiResponses(value = {
@@ -222,16 +222,15 @@ public class AuthorController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            int page)
             throws ServiceException {
         return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(),
-                countElementsReturn,
-                numberPage);
+                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -250,15 +249,18 @@ public class AuthorController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long countElementsReturn,
+            @Min(value = 1,
+                    message = "pagination.invalid.size.must_be_more_one")
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long numberPage)
+            @Min(value = 1,
+                    message = "pagination.invalid.number_page.must_be_more_one")
+            int page)
             throws ServiceException {
         return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(),
-                countElementsReturn,
-                numberPage);
+                authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(page, size),
+                page, size);
     }
 }

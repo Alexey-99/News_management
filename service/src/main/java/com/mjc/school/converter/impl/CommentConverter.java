@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CommentConverter implements Converter<CommentDTO, Comment> {
-
+    @Override
     public Comment fromDTO(CommentDTO commentDTO) {
         return new Comment
                 .CommentBuilder()
@@ -18,6 +18,7 @@ public class CommentConverter implements Converter<CommentDTO, Comment> {
                 .build();
     }
 
+    @Override
     public CommentDTO toDTO(Comment comment) {
         return new CommentDTO
                 .CommentDTOBuilder()

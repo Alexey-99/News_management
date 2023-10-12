@@ -1,7 +1,5 @@
 package com.mjc.school.exception;
 
-import java.security.PrivilegedActionException;
-
 public class IncorrectParameterException extends Exception {
     public IncorrectParameterException() {
     }

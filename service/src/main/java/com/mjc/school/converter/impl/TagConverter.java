@@ -16,11 +16,14 @@ public class TagConverter implements Converter<TagDTO, Tag> {
                 .build();
     }
 
+    @Override
     public TagDTO toDTO(Tag tag) {
         return new TagDTO.TagDTOBuilder()
                 .setId(tag.getId())
                 .setName(tag.getName())
-                .setCountNews(tag.getNews().size())
+                .setCountNews(tag.getNews() != null
+                        ? tag.getNews().size()
+                        : 0)
                 .build();
     }
 }

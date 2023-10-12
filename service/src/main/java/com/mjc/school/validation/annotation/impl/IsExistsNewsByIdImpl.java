@@ -1,7 +1,7 @@
 package com.mjc.school.validation.annotation.impl;
 
 import com.mjc.school.exception.RepositoryException;
-import com.mjc.school.repository.news.NewsRepository;
+import com.mjc.school.repository.impl.news.NewsRepository;
 import com.mjc.school.validation.annotation.IsExistsNewsById;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,15 +24,11 @@ public class IsExistsNewsByIdImpl
     public boolean isValid(Long newsId,
                            ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
-        try {
-            if (newsRepository.findById(newsId) != null) {
-                log.log(INFO, "Correct entered comment news id: " + newsId);
-                result = true;
-            } else {
-                log.log(WARN, "Not found objects with comment news ID: " + newsId);
-            }
-        } catch (RepositoryException e) {
-            log.log(ERROR, e.getMessage());
+        if (newsRepository.findById(newsId) != null) {
+            log.log(INFO, "Correct entered comment news id: " + newsId);
+            result = true;
+        } else {
+            log.log(WARN, "Not found objects with comment news ID: " + newsId);
         }
         return result;
     }

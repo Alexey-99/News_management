@@ -4,7 +4,8 @@ import com.mjc.school.validation.dto.CommentDTO;
 
 import java.util.Comparator;
 
-public interface SortCommentComparator extends Comparator<CommentDTO> {
+public interface SortCommentComparator
+        extends Comparator<CommentDTO> {
     @Override
-    public int compare(CommentDTO commentDTO1, CommentDTO commentDTO2);
+    int compare(CommentDTO commentDTO1, CommentDTO commentDTO2);
 }

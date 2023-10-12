@@ -12,24 +12,24 @@ import java.util.List;
 public interface CommentService
         extends PaginationService<CommentDTO>,
         CRUDOperationService<CommentDTO> {
-    public List<CommentDTO> findByNewsId(long newsId)
+    List<CommentDTO> findByNewsId(long newsId,int page, int size)
             throws ServiceException, IncorrectParameterException;
 
-    public List<CommentDTO> sort(List<CommentDTO> list,
-                                 SortCommentComparator comparator) throws ServiceException;
+    List<CommentDTO> sort(List<CommentDTO> list,
+                          SortCommentComparator comparator) throws ServiceException;
 
-    public List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list)
+    List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list)
             throws ServiceException;
 
-    public List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list)
+    List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list)
             throws ServiceException;
 
-    public List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list)
+    List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list)
             throws ServiceException;
 
-    public List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list)
+    List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list)
             throws ServiceException;
 
-    public boolean deleteByNewsId(long newsId)
+    boolean deleteByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException;
 }

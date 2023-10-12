@@ -1,7 +1,6 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.TagDTO;
@@ -188,15 +187,15 @@ public class TagController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return tagService.getPagination(
-                tagService.findAll(),
-                size, page);
+                tagService.findAll(page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -237,15 +236,15 @@ public class TagController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return tagService.getPagination(
-                tagService.findByPartOfName(partOfName),
-                size, page);
+                tagService.findByPartOfName(partOfName, page, size),
+                page, size);
     }
 
     @ApiResponses(value = {
@@ -266,14 +265,14 @@ public class TagController {
             @RequestParam(value = "size",
                     required = false,
                     defaultValue = DEFAULT_SIZE)
-            long size,
+            int size,
             @RequestParam(value = "page",
                     required = false,
                     defaultValue = DEFAULT_NUMBER_PAGE)
-            long page)
+            int page)
             throws ServiceException {
         return tagService.getPagination(
-                tagService.findByNewsId(newsId),
-                size, page);
+                tagService.findByNewsId(newsId, page, size),
+                page, size);
     }
 }

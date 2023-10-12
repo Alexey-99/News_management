@@ -2,8 +2,15 @@ package com.mjc.school.entity;
 
 import com.mjc.school.entity.abstation.AbstractEntity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+//@Entity
 public class AuthorIdWithAmountOfWrittenNews extends AbstractEntity {
+    //    private long id;
+//    @Column(name = "authors.id")
     private long authorId;
+    //    @Column(name = "news.authors_id")
     private long amountOfWrittenNews;
 
     public long getAuthorId() {

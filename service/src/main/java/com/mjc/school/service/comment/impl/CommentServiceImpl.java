@@ -7,9 +7,9 @@ import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.RepositoryException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
-import com.mjc.school.repository.news.NewsRepository;
+import com.mjc.school.repository.impl.news.NewsRepository;
 import com.mjc.school.service.pagination.PaginationService;
-import com.mjc.school.repository.comment.CommentRepository;
+import com.mjc.school.repository.impl.comment.CommentRepository;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
 import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentComparatorByCreatedDateTimeAsc;
@@ -51,69 +51,54 @@ public class CommentServiceImpl implements CommentService {
     private PaginationService<CommentDTO> commentPagination;
 
     @Override
-    public List<CommentDTO> findByNewsId(long newsId)
+    public List<CommentDTO> findByNewsId(long newsId, int page, int size)
             throws ServiceException, IncorrectParameterException {
-        try {
-            List<Comment> commentList = commentRepository.findByNewsId(newsId);
-            if (!commentList.isEmpty()) {
-                for (Comment comment : commentList) {
-                    comment.setNews(
-                            newsRepository.findById(
-                                    comment.getNews().getId()));
-                }
-                return commentList.stream()
-                        .map(comment -> commentConverter.toDTO(comment))
-                        .toList();
-            } else {
-                log.log(ERROR, "Not found objects with comment news ID: " + newsId);
-                throw new ServiceException(NO_ENTITY_WITH_COMMENT_NEWS_ID);
+        List<Comment> commentList = commentRepository.findByNewsId(newsId, page, size);
+        if (!commentList.isEmpty()) {
+            for (Comment comment : commentList) {
+                comment.setNews(
+                        newsRepository.findById(
+                                comment.getNews().getId()));
             }
-        } catch (RepositoryException e) {
-            log.log(ERROR, e);
-            throw new ServiceException(FIND_ERROR);
+            return commentList.stream()
+                    .map(comment -> commentConverter.toDTO(comment))
+                    .toList();
+        } else {
+            log.log(ERROR, "Not found objects with comment news ID: " + newsId);
+            throw new ServiceException(NO_ENTITY_WITH_COMMENT_NEWS_ID);
         }
     }
 
     @Override
-    public List<CommentDTO> findAll() throws ServiceException {
-        try {
-            List<Comment> commentList = commentRepository.findAll();
-            if (!commentList.isEmpty()) {
-                for (Comment comment : commentList) {
-                    comment.setNews(
-                            newsRepository.findById(
-                                    comment.getNews().getId()));
-                }
-                return commentList.stream()
-                        .map(comment -> commentConverter.toDTO(comment))
-                        .toList();
-            } else {
-                log.log(WARN, "Not found objects");
-                throw new ServiceException(NO_ENTITY);
+    public List<CommentDTO> findAll(int page, int size) throws ServiceException {
+        List<Comment> commentList = commentRepository.findAll();
+        if (!commentList.isEmpty()) {
+            for (Comment comment : commentList) {
+                comment.setNews(
+                        newsRepository.findById(
+                                comment.getNews().getId()));
             }
-        } catch (RepositoryException e) {
-            log.log(ERROR, e);
-            throw new ServiceException(FIND_ERROR);
+            return commentList.stream()
+                    .map(comment -> commentConverter.toDTO(comment))
+                    .toList();
+        } else {
+            log.log(WARN, "Not found objects");
+            throw new ServiceException(NO_ENTITY);
         }
     }
 
     @Override
     public CommentDTO findById(long id)
             throws ServiceException {
-        try {
-            Comment comment = commentRepository.findById(id);
-            if (comment != null) {
-                comment.setNews(
-                        newsRepository.findById(
-                                comment.getNews().getId()));
-                return commentConverter.toDTO(comment);
-            } else {
-                log.log(WARN, "Not found object with this ID: " + id);
-                throw new ServiceException(NO_ENTITY_WITH_ID);
-            }
-        } catch (RepositoryException e) {
-            log.log(ERROR, e);
-            throw new ServiceException(FIND_ERROR);
+        Comment comment = commentRepository.findById(id);
+        if (comment != null) {
+            comment.setNews(
+                    newsRepository.findById(
+                            comment.getNews().getId()));
+            return commentConverter.toDTO(comment);
+        } else {
+            log.log(WARN, "Not found object with this ID: " + id);
+            throw new ServiceException(NO_ENTITY_WITH_ID);
         }
     }
 
@@ -165,55 +150,34 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean create(CommentDTO commentDTO)
             throws ServiceException {
-        try {
-            commentDTO.setCreated(dateHandler.getCurrentDate());
-            commentDTO.setModified(dateHandler.getCurrentDate());
-            return commentRepository.create(
-                    commentConverter.fromDTO(commentDTO));
-        } catch (RepositoryException e) {
-            log.log(ERROR, e);
-            throw new ServiceException(INSERT_ERROR);
-        }
+        commentDTO.setCreated(dateHandler.getCurrentDate());
+        commentDTO.setModified(dateHandler.getCurrentDate());
+        return commentRepository.create(
+                commentConverter.fromDTO(commentDTO));
     }
 
     @Override
     public boolean update(CommentDTO commentDTO)
             throws ServiceException {
-        try {
-            commentDTO.setModified(dateHandler.getCurrentDate());
-            return commentRepository.update(
-                    commentConverter.fromDTO(commentDTO));
-        } catch (RepositoryException e) {
-            log.log(ERROR, e);
-            throw new ServiceException(UPDATE_ERROR);
-        }
+        commentDTO.setModified(dateHandler.getCurrentDate());
+        return commentRepository.update(
+                commentConverter.fromDTO(commentDTO)) != null;
     }
 
     @Override
-    public boolean deleteById(long id)
-            throws ServiceException {
-        try {
-            return commentRepository.deleteById(id);
-        } catch (RepositoryException e) {
-            log.log(ERROR, e);
-            throw new ServiceException(DELETE_ERROR);
-        }
+    public boolean deleteById(long id) {
+        return commentRepository.deleteById(id);
     }
 
     @Override
     public boolean deleteByNewsId(long newsId)
             throws ServiceException {
-        try {
-            return commentRepository.deleteByNewsId(newsId);
-        } catch (RepositoryException e) {
-            log.log(ERROR, e);
-            throw new ServiceException(DELETE_ERROR);
-        }
+        return commentRepository.deleteByNewsId(newsId);
     }
 
     @Override
     public Pagination<CommentDTO> getPagination(
-            List<CommentDTO> list, long size, long page) {
+            List<CommentDTO> list, int size, int page) {
         return commentPagination.getPagination(list, size, page);
     }
 }

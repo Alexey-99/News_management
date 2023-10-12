@@ -13,18 +13,18 @@ import java.util.List;
 public interface AuthorService
         extends PaginationService<AuthorDTO>,
         CRUDOperationService<AuthorDTO> {
-    public List<AuthorDTO> findByPartOfName(String partOfName)
+    List<AuthorDTO> findByPartOfName(String partOfName, int page, int size)
             throws ServiceException, IncorrectParameterException;
 
-    public AuthorDTO findByNewsId(long newsId)
+    AuthorDTO findByNewsId(long newsId)
             throws ServiceException, IncorrectParameterException;
 
-    public List<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsIdWithAmountOfWrittenNews()
+    List<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsIdWithAmountOfWrittenNews(int page, int size)
             throws ServiceException;
 
-    public List<AuthorIdWithAmountOfWrittenNewsDTO> sortAllAuthorsIdWithAmountOfWrittenNewsDesc()
+    List<AuthorIdWithAmountOfWrittenNewsDTO> sortAllAuthorsIdWithAmountOfWrittenNewsDesc(int page, int size)
             throws ServiceException;
 
-    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> getPaginationAuthorIdWithAmountOfWrittenNews
-            (List<AuthorIdWithAmountOfWrittenNewsDTO> list, long size, long page);
+    Pagination<AuthorIdWithAmountOfWrittenNewsDTO> getPaginationAuthorIdWithAmountOfWrittenNews
+            (List<AuthorIdWithAmountOfWrittenNewsDTO> list, int size, int page);
 }

@@ -7,5 +7,6 @@ import java.util.Comparator;
 public interface SortAuthorsWithAmountOfWrittenNewsComparator
         extends Comparator<AuthorIdWithAmountOfWrittenNews> {
     @Override
-    public int compare(AuthorIdWithAmountOfWrittenNews o1, AuthorIdWithAmountOfWrittenNews o2);
+    int compare(AuthorIdWithAmountOfWrittenNews o1,
+                AuthorIdWithAmountOfWrittenNews o2);
 }

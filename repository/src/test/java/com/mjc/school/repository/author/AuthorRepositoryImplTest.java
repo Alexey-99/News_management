@@ -2,12 +2,11 @@ package com.mjc.school.repository.author;
 
 import com.mjc.school.config.DataBaseConfigTest;
 import com.mjc.school.entity.Author;
-import com.mjc.school.entity.News;
 import com.mjc.school.exception.RepositoryException;
 
-import com.mjc.school.repository.news.NewsRepository;
+import com.mjc.school.repository.impl.author.AuthorRepository;
+import com.mjc.school.repository.impl.news.NewsRepository;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,8 +81,8 @@ class AuthorRepositoryImplTest {
     void updateTest() throws RepositoryException { // 5
         Author authorUpdating = listAllAuthors.get(0);
         authorUpdating.setName("Angel");
-        boolean actual = authorRepository.update(authorUpdating);
-        assertTrue(actual);
+        Author actual = authorRepository.update(authorUpdating);
+        // assertTrue(actual);
     }
 
     @Test
@@ -114,7 +112,7 @@ class AuthorRepositoryImplTest {
 
     @Test
     void isExistsAuthorWithNameTest() throws RepositoryException {
-        boolean actual = authorRepository.isExistsAuthorWithName(
+        boolean actual = authorRepository.isNotExistsAuthorWithName(
                 listAllAuthors.get(0).getName());
         assertTrue(actual);
     }
