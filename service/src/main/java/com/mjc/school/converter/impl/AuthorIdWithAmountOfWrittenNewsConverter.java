@@ -22,7 +22,12 @@ public class AuthorIdWithAmountOfWrittenNewsConverter
     }
 
     @Override
-    public AuthorIdWithAmountOfWrittenNewsDTO toDTO(AuthorIdWithAmountOfWrittenNews entity) {
-        return new AuthorIdWithAmountOfWrittenNewsDTO.AuthorIdWithAmountOfWrittenNewsDTOBuilder().setAuthorId(entity.getAuthorId()).setAmountOfWrittenNews(entity.getAmountOfWrittenNews()).build();
+    public AuthorIdWithAmountOfWrittenNewsDTO toDTO(
+            AuthorIdWithAmountOfWrittenNews entity) {
+        return AuthorIdWithAmountOfWrittenNewsDTO
+                .builder()
+                .authorId(entity.getAuthorId())
+                .amountOfWrittenNews(entity.getAmountOfWrittenNews())
+                .build();
     }
 }

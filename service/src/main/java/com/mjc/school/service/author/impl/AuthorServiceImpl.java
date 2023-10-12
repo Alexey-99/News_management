@@ -196,11 +196,11 @@ public class AuthorServiceImpl implements AuthorService {
     getPaginationAuthorIdWithAmountOfWrittenNews(
             List<AuthorIdWithAmountOfWrittenNewsDTO> list,
             int size, int page) {
-        return new Pagination
-                .PaginationBuilder<AuthorIdWithAmountOfWrittenNewsDTO>()
-                .setEntity(list)
-                .setSize(size)
-                .setNumberPage(page)
+        return Pagination
+                .<AuthorIdWithAmountOfWrittenNewsDTO>builder()
+                .entity(list)
+                .size(size)
+                .numberPage(page)
                 .build();
     }
 }

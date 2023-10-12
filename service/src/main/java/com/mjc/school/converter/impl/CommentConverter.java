@@ -20,13 +20,13 @@ public class CommentConverter implements Converter<CommentDTO, Comment> {
 
     @Override
     public CommentDTO toDTO(Comment comment) {
-        return new CommentDTO
-                .CommentDTOBuilder()
-                .setId(comment.getId())
-                .setContent(comment.getContent())
-                .setNewsId(comment.getNews().getId())
-                .setCreated(comment.getCreated())
-                .setModified(comment.getModified())
+        return CommentDTO
+                .builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .newsId(comment.getNews().getId())
+                .created(comment.getCreated())
+                .modified(comment.getModified())
                 .build();
     }
 }

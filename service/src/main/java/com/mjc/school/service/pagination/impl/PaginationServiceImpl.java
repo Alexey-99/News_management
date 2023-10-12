@@ -22,16 +22,16 @@ public class PaginationServiceImpl<T>
             int maxNumberPage = calcMaxNumberPage(list, size);
             page = validNumberPage(page, maxNumberPage);
             int numberStartElement = validNumberStartElement(page, size);
-            paginationResult = new Pagination
-                    .PaginationBuilder<T>()
-                    .setEntity(getListEntity(list, numberStartElement, size))
-                    .setNumberPage(page)
-                    .setMaxNumberPage(maxNumberPage)
+            paginationResult = Pagination
+                    .<T>builder()
+                    .entity(getListEntity(list, numberStartElement, size))
+                    .numberPage(page)
+                    .maxNumberPage(maxNumberPage)
                     .build();
         } else {
-            paginationResult = new Pagination
-                    .PaginationBuilder<T>()
-                    .setEntity(new ArrayList<>())
+            paginationResult = Pagination
+                    .<T>builder()
+                    .entity(new ArrayList<>())
                     .build();
         }
         return paginationResult;

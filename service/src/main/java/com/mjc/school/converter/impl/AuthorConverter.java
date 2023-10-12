@@ -18,11 +18,11 @@ public class AuthorConverter
 
     @Override
     public AuthorDTO toDTO(Author author) {
-        return new AuthorDTO
-                .AuthorDTOBuilder()
-                .setId(author.getId())
-                .setName(author.getName())
-                .setCountNews(author.getNews() != null
+        return AuthorDTO
+                .builder()
+                .id(author.getId())
+                .name(author.getName())
+                .countNews(author.getNews() != null
                         ? author.getNews().size()
                         : 0)
                 .build();

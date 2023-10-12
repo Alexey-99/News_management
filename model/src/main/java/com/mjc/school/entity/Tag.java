@@ -3,7 +3,6 @@ package com.mjc.school.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,11 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "tags")
@@ -31,4 +30,8 @@ public class Tag implements Serializable {
 
     @ManyToMany(mappedBy = "tags")
     private List<News> news;
+
+    public Tag() {
+        this.news = new ArrayList<>();
+    }
 }

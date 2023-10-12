@@ -41,20 +41,20 @@ public class NewsConverter implements Converter<NewsDTO, News> {
 
     @Override
     public NewsDTO toDTO(News news) {
-        return new NewsDTO
-                .NewsDTOBuilder()
-                .setId(news.getId())
-                .setTitle(news.getTitle())
-                .setContent(news.getContent())
-                .setAuthorId(news.getAuthor().getId())
-                .setCountComments(news.getComments() != null
+        return NewsDTO
+                .builder()
+                .id(news.getId())
+                .title(news.getTitle())
+                .content(news.getContent())
+                .authorId(news.getAuthor().getId())
+                .countComments(news.getComments() != null
                         ? news.getComments().size()
                         : 0)
-                .setCountTags(news.getTags() != null
+                .countTags(news.getTags() != null
                         ? news.getTags().size()
                         : 0)
-                .setCreated(news.getCreated())
-                .setModified(news.getModified())
+                .created(news.getCreated())
+                .modified(news.getModified())
                 .build();
     }
 }
