@@ -10,5 +10,7 @@ public interface CommentRepository
 
     List<Comment> findByNewsId(long newsId, int page, int size);
 
+    List<Comment> findByNewsId(long newsId);
+
     boolean deleteByNewsId(long newsId);
 }

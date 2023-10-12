@@ -13,6 +13,7 @@ public interface TagRepository extends CRUDOperationRepository<Tag> {
     boolean deleteAllTagsFromNewsByNewsId(long tagId);
 
     List<Tag> findByNewsId(long newsId, int page, int size);
+    List<Tag> findByNewsId(long newsId);
 
     boolean isExistsTagWithName(String name) ;
 }

@@ -77,6 +77,10 @@ public class TagRepositoryImpl
         return null;
     }
 
+    public List<Tag> findByNewsId(long newsId) {
+        return null;
+    }
+
     private static final String QUERY_SELECT_TAG_BY_NAME = """
             SELECT id, name
             FROM tags

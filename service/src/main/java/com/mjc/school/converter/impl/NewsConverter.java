@@ -6,17 +6,15 @@ import com.mjc.school.repository.impl.author.AuthorRepository;
 import com.mjc.school.repository.impl.comment.CommentRepository;
 import com.mjc.school.repository.impl.tag.TagRepository;
 import com.mjc.school.validation.dto.NewsDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class NewsConverter implements Converter<NewsDTO, News> {
-    @Autowired
-    private AuthorRepository authorRepository;
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private TagRepository tagRepository;
+    private final AuthorRepository authorRepository;
+    private final CommentRepository commentRepository;
+    private final TagRepository tagRepository;
 
     @Override
     public News fromDTO(NewsDTO newsDTO) {
@@ -25,15 +23,11 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                 .id(newsDTO.getId())
                 .title(newsDTO.getTitle())
                 .content(newsDTO.getContent())
-                .author(
-                        authorRepository.findById(
-                                newsDTO.getAuthorId()))
-//                .setComments(
-//                        commentRepository.findByNewsId(
-//                                newsDTO.getId()))
-//                .setTags(
-//                        tagRepository.findByNewsId(
-//                                newsDTO.getId()))
+                .author(authorRepository.findById(
+                        newsDTO.getAuthorId()))
+                .comments(commentRepository.findByNewsId(
+                        newsDTO.getId()))
+                .tags(tagRepository.findByNewsId(newsDTO.getId()))
                 .created(newsDTO.getCreated())
                 .modified(newsDTO.getModified())
                 .build();

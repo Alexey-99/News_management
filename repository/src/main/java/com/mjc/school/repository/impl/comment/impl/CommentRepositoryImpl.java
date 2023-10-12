@@ -20,6 +20,7 @@ public class CommentRepositoryImpl
         super(entityManager);
         this.entityManager = entityManager;
     }
+
     private static final String SELECT_COMMENT_BY_NEWS_ID = """
             SELECT id, content, news_id, created, modified
             FROM comments
@@ -28,6 +29,11 @@ public class CommentRepositoryImpl
 
     @Override
     public List<Comment> findByNewsId(long newsId, int page, int size) {
+        return null;
+    }
+
+    @Override
+    public List<Comment> findByNewsId(long newsId) {
         return null;
     }
 
