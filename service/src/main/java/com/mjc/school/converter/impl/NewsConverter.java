@@ -20,12 +20,12 @@ public class NewsConverter implements Converter<NewsDTO, News> {
 
     @Override
     public News fromDTO(NewsDTO newsDTO) {
-        return new News
-                .NewsBuilder()
-                .setId(newsDTO.getId())
-                .setTitle(newsDTO.getTitle())
-                .setContent(newsDTO.getContent())
-                .setAuthor(
+        return News
+                .builder()
+                .id(newsDTO.getId())
+                .title(newsDTO.getTitle())
+                .content(newsDTO.getContent())
+                .author(
                         authorRepository.findById(
                                 newsDTO.getAuthorId()))
 //                .setComments(
@@ -34,8 +34,8 @@ public class NewsConverter implements Converter<NewsDTO, News> {
 //                .setTags(
 //                        tagRepository.findByNewsId(
 //                                newsDTO.getId()))
-                .setCreated(newsDTO.getCreated())
-                .setModified(newsDTO.getModified())
+                .created(newsDTO.getCreated())
+                .modified(newsDTO.getModified())
                 .build();
     }
 

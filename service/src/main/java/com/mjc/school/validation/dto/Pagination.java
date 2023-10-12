@@ -1,18 +1,23 @@
 package com.mjc.school.validation.dto;
 
-import com.mjc.school.validation.dto.abstraction.AbstractEntityDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
+@Data
+@AllArgsConstructor
 public class Pagination<T>
-        extends AbstractEntityDTO
         implements Serializable {
     private static final int DEFAULT_SIZE = 1;
     private static final int DEFAULT_NUMBER_PAGE = 1;
-    private List<T> entity;
 
+    private List<T> entity;
     private int size;
     private int numberPage;
     private int maxNumberPage;

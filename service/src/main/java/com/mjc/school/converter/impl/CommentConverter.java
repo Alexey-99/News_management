@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 public class CommentConverter implements Converter<CommentDTO, Comment> {
     @Override
     public Comment fromDTO(CommentDTO commentDTO) {
-        return new Comment
-                .CommentBuilder()
-                .setId(commentDTO.getId())
-                .setContent(commentDTO.getContent())
-                .setCreated(commentDTO.getCreated())
-                .setModified(commentDTO.getModified())
+        return Comment
+                .builder()
+                .id(commentDTO.getId())
+                .content(commentDTO.getContent())
+                .created(commentDTO.getCreated())
+                .modified(commentDTO.getModified())
                 .build();
     }
 

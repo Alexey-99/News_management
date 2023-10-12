@@ -47,8 +47,7 @@ public class AuthorServiceImpl implements AuthorService {
             authorIdWithAmountOfWrittenNewsPagination;
 
     @Override
-    public boolean create(AuthorDTO authorDTO)
-            throws ServiceException {
+    public boolean create(AuthorDTO authorDTO) {
         return authorRepository.create(
                 authorConverter.fromDTO(authorDTO));
     }
@@ -56,10 +55,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public boolean deleteById(long id)
             throws ServiceException {
-            newsRepository.deleteByAuthorId(id);
-            authorRepository.deleteById(id);
-            return newsRepository.findByAuthorId(id, 1, 5).isEmpty()
-                    && authorRepository.findById(id) == null;
+        newsRepository.deleteByAuthorId(id);
+        authorRepository.deleteById(id);
+        return newsRepository.findByAuthorId(id, 1, 5).isEmpty()
+                && authorRepository.findById(id) == null;
     }
 
     @Override
@@ -123,13 +122,13 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorDTO findByNewsId(long newsId)
             throws ServiceException {
-            Author author = authorRepository.findByNewsId(newsId);
-            if (author != null) {
-                return authorConverter.toDTO(author);
-            } else {
-                log.log(WARN, "Not found objects with author news ID: " + newsId);
-                throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
-            }
+        Author author = authorRepository.findByNewsId(newsId);
+        if (author != null) {
+            return authorConverter.toDTO(author);
+        } else {
+            log.log(WARN, "Not found objects with author news ID: " + newsId);
+            throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
+        }
     }
 
     @Override
@@ -140,10 +139,10 @@ public class AuthorServiceImpl implements AuthorService {
         if (list != null && !list.isEmpty()) {
             return list.stream()
                     .map(author ->
-                            new AuthorIdWithAmountOfWrittenNews
-                                    .AuthorIdWithAmountOfWrittenNewsBuilder()
-                                    .setAuthorId(author.getId())
-                                    .setAmountOfWrittenNews(
+                            AuthorIdWithAmountOfWrittenNews
+                                    .builder()
+                                    .authorId(author.getId())
+                                    .amountOfWrittenNews(
                                             author.getNews() != null
                                                     ? author.getNews().size()
                                                     : 0)
@@ -164,10 +163,10 @@ public class AuthorServiceImpl implements AuthorService {
                 new LinkedList<>(authorRepository.findAll(page, size))
                         .stream()
                         .map(author ->
-                                new AuthorIdWithAmountOfWrittenNews
-                                        .AuthorIdWithAmountOfWrittenNewsBuilder()
-                                        .setAuthorId(author.getId())
-                                        .setAmountOfWrittenNews(
+                                AuthorIdWithAmountOfWrittenNews
+                                        .builder()
+                                        .authorId(author.getId())
+                                        .amountOfWrittenNews(
                                                 author.getNews() != null
                                                         ? author.getNews().size()
                                                         : 0)

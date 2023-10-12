@@ -10,9 +10,9 @@ public class TagConverter implements Converter<TagDTO, Tag> {
 
     @Override
     public Tag fromDTO(TagDTO tagDTO) {
-        return new Tag.TagBuilder()
-                .setId(tagDTO.getId())
-                .setName(tagDTO.getName())
+        return Tag.builder()
+                .id(tagDTO.getId())
+                .name(tagDTO.getName())
                 .build();
     }
 
