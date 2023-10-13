@@ -14,8 +14,7 @@ public interface AuthorService extends CRUDOperationService<AuthorDTO> {
 
     List<AuthorDTO> findByPartOfName(String partOfName);
 
-    AuthorDTO findByNewsId(long newsId)
-            throws ServiceException;
+    AuthorDTO findByNewsId(long newsId) throws ServiceException;
 
     List<AuthorIdWithAmountOfWrittenNewsDTO>
     selectAllAuthorsIdWithAmountOfWrittenNews(int page, int size)
