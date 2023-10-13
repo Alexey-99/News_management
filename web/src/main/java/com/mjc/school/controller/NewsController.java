@@ -141,7 +141,7 @@ public class NewsController {
             Response: true - if successful updated news, if didn't update news - false.
             """, response = Boolean.class)
     @PutMapping(value = "/{id}")
-    public boolean update(@PathVariable
+    public NewsDTO update(@PathVariable
                           @Min(value = 1, message = BAD_ID)
                           long id,
                           @Valid

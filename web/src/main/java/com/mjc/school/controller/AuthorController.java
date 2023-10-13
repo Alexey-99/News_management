@@ -100,7 +100,7 @@ public class AuthorController {
             Response: true - if successful updated author, if didn't update author - false.
             """, response = Boolean.class)
     @PutMapping("/{id}")
-    public ResponseEntity<Boolean> update(
+    public ResponseEntity<AuthorDTO> update(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id,
@@ -110,7 +110,7 @@ public class AuthorController {
             AuthorDTO authorDTO)
             throws ServiceException {
         authorDTO.setId(id);
-        boolean result = authorService.update(authorDTO);
+        AuthorDTO result = authorService.update(authorDTO);
         return new ResponseEntity<>(result, OK);
     }
 

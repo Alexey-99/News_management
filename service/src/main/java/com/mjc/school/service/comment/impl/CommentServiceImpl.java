@@ -16,6 +16,7 @@ import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentCo
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeDesc;
 import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeAsc;
 import com.mjc.school.validation.dto.CommentDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +32,15 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.SORT_ER
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
+@RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
     private static final Logger log = LogManager.getLogger();
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private NewsRepository newsRepository;
-    @Autowired
-    private CommentConverter commentConverter;
-    @Autowired
-    private DateHandler dateHandler;
-    @Autowired
-    private PaginationService<CommentDTO> commentPagination;
+    private final CommentRepository commentRepository;
+    private final NewsRepository newsRepository;
+    private final CommentConverter commentConverter;
+    private final DateHandler dateHandler;
+    private final PaginationService<CommentDTO> commentPagination;
 
     @Override
     public List<CommentDTO> findByNewsId(long newsId, int page, int size)
@@ -152,11 +149,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean update(CommentDTO commentDTO)
+    public CommentDTO update(CommentDTO commentDTO)
             throws ServiceException {
         commentDTO.setModified(dateHandler.getCurrentDate());
-        return commentRepository.update(
-                commentConverter.fromDTO(commentDTO)) != null;
+        return commentConverter.toDTO(commentRepository.update(
+                commentConverter.fromDTO(commentDTO)));
     }
 
     @Override
@@ -165,8 +162,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean deleteByNewsId(long newsId)
-            throws ServiceException {
+    public boolean deleteByNewsId(long newsId) {
         return commentRepository.deleteByNewsId(newsId);
     }
 

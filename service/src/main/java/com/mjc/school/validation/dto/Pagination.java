@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class Pagination<T> implements Serializable {
-    private static final int DEFAULT_SIZE = 1;
+    private static final int DEFAULT_SIZE = 5;
     private static final int DEFAULT_NUMBER_PAGE = 1;
 
     private List<T> entity;
@@ -25,5 +25,13 @@ public class Pagination<T> implements Serializable {
         this.maxNumberPage = DEFAULT_NUMBER_PAGE;
         this.numberPage = DEFAULT_NUMBER_PAGE;
         this.size = DEFAULT_SIZE;
+    }
+
+    public static int getDefaultNumberPage() {
+        return DEFAULT_NUMBER_PAGE;
+    }
+
+    public static int getDefaultSize() {
+        return DEFAULT_SIZE;
     }
 }

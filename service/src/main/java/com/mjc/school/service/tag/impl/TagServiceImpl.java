@@ -9,6 +9,7 @@ import com.mjc.school.repository.impl.news.NewsRepository;
 import com.mjc.school.repository.impl.tag.TagRepository;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.TagDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +24,14 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTI
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_TAGS_WITH_NEWS_ID;
 import static org.apache.logging.log4j.Level.WARN;
 
+@RequiredArgsConstructor
 @Service
 public class TagServiceImpl implements TagService {
     private static final Logger log = LogManager.getLogger();
-    @Autowired
-    private TagRepository tagRepository;
-    @Autowired
-    private NewsRepository newsRepository;
-    @Autowired
-    private TagConverter tagConverter;
-    @Autowired
-    private PaginationService<TagDTO> tagPagination;
+    private final TagRepository tagRepository;
+    private final NewsRepository newsRepository;
+    private final TagConverter tagConverter;
+    private final PaginationService<TagDTO> tagPagination;
 
     @Override
     public boolean create(TagDTO tagDTO) {
@@ -66,10 +64,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public boolean update(TagDTO tagDTO)
+    public TagDTO update(TagDTO tagDTO)
             throws ServiceException {
         Tag tag = tagConverter.fromDTO(tagDTO);
-        return tagRepository.update(tag) != null;
+        return tagConverter.toDTO(tagRepository.update(tag));
     }
 
     @Override

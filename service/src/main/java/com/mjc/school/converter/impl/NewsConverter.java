@@ -23,8 +23,8 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                 .id(newsDTO.getId())
                 .title(newsDTO.getTitle())
                 .content(newsDTO.getContent())
-                .author(authorRepository.findById(
-                        newsDTO.getAuthorId()))
+//                .author(authorRepository.findById(
+//                        newsDTO.getAuthorId()))
                 .comments(commentRepository.findByNewsId(
                         newsDTO.getId()))
                 .tags(tagRepository.findByNewsId(newsDTO.getId()))

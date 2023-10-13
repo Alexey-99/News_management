@@ -1,5 +1,6 @@
 package com.mjc.school.controller;
 
+import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.tag.TagService;
@@ -158,7 +159,7 @@ public class TagController {
             Response: true - if successful updated a tag, if didn't update a tag - false.
             """, response = Boolean.class)
     @PutMapping("/{id}")
-    public ResponseEntity<Boolean> update(
+    public ResponseEntity<TagDTO> update(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id,
@@ -168,7 +169,7 @@ public class TagController {
             TagDTO tagDTO)
             throws ServiceException {
         tagDTO.setId(id);
-        boolean result = tagService.update(tagDTO);
+        TagDTO result = tagService.update(tagDTO);
         return new ResponseEntity<>(result, OK);
     }
 

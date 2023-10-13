@@ -13,66 +13,74 @@ import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_AUTHOR_NEWS_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
+import static com.mjc.school.validation.dto.Pagination.getDefaultNumberPage;
+import static com.mjc.school.validation.dto.Pagination.getDefaultSize;
 import static org.apache.logging.log4j.Level.WARN;
 
+@RequiredArgsConstructor
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private static final Logger log = LogManager.getLogger();
-    @Autowired
-    private AuthorRepository authorRepository;
-    @Autowired
-    private NewsRepository newsRepository;
-    @Autowired
-    private AuthorConverter authorConverter;
-    @Autowired
-    private AuthorIdWithAmountOfWrittenNewsConverter
+    private final AuthorRepository authorRepository;
+    private final NewsRepository newsRepository;
+    private final AuthorConverter authorConverter;
+    private final AuthorIdWithAmountOfWrittenNewsConverter
             authorIdWithAmountOfWrittenNewsConverter;
-    @Autowired
-    private PaginationService<AuthorDTO> authorPagination;
-    @Autowired
-    private PaginationService<AuthorIdWithAmountOfWrittenNewsDTO>
+    private final PaginationService<AuthorDTO> authorPagination;
+    private final PaginationService<AuthorIdWithAmountOfWrittenNewsDTO>
             authorIdWithAmountOfWrittenNewsPagination;
 
+    @Transactional
     @Override
     public boolean create(AuthorDTO authorDTO) {
-        return authorRepository.create(
-                authorConverter.fromDTO(authorDTO));
+        Author author = authorConverter.fromDTO(authorDTO);
+        authorRepository.save(author);
+        return authorRepository.existsById(author.getId());
     }
 
+    @Transactional
     @Override
-    public boolean deleteById(long id)
-            throws ServiceException {
-        newsRepository.deleteByAuthorId(id);
+    public boolean deleteById(long id) {
         authorRepository.deleteById(id);
-        return newsRepository.findByAuthorId(id, 1, 5).isEmpty()
-                && authorRepository.findById(id) == null;
+        return !authorRepository.existsById(id);
     }
 
+    @Transactional
     @Override
-    public boolean update(AuthorDTO authorDTO)
-            throws ServiceException {
-        return authorRepository.update(
-                authorConverter.fromDTO(authorDTO)) != null;
+    public AuthorDTO update(AuthorDTO authorDTO) throws ServiceException {
+        if (authorRepository.existsById(authorDTO.getId())) {
+            authorRepository.update(authorDTO.getId(), authorDTO.getName());
+            return authorConverter.toDTO(
+                    authorRepository.findById(authorDTO.getId()).get());
+        } else {
+            log.log(WARN, "Not found object with this ID: " + authorDTO.getId());
+            throw new ServiceException(NO_ENTITY_WITH_ID);
+        }
     }
 
     @Override
     public List<AuthorDTO> findAll(int page, int size) throws ServiceException {
-        List<Author> authorsList = authorRepository.findAll(page, size);
-        if (!authorsList.isEmpty()) {
-            return authorsList
+        Page<Author> authorPage = authorRepository.findAll(PageRequest.of(calcNumberFirstElement(page, size), size));
+        if (!authorPage.isEmpty()) {
+            return authorPage
                     .stream()
                     .map(authorConverter::toDTO)
                     .toList();
@@ -83,12 +91,10 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDTO findById(long id)
-            throws ServiceException {
-        Author author = authorRepository.findById(id);
-        if (author != null) {
-            //author.setNews(newsRepository.findByAuthorId(author.getId()));
-            return authorConverter.toDTO(author);
+    public AuthorDTO findById(long id) throws ServiceException {
+        Optional<Author> author = authorRepository.findById(id);
+        if (author.isPresent()) {
+            return authorConverter.toDTO(author.get());
         } else {
             log.log(WARN, "Not found object with this ID: " + id);
             throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -98,31 +104,34 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorDTO> findByPartOfName(String partOfName, int page, int size)
             throws ServiceException {
-
-        String pattern = partOfName.toLowerCase();
-        Pattern p = Pattern.compile(pattern);
-        List<Author> authorsList = authorRepository.findAll()
-                .stream()
-                .filter(author -> {
-                    String authorName = author.getName().toLowerCase();
-                    return (p.matcher(authorName).find())
-                            || (p.matcher(authorName).lookingAt())
-                            || (authorName.matches(pattern));
-                }).toList();
-        if (!authorsList.isEmpty()) {
-            return authorsList.stream()
-                    .map(author -> authorConverter.toDTO(author))
+        List<Author> authors = authorRepository.findByPartOfName(partOfName, calcNumberFirstElement(page, size), size);
+        if (!authors.isEmpty()) {
+            return authors.stream()
+                    .map(authorConverter::toDTO)
                     .toList();
         } else {
-            log.log(WARN, "Not found object with this part of name: " + partOfName);
-            throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
+            authors = authorRepository.findByPartOfName(partOfName, calcNumberFirstElement(getDefaultNumberPage(), getDefaultSize()), getDefaultSize());
+            if (!authors.isEmpty()) {
+                return authors.stream()
+                        .map(authorConverter::toDTO)
+                        .toList();
+            } else {
+                log.log(WARN, "Not found object with this part of name: " + partOfName);
+                throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
+            }
         }
+    }
+
+    private int calcNumberFirstElement(int page, int size) {
+        int numberFirstElement = size * (page - 1);
+        return numberFirstElement >= 0 ?
+                numberFirstElement : 1;
     }
 
     @Override
     public AuthorDTO findByNewsId(long newsId)
             throws ServiceException {
-        Author author = authorRepository.findByNewsId(newsId);
+        Author author = null;//authorRepository.findByNewsId(newsId);
         if (author != null) {
             return authorConverter.toDTO(author);
         } else {
@@ -135,7 +144,7 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorIdWithAmountOfWrittenNewsDTO>
     selectAllAuthorsIdWithAmountOfWrittenNews(int page, int size)
             throws ServiceException {
-        List<Author> list = authorRepository.findAll(page, size);
+        List<Author> list = null;//authorRepository.findAll(page, size);
         if (list != null && !list.isEmpty()) {
             return list.stream()
                     .map(author ->
@@ -159,19 +168,19 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorIdWithAmountOfWrittenNewsDTO>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc(int page, int size)
             throws ServiceException {
-        List<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsList =
-                new LinkedList<>(authorRepository.findAll(page, size))
-                        .stream()
-                        .map(author ->
-                                AuthorIdWithAmountOfWrittenNews
-                                        .builder()
-                                        .authorId(author.getId())
-                                        .amountOfWrittenNews(
-                                                author.getNews() != null
-                                                        ? author.getNews().size()
-                                                        : 0)
-                                        .build())
-                        .toList();
+        List<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsList = new ArrayList<AuthorIdWithAmountOfWrittenNews>()
+//                new LinkedList<>(authorRepository.findAll(page, size))
+                .stream()
+//                        .map(author ->
+//                                AuthorIdWithAmountOfWrittenNews
+//                                        .builder()
+//                                        .authorId(author.getId())
+//                                        .amountOfWrittenNews(
+//                                                author.getNews() != null
+//                                                        ? author.getNews().size()
+//                                                        : 0)
+//                                        .build())
+                .toList();
         if (!authorIdWithAmountOfWrittenNewsList.isEmpty()) {
             authorIdWithAmountOfWrittenNewsList.sort(
                     new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
@@ -203,4 +212,6 @@ public class AuthorServiceImpl implements AuthorService {
                 .numberPage(page)
                 .build();
     }
+
+
 }

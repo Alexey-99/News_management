@@ -209,7 +209,7 @@ public class CommentController {
             Response: true - if successful updated comment, if didn't update comment - false.
             """, response = Boolean.class)
     @PutMapping("/{id}")
-    public ResponseEntity<Boolean> update(
+    public ResponseEntity<CommentDTO> update(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id,
@@ -219,7 +219,7 @@ public class CommentController {
             CommentDTO commentDTO)
             throws ServiceException {
         commentDTO.setId(id);
-        boolean result = commentService.update(commentDTO);
+        CommentDTO result = commentService.update(commentDTO);
         return new ResponseEntity<>(result, OK);
     }
 

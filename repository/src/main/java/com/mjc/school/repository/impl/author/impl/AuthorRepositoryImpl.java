@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 @Repository
 public class AuthorRepositoryImpl
         extends CRUDOperationRepositoryImpl<Author>
-        implements AuthorRepository {
+       /* implements AuthorRepository*/ {
     private final EntityManager entityManager;
 
     @Autowired
@@ -34,7 +34,7 @@ public class AuthorRepositoryImpl
         return findById(author.getId()) != null;
     }
 
-    @Override
+    //@Override
     public Author findByNewsId(long newsId) {
         CriteriaBuilder criteriaBuilder =
                 entityManager.getCriteriaBuilder();
@@ -51,7 +51,7 @@ public class AuthorRepositoryImpl
                 .getSingleResult();
     }
 
-    @Override
+   // @Override
     public boolean isNotExistsAuthorWithName(String name) {
         CriteriaBuilder criteriaBuilder =
                 entityManager.getCriteriaBuilder();

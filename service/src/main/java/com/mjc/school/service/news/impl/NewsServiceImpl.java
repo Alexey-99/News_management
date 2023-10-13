@@ -57,7 +57,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean create(NewsDTO newsDTO) {
-        Author author = authorRepository.findById(newsDTO.getAuthorId());
+        Author author = null;//authorRepository.findById(newsDTO.getAuthorId());
         if (author != null) {
             newsDTO.setCreated(dateHandler.getCurrentDate());
             newsDTO.setModified(dateHandler.getCurrentDate());
@@ -111,14 +111,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public boolean update(NewsDTO newsDTO)
+    public NewsDTO update(NewsDTO newsDTO)
             throws ServiceException {
         if ((authorRepository.findById(newsDTO.getAuthorId()) != null)) {
             newsDTO.setModified(dateHandler.getCurrentDate());
-            return newsRepository.update(
-                    newsConverter.fromDTO(newsDTO)) != null;
+            return newsConverter.toDTO(newsRepository.update(
+                    newsConverter.fromDTO(newsDTO)));
         } else {
-            return false;
+            return null;
         }
     }
 
