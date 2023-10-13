@@ -4,19 +4,21 @@ import com.mjc.school.exception.ServiceException;
 
 import java.util.List;
 
-public interface CRUDOperationService<DTO> {
-    boolean create(DTO entity)
+public interface CRUDOperationService<T> {
+    boolean create(T entity)
             throws ServiceException;
 
     boolean deleteById(long id)
             throws ServiceException;
 
-    DTO update(DTO entity)
+    T update(T entity)
             throws ServiceException;
 
-    List<DTO> findAll(int page, int size)
+    List<T> findAll(int page, int size)
             throws ServiceException;
 
-    DTO findById(long id)
+    List<T> findAll();
+
+    T findById(long id)
             throws ServiceException;
 }

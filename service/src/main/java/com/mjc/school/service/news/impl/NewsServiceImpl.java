@@ -18,13 +18,15 @@ import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparat
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeAsc;
 import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeDesc;
 import com.mjc.school.validation.dto.NewsDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_AUTHOR_NAME;
@@ -39,30 +41,28 @@ import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.SORT_ER
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
+@RequiredArgsConstructor
 @Service
 public class NewsServiceImpl implements NewsService {
     private static final Logger log = LogManager.getLogger();
-    @Autowired
-    private NewsRepository newsRepository;
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private AuthorRepository authorRepository;
-    @Autowired
-    private NewsConverter newsConverter;
-    @Autowired
-    private DateHandler dateHandler;
-    @Autowired
-    private PaginationService<NewsDTO> newsPagination;
+    private final NewsRepository newsRepository;
+    private final CommentRepository commentRepository;
+    private final AuthorRepository authorRepository;
+    private final NewsConverter newsConverter;
+    private final DateHandler dateHandler;
+    private final PaginationService<NewsDTO> newsPagination;
 
+    @Transactional
     @Override
     public boolean create(NewsDTO newsDTO) {
-        Author author = null;//authorRepository.findById(newsDTO.getAuthorId());
-        if (author != null) {
+        Optional<Author> author = authorRepository.findById(newsDTO.getAuthorId());
+        if (author.isPresent()) {
             newsDTO.setCreated(dateHandler.getCurrentDate());
             newsDTO.setModified(dateHandler.getCurrentDate());
-            return newsRepository.create(
-                    newsConverter.fromDTO(newsDTO));
+            News news = newsConverter.fromDTO(newsDTO);
+            news.setAuthor(author.get());
+            newsRepository.save(news);
+            return newsRepository.existsById(news.getId());
         } else {
             return false;
         }
@@ -70,7 +70,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean deleteById(long newsId) {
-        newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
+        //newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
         commentRepository.deleteByNewsId(newsId);
         newsRepository.deleteById(newsId);
         return newsRepository.findById(newsId) == null;
@@ -78,15 +78,15 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean deleteByAuthorId(long authorId)
-            throws ServiceException, IncorrectParameterException {
+            throws IncorrectParameterException {
         if (authorRepository.findById(authorId) != null) {
             for (News news : newsRepository.findAll()
                     .stream()
                     .filter(news -> news.getAuthor().getId() == authorId)
                     .toList()) {
-                newsRepository.deleteAllTagsFromNewsByNewsId(news.getId());
+                //newsRepository.deleteAllTagsFromNewsByNewsId(news.getId());
                 commentRepository.deleteByNewsId(news.getId());
-                newsRepository.deleteByAuthorId(authorId);
+                //newsRepository.deleteByAuthorId(authorId);
             }
             return newsRepository.findAll()
                     .stream()
@@ -102,7 +102,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public boolean deleteAllTagsFromNewsByNewsId(long newsId)
             throws ServiceException {
-        newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
+        //newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
         return newsRepository.findAll()
                 .stream()
                 .filter(news -> !news.getTags().isEmpty())
@@ -115,8 +115,9 @@ public class NewsServiceImpl implements NewsService {
             throws ServiceException {
         if ((authorRepository.findById(newsDTO.getAuthorId()) != null)) {
             newsDTO.setModified(dateHandler.getCurrentDate());
-            return newsConverter.toDTO(newsRepository.update(
-                    newsConverter.fromDTO(newsDTO)));
+            return null;
+//            newsConverter.toDTO(newsRepository.update(
+//                    newsConverter.fromDTO(newsDTO)));
         } else {
             return null;
         }
@@ -138,56 +139,59 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsDTO findById(long id) throws ServiceException {
-        News news = newsRepository.findById(id);
-        if (news != null) {
-            return newsConverter.toDTO(news);
-        } else {
-            log.log(WARN, "Not found news with this ID: " + id);
-            throw new ServiceException(NO_ENTITY_WITH_ID);
-        }
+        //News news = newsRepository.findById(id);
+//        if (news != null) {
+//            return newsConverter.toDTO(news);
+//        } else {
+//            log.log(WARN, "Not found news with this ID: " + id);
+//            throw new ServiceException(NO_ENTITY_WITH_ID);
+//        }
+        return null;
     }
 
     @Override
     public List<NewsDTO> findByTagName(String tagName, int page, int size)
             throws ServiceException {
-        List<News> newsList = newsRepository.findByTagName(tagName, page, size);
-        if (!newsList.isEmpty()) {
-            return newsList.stream()
-                    .map(news -> newsConverter.toDTO(news))
-                    .toList();
-        } else {
-            log.log(WARN, "Not found news with entered tag name: " + tagName);
-            throw new ServiceException(NO_NEWS_WITH_TAG_NAME);
-        }
-
+//        List<News> newsList = newsRepository.findByTagName(tagName, page, size);
+//        if (!newsList.isEmpty()) {
+//            return newsList.stream()
+//                    .map(news -> newsConverter.toDTO(news))
+//                    .toList();
+//        } else {
+//            log.log(WARN, "Not found news with entered tag name: " + tagName);
+//            throw new ServiceException(NO_NEWS_WITH_TAG_NAME);
+//        }
+        return null;
     }
 
     @Override
     public List<NewsDTO> findByTagId(long tagId, int page, int size)
             throws ServiceException {
-        List<News> newsList = newsRepository.findByTagId(tagId, page, size);
-        if (!newsList.isEmpty()) {
-            return newsList.stream()
-                    .map(news -> newsConverter.toDTO(news))
-                    .toList();
-        } else {
-            log.log(WARN, "Not found news with entered tag ID: " + tagId);
-            throw new ServiceException(NO_NEWS_WITH_TAG_ID);
-        }
+//        List<News> newsList = newsRepository.findByTagId(tagId, page, size);
+//        if (!newsList.isEmpty()) {
+//            return newsList.stream()
+//                    .map(news -> newsConverter.toDTO(news))
+//                    .toList();
+//        } else {
+//            log.log(WARN, "Not found news with entered tag ID: " + tagId);
+//            throw new ServiceException(NO_NEWS_WITH_TAG_ID);
+//        }
+        return null;
     }
 
     @Override
     public List<NewsDTO> findByAuthorName(String authorName, int page, int size)
             throws ServiceException {
-        List<News> newsList = newsRepository.findByAuthorName(authorName, page, size);
-        if (!newsList.isEmpty()) {
-            return newsList.stream()
-                    .map(news -> newsConverter.toDTO(news))
-                    .toList();
-        } else {
-            log.log(WARN, "Not found news with entered author name: " + authorName);
-            throw new ServiceException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
-        }
+//        List<News> newsList = newsRepository.findByAuthorName(authorName, page, size);
+//        if (!newsList.isEmpty()) {
+//            return newsList.stream()
+//                    .map(news -> newsConverter.toDTO(news))
+//                    .toList();
+//        } else {
+//            log.log(WARN, "Not found news with entered author name: " + authorName);
+//            throw new ServiceException(BAD_PARAMETER_PART_OF_AUTHOR_NAME);
+//        }
+        return null;
     }
 
     @Override

@@ -8,7 +8,6 @@ import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.impl.author.AuthorRepository;
-import com.mjc.school.repository.impl.news.NewsRepository;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
 import com.mjc.school.validation.dto.AuthorDTO;
@@ -21,18 +20,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_AUTHOR_NEWS_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
-import static com.mjc.school.validation.dto.Pagination.getDefaultNumberPage;
-import static com.mjc.school.validation.dto.Pagination.getDefaultSize;
 import static org.apache.logging.log4j.Level.WARN;
 
 @RequiredArgsConstructor
@@ -40,13 +35,10 @@ import static org.apache.logging.log4j.Level.WARN;
 public class AuthorServiceImpl implements AuthorService {
     private static final Logger log = LogManager.getLogger();
     private final AuthorRepository authorRepository;
-    private final NewsRepository newsRepository;
     private final AuthorConverter authorConverter;
     private final AuthorIdWithAmountOfWrittenNewsConverter
             authorIdWithAmountOfWrittenNewsConverter;
-    private final PaginationService<AuthorDTO> authorPagination;
-    private final PaginationService<AuthorIdWithAmountOfWrittenNewsDTO>
-            authorIdWithAmountOfWrittenNewsPagination;
+    private final PaginationService authorPagination;
 
     @Transactional
     @Override
@@ -78,7 +70,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDTO> findAll(int page, int size) throws ServiceException {
-        Page<Author> authorPage = authorRepository.findAll(PageRequest.of(calcNumberFirstElement(page, size), size));
+        Page<Author> authorPage = authorRepository.findAll(
+                PageRequest.of(
+                        authorPagination.calcNumberFirstElement(page, size),
+                        size));
         if (!authorPage.isEmpty()) {
             return authorPage
                     .stream()
@@ -88,6 +83,15 @@ public class AuthorServiceImpl implements AuthorService {
             log.log(WARN, "Not found objects");
             throw new ServiceException(NO_ENTITY);
         }
+    }
+
+    @Override
+    public List<AuthorDTO> findAll() {
+        return authorRepository.findAll()
+                .stream()
+                .map(authorConverter::toDTO)
+                .toList();
+
     }
 
     @Override
@@ -104,34 +108,34 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorDTO> findByPartOfName(String partOfName, int page, int size)
             throws ServiceException {
-        List<Author> authors = authorRepository.findByPartOfName(partOfName, calcNumberFirstElement(page, size), size);
+        String patternPartOfName = "%".concat(partOfName).concat("%");
+        List<Author> authors = authorRepository.findByPartOfName(
+                patternPartOfName,
+                authorPagination.calcNumberFirstElement(page, size),
+                size);
         if (!authors.isEmpty()) {
             return authors.stream()
                     .map(authorConverter::toDTO)
                     .toList();
         } else {
-            authors = authorRepository.findByPartOfName(partOfName, calcNumberFirstElement(getDefaultNumberPage(), getDefaultSize()), getDefaultSize());
-            if (!authors.isEmpty()) {
-                return authors.stream()
-                        .map(authorConverter::toDTO)
-                        .toList();
-            } else {
-                log.log(WARN, "Not found object with this part of name: " + partOfName);
-                throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
-            }
+            log.log(WARN, "Not found object with this part of name: " + partOfName);
+            throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
         }
     }
 
-    private int calcNumberFirstElement(int page, int size) {
-        int numberFirstElement = size * (page - 1);
-        return numberFirstElement >= 0 ?
-                numberFirstElement : 1;
+    @Override
+    public List<AuthorDTO> findByPartOfName(String partOfName) {
+        String patternPartOfName = "%".concat(partOfName).concat("%");
+        return authorRepository.findByPartOfName(patternPartOfName)
+                .stream()
+                .map(authorConverter::toDTO)
+                .toList();
     }
 
     @Override
     public AuthorDTO findByNewsId(long newsId)
             throws ServiceException {
-        Author author = null;//authorRepository.findByNewsId(newsId);
+        Author author = authorRepository.findByNewsId(newsId);
         if (author != null) {
             return authorConverter.toDTO(author);
         } else {
@@ -144,9 +148,12 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorIdWithAmountOfWrittenNewsDTO>
     selectAllAuthorsIdWithAmountOfWrittenNews(int page, int size)
             throws ServiceException {
-        List<Author> list = null;//authorRepository.findAll(page, size);
-        if (list != null && !list.isEmpty()) {
-            return list.stream()
+        Page<Author> authorPage = authorRepository.findAll(
+                PageRequest.of(
+                        authorPagination.calcNumberFirstElement(page, size),
+                        size));
+        if (!authorPage.isEmpty()) {
+            return authorPage.stream()
                     .map(author ->
                             AuthorIdWithAmountOfWrittenNews
                                     .builder()
@@ -166,24 +173,42 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorIdWithAmountOfWrittenNewsDTO>
+    selectAllAuthorsIdWithAmountOfWrittenNews() {
+        return authorRepository.findAll()
+                .stream()
+                .map(author ->
+                        AuthorIdWithAmountOfWrittenNews
+                                .builder()
+                                .authorId(author.getId())
+                                .amountOfWrittenNews(
+                                        author.getNews() != null
+                                                ? author.getNews().size()
+                                                : 0)
+                                .build())
+                .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
+                .toList();
+    }
+
+    @Override
+    public List<AuthorIdWithAmountOfWrittenNewsDTO>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc(int page, int size)
             throws ServiceException {
-        List<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsList = new ArrayList<AuthorIdWithAmountOfWrittenNews>()
-//                new LinkedList<>(authorRepository.findAll(page, size))
-                .stream()
-//                        .map(author ->
-//                                AuthorIdWithAmountOfWrittenNews
-//                                        .builder()
-//                                        .authorId(author.getId())
-//                                        .amountOfWrittenNews(
-//                                                author.getNews() != null
-//                                                        ? author.getNews().size()
-//                                                        : 0)
-//                                        .build())
-                .toList();
+        List<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsList =
+                new LinkedList<>(authorRepository.sortAllAuthorsWithAmountWrittenNewsDesc(
+                                authorPagination.calcNumberFirstElement(page, size),
+                                size)
+                        .stream()
+                        .map(author ->
+                                AuthorIdWithAmountOfWrittenNews
+                                        .builder()
+                                        .authorId(author.getId())
+                                        .amountOfWrittenNews(
+                                                author.getNews() != null
+                                                        ? author.getNews().size()
+                                                        : 0)
+                                        .build())
+                        .toList());
         if (!authorIdWithAmountOfWrittenNewsList.isEmpty()) {
-            authorIdWithAmountOfWrittenNewsList.sort(
-                    new SortAuthorsWithAmountOfWrittenNewsComparatorImpl());
             return authorIdWithAmountOfWrittenNewsList.stream()
                     .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
                     .toList();
@@ -194,24 +219,55 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Pagination<AuthorDTO> getPagination(
-            List<AuthorDTO> list,
-            int size, int page) {
-        return new Pagination<>();
+    public List<AuthorIdWithAmountOfWrittenNewsDTO>
+    sortAllAuthorsIdWithAmountOfWrittenNewsDesc() {
+        return new LinkedList<>(authorRepository.sortAllAuthorsWithAmountWrittenNewsDesc()
+                .stream()
+                .map(author ->
+                        AuthorIdWithAmountOfWrittenNews
+                                .builder()
+                                .authorId(author.getId())
+                                .amountOfWrittenNews(
+                                        author.getNews() != null
+                                                ? author.getNews().size()
+                                                : 0)
+                                .build())
+                .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
+                .toList());
     }
 
-
-    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
-    getPaginationAuthorIdWithAmountOfWrittenNews(
-            List<AuthorIdWithAmountOfWrittenNewsDTO> list,
-            int size, int page) {
+    @Override
+    public Pagination<AuthorDTO> getPagination(
+            List<AuthorDTO> elementsOnPage,
+            List<AuthorDTO> allElementsList,
+            int page, int size) {
         return Pagination
-                .<AuthorIdWithAmountOfWrittenNewsDTO>builder()
-                .entity(list)
+                .<AuthorDTO>builder()
+                .entity(elementsOnPage)
                 .size(size)
                 .numberPage(page)
+                .maxNumberPage(
+                        authorPagination.calcMaxNumberPage(
+                                allElementsList.size(),
+                                size))
                 .build();
     }
 
-
+    @Override
+    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
+    getPaginationAuthorIdWithAmountOfWrittenNews(
+            List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage,
+            List<AuthorIdWithAmountOfWrittenNewsDTO> allElementsList,
+            int page, int size) {
+        return Pagination
+                .<AuthorIdWithAmountOfWrittenNewsDTO>builder()
+                .entity(elementsOnPage)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(
+                        authorPagination.calcMaxNumberPage(
+                                allElementsList.size(),
+                                size))
+                .build();
+    }
 }

@@ -48,9 +48,9 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> commentList = commentRepository.findByNewsId(newsId, page, size);
         if (!commentList.isEmpty()) {
             for (Comment comment : commentList) {
-                comment.setNews(
-                        newsRepository.findById(
-                                comment.getNews().getId()));
+//                comment.setNews(
+//                        newsRepository.findById(
+//                                comment.getNews().getId()));
             }
             return commentList.stream()
                     .map(comment -> commentConverter.toDTO(comment))
@@ -66,9 +66,9 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> commentList = commentRepository.findAll();
         if (!commentList.isEmpty()) {
             for (Comment comment : commentList) {
-                comment.setNews(
-                        newsRepository.findById(
-                                comment.getNews().getId()));
+//                comment.setNews(
+//                        newsRepository.findById(
+//                                comment.getNews().getId()));
             }
             return commentList.stream()
                     .map(comment -> commentConverter.toDTO(comment))
@@ -84,9 +84,9 @@ public class CommentServiceImpl implements CommentService {
             throws ServiceException {
         Comment comment = commentRepository.findById(id);
         if (comment != null) {
-            comment.setNews(
-                    newsRepository.findById(
-                            comment.getNews().getId()));
+//            comment.setNews(
+//                    newsRepository.findById(
+//                            comment.getNews().getId()));
             return commentConverter.toDTO(comment);
         } else {
             log.log(WARN, "Not found object with this ID: " + id);

@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static org.apache.logging.log4j.Level.WARN;
-
 public class IsNotExistsNewsTitleImpl
         implements ConstraintValidator<IsNotExistsNewsTitle, String> {
     private static final Logger log = LogManager.getLogger();
@@ -20,12 +18,12 @@ public class IsNotExistsNewsTitleImpl
     @Override
     public boolean isValid(String title,
                            ConstraintValidatorContext constraintValidatorContext) {
-        boolean result = false;
-        if (!newsRepository.isExistsNewsWithTitle(title)) {
-            result = true;
-        } else {
-            log.log(WARN, "News with title '" + title + "' exists.");
-        }
+        boolean result = true;
+//        if (!newsRepository.isExistsNewsWithTitle(title)) { // TODO newsRepository.isExistsNewsWithTitle(title)
+//            result = true;
+//        } else {
+//            log.log(WARN, "News with title '" + title + "' exists.");
+//        }
         return result;
     }
 }

@@ -1,6 +1,5 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
@@ -10,7 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -28,25 +27,20 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import java.util.List;
-
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
 import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
-import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER_PAGE;
-import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping(value = "/api/v2/author")
 @Api("Operations for authors in the application")
 public class AuthorController {
-    @Autowired
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful created a author"),
@@ -126,19 +120,17 @@ public class AuthorController {
             """, response = Pagination.class)
     @GetMapping(value = "/all",
             produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AuthorDTO>> findAll(
-            @RequestParam(value = "size",
-                    required = false,
-                    defaultValue = DEFAULT_SIZE)
+    public ResponseEntity<Pagination<AuthorDTO>> findAll(
+            @RequestAttribute(value = "size")
             int size,
-            @RequestParam(value = "page",
-                    required = false,
-                    defaultValue = DEFAULT_NUMBER_PAGE)
+            @RequestAttribute(value = "page")
             int page)
             throws ServiceException {
-        return ResponseEntity.ok()
-                .contentType(APPLICATION_JSON)
-                .body(authorService.findAll(page, size));
+        return new ResponseEntity<>(
+                authorService.getPagination(
+                        authorService.findAll(page, size),
+                        authorService.findAll(),
+                        page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -151,12 +143,12 @@ public class AuthorController {
             View author by id
             """, response = AuthorDTO.class)
     @GetMapping("/{id}")
-    public AuthorDTO findById(
+    public ResponseEntity<AuthorDTO> findById(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long id)
             throws ServiceException {
-        return authorService.findById(id);
+        return new ResponseEntity<>(authorService.findById(id), OK);
     }
 
     @ApiResponses(value = {
@@ -170,23 +162,21 @@ public class AuthorController {
             Response: pagination with authors.
             """, response = Pagination.class)
     @GetMapping("/part-name/{partOfName}")
-    public Pagination<AuthorDTO> findByPartOfName(
+    public ResponseEntity<Pagination<AuthorDTO>> findByPartOfName(
             @PathVariable
             @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
             @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
             String partOfName,
-            @RequestParam(value = "size",
-                    required = false,
-                    defaultValue = DEFAULT_SIZE)
+            @RequestAttribute(value = "size")
             int size,
-            @RequestParam(value = "page",
-                    required = false,
-                    defaultValue = DEFAULT_NUMBER_PAGE)
+            @RequestAttribute(value = "page")
             int page)
-            throws ServiceException, IncorrectParameterException {
-        return authorService.getPagination(
-                authorService.findByPartOfName(partOfName, page, size),
-                size, page);
+            throws ServiceException {
+        return new ResponseEntity<>(
+                authorService.getPagination(
+                        authorService.findByPartOfName(partOfName, page, size),
+                        authorService.findByPartOfName(partOfName),
+                        page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -199,12 +189,12 @@ public class AuthorController {
             View author by news id.
             """, response = AuthorDTO.class)
     @GetMapping("/news/{newsId}")
-    public AuthorDTO findByNewsId(
+    public ResponseEntity<AuthorDTO> findByNewsId(
             @PathVariable
             @Min(value = 1, message = BAD_ID)
             long newsId)
-            throws ServiceException, IncorrectParameterException {
-        return authorService.findByNewsId(newsId);
+            throws ServiceException {
+        return new ResponseEntity<>(authorService.findByNewsId(newsId), OK);
     }
 
     @ApiResponses(value = {
@@ -218,19 +208,18 @@ public class AuthorController {
             Response: objects with author id and amount written news, with pagination.
             """, response = Pagination.class)
     @GetMapping("/amount-news")
-    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsIdWithAmountOfWrittenNews(
-            @RequestParam(value = "size",
-                    required = false,
-                    defaultValue = DEFAULT_SIZE)
+    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>>
+    selectAllAuthorsIdWithAmountOfWrittenNews(
+            @RequestAttribute(value = "size")
             int size,
-            @RequestParam(value = "page",
-                    required = false,
-                    defaultValue = DEFAULT_NUMBER_PAGE)
+            @RequestAttribute(value = "page")
             int page)
             throws ServiceException {
-        return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(page, size),
-                page, size);
+        return new ResponseEntity<>(
+                authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
+                        authorService.selectAllAuthorsIdWithAmountOfWrittenNews(page, size),
+                        authorService.selectAllAuthorsIdWithAmountOfWrittenNews(),
+                        page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -244,23 +233,17 @@ public class AuthorController {
             Response: pagination with objects with author id and amount written news.
             """, response = Pagination.class)
     @GetMapping("/sort/amount-news")
-    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
+    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
-            @RequestParam(value = "size",
-                    required = false,
-                    defaultValue = DEFAULT_SIZE)
-            @Min(value = 1,
-                    message = "pagination.invalid.size.must_be_more_one")
+            @RequestAttribute(value = "size")
             int size,
-            @RequestParam(value = "page",
-                    required = false,
-                    defaultValue = DEFAULT_NUMBER_PAGE)
-            @Min(value = 1,
-                    message = "pagination.invalid.number_page.must_be_more_one")
+            @RequestAttribute(value = "page")
             int page)
             throws ServiceException {
-        return authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(page, size),
-                page, size);
+        return new ResponseEntity<>(
+                authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
+                        authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(page, size),
+                        authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(),
+                        page, size), OK);
     }
 }

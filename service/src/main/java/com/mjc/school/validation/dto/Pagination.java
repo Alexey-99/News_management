@@ -26,12 +26,4 @@ public class Pagination<T> implements Serializable {
         this.numberPage = DEFAULT_NUMBER_PAGE;
         this.size = DEFAULT_SIZE;
     }
-
-    public static int getDefaultNumberPage() {
-        return DEFAULT_NUMBER_PAGE;
-    }
-
-    public static int getDefaultSize() {
-        return DEFAULT_SIZE;
-    }
 }
