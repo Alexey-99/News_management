@@ -9,7 +9,6 @@ import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.impl.author.AuthorRepository;
 import com.mjc.school.service.author.AuthorService;
-import com.mjc.school.service.author.impl.comparator.impl.SortAuthorsWithAmountOfWrittenNewsComparatorImpl;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import lombok.RequiredArgsConstructor;

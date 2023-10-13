@@ -3,23 +3,18 @@ package com.mjc.school.repository.impl.comment.impl;
 import com.mjc.school.entity.Comment;
 import com.mjc.school.repository.impl.CRUDOperationRepositoryImpl;
 import com.mjc.school.repository.impl.comment.CommentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Repository
-public class CommentRepositoryImpl
-        extends CRUDOperationRepositoryImpl<Comment>
-        implements CommentRepository {
+public class CommentRepositoryImpl {
     private final EntityManager entityManager;
 
-    @Autowired
-    protected CommentRepositoryImpl(EntityManager entityManager) {
-        super(entityManager);
-        this.entityManager = entityManager;
-    }
 
     private static final String SELECT_COMMENT_BY_NEWS_ID = """
             SELECT id, content, news_id, created, modified

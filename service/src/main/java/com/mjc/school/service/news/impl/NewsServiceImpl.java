@@ -50,7 +50,7 @@ public class NewsServiceImpl implements NewsService {
     private final AuthorRepository authorRepository;
     private final NewsConverter newsConverter;
     private final DateHandler dateHandler;
-    private final PaginationService<NewsDTO> newsPagination;
+    private final PaginationService newsPagination;
 
     @Transactional
     @Override

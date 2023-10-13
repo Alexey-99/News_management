@@ -19,7 +19,6 @@ import com.mjc.school.validation.dto.CommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -40,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
     private final NewsRepository newsRepository;
     private final CommentConverter commentConverter;
     private final DateHandler dateHandler;
-    private final PaginationService<CommentDTO> commentPagination;
+    private final PaginationService commentPagination;
 
     @Override
     public List<CommentDTO> findByNewsId(long newsId, int page, int size)
