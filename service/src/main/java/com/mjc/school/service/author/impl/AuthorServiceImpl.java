@@ -197,15 +197,14 @@ public class AuthorServiceImpl implements AuthorService {
                                 authorPagination.calcNumberFirstElement(page, size),
                                 size)
                         .stream()
-                        .map(author ->
-                                AuthorIdWithAmountOfWrittenNews
-                                        .builder()
-                                        .authorId(author.getId())
-                                        .amountOfWrittenNews(
-                                                author.getNews() != null
-                                                        ? author.getNews().size()
-                                                        : 0)
-                                        .build())
+                        .map(author -> AuthorIdWithAmountOfWrittenNews
+                                .builder()
+                                .authorId(author.getId())
+                                .amountOfWrittenNews(
+                                        author.getNews() != null
+                                                ? author.getNews().size()
+                                                : 0)
+                                .build())
                         .toList());
         if (!authorIdWithAmountOfWrittenNewsList.isEmpty()) {
             return authorIdWithAmountOfWrittenNewsList.stream()
@@ -222,15 +221,14 @@ public class AuthorServiceImpl implements AuthorService {
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc() {
         return new LinkedList<>(authorRepository.sortAllAuthorsWithAmountWrittenNewsDesc()
                 .stream()
-                .map(author ->
-                        AuthorIdWithAmountOfWrittenNews
-                                .builder()
-                                .authorId(author.getId())
-                                .amountOfWrittenNews(
-                                        author.getNews() != null
-                                                ? author.getNews().size()
-                                                : 0)
-                                .build())
+                .map(author -> AuthorIdWithAmountOfWrittenNews
+                        .builder()
+                        .authorId(author.getId())
+                        .amountOfWrittenNews(
+                                author.getNews() != null
+                                        ? author.getNews().size()
+                                        : 0)
+                        .build())
                 .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
                 .toList());
     }
