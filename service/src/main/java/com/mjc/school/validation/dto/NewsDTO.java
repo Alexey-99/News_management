@@ -17,8 +17,6 @@ import java.io.Serializable;
 
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_AUTHOR_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_CONTENT;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_TITLE;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_NEWS_TITLE_EXISTS;
 
 @Builder
 @AllArgsConstructor
@@ -29,9 +27,9 @@ public class NewsDTO implements Serializable {
     @JsonIgnore
     private long id;
 
-    @NotNull(message = BAD_NEWS_TITLE)
-    @Size(min = 5, max = 30, message = BAD_NEWS_TITLE)
-    @IsNotExistsNewsTitle(message = BAD_PARAMETER_NEWS_TITLE_EXISTS)
+    @NotNull(message = "news_dto.title.not_valid.null")
+    @Size(min = 5, max = 30, message = "news_dto.title.not_valid.size")
+    @IsNotExistsNewsTitle(message = "news_dto.title.not_valid.exists_news_title")
     private String title;
 
     @NotNull(message = BAD_NEWS_CONTENT)

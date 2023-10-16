@@ -8,7 +8,6 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_TAF_NAME_EXISTS;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -17,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = IsNotExistsTagNameImpl.class)
 @Documented
 public @interface IsNotExistsTagName {
-    String message() default BAD_PARAMETER_TAF_NAME_EXISTS;
+    String message() default "";
 
     Class<?>[] groups() default {};
 

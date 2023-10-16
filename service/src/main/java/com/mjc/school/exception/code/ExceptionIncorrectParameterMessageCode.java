@@ -4,10 +4,10 @@ public final class ExceptionIncorrectParameterMessageCode {
     public static final String BAD_ID = "40000";
 
     public static final String BAD_AUTHOR_NAME = "40001";
-    //    public static final String BAD_PARAMETER_PART_OF_AUTHOR_NAME = "40002";
-    public static final String BAD_PARAMETER_AUTHOR_NAME_EXISTS = "40012";
+//    public static final String BAD_PARAMETER_PART_OF_AUTHOR_NAME = "40002";
+//    public static final String BAD_PARAMETER_AUTHOR_NAME_EXISTS = "40012";
 
-    public static final String BAD_COMMENT_CONTENT = "40003";
+//    public static final String BAD_COMMENT_CONTENT = "40003";
 //    public static final String BAD_COMMENT_NEWS_ID = "40004";
 
     public static final String BAD_NEWS_TITLE = "40005";

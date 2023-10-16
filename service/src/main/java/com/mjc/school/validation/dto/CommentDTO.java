@@ -14,10 +14,6 @@ import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_COMMENT_CONTENT;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_COMMENT_NEWS_ID;
-
 @Builder
 @AllArgsConstructor
 @Data
@@ -27,12 +23,12 @@ public class CommentDTO implements Serializable {
     @JsonIgnore
     private long id;
 
-    @NotNull(message = BAD_COMMENT_CONTENT)
-    @Size(min = 3, max = 255, message = BAD_COMMENT_CONTENT)
+    @NotNull(message = "comment_dto.content.not_valid.null")
+    @Size(min = 3, max = 255, message = "comment_dto.content.not_valid.size")
     private String content;
 
-    @Min(value = 1, message = BAD_ID)
-    @IsExistsNewsById(message = NO_ENTITY_WITH_COMMENT_NEWS_ID)
+    @Min(value = 1, message = "comment_dto.news_id.not_valid.min")
+    @IsExistsNewsById(message = "comment_dto.news_id.not_valid.not_exists_news_by_id")
     private long newsId;
 
     private String created;
