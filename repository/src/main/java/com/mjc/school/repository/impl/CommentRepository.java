@@ -8,8 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface CommentRepository
-        extends BaseRepository<Comment, Long> {
+public interface CommentRepository extends BaseRepository<Comment, Long> {
     @Modifying
     @Query(value = """
             UPDATE comments
