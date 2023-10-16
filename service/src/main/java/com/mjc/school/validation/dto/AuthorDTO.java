@@ -23,10 +23,10 @@ public class AuthorDTO implements Serializable {
     @JsonIgnore
     private long id;
 
-    @NotNull(message = "author.name.null")
-    @NotBlank(message = "author.name.is_blank")
-    @Size(min = 3, max = 15, message = "author.name.size_3_15")
-    @IsNotExistsAuthorName(message = "author.name.already_exists")
+    @NotNull(message = "author.name.not_valid.null")
+    @NotBlank(message = "author.name..not_valid.is_blank")
+    @Size(min = 3, max = 15, message = "author.name.not_valid.size")
+    @IsNotExistsAuthorName(message = "author.name.not_valid.already_exists")
     private String name;
 
     private int countNews;
