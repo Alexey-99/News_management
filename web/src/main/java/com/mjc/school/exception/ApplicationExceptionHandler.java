@@ -31,13 +31,6 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errorResponse, NOT_FOUND);
     }
 
-    @ExceptionHandler(IncorrectParameterException.class)
-    public final ResponseEntity<Object> handleIncorrectParameterExceptions(IncorrectParameterException ex) {
-        String details = translator.toLocale(ex.getLocalizedMessage());
-        ErrorResponse errorResponse = new ErrorResponse(BAD_REQUEST.toString(), details);
-        return new ResponseEntity<>(errorResponse, BAD_REQUEST);
-    }
-
     @ExceptionHandler({ConstraintViolationException.class})
     public final ResponseEntity<Object> handleConstraintViolationExceptions(
             ConstraintViolationException ex) {

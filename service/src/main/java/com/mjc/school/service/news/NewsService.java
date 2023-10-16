@@ -1,37 +1,53 @@
 package com.mjc.school.service.news;
 
-import com.mjc.school.exception.IncorrectParameterException;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.service.CRUDOperationService;
-import com.mjc.school.service.pagination.PaginationService;
+import com.mjc.school.service.BaseService;
 import com.mjc.school.service.news.impl.comparator.SortNewsComparator;
 import com.mjc.school.validation.dto.NewsDTO;
 
 import java.util.List;
 
-public interface NewsService
-        extends PaginationService<NewsDTO>,
-        CRUDOperationService<NewsDTO> {
+public interface NewsService extends BaseService<NewsDTO> {
     boolean deleteByAuthorId(long authorId)
-            throws ServiceException, IncorrectParameterException;
-
-    boolean deleteAllTagsFromNewsByNewsId(long newsId)
             throws ServiceException;
 
-    List<NewsDTO> findByTagName(String tagName, int page, int size)
+    boolean deleteAllTagsFromNewsByNewsId(long newsId);
+
+    List<NewsDTO> findByTagName(String tagName,
+                                int page, int size)
             throws ServiceException;
 
-    List<NewsDTO> findByTagId(long tagId, int page, int size)
+    public List<NewsDTO> findByTagName(String tagName);
+
+    List<NewsDTO> findByTagId(long tagId,
+                              int page, int size)
             throws ServiceException;
 
-    List<NewsDTO> findByAuthorName(String authorName, int page, int size)
+    List<NewsDTO> findByTagId(long tagId);
+
+    List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName,
+                                         int page, int size)
             throws ServiceException;
 
-    List<NewsDTO> findByPartOfTitle(String partOfTitle, int page, int size)
+    List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName);
+
+    List<NewsDTO> findByAuthorId(long authorId,
+                                 int page, int size)
             throws ServiceException;
 
-    List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size)
+    List<NewsDTO> findByAuthorId(long authorId);
+
+    List<NewsDTO> findByPartOfTitle(String partOfTitle,
+                                    int page, int size)
             throws ServiceException;
+
+    List<NewsDTO> findByPartOfTitle(String partOfTitle);
+
+    List<NewsDTO> findByPartOfContent(String partOfContent,
+                                      int page, int size)
+            throws ServiceException;
+
+    List<NewsDTO> findByPartOfContent(String partOfContent);
 
     List<NewsDTO> sort(List<NewsDTO> newsList,
                        SortNewsComparator comparator)

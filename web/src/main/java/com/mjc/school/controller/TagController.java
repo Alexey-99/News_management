@@ -1,6 +1,5 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.tag.TagService;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,8 +29,6 @@ import javax.validation.constraints.NotNull;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
 import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
 import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
-import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER_PAGE;
-import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -52,12 +50,10 @@ public class TagController {
             Response: true - if successful created tag, if didn't create tag - false.
             """, response = Boolean.class)
     @PostMapping
-    public ResponseEntity<Boolean> create(
-            @Valid
-            @RequestBody
-            @NotNull(message = BAD_REQUEST_PARAMETER)
-            TagDTO tagDTO)
-            throws ServiceException {
+    public ResponseEntity<Boolean> create(@Valid
+                                          @RequestBody
+                                          @NotNull(message = BAD_REQUEST_PARAMETER)
+                                          TagDTO tagDTO) {
         boolean result = tagService.create(tagDTO);
         return new ResponseEntity<>(result, CREATED);
     }
@@ -73,14 +69,12 @@ public class TagController {
             Response: true - if successful added a tag to news, if didn't add a tag to news - false.
             """, response = Boolean.class)
     @PutMapping("/to-news")
-    public ResponseEntity<Boolean> addToNews(
-            @RequestParam(value = "tag")
-            @Min(value = 1, message = BAD_ID)
-            long tagId,
-            @RequestParam(value = "news")
-            @Min(value = 1, message = BAD_ID)
-            long newsId)
-            throws ServiceException {
+    public ResponseEntity<Boolean> addToNews(@RequestParam(value = "tag")
+                                             @Min(value = 1, message = BAD_ID)
+                                             long tagId,
+                                             @RequestParam(value = "news")
+                                             @Min(value = 1, message = BAD_ID)
+                                             long newsId) {
         boolean result = tagService.addToNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
     }
@@ -96,15 +90,13 @@ public class TagController {
             Response: true - if successful deleted a tag from news, if didn't delete a tag from news - false.
             """, response = Boolean.class)
     @DeleteMapping("/from-news")
-    public ResponseEntity<Boolean> removeTagFromNews(
-            @RequestParam(value = "tag")
-            @Min(value = 1, message = BAD_ID)
-            long tagId,
-            @RequestParam(value = "news")
-            @Min(value = 1, message = BAD_ID)
-            long newsId)
-            throws ServiceException {
-        boolean result = tagService.removeFromNews(tagId, newsId);
+    public ResponseEntity<Boolean> deleteFromNews(@RequestParam(value = "tag")
+                                                  @Min(value = 1, message = BAD_ID)
+                                                  long tagId,
+                                                  @RequestParam(value = "news")
+                                                  @Min(value = 1, message = BAD_ID)
+                                                  long newsId) {
+        boolean result = tagService.deleteFromNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
     }
 
@@ -119,11 +111,9 @@ public class TagController {
             Response: true - if successful deleted a tag, if didn't delete a tag - false.
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteById(
-            @PathVariable
-            @Min(value = 1, message = BAD_ID)
-            long id)
-            throws ServiceException {
+    public ResponseEntity<Boolean> deleteById(@PathVariable
+                                              @Min(value = 1, message = BAD_ID)
+                                              long id) {
         boolean result = tagService.deleteById(id);
         return new ResponseEntity<>(result, OK);
     }
@@ -139,11 +129,9 @@ public class TagController {
             Response: true - if successful deleted a tag from all news, if didn't delete a tag from all news - false.
             """, response = Boolean.class)
     @DeleteMapping("/all-news/{id}")
-    public ResponseEntity<Boolean> deleteFromAllNews(
-            @PathVariable
-            @Min(value = 1, message = BAD_ID)
-            long id)
-            throws ServiceException {
+    public ResponseEntity<Boolean> deleteFromAllNews(@PathVariable
+                                                     @Min(value = 1, message = BAD_ID)
+                                                     long id) {
         boolean result = tagService.deleteFromAllNews(id);
         return new ResponseEntity<>(result, OK);
     }
@@ -159,14 +147,13 @@ public class TagController {
             Response: true - if successful updated a tag, if didn't update a tag - false.
             """, response = Boolean.class)
     @PutMapping("/{id}")
-    public ResponseEntity<TagDTO> update(
-            @PathVariable
-            @Min(value = 1, message = BAD_ID)
-            long id,
-            @Valid
-            @RequestBody
-            @NotNull(message = BAD_REQUEST_PARAMETER)
-            TagDTO tagDTO)
+    public ResponseEntity<TagDTO> update(@PathVariable
+                                         @Min(value = 1, message = BAD_ID)
+                                         long id,
+                                         @Valid
+                                         @RequestBody
+                                         @NotNull(message = BAD_REQUEST_PARAMETER)
+                                         TagDTO tagDTO)
             throws ServiceException {
         tagDTO.setId(id);
         TagDTO result = tagService.update(tagDTO);
@@ -184,19 +171,16 @@ public class TagController {
             Response: pagination of tags.
             """, response = Pagination.class)
     @GetMapping("/all")
-    public Pagination<TagDTO> findAll(
-            @RequestParam(value = "size",
-                    required = false,
-                    defaultValue = DEFAULT_SIZE)
-            int size,
-            @RequestParam(value = "page",
-                    required = false,
-                    defaultValue = DEFAULT_NUMBER_PAGE)
-            int page)
+    public ResponseEntity<Pagination<TagDTO>> findAll(@RequestAttribute(value = "size")
+                                                      int size,
+                                                      @RequestAttribute(value = "page")
+                                                      int page)
             throws ServiceException {
-        return tagService.getPagination(
-                tagService.findAll(page, size),
-                page, size);
+        return new ResponseEntity<>(
+                tagService.getPagination(
+                        tagService.findAll(page, size),
+                        tagService.findAll(),
+                        page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -210,12 +194,11 @@ public class TagController {
             Response: tags.
             """, response = TagDTO.class)
     @GetMapping("/{id}")
-    public TagDTO findById(
-            @PathVariable
-            @Min(value = 1, message = BAD_ID)
-            long id)
+    public ResponseEntity<TagDTO> findById(@PathVariable
+                                           @Min(value = 1, message = BAD_ID)
+                                           long id)
             throws ServiceException {
-        return tagService.findById(id);
+        return new ResponseEntity<>(tagService.findById(id), OK);
     }
 
     @ApiResponses(value = {
@@ -229,23 +212,20 @@ public class TagController {
             Response: pagination of tags.
             """, response = Pagination.class)
     @GetMapping("/part-name/{partOfName}")
-    public Pagination<TagDTO> findByPartOfName(
-            @PathVariable
-            @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-            @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-            String partOfName,
-            @RequestParam(value = "size",
-                    required = false,
-                    defaultValue = DEFAULT_SIZE)
-            int size,
-            @RequestParam(value = "page",
-                    required = false,
-                    defaultValue = DEFAULT_NUMBER_PAGE)
-            int page)
+    public ResponseEntity<Pagination<TagDTO>> findByPartOfName(@PathVariable
+                                                               @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+                                                               @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+                                                               String partOfName,
+                                                               @RequestAttribute(value = "size")
+                                                               int size,
+                                                               @RequestAttribute(value = "page")
+                                                               int page)
             throws ServiceException {
-        return tagService.getPagination(
-                tagService.findByPartOfName(partOfName, page, size),
-                page, size);
+        return new ResponseEntity<>(
+                tagService.getPagination(
+                        tagService.findByPartOfName(partOfName, page, size),
+                        tagService.findByPartOfName(partOfName),
+                        page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -259,21 +239,18 @@ public class TagController {
             Response: pagination of tags.
             """, response = Pagination.class)
     @GetMapping("/news/{newsId}")
-    public Pagination<TagDTO> findByNewsId(
-            @PathVariable
-            @Min(value = 1, message = BAD_ID)
-            long newsId,
-            @RequestParam(value = "size",
-                    required = false,
-                    defaultValue = DEFAULT_SIZE)
-            int size,
-            @RequestParam(value = "page",
-                    required = false,
-                    defaultValue = DEFAULT_NUMBER_PAGE)
-            int page)
+    public ResponseEntity<Pagination<TagDTO>> findByNewsId(@PathVariable
+                                                           @Min(value = 1, message = BAD_ID)
+                                                           long newsId,
+                                                           @RequestAttribute(value = "size")
+                                                           int size,
+                                                           @RequestAttribute(value = "page")
+                                                           int page)
             throws ServiceException {
-        return tagService.getPagination(
-                tagService.findByNewsId(newsId, page, size),
-                page, size);
+        return new ResponseEntity<>(
+                tagService.getPagination(
+                        tagService.findByNewsId(newsId, page, size),
+                        tagService.findByNewsId(newsId),
+                        page, size), OK);
     }
 }

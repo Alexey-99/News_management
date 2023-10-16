@@ -2,8 +2,8 @@ package com.mjc.school.service.author.impl;
 
 import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.converter.impl.AuthorIdWithAmountOfWrittenNewsConverter;
-import com.mjc.school.entity.Author;
-import com.mjc.school.entity.AuthorIdWithAmountOfWrittenNews;
+import com.mjc.school.Author;
+import com.mjc.school.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.pagination.PaginationService;
@@ -37,7 +37,9 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorConverter authorConverter;
     private final AuthorIdWithAmountOfWrittenNewsConverter
             authorIdWithAmountOfWrittenNewsConverter;
-    private final PaginationService authorPagination;
+    private final PaginationService<AuthorDTO> authorPagination;
+    private final PaginationService<AuthorIdWithAmountOfWrittenNewsDTO>
+            amountOfWrittenNewsDTOPagination;
 
     @Transactional
     @Override
@@ -105,9 +107,10 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorDTO> findByPartOfName(String partOfName, int page, int size)
+    public List<AuthorDTO> findByPartOfName(String partOfName,
+                                            int page, int size)
             throws ServiceException {
-        String patternPartOfName = "%".concat(partOfName).concat("%");
+        String patternPartOfName = "%" + partOfName + "%";
         List<Author> authors = authorRepository.findByPartOfName(
                 patternPartOfName,
                 authorPagination.calcNumberFirstElement(page, size),
@@ -124,7 +127,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDTO> findByPartOfName(String partOfName) {
-        String patternPartOfName = "%".concat(partOfName).concat("%");
+        String patternPartOfName = "%" + partOfName + "%";
         return authorRepository.findByPartOfName(patternPartOfName)
                 .stream()
                 .map(authorConverter::toDTO)
@@ -234,37 +237,20 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Pagination<AuthorDTO> getPagination(
-            List<AuthorDTO> elementsOnPage,
-            List<AuthorDTO> allElementsList,
-            int page, int size) {
-        return Pagination
-                .<AuthorDTO>builder()
-                .entity(elementsOnPage)
-                .size(size)
-                .numberPage(page)
-                .maxNumberPage(
-                        authorPagination.calcMaxNumberPage(
-                                allElementsList.size(),
-                                size))
-                .build();
+    public Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage,
+                                               List<AuthorDTO> allElementsList,
+                                               int page, int size) {
+        return authorPagination.getPagination(
+                elementsOnPage, allElementsList,
+                page, size);
     }
 
     @Override
     public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
-    getPaginationAuthorIdWithAmountOfWrittenNews(
-            List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage,
-            List<AuthorIdWithAmountOfWrittenNewsDTO> allElementsList,
-            int page, int size) {
-        return Pagination
-                .<AuthorIdWithAmountOfWrittenNewsDTO>builder()
-                .entity(elementsOnPage)
-                .size(size)
-                .numberPage(page)
-                .maxNumberPage(
-                        authorPagination.calcMaxNumberPage(
-                                allElementsList.size(),
-                                size))
-                .build();
+    getPaginationAuthorIdWithAmountOfWrittenNews(List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage,
+                                                 List<AuthorIdWithAmountOfWrittenNewsDTO> allElementsList,
+                                                 int page, int size) {
+        return amountOfWrittenNewsDTOPagination.getPagination(
+                elementsOnPage, allElementsList, page, size);
     }
 }

@@ -21,7 +21,7 @@ public class IsNotExistsAuthorNameImpl
     public boolean isValid(String name,
                            ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
-        if (authorRepository.isNotExistsAuthorWithName(name).isEmpty()) {
+        if (authorRepository.findAuthorByName(name).isEmpty()) {
             result = true;
         } else {
             log.log(WARN, "Author with entered name '" + name + "' already exists");

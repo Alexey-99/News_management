@@ -1,7 +1,7 @@
 package com.mjc.school.converter.impl;
 
 import com.mjc.school.converter.Converter;
-import com.mjc.school.entity.Comment;
+import com.mjc.school.Comment;
 import com.mjc.school.validation.dto.CommentDTO;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +13,7 @@ public class CommentConverter implements Converter<CommentDTO, Comment> {
                 .builder()
                 .id(commentDTO.getId())
                 .content(commentDTO.getContent())
+                .newsId(commentDTO.getNewsId())
                 .created(commentDTO.getCreated())
                 .modified(commentDTO.getModified())
                 .build();

@@ -1,4 +1,4 @@
-package com.mjc.school.entity;
+package com.mjc.school;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,36 +8,31 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import java.io.Serializable;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Builder
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "comments")
-public class Comment implements Serializable {
+@Table(name = "news_tags")
+public class NewsTag {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private long id;
 
-    @Column(name = "content", nullable = false)
-    private String content;
-
-    @ManyToOne
+    @ManyToOne(cascade = ALL)
     @JoinColumn(name = "news_id")
     private News news;
 
-    @Column(name = "created", nullable = false)
-    private String created;
-
-    @Column(name = "modified", nullable = false)
-    private String modified;
+    @ManyToOne(cascade = ALL)
+    @JoinColumn(name = "tags_id")
+    private Tag tag;
 }

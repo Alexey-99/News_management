@@ -1,9 +1,8 @@
-package com.mjc.school.entity;
+package com.mjc.school;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +20,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -28,7 +30,7 @@ import java.util.List;
 @Table(name = "news")
 public class News implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private long id;
 
@@ -38,7 +40,7 @@ public class News implements Serializable {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(cascade = ALL)
     @JoinColumn(name = "authors_id")
     private Author author;
 
@@ -48,14 +50,11 @@ public class News implements Serializable {
     @Column(name = "modified", nullable = false)
     private String modified;
 
-    @OneToMany(mappedBy = "news")
+    @OneToMany(mappedBy = "news", cascade = ALL)
     private List<Comment> comments;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "news_tags",
-            joinColumns = {@JoinColumn(name = "news_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tags_id")})
-    private List<Tag> tags;
+    @OneToMany(mappedBy = "news", cascade = ALL)
+    private List<NewsTag> tags;
 
     public News() {
         this.comments = new ArrayList<>();

@@ -1,12 +1,13 @@
 package com.mjc.school.repository.impl.author;
 
-import com.mjc.school.entity.Author;
+import com.mjc.school.Author;
 import com.mjc.school.repository.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AuthorRepository extends BaseRepository<Author, Long> {
     @Query(value = """
@@ -14,7 +15,7 @@ public interface AuthorRepository extends BaseRepository<Author, Long> {
             FROM authors
             WHERE name = :name
             """, nativeQuery = true)
-    List<Author> isNotExistsAuthorWithName(@Param("name") String name);
+    Optional<Author> findAuthorByName(@Param("name") String name);
 
     @Modifying
     @Query(value = """

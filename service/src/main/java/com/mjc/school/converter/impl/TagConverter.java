@@ -1,7 +1,7 @@
 package com.mjc.school.converter.impl;
 
 import com.mjc.school.converter.Converter;
-import com.mjc.school.entity.Tag;
+import com.mjc.school.Tag;
 import com.mjc.school.validation.dto.TagDTO;
 import org.springframework.stereotype.Component;
 

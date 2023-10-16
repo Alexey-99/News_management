@@ -1,7 +1,8 @@
 package com.mjc.school.converter.impl;
 
+import com.mjc.school.NewsTag;
 import com.mjc.school.converter.Converter;
-import com.mjc.school.entity.News;
+import com.mjc.school.News;
 import com.mjc.school.repository.impl.author.AuthorRepository;
 import com.mjc.school.repository.impl.comment.CommentRepository;
 import com.mjc.school.repository.impl.tag.TagRepository;
@@ -23,8 +24,9 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                 .id(newsDTO.getId())
                 .title(newsDTO.getTitle())
                 .content(newsDTO.getContent())
-//                .author(authorRepository.findById(
-//                        newsDTO.getAuthorId()))
+                .author(authorRepository.findById(
+                                newsDTO.getAuthorId())
+                        .orElse(null))
                 .comments(commentRepository.findByNewsId(
                         newsDTO.getId()))
                 .tags(tagRepository.findByNewsId(newsDTO.getId()))
@@ -51,4 +53,6 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                 .modified(news.getModified())
                 .build();
     }
+
+
 }

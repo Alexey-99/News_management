@@ -1,12 +1,32 @@
 package com.mjc.school.service.pagination.impl;
 
 import com.mjc.school.service.pagination.PaginationService;
+import com.mjc.school.validation.dto.Pagination;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
-public class PaginationServiceImpl implements PaginationService {
+public class PaginationServiceImpl<T> implements PaginationService<T> {
     private static final int NUMBER_MIN_PAGE = 1;
     private static final int NUMBER_FIRST_ELEMENT = 0;
+
+    @Override
+    public Pagination<T> getPagination(
+            List<T> elementsOnPage,
+            List<T> allElementsList,
+            int page, int size) {
+        return Pagination
+                .<T>builder()
+                .entity(elementsOnPage)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(
+                        calcMaxNumberPage(
+                                allElementsList.size(),
+                                size))
+                .build();
+    }
 
     @Override
     public int calcMaxNumberPage(long allElementsSize, int sizeOnPage) {

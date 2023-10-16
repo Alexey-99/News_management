@@ -2,6 +2,7 @@ package com.mjc.school.validation.annotation.impl;
 
 import com.mjc.school.repository.impl.tag.TagRepository;
 import com.mjc.school.validation.annotation.IsNotExistsTagName;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +13,17 @@ import javax.validation.ConstraintValidatorContext;
 
 import static org.apache.logging.log4j.Level.WARN;
 
+@RequiredArgsConstructor
 public class IsNotExistsTagNameImpl
         implements ConstraintValidator<IsNotExistsTagName, String> {
     private static final Logger log = LogManager.getLogger();
-    @Autowired
-    private TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
     @Override
     public boolean isValid(String name,
                            ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
-        if (!tagRepository.isExistsTagWithName(name)) {
+        if (tagRepository.findByName(name).isEmpty()) {
             result = true;
         } else {
             log.log(WARN, "Tag with entered name '" + name + "' already exists");
