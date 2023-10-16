@@ -37,6 +37,7 @@ public class NewsDTO implements Serializable {
     private String content;
 
     @Min(value = 1, message = BAD_NEWS_AUTHOR_ID)
+
     private long authorId;
 
     private long countComments;
