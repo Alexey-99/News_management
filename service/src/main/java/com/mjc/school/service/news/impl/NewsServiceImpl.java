@@ -8,7 +8,6 @@ import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.logic.handler.DateHandler;
 import com.mjc.school.service.pagination.PaginationService;
-import com.mjc.school.repository.impl.comment.CommentRepository;
 import com.mjc.school.repository.impl.news.NewsRepository;
 import com.mjc.school.service.news.NewsService;
 import com.mjc.school.service.news.impl.comparator.SortNewsComparator;
@@ -46,7 +45,6 @@ import static org.apache.logging.log4j.Level.WARN;
 public class NewsServiceImpl implements NewsService {
     private static final Logger log = LogManager.getLogger();
     private final NewsRepository newsRepository;
-    private final CommentRepository commentRepository;
     private final AuthorRepository authorRepository;
     private final NewsConverter newsConverter;
     private final DateHandler dateHandler;
@@ -160,7 +158,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByTagName(String tagName, int page, int size)
+    public List<NewsDTO> findByTagName(String tagName,
+                                       int page, int size)
             throws ServiceException {
         List<News> newsList = newsRepository.findByTagName(
                 tagName,
@@ -185,7 +184,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByTagId(long tagId, int page, int size)
+    public List<NewsDTO> findByTagId(long tagId,
+                                     int page, int size)
             throws ServiceException {
         List<News> newsList = newsRepository.findByTagId(
                 tagId,
@@ -209,7 +209,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName, int page, int size)
+    public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName,
+                                                int page, int size)
             throws ServiceException {
         String patternPartOfAuthorName = "%" + partOfAuthorName + "%";
         List<News> newsList = newsRepository.findByPartOfAuthorName(
@@ -237,7 +238,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByAuthorId(long authorId, int page, int size)
+    public List<NewsDTO> findByAuthorId(long authorId,
+                                        int page, int size)
             throws ServiceException {
         List<News> newsList = newsRepository.findByAuthorId(
                 authorId,
@@ -262,7 +264,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfTitle(String partOfTitle, int page, int size)
+    public List<NewsDTO> findByPartOfTitle(String partOfTitle,
+                                           int page, int size)
             throws ServiceException {
         String patternPartOfTitle = "%" + partOfTitle + "%";
         List<News> newsList = newsRepository.findByPartOfTitle(
@@ -289,7 +292,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size)
+    public List<NewsDTO> findByPartOfContent(String partOfContent,
+                                             int page, int size)
             throws ServiceException {
         String patternPartOfContent = "%" + partOfContent + "%";
         List<News> newsList = newsRepository.findByPartOfContent(
@@ -316,7 +320,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> sort(List<NewsDTO> newsList, SortNewsComparator comparator)
+    public List<NewsDTO> sort(List<NewsDTO> newsList,
+                              SortNewsComparator comparator)
             throws ServiceException {
         List<NewsDTO> sortedNewsList;
         if (newsList != null) {

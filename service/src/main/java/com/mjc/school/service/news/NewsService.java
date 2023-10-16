@@ -17,7 +17,7 @@ public interface NewsService extends BaseService<NewsDTO> {
                                 int page, int size)
             throws ServiceException;
 
-    public List<NewsDTO> findByTagName(String tagName);
+    List<NewsDTO> findByTagName(String tagName);
 
     List<NewsDTO> findByTagId(long tagId,
                               int page, int size)
