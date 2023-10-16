@@ -12,15 +12,16 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
 
 import static org.apache.logging.log4j.Level.INFO;
 
+@RequiredArgsConstructor
 @WebFilter(urlPatterns = {
         "/api/v2/news/*",
         "/api/v2/author/*",
@@ -28,8 +29,7 @@ import static org.apache.logging.log4j.Level.INFO;
         "/api/v2/tag/*"})
 public class LanguageFilter implements Filter {
     private static final Logger log = LogManager.getLogger();
-    @Autowired
-    private Translator translator;
+    private final Translator translator;
 
     @Override
     public void doFilter(ServletRequest servletRequest,
@@ -39,7 +39,6 @@ public class LanguageFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String headerLang = req.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
         translator.setLocale(LanguageLocale.getLocale(headerLang));
-
         log.log(INFO, "Request URI is: " + req.getRequestURI());
         filterChain.doFilter(servletRequest, servletResponse);
         log.log(INFO, "Response Status Code is: " + ((HttpServletResponse) servletResponse).getStatus());

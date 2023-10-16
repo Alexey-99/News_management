@@ -1,4 +1,4 @@
-package com.mjc.school.logic.handler;
+package com.mjc.school.handler;
 
 import org.springframework.stereotype.Component;
 

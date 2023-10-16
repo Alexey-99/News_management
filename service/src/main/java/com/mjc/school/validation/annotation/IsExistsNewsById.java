@@ -18,6 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface IsExistsNewsById {
     String message() default NO_ENTITY_WITH_COMMENT_NEWS_ID;
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

@@ -2,7 +2,7 @@ package com.mjc.school.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mjc.school.config.language.Translator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,10 +19,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
-    @Autowired
-    private Translator translator;
+    private final Translator translator;
 
     @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<Object> handleServiceExceptions(ServiceException ex) {

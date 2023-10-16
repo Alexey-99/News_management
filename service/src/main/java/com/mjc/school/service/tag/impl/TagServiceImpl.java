@@ -1,7 +1,7 @@
 package com.mjc.school.service.tag.impl;
 
 import com.mjc.school.NewsTag;
-import com.mjc.school.converter.impl.NewsTagsConverter;
+import com.mjc.school.converter.NewsTagsConverter;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.Tag;

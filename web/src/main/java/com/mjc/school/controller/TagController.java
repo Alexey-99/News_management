@@ -8,7 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,12 +32,12 @@ import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessag
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v2/tag")
 @Api(value = "Operations for tag in the application")
 public class TagController {
-    @Autowired
-    private TagService tagService;
+    private final TagService tagService;
 
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful created a tag"),

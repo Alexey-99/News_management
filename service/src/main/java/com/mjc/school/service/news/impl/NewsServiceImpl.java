@@ -6,7 +6,7 @@ import com.mjc.school.News;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.logic.handler.DateHandler;
+import com.mjc.school.handler.DateHandler;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.news.NewsService;

@@ -1,4 +1,4 @@
-package com.mjc.school.converter.impl;
+package com.mjc.school.converter;
 
 import com.mjc.school.NewsTag;
 import com.mjc.school.Tag;
