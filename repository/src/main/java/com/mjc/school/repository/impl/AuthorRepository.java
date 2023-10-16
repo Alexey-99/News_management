@@ -1,4 +1,4 @@
-package com.mjc.school.repository.impl.author;
+package com.mjc.school.repository.impl;
 
 import com.mjc.school.Author;
 import com.mjc.school.repository.BaseRepository;

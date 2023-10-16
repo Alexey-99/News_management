@@ -1,4 +1,4 @@
-package com.mjc.school.repository.impl.tag;
+package com.mjc.school.repository.impl;
 
 import com.mjc.school.NewsTag;
 import com.mjc.school.Tag;

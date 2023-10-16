@@ -1,4 +1,4 @@
-package com.mjc.school.repository.impl.comment;
+package com.mjc.school.repository.impl;
 
 import com.mjc.school.Comment;
 import com.mjc.school.repository.BaseRepository;

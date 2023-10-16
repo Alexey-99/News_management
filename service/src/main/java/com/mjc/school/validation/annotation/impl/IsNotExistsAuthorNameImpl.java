@@ -1,6 +1,6 @@
 package com.mjc.school.validation.annotation.impl;
 
-import com.mjc.school.repository.impl.author.AuthorRepository;
+import com.mjc.school.repository.impl.AuthorRepository;
 import com.mjc.school.validation.annotation.IsNotExistsAuthorName;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
