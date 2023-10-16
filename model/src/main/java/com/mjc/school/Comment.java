@@ -1,10 +1,8 @@
 package com.mjc.school;
 
-import com.mjc.school.abstr.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -19,14 +17,13 @@ import java.io.Serializable;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-@EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "comments")
-public class Comment extends AbstractEntity implements Serializable {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
