@@ -1,6 +1,6 @@
 package com.mjc.school.validation.annotation.impl;
 
-import com.mjc.school.repository.impl.NewsRepository;
+import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.validation.annotation.IsExistsNewsById;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;

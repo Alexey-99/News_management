@@ -1,15 +1,17 @@
-package com.mjc.school.repository.impl;
+package com.mjc.school.repository;
 
 import com.mjc.school.News;
-import com.mjc.school.repository.BaseRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface NewsRepository extends BaseRepository<News, Long> {
+@Repository
+public interface NewsRepository extends JpaRepository<News, Long> {
     @Modifying
     @Query(value = """
             DELETE

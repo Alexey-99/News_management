@@ -1,15 +1,17 @@
-package com.mjc.school.repository.impl;
+package com.mjc.school.repository;
 
 import com.mjc.school.Author;
-import com.mjc.school.repository.BaseRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface AuthorRepository extends BaseRepository<Author, Long> {
+@Repository
+public interface AuthorRepository extends JpaRepository<Author, Long> {
     @Query(value = """
             SELECT id, name
             FROM authors

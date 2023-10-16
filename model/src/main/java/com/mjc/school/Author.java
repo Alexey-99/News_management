@@ -1,14 +1,14 @@
 package com.mjc.school;
 
+import com.mjc.school.abstr.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -16,21 +16,25 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.GenerationType.IDENTITY;
+
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
 @AllArgsConstructor
 @Entity
 @Table(name = "authors")
-public class Author implements Serializable {
+public class Author extends AbstractEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private long id;
 
     @Column(name = "name", nullable = false, length = 15, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = ALL)
     private List<News> news;
 
     public Author() {

@@ -1,14 +1,16 @@
-package com.mjc.school.repository.impl;
+package com.mjc.school.repository;
 
 import com.mjc.school.Comment;
-import com.mjc.school.repository.BaseRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface CommentRepository extends BaseRepository<Comment, Long> {
+@Repository
+public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query(value = """
             UPDATE comments

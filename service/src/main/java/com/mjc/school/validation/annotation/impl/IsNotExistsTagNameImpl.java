@@ -1,6 +1,6 @@
 package com.mjc.school.validation.annotation.impl;
 
-import com.mjc.school.repository.impl.TagRepository;
+import com.mjc.school.repository.TagRepository;
 import com.mjc.school.validation.annotation.IsNotExistsTagName;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;

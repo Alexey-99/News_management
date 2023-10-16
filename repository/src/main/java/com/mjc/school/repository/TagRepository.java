@@ -1,16 +1,18 @@
-package com.mjc.school.repository.impl;
+package com.mjc.school.repository;
 
 import com.mjc.school.NewsTag;
 import com.mjc.school.Tag;
-import com.mjc.school.repository.BaseRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface TagRepository extends BaseRepository<Tag, Long> {
+@Repository
+public interface TagRepository extends JpaRepository<Tag, Long> {
     @Modifying
     @Query(value = """
             INSERT INTO news_tags (news_id, tags_id)
@@ -64,24 +66,20 @@ public interface TagRepository extends BaseRepository<Tag, Long> {
     List<Tag> findByPartOfName(@Param("part_name") String partOfName);
 
     @Query(value = """
-            SELECT news_tags.id, news_tags.news_id, news_tags.tags_id
-            FROM tags
-                INNER JOIN news_tags
-                    ON tags.id = news_tags.tags_id
-            WHERE news_tags.news_id = :news_id
+            SELECT id, news_id, tags_id
+            FROM news_tags
+            WHERE news_id = :news_id
             LIMIT :size OFFSET :indexFirstElement
-            """)
+            """, nativeQuery = true)
     List<NewsTag> findByNewsId(@Param("news_id") Long newsId,
                                @Param("indexFirstElement") Integer indexFirstElement,
                                @Param("size") Integer size);
 
     @Query(value = """
-            SELECT news_tags.id, news_tags.news_id, news_tags.tags_id
-            FROM tags
-                INNER JOIN news_tags
-                    ON tags.id = news_tags.tags_id
-            WHERE news_tags.news_id = :news_id
-            """)
+            SELECT id, news_id, tags_id
+            FROM news_tags
+            WHERE news_id = :news_id
+            """, nativeQuery = true)
     List<NewsTag> findByNewsId(@Param("news_id") Long newsId);
 
     @Query(value = """
