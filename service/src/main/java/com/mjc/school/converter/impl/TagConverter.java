@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TagConverter implements Converter<TagDTO, Tag> {
-
     @Override
     public Tag fromDTO(TagDTO tagDTO) {
         return Tag.builder()

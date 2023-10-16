@@ -1,20 +1,18 @@
 package com.mjc.school.config.language;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
+@RequiredArgsConstructor
+@Setter
 @Component
 public class Translator {
     private Locale locale;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
+    private final ResourceBundleMessageSource messageSource;
 
     public String toLocale(String msg) {
         return messageSource.getMessage(msg, null, locale);
