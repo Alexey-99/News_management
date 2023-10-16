@@ -9,14 +9,6 @@ public final class ExceptionServiceMessageCodes {
 
     public static final String NO_ENTITY_WITH_AUTHOR_NEWS_ID = "404003";
 
-    public static final String INSERT_ERROR = "404004";
-
-    public static final String DELETE_ERROR = "404005";
-
-    public static final String UPDATE_ERROR = "404006";
-
-    public static final String FIND_ERROR = "404007";
-
     public static final String SORT_ERROR = "404008";
 
     public static final String NO_ENTITY_WITH_COMMENT_NEWS_ID = "404009";

@@ -14,9 +14,6 @@ import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_AUTHOR_NAME_EXISTS;
-
 @Builder
 @Data
 @AllArgsConstructor
@@ -26,11 +23,10 @@ public class AuthorDTO implements Serializable {
     @JsonIgnore
     private long id;
 
-    @NotNull(message = BAD_AUTHOR_NAME)
-    @NotBlank(message = BAD_AUTHOR_NAME)
-    @Size(min = 3, max = 15, message = "40001")
-//"author.name_not_valid"
-    @IsNotExistsAuthorName(message = BAD_PARAMETER_AUTHOR_NAME_EXISTS)
+    @NotNull(message = "author.name.null")
+    @NotBlank(message = "author.name.is_blank")
+    @Size(min = 3, max = 15, message = "author.name.size_3_15")
+    @IsNotExistsAuthorName(message = "author.name.already_exists")
     private String name;
 
     private int countNews;
