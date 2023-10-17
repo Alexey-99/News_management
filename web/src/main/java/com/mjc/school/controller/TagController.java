@@ -23,12 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
-import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -52,7 +48,7 @@ public class TagController {
     @PostMapping
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
-                                          @NotNull(message = BAD_REQUEST_PARAMETER)
+                                          @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
                                           TagDTO tagDTO) {
         boolean result = tagService.create(tagDTO);
         return new ResponseEntity<>(result, CREATED);
@@ -70,10 +66,12 @@ public class TagController {
             """, response = Boolean.class)
     @PutMapping("/to-news")
     public ResponseEntity<Boolean> addToNews(@RequestParam(value = "tag")
-                                             @Min(value = 1, message = BAD_ID)
+                                             @Min(value = 1,
+                                                     message = "tag_controller.request_body.tag_id.in_valid.min")
                                              long tagId,
                                              @RequestParam(value = "news")
-                                             @Min(value = 1, message = BAD_ID)
+                                             @Min(value = 1,
+                                                     message = "tag_controller.request_body.news_id.in_valid.min")
                                              long newsId) {
         boolean result = tagService.addToNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
@@ -91,10 +89,12 @@ public class TagController {
             """, response = Boolean.class)
     @DeleteMapping("/from-news")
     public ResponseEntity<Boolean> deleteFromNews(@RequestParam(value = "tag")
-                                                  @Min(value = 1, message = BAD_ID)
+                                                  @Min(value = 1,
+                                                          message = "tag_controller.request_body.tag_id.in_valid.min")
                                                   long tagId,
                                                   @RequestParam(value = "news")
-                                                  @Min(value = 1, message = BAD_ID)
+                                                  @Min(value = 1,
+                                                          message = "tag_controller.request_body.news_id.in_valid.min")
                                                   long newsId) {
         boolean result = tagService.deleteFromNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
@@ -112,7 +112,8 @@ public class TagController {
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable
-                                              @Min(value = 1, message = BAD_ID)
+                                              @Min(value = 1,
+                                                      message = "tag_controller.request_body.tag_id.in_valid.min")
                                               long id) {
         boolean result = tagService.deleteById(id);
         return new ResponseEntity<>(result, OK);
@@ -130,7 +131,8 @@ public class TagController {
             """, response = Boolean.class)
     @DeleteMapping("/all-news/{id}")
     public ResponseEntity<Boolean> deleteFromAllNews(@PathVariable
-                                                     @Min(value = 1, message = BAD_ID)
+                                                     @Min(value = 1,
+                                                             message = "tag_controller.request_body.tag_id.in_valid.min")
                                                      long id) {
         boolean result = tagService.deleteFromAllNews(id);
         return new ResponseEntity<>(result, OK);
@@ -148,11 +150,12 @@ public class TagController {
             """, response = Boolean.class)
     @PutMapping("/{id}")
     public ResponseEntity<TagDTO> update(@PathVariable
-                                         @Min(value = 1, message = BAD_ID)
+                                         @Min(value = 1,
+                                                 message = "tag_controller.request_body.tag_id.in_valid.min")
                                          long id,
                                          @Valid
                                          @RequestBody
-                                         @NotNull(message = BAD_REQUEST_PARAMETER)
+                                         @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
                                          TagDTO tagDTO)
             throws ServiceException {
         tagDTO.setId(id);
@@ -195,7 +198,8 @@ public class TagController {
             """, response = TagDTO.class)
     @GetMapping("/{id}")
     public ResponseEntity<TagDTO> findById(@PathVariable
-                                           @Min(value = 1, message = BAD_ID)
+                                           @Min(value = 1,
+                                                   message = "tag_controller.request_body.tag_id.in_valid.min")
                                            long id)
             throws ServiceException {
         return new ResponseEntity<>(tagService.findById(id), OK);
@@ -213,8 +217,7 @@ public class TagController {
             """, response = Pagination.class)
     @GetMapping("/part-name/{partOfName}")
     public ResponseEntity<Pagination<TagDTO>> findByPartOfName(@PathVariable
-                                                               @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-                                                               @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+                                                               @NotNull(message = "news_controller.path_variable.part_of_tag_name.in_valid.null")
                                                                String partOfName,
                                                                @RequestAttribute(value = "size")
                                                                int size,
@@ -240,7 +243,8 @@ public class TagController {
             """, response = Pagination.class)
     @GetMapping("/news/{newsId}")
     public ResponseEntity<Pagination<TagDTO>> findByNewsId(@PathVariable
-                                                           @Min(value = 1, message = BAD_ID)
+                                                           @Min(value = 1,
+                                                                   message = "tag_controller.request_body.news_id.in_valid.min")
                                                            long newsId,
                                                            @RequestAttribute(value = "size")
                                                            int size,
