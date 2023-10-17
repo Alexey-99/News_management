@@ -2,6 +2,7 @@ package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mjc.school.validation.annotation.IsExistsAuthorById;
 import com.mjc.school.validation.annotation.IsNotExistsNewsTitle;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +38,7 @@ public class NewsDTO implements Serializable {
     private String content;
 
     @Min(value = 1, message = "news_dto.author_id.not_valid.min")
-
+    @IsExistsAuthorById(message = "")
     private long authorId;
 
     private long countComments;
