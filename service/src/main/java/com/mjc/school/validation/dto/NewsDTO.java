@@ -38,7 +38,7 @@ public class NewsDTO implements Serializable {
     private String content;
 
     @Min(value = 1, message = "news_dto.author_id.not_valid.min")
-    @IsExistsAuthorById(message = "")
+    @IsExistsAuthorById(message = "news_dto.author_id.not_valid.not_exists_author_by_id")
     private long authorId;
 
     private long countComments;
