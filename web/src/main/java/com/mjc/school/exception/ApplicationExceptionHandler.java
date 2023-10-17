@@ -31,7 +31,7 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errorResponse, NOT_FOUND);
     }
 
-    @ExceptionHandler({ConstraintViolationException.class})
+    @ExceptionHandler(ConstraintViolationException.class)
     public final ResponseEntity<Object> handleConstraintViolationExceptions(
             ConstraintViolationException ex) {
         String details = translator.toLocale(ex.getLocalizedMessage());
@@ -39,7 +39,7 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<Object> handleConstraintViolationExceptions(
             MethodArgumentNotValidException ex) {
         String details = translator.toLocale(ex.getBindingResult()
