@@ -24,12 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
-import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -55,7 +51,7 @@ public class AuthorController {
     @PostMapping
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
-                                          @NotNull(message = BAD_REQUEST_PARAMETER)
+                                          @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
                                           AuthorDTO authorDTO) {
         boolean result = authorService.create(authorDTO);
         return new ResponseEntity<>(result, CREATED);
@@ -73,7 +69,8 @@ public class AuthorController {
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable
-                                              @Min(value = 1, message = BAD_ID)
+                                              @Min(value = 1,
+                                                      message = "author_controller.path_variable.id.in_valid.min")
                                               long id) {
         boolean result = authorService.deleteById(id);
         return new ResponseEntity<>(result, OK);
@@ -91,11 +88,12 @@ public class AuthorController {
             """, response = Boolean.class)
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDTO> update(@PathVariable
-                                            @Min(value = 1, message = BAD_ID)
+                                            @Min(value = 1,
+                                                    message = "author_controller.path_variable.id.in_valid.min")
                                             long id,
                                             @RequestBody
                                             @Valid
-                                            @NotNull(message = BAD_REQUEST_PARAMETER)
+                                            @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
                                             AuthorDTO authorDTO)
             throws ServiceException {
         authorDTO.setId(id);
@@ -138,7 +136,8 @@ public class AuthorController {
             """, response = AuthorDTO.class)
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> findById(@PathVariable
-                                              @Min(value = 1, message = BAD_ID)
+                                              @Min(value = 1,
+                                                      message = "author_controller.path_variable.id.in_valid.min")
                                               long id)
             throws ServiceException {
         return new ResponseEntity<>(authorService.findById(id), OK);
@@ -156,8 +155,7 @@ public class AuthorController {
             """, response = Pagination.class)
     @GetMapping("/part-name/{partOfName}")
     public ResponseEntity<Pagination<AuthorDTO>> findByPartOfName(@PathVariable
-                                                                  @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-                                                                  @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
+                                                                  @NotNull(message = "author_controller.path_variable.part_of_tag_name.in_valid.null")
                                                                   String partOfName,
                                                                   @RequestAttribute(value = "size")
                                                                   int size,
@@ -182,7 +180,8 @@ public class AuthorController {
             """, response = AuthorDTO.class)
     @GetMapping("/news/{newsId}")
     public ResponseEntity<AuthorDTO> findByNewsId(@PathVariable
-                                                  @Min(value = 1, message = BAD_ID)
+                                                  @Min(value = 1,
+                                                          message = "author_controller.path_variable.id.in_valid.min")
                                                   long newsId)
             throws ServiceException {
         return new ResponseEntity<>(authorService.findByNewsId(newsId), OK);

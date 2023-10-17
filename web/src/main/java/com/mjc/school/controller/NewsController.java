@@ -29,12 +29,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_AUTHOR_NAME;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_CONTENT;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_NEWS_TITLE;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_PARAMETER_PART_OF_TAG_NAME;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_TAG_NAME;
 import static com.mjc.school.name.SortField.MODIFIED;
 import static com.mjc.school.name.SortType.ASCENDING;
 import static com.mjc.school.name.SortType.DESCENDING;
@@ -60,7 +54,7 @@ public class NewsController {
     @PostMapping
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
-                                          @NotNull
+                                          @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
                                           NewsDTO newsDTO) {
         boolean result = newsService.create(newsDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -78,7 +72,8 @@ public class NewsController {
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable
-                                              @Min(value = 1, message = BAD_ID)
+                                              @Min(value = 1,
+                                                      message = "news_controller.path_variable.id.in_valid.min")
                                               long id) {
         boolean result = newsService.deleteById(id);
         return new ResponseEntity<>(result, OK);
@@ -96,7 +91,8 @@ public class NewsController {
             """, response = Boolean.class)
     @DeleteMapping("/author/{authorId}")
     public ResponseEntity<Boolean> deleteByAuthorId(@PathVariable
-                                                    @Min(value = 1, message = BAD_ID)
+                                                    @Min(value = 1,
+                                                            message = "news_controller.path_variable.id.in_valid.min")
                                                     long authorId)
             throws ServiceException {
         boolean result = newsService.deleteByAuthorId(authorId);
@@ -115,7 +111,8 @@ public class NewsController {
             """, response = Boolean.class)
     @DeleteMapping("/tags/{newsId}")
     public ResponseEntity<Boolean> deleteAllTagsFromNewsByNewsId(@PathVariable
-                                                                 @Min(value = 1, message = BAD_ID)
+                                                                 @Min(value = 1,
+                                                                         message = "news_controller.path_variable.id.in_valid.min")
                                                                  long newsId) {
         boolean result = newsService.deleteAllTagsFromNewsByNewsId(newsId);
         return new ResponseEntity<>(result, OK);
@@ -133,11 +130,12 @@ public class NewsController {
             """, response = Boolean.class)
     @PutMapping(value = "/{id}")
     public ResponseEntity<NewsDTO> update(@PathVariable
-                                          @Min(value = 1, message = BAD_ID)
+                                          @Min(value = 1,
+                                                  message = "news_controller.path_variable.id.in_valid.min")
                                           long id,
                                           @Valid
                                           @RequestBody
-                                          @NotNull
+                                          @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
                                           NewsDTO newsDTO)
             throws ServiceException {
         newsDTO.setId(id);
@@ -179,7 +177,8 @@ public class NewsController {
             """, response = NewsDTO.class)
     @GetMapping("/{id}")
     public ResponseEntity<NewsDTO> findById(@PathVariable
-                                            @Min(value = 1, message = BAD_ID)
+                                            @Min(value = 1,
+                                                    message = "news_controller.path_variable.id.in_valid.min")
                                             long id)
             throws ServiceException {
         return new ResponseEntity<>(newsService.findById(id), OK);
@@ -197,9 +196,10 @@ public class NewsController {
             """, response = Pagination.class)
     @GetMapping("/tag-name/{tagName}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByTagName(@PathVariable
-                                                                 @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-                                                                 @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-                                                                 @Size(min = 3, max = 15, message = BAD_TAG_NAME)
+                                                                 @NotNull(message = "news_controller.path_variable.tag_name.in_valid.null")
+                                                                 @NotBlank(message = "news_controller.path_variable.tag_name.in_valid.is_blank")
+                                                                 @Size(min = 3, max = 15,
+                                                                         message = "news_controller.path_variable.tag_name.in_valid.size")
                                                                  String tagName,
                                                                  @RequestAttribute(value = "size")
                                                                  int size,
@@ -225,7 +225,8 @@ public class NewsController {
             """, response = Pagination.class)
     @GetMapping("/tag/{tagId}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByTagId(@PathVariable
-                                                               @Min(value = 1, message = BAD_ID)
+                                                               @Min(value = 1,
+                                                                       message = "news_controller.path_variable.id.in_valid.min")
                                                                long tagId,
                                                                @RequestAttribute(value = "size")
                                                                int size,
@@ -250,9 +251,10 @@ public class NewsController {
             """, response = Pagination.class)
     @GetMapping("/author-name/{authorName}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByAuthorName(@PathVariable
-                                                                    @NotNull(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-                                                                    @NotBlank(message = BAD_PARAMETER_PART_OF_TAG_NAME)
-                                                                    @Size(min = 3, max = 15, message = BAD_AUTHOR_NAME)
+                                                                    @NotNull(message = "news_controller.path_variable.author_name.in_valid.null")
+                                                                    @NotBlank(message = "news_controller.path_variable.author_name.in_valid.is_blank")
+                                                                    @Size(min = 3, max = 15,
+                                                                            message = "news_controller.path_variable.author_name.in_valid.size")
                                                                     String authorName,
                                                                     @RequestAttribute(value = "size")
                                                                     int size,
@@ -278,8 +280,7 @@ public class NewsController {
             """, response = Pagination.class)
     @GetMapping("/part-title/{partOfTitle}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByPartOfTitle(@PathVariable
-                                                                     @NotNull(message = BAD_PARAMETER_PART_OF_NEWS_TITLE)
-                                                                     @NotBlank(message = BAD_PARAMETER_PART_OF_NEWS_TITLE)
+                                                                     @NotNull(message = "news_controller.path_variable.part_of_news_title.in_valid.null")
                                                                      String partOfTitle,
                                                                      @RequestAttribute(value = "size")
                                                                      int size,
@@ -305,18 +306,18 @@ public class NewsController {
             """, response = Pagination.class)
     @GetMapping("/part-content/{partOfContent}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByPartOfContent(@PathVariable
-                                                                       @NotNull(message = BAD_PARAMETER_PART_OF_NEWS_CONTENT)
-                                                                       @NotBlank(message = BAD_PARAMETER_PART_OF_NEWS_CONTENT)
+                                                                       @NotNull(message = "news_controller.path_variable.part_of_news_content.in_valid.null")
                                                                        String partOfContent,
                                                                        @RequestAttribute(value = "size")
                                                                        int size,
                                                                        @RequestAttribute(value = "page")
                                                                        int page)
             throws ServiceException {
-        return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByPartOfContent(partOfContent, page, size),
-                newsService.findByPartOfContent(partOfContent),
-                page, size), OK);
+        return new ResponseEntity<>(
+                newsService.getPagination(
+                        newsService.findByPartOfContent(partOfContent, page, size),
+                        newsService.findByPartOfContent(partOfContent),
+                        page, size), OK);
     }
 
     @ApiResponses(value = {

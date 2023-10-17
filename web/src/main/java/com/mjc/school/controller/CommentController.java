@@ -27,8 +27,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_ID;
-import static com.mjc.school.exception.message.ExceptionIncorrectParameterMessage.BAD_REQUEST_PARAMETER;
 import static com.mjc.school.name.SortField.MODIFIED;
 import static com.mjc.school.name.SortType.ASCENDING;
 import static com.mjc.school.name.SortType.DESCENDING;
@@ -54,7 +52,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
-                                          @NotNull(message = BAD_REQUEST_PARAMETER)
+                                          @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
                                           CommentDTO commentDTO) {
         boolean result = commentService.create(commentDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -72,11 +70,12 @@ public class CommentController {
             """, response = Boolean.class)
     @PutMapping("/{id}")
     public ResponseEntity<CommentDTO> update(@PathVariable
-                                             @Min(value = 1, message = BAD_ID)
+                                             @Min(value = 1,
+                                                     message = "comment_controller.path_variable.id.in_valid.min")
                                              long id,
                                              @Valid
                                              @RequestBody
-                                             @NotNull(message = BAD_REQUEST_PARAMETER)
+                                             @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
                                              CommentDTO commentDTO)
             throws ServiceException {
         commentDTO.setId(id);
@@ -96,7 +95,8 @@ public class CommentController {
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable
-                                              @Min(value = 1, message = BAD_ID)
+                                              @Min(value = 1,
+                                                      message = "comment_controller.path_variable.id.in_valid.min")
                                               long id) {
         boolean result = commentService.deleteById(id);
         return new ResponseEntity<>(result, OK);
@@ -114,7 +114,8 @@ public class CommentController {
             """, response = Boolean.class)
     @DeleteMapping("/news/{newsId}")
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable
-                                                  @Min(value = 1, message = BAD_ID)
+                                                  @Min(value = 1,
+                                                          message = "comment_controller.path_variable.id.in_valid.min")
                                                   long newsId)
             throws ServiceException {
         boolean result = commentService.deleteByNewsId(newsId);
@@ -156,7 +157,8 @@ public class CommentController {
             """, response = Pagination.class)
     @GetMapping("/news/{newsId}")
     public ResponseEntity<Pagination<CommentDTO>> findByNewsId(@PathVariable
-                                                               @Min(value = 1, message = BAD_ID)
+                                                               @Min(value = 1,
+                                                                       message = "comment_controller.path_variable.id.in_valid.min")
                                                                long newsId,
                                                                @RequestAttribute(value = "size")
                                                                int size,
@@ -181,7 +183,8 @@ public class CommentController {
             """, response = CommentDTO.class)
     @GetMapping("/{id}")
     public ResponseEntity<CommentDTO> findById(@PathVariable
-                                               @Min(value = 1, message = BAD_ID)
+                                               @Min(value = 1,
+                                                       message = "comment_controller.path_variable.id.in_valid.min")
                                                long id)
             throws ServiceException {
         return new ResponseEntity<>(commentService.findById(id), OK);
