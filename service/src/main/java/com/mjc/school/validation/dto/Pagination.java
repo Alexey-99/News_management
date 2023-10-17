@@ -15,7 +15,7 @@ public class Pagination<T> implements Serializable {
     private static final int DEFAULT_SIZE = 5;
     private static final int DEFAULT_NUMBER_PAGE = 1;
 
-    private List<T> entity;
+    private transient List<T> entity;
     private int size;
     private int numberPage;
     private int maxNumberPage;

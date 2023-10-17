@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -24,6 +25,7 @@ public class CommentDTO implements Serializable {
     private long id;
 
     @NotNull(message = "comment_dto.content.not_valid.null")
+    @NotBlank(message = "comment_dto.content.not_valid.is_blank")
     @Size(min = 3, max = 255, message = "comment_dto.content.not_valid.size")
     private String content;
 
