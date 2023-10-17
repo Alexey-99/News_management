@@ -27,7 +27,7 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<Object> handleServiceExceptions(ServiceException ex) {
         String details = translator.toLocale(ex.getLocalizedMessage());
-        ErrorResponse errorResponse = new ErrorResponse(NOT_FOUND_EXCEPTION.toString(), details);
+        ErrorResponse errorResponse = new ErrorResponse(NOT_FOUND.toString(), details);
         return new ResponseEntity<>(errorResponse, NOT_FOUND);
     }
 
