@@ -10,13 +10,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.io.Serializable;
-
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_AUTHOR_ID;
-import static com.mjc.school.exception.code.ExceptionIncorrectParameterMessageCode.BAD_NEWS_CONTENT;
 
 @Builder
 @AllArgsConstructor
@@ -28,15 +26,17 @@ public class NewsDTO implements Serializable {
     private long id;
 
     @NotNull(message = "news_dto.title.not_valid.null")
+    @NotBlank(message = "news_dto.title.not_valid.is_blank")
     @Size(min = 5, max = 30, message = "news_dto.title.not_valid.size")
     @IsNotExistsNewsTitle(message = "news_dto.title.not_valid.exists_news_title")
     private String title;
 
-    @NotNull(message = BAD_NEWS_CONTENT)
-    @Size(min = 5, max = 255, message = BAD_NEWS_CONTENT)
+    @NotNull(message = "news_dto.content.not_valid.null")
+    @NotBlank(message = "news_dto.content.not_valid.is_blank")
+    @Size(min = 5, max = 255, message = "news_dto.content.not_valid.size")
     private String content;
 
-    @Min(value = 1, message = BAD_NEWS_AUTHOR_ID)
+    @Min(value = 1, message = "news_dto.author_id.not_valid.min")
 
     private long authorId;
 
