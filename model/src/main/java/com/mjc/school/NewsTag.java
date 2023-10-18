@@ -15,7 +15,6 @@ import javax.persistence.Table;
 
 import java.io.Serializable;
 
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Builder
@@ -30,11 +29,11 @@ public class NewsTag implements Serializable {
     @Column(name = "id")
     private long id;
 
-    @ManyToOne(cascade = ALL)
+    @ManyToOne
     @JoinColumn(name = "news_id")
     private News news;
 
-    @ManyToOne(cascade = ALL)
+    @ManyToOne
     @JoinColumn(name = "tags_id")
     private Tag tag;
 }

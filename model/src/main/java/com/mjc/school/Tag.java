@@ -30,7 +30,7 @@ public class Tag implements Serializable {
     @Column(name = "name", nullable = false, length = 15, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "tag", cascade = ALL)
+    @OneToMany(mappedBy = "tag", cascade = {ALL})
     private List<NewsTag> news;
 
     public Tag() {

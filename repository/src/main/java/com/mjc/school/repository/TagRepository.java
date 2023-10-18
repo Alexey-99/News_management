@@ -1,6 +1,5 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.NewsTag;
 import com.mjc.school.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,13 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
-    @Modifying
-    @Query(value = """
-            INSERT INTO news_tags (news_id, tags_id)
-            VALUES (:news_id, :tags_id)
-            """, nativeQuery = true)
-    void addToNews(@Param("tags_id") Long tagId,
-                   @Param("news_id") Long newsId);
 
     @Modifying
     @Query(value = """
@@ -66,21 +58,29 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     List<Tag> findByPartOfName(@Param("part_name") String partOfName);
 
     @Query(value = """
-            SELECT id, news_id, tags_id
-            FROM news_tags
-            WHERE news_id = :news_id
+            SELECT tags.id, tags.name
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
             LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
-    List<NewsTag> findByNewsId(@Param("news_id") Long newsId,
+    List<Tag> findByNewsId(@Param("news_id") Long newsId,
                                @Param("indexFirstElement") Integer indexFirstElement,
                                @Param("size") Integer size);
 
     @Query(value = """
-            SELECT id, news_id, tags_id
-            FROM news_tags
-            WHERE news_id = :news_id
+            SELECT tags.id, tags.name
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
             """, nativeQuery = true)
-    List<NewsTag> findByNewsId(@Param("news_id") Long newsId);
+    List<Tag> findByNewsId(@Param("news_id") Long newsId);
 
     @Query(value = """
             SELECT id, name

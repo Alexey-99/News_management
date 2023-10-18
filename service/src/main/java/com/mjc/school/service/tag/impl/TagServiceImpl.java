@@ -1,8 +1,8 @@
 package com.mjc.school.service.tag.impl;
 
 import com.mjc.school.NewsTag;
-import com.mjc.school.converter.NewsTagsConverter;
 import com.mjc.school.converter.impl.TagConverter;
+import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.Tag;
 import com.mjc.school.exception.ServiceException;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,39 +34,34 @@ public class TagServiceImpl implements TagService {
     private static final Logger log = LogManager.getLogger();
     private final TagRepository tagRepository;
     private final NewsRepository newsRepository;
+    private final NewsTagRepository newsTagRepository;
     private final TagConverter tagConverter;
-    private final NewsTagsConverter newsTagsConverter;
     private final PaginationService<TagDTO> tagPagination;
 
     @Override
     public boolean create(TagDTO tagDTO) {
         Tag tag = tagConverter.fromDTO(tagDTO);
         tagRepository.save(tag);
-        return tagRepository.existsById(tag.getId());
+        return true;
     }
 
     @Override
     public boolean addToNews(long tagId, long newsId) {
-        if (tagRepository.existsById(tagId) &&
-                newsRepository.existsById(newsId) &&
-                newsRepository.findById(newsId)
-                        .filter(news -> news.getTags()
-                                .stream()
-                                .filter(tag -> tag.getId() == tagId)
-                                .toList()
-                                .isEmpty())
-                        .isEmpty()) {
-            tagRepository.addToNews(tagId, newsId);
+        boolean result = false;
+        NewsTag newsTag = NewsTag.builder()
+                .tag(tagRepository.getById(tagId))
+                .news(newsRepository.getById(newsId))
+                .build();
+        if (newsTag.getNews() != null &&
+                newsTag.getTag() != null &&
+                isNotExistsTagInNews(tagId, newsId)) {
+            newsTagRepository.save(newsTag);
+            result = true;
         }
-        return newsRepository.findById(newsId)
-                .filter(value -> !value.getTags()
-                        .stream()
-                        .filter(tag -> tag.getId() == tagId)
-                        .toList()
-                        .isEmpty())
-                .isPresent();
+        return result;
     }
 
+    @Transactional
     @Override
     public boolean deleteFromNews(long tagId, long newsId) {
         tagRepository.deleteFromNews(tagId, newsId);
@@ -78,18 +74,23 @@ public class TagServiceImpl implements TagService {
                 .isEmpty();
     }
 
+    @Transactional
     @Override
     public boolean deleteById(long tagId) {
-        tagRepository.deleteById(tagId);
-        return tagRepository.existsById(tagId);
+        if (tagRepository.existsById(tagId)) {
+            tagRepository.deleteById(tagId);
+        }
+        return !tagRepository.existsById(tagId);
     }
 
+    @Transactional
     @Override
     public boolean deleteFromAllNews(long tagId) {
         tagRepository.deleteFromAllNewsById(tagId);
         return newsRepository.findByTagId(tagId).isEmpty();
     }
 
+    @Transactional
     @Override
     public TagDTO update(TagDTO tagDTO)
             throws ServiceException {
@@ -171,13 +172,12 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDTO> findByNewsId(long newsId, int page, int size)
             throws ServiceException {
-        List<NewsTag> tagList = tagRepository.findByNewsId(
+        List<Tag> tagList = tagRepository.findByNewsId(
                 newsId,
                 tagPagination.calcNumberFirstElement(page, size),
                 size);
         if (!tagList.isEmpty()) {
             return tagList.stream()
-                    .map(newsTagsConverter::toTag)
                     .map(tagConverter::toDTO)
                     .toList();
         } else {
@@ -190,7 +190,6 @@ public class TagServiceImpl implements TagService {
     public List<TagDTO> findByNewsId(long newsId) {
         return tagRepository.findByNewsId(newsId)
                 .stream()
-                .map(newsTagsConverter::toTag)
                 .map(tagConverter::toDTO)
                 .toList();
     }
@@ -202,5 +201,14 @@ public class TagServiceImpl implements TagService {
         return tagPagination.getPagination(
                 elementsOnPage, allElementsList,
                 page, size);
+    }
+
+    private boolean isNotExistsTagInNews(long tagId, long newsId) {
+        return newsRepository.getById(newsId)
+                .getTags()
+                .stream()
+                .filter(newsTag -> newsTag.getTag().getId() == tagId)
+                .toList()
+                .isEmpty();
     }
 }
