@@ -5,7 +5,7 @@ import com.mjc.school.exception.ServiceException;
 import java.util.List;
 
 public interface CRUDOperationService<T> {
-    boolean create(T entity);
+    boolean create(T entity) throws ServiceException;
 
     boolean deleteById(long id);
 

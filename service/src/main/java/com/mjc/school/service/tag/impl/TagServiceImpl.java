@@ -80,7 +80,7 @@ public class TagServiceImpl implements TagService {
         if (tagRepository.existsById(tagId)) {
             tagRepository.deleteById(tagId);
         }
-        return !tagRepository.existsById(tagId);
+        return true;
     }
 
     @Transactional
@@ -92,8 +92,7 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public TagDTO update(TagDTO tagDTO)
-            throws ServiceException {
+    public TagDTO update(TagDTO tagDTO) throws ServiceException {
         if (tagRepository.existsById(tagDTO.getId())) {
             Tag tag = tagConverter.fromDTO(tagDTO);
             tagRepository.update(tag.getName(), tag.getId());

@@ -46,14 +46,16 @@ public class AuthorServiceImpl implements AuthorService {
     public boolean create(AuthorDTO authorDTO) {
         Author author = authorConverter.fromDTO(authorDTO);
         authorRepository.save(author);
-        return authorRepository.existsById(author.getId());
+        return true;
     }
 
     @Transactional
     @Override
     public boolean deleteById(long id) {
-        authorRepository.deleteById(id);
-        return !authorRepository.existsById(id);
+        if (authorRepository.existsById(id)) {
+            authorRepository.deleteById(id);
+        }
+        return true;
     }
 
     @Transactional
@@ -61,8 +63,7 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDTO update(AuthorDTO authorDTO) throws ServiceException {
         if (authorRepository.existsById(authorDTO.getId())) {
             authorRepository.update(authorDTO.getId(), authorDTO.getName());
-            return authorConverter.toDTO(
-                    authorRepository.findById(authorDTO.getId()).get());
+            return authorConverter.toDTO(authorRepository.getById(authorDTO.getId()));
         } else {
             log.log(WARN, "Not found object with this ID: " + authorDTO.getId());
             throw new ServiceException(NO_ENTITY_WITH_ID);

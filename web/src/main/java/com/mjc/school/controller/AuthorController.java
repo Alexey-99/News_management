@@ -52,7 +52,8 @@ public class AuthorController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
-                                          AuthorDTO authorDTO) {
+                                          AuthorDTO authorDTO)
+            throws ServiceException {
         boolean result = authorService.create(authorDTO);
         return new ResponseEntity<>(result, CREATED);
     }

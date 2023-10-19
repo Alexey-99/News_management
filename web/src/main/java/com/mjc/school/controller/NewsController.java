@@ -55,7 +55,8 @@ public class NewsController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
-                                          NewsDTO newsDTO) {
+                                          NewsDTO newsDTO)
+            throws ServiceException {
         boolean result = newsService.create(newsDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -109,13 +110,13 @@ public class NewsController {
             Delete all tags from news by news id.
             Response: true - if successful deleted all tags from news, if didn't delete all tags from news - false.
             """, response = Boolean.class)
-    @DeleteMapping("/tags/{newsId}")
-    public ResponseEntity<Boolean> deleteAllTagsFromNewsByNewsId(@PathVariable
+    @DeleteMapping("/all-tags/{newsId}")
+    public ResponseEntity<NewsDTO> deleteAllTagsFromNewsByNewsId(@PathVariable
                                                                  @Min(value = 1,
                                                                          message = "news_controller.path_variable.id.in_valid.min")
-                                                                 long newsId) {
-        boolean result = newsService.deleteAllTagsFromNewsByNewsId(newsId);
-        return new ResponseEntity<>(result, OK);
+                                                                 long newsId) throws ServiceException {
+        return new ResponseEntity<>(
+                newsService.deleteAllTagsFromNews(newsId), OK);
     }
 
     @ApiResponses(value = {
@@ -139,7 +140,11 @@ public class NewsController {
                                           NewsDTO newsDTO)
             throws ServiceException {
         newsDTO.setId(id);
-        return new ResponseEntity<>(newsService.update(newsDTO), OK);
+        NewsDTO newsDTO1 = newsService.update(newsDTO);
+        System.out.println(newsDTO1.getContent());
+        NewsDTO newsDTO2 = newsService.findById(id);
+        System.out.println(newsDTO2.getContent());
+        return new ResponseEntity<>(newsDTO2, OK);
     }
 
     @ApiResponses(value = {
@@ -249,13 +254,10 @@ public class NewsController {
             View news by author name.
             Response: pagination of news.
             """, response = Pagination.class)
-    @GetMapping("/author-name/{authorName}")
+    @GetMapping("/author/part-name/{partOfAuthorName}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByAuthorName(@PathVariable
                                                                     @NotNull(message = "news_controller.path_variable.author_name.in_valid.null")
-                                                                    @NotBlank(message = "news_controller.path_variable.author_name.in_valid.is_blank")
-                                                                    @Size(min = 3, max = 15,
-                                                                            message = "news_controller.path_variable.author_name.in_valid.size")
-                                                                    String authorName,
+                                                                    String partOfAuthorName,
                                                                     @RequestAttribute(value = "size")
                                                                     int size,
                                                                     @RequestAttribute(value = "page")
@@ -263,8 +265,8 @@ public class NewsController {
             throws ServiceException {
         return new ResponseEntity<>(
                 newsService.getPagination(
-                        newsService.findByPartOfAuthorName(authorName, page, size),
-                        newsService.findByPartOfAuthorName(authorName),
+                        newsService.findByPartOfAuthorName(partOfAuthorName, page, size),
+                        newsService.findByPartOfAuthorName(partOfAuthorName),
                         page, size), OK);
     }
 

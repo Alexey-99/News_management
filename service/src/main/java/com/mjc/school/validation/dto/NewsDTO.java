@@ -29,7 +29,6 @@ public class NewsDTO implements Serializable {
     @NotNull(message = "news_dto.title.not_valid.null")
     @NotBlank(message = "news_dto.title.not_valid.is_blank")
     @Size(min = 5, max = 30, message = "news_dto.title.not_valid.size")
-    @IsNotExistsNewsTitle(message = "news_dto.title.not_valid.exists_news_title")
     private String title;
 
     @NotNull(message = "news_dto.content.not_valid.null")

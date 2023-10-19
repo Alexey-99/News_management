@@ -11,7 +11,7 @@ public interface NewsService extends BaseService<NewsDTO> {
     boolean deleteByAuthorId(long authorId)
             throws ServiceException;
 
-    boolean deleteAllTagsFromNewsByNewsId(long newsId);
+    NewsDTO deleteAllTagsFromNews(long newsId) throws ServiceException;
 
     List<NewsDTO> findByTagName(String tagName,
                                 int page, int size)

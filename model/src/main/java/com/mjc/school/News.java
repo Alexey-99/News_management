@@ -36,7 +36,7 @@ public class News implements Serializable {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ManyToOne(cascade = ALL)
+    @ManyToOne
     @JoinColumn(name = "authors_id")
     private Author author;
 

@@ -10,6 +10,6 @@ import static java.time.LocalDateTime.now;
 public class DateHandler {
     public String getCurrentDate() {
         return now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
     }
 }

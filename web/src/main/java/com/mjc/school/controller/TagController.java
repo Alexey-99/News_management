@@ -49,7 +49,7 @@ public class TagController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
-                                          TagDTO tagDTO) {
+                                          TagDTO tagDTO) throws ServiceException {
         boolean result = tagService.create(tagDTO);
         return new ResponseEntity<>(result, CREATED);
     }

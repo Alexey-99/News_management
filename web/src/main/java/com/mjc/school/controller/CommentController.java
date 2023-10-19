@@ -53,7 +53,8 @@ public class CommentController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
-                                          CommentDTO commentDTO) {
+                                          CommentDTO commentDTO)
+            throws ServiceException {
         boolean result = commentService.create(commentDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

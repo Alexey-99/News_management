@@ -52,33 +52,40 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public boolean create(NewsDTO newsDTO) {
-        Optional<Author> author = authorRepository.findById(newsDTO.getAuthorId());
-        if (author.isPresent()) {
-            newsDTO.setCreated(dateHandler.getCurrentDate());
-            newsDTO.setModified(dateHandler.getCurrentDate());
-            News news = newsConverter.fromDTO(newsDTO);
-            news.setAuthor(author.get());
-            newsRepository.save(news);
-            return newsRepository.existsById(news.getId());
+    public boolean create(NewsDTO newsDTO) throws ServiceException {
+        if (newsRepository.findNewsByTitle(newsDTO.getTitle()).isEmpty()) {
+            Optional<Author> author = authorRepository.findById(newsDTO.getAuthorId());
+            if (author.isPresent()) {
+                newsDTO.setCreated(dateHandler.getCurrentDate());
+                newsDTO.setModified(dateHandler.getCurrentDate());
+                News news = newsConverter.fromDTO(newsDTO);
+                news.setAuthor(author.get());
+                newsRepository.save(news);
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            log.log(WARN, "News with title '" + newsDTO.getTitle() + "' exists.");
+            throw new ServiceException("news_dto.title.not_valid.exists_news_title");
         }
     }
 
     @Transactional
     @Override
     public boolean deleteById(long newsId) {
-        newsRepository.deleteById(newsId);
-        return !newsRepository.existsById(newsId);
+        if (newsRepository.existsById(newsId)) {
+            newsRepository.deleteById(newsId);
+        }
+        return true;
     }
 
     @Transactional
     @Override
-    public boolean deleteByAuthorId(long authorId)
-            throws ServiceException {
+    public boolean deleteByAuthorId(long authorId) throws ServiceException {
         if (authorRepository.existsById(authorId)) {
-            newsRepository.deleteByAuthorId(authorId);
+            newsRepository.findByAuthorId(authorId)
+                    .forEach(news -> newsRepository.deleteById(news.getId()));
             return newsRepository.findAll()
                     .stream()
                     .filter(news -> news.getAuthor().getId() == authorId)
@@ -92,30 +99,34 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public boolean deleteAllTagsFromNewsByNewsId(long newsId) {
-        newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
-        return newsRepository.findAll()
-                .stream()
-                .filter(news -> !news.getTags().isEmpty())
-                .toList()
-                .isEmpty();
+    public NewsDTO deleteAllTagsFromNews(long newsId) throws ServiceException {
+        if (newsRepository.existsById(newsId)) {
+            newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
+            return newsConverter.toDTO(newsRepository.getById(newsId));
+        } else {
+            log.log(WARN, "Not found news with ID: " + newsId);
+            throw new ServiceException(NO_ENTITY_WITH_ID);
+        }
     }
 
     @Transactional
     @Override
-    public NewsDTO update(NewsDTO newsDTO)
-            throws ServiceException {
-        if (authorRepository.existsById(newsDTO.getAuthorId())) {
+    public NewsDTO update(NewsDTO newsDTO) throws ServiceException {
+        Optional<News> newsOld = newsRepository.findById(newsDTO.getId());
+        if (newsOld.isPresent()) {
+            if (!newsOld.get().getTitle().equals(newsDTO.getTitle()) &&
+                    newsRepository.findNewsByTitle(newsDTO.getTitle()).isPresent()) {
+                log.log(WARN, "News with title '" + newsDTO.getTitle() + "' exists.");
+                throw new ServiceException("news_dto.title.not_valid.exists_news_title");
+            }
             News news = newsConverter.fromDTO(newsDTO);
             news.setModified(dateHandler.getCurrentDate());
-            newsRepository.update(
-                    news.getTitle(),
+            newsRepository.update(news.getTitle(),
                     news.getContent(),
                     news.getAuthor().getId(),
                     news.getModified(),
                     news.getId());
-            return newsConverter.toDTO(
-                    newsRepository.getById(news.getId()));
+            return newsConverter.toDTO(newsRepository.getById(news.getId()));
         } else {
             log.log(WARN, "Not found object with this ID: " + newsDTO.getId());
             throw new ServiceException(NO_ENTITY_WITH_ID);
