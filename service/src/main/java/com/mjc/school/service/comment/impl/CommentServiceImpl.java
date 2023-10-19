@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,25 +53,21 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreated(dateHandler.getCurrentDate());
         comment.setModified(dateHandler.getCurrentDate());
         commentRepository.save(comment);
-        return commentRepository.existsById(comment.getId());
+        return true;
     }
 
     @Transactional
     @Override
-    public CommentDTO update(CommentDTO commentDTO)
-            throws ServiceException {
-        if (commentRepository.existsById(commentDTO.getId())) {
-            Comment commentOld = commentRepository.getById(commentDTO.getId());
-            Comment comment = commentConverter.fromDTO(commentDTO);
-            comment.setNews(newsRepository.getById(comment.getNewsId()));
-            comment.setCreated(commentOld.getCreated());
+    public CommentDTO update(CommentDTO commentDTO) throws ServiceException {
+        Optional<Comment> optionalComment = commentRepository.findById(commentDTO.getId());
+        if (optionalComment.isPresent()) {
+            Comment comment = optionalComment.get();
+            comment.setContent(commentDTO.getContent());
+            comment.setNews(newsRepository.getById(commentDTO.getNewsId()));
             comment.setModified(dateHandler.getCurrentDate());
-            commentRepository.update(
-                    comment.getContent(),
-                    comment.getNews().getId(),
+            commentRepository.update(comment.getContent(), comment.getNews().getId(),
                     comment.getModified());
-            return commentConverter.toDTO(
-                    commentRepository.getById(comment.getId()));
+            return commentConverter.toDTO(comment);
         } else {
             log.log(WARN, "Not found object with this ID: " + commentDTO.getId());
             throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -81,15 +78,19 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public boolean deleteById(long id) {
-        commentRepository.deleteById(id);
-        return !commentRepository.existsById(id);
+        if (commentRepository.existsById(id)) {
+            commentRepository.deleteById(id);
+        }
+        return true;
     }
 
     @Transactional
     @Override
     public boolean deleteByNewsId(long newsId) {
-        commentRepository.deleteByNewsId(newsId);
-        return commentRepository.findByNewsId(newsId).isEmpty();
+        if (newsRepository.existsById(newsId)) {
+            commentRepository.deleteByNewsId(newsId);
+        }
+        return true;
     }
 
     @Override
@@ -152,8 +153,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> sort(List<CommentDTO> list,
-                                 SortCommentComparator comparator)
-            throws ServiceException {
+                                 SortCommentComparator comparator) throws ServiceException {
         List<CommentDTO> sortedList;
         if (list != null) {
             if (comparator != null) {

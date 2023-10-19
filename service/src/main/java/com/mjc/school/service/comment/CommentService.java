@@ -1,23 +1,40 @@
 package com.mjc.school.service.comment;
 
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.service.BaseService;
 import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
 
 import com.mjc.school.validation.dto.CommentDTO;
+import com.mjc.school.validation.dto.Pagination;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
-public interface CommentService extends BaseService<CommentDTO> {
+public interface CommentService {
+    @Transactional
+    boolean create(CommentDTO commentDTO) throws ServiceException;
+
+    @Transactional
+    boolean deleteById(long id);
+
+    @Transactional
+    CommentDTO update(CommentDTO commentDTO) throws ServiceException;
+
+    @Transactional
+    boolean deleteByNewsId(long newsId) throws ServiceException;
+
+    List<CommentDTO> findAll(int page, int size) throws ServiceException;
+
+    List<CommentDTO> findAll();
+
+    CommentDTO findById(long id) throws ServiceException;
+
     List<CommentDTO> findByNewsId(long newsId,
-                                  int page, int size)
-            throws ServiceException;
+                                  int page, int size) throws ServiceException;
 
     List<CommentDTO> findByNewsId(long newsId);
 
     List<CommentDTO> sort(List<CommentDTO> list,
-                          SortCommentComparator comparator)
-            throws ServiceException;
+                          SortCommentComparator comparator) throws ServiceException;
 
     List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list)
             throws ServiceException;
@@ -31,5 +48,7 @@ public interface CommentService extends BaseService<CommentDTO> {
     List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list)
             throws ServiceException;
 
-    boolean deleteByNewsId(long newsId) throws ServiceException;
+    Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage,
+                                         List<CommentDTO> allElementsList,
+                                         int page, int size);
 }
