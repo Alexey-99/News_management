@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
@@ -68,8 +67,8 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
     List<Tag> findByNewsId(@Param("news_id") Long newsId,
-                               @Param("indexFirstElement") Integer indexFirstElement,
-                               @Param("size") Integer size);
+                           @Param("indexFirstElement") Integer indexFirstElement,
+                           @Param("size") Integer size);
 
     @Query(value = """
             SELECT tags.id, tags.name
@@ -83,9 +82,9 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     List<Tag> findByNewsId(@Param("news_id") Long newsId);
 
     @Query(value = """
-            SELECT id, name
+            SELECT COUNT(name) > 0
             FROM tags
             WHERE name = :name
-            """, nativeQuery = true)
-    Optional<Tag> findByName(@Param("name") String name);
+            """)
+    boolean existByName(@Param("name") String name);
 }

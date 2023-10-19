@@ -112,21 +112,20 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     @Override
     public NewsDTO update(NewsDTO newsDTO) throws ServiceException {
-        Optional<News> newsOld = newsRepository.findById(newsDTO.getId());
-        if (newsOld.isPresent()) {
-            if (!newsOld.get().getTitle().equals(newsDTO.getTitle()) &&
+        Optional<News> optionalNews = newsRepository.findById(newsDTO.getId());
+        if (optionalNews.isPresent()) {
+//            News news = optionalNews.get();
+            if (!optionalNews.get().getTitle().equals(newsDTO.getTitle()) &&
                     newsRepository.findNewsByTitle(newsDTO.getTitle()).isPresent()) {
                 log.log(WARN, "News with title '" + newsDTO.getTitle() + "' exists.");
                 throw new ServiceException("news_dto.title.not_valid.exists_news_title");
+            } else {
+                News news = newsConverter.fromDTO(newsDTO);
+                news.setModified(dateHandler.getCurrentDate());
+                newsRepository.update(news.getTitle(), news.getContent(),
+                        news.getAuthor().getId(), news.getModified(), news.getId());
+                return newsConverter.toDTO(newsRepository.getById(news.getId()));
             }
-            News news = newsConverter.fromDTO(newsDTO);
-            news.setModified(dateHandler.getCurrentDate());
-            newsRepository.update(news.getTitle(),
-                    news.getContent(),
-                    news.getAuthor().getId(),
-                    news.getModified(),
-                    news.getId());
-            return newsConverter.toDTO(newsRepository.getById(news.getId()));
         } else {
             log.log(WARN, "Not found object with this ID: " + newsDTO.getId());
             throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -136,8 +135,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findAll(int page, int size) throws ServiceException {
         Page<News> newsPage = newsRepository.findAll(
-                PageRequest.of(
-                        newsPagination.calcNumberFirstElement(page, size),
+                PageRequest.of(newsPagination.calcNumberFirstElement(page, size),
                         size));
         if (!newsPage.isEmpty()) {
             return newsPage.stream()

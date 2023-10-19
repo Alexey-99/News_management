@@ -1,7 +1,6 @@
 package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mjc.school.validation.annotation.IsNotExistsTagName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +25,6 @@ public class TagDTO implements Serializable {
     @NotNull(message = "tag_dto.name.not_valid.null")
     @NotBlank(message = "tag_dto.name.not_valid.is_blank")
     @Size(min = 3, max = 15, message = "tag_dto.name.not_valid.size")
-    @IsNotExistsTagName(message = "tag_dto.name.not_valid.exists_tag_by_name")
     private String name;
 
     private long countNews;

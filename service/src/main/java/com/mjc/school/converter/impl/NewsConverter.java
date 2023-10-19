@@ -5,7 +5,6 @@ import com.mjc.school.News;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.repository.NewsTagRepository;
-import com.mjc.school.repository.TagRepository;
 import com.mjc.school.validation.dto.NewsDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

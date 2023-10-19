@@ -39,10 +39,15 @@ public class TagServiceImpl implements TagService {
     private final PaginationService<TagDTO> tagPagination;
 
     @Override
-    public boolean create(TagDTO tagDTO) {
-        Tag tag = tagConverter.fromDTO(tagDTO);
-        tagRepository.save(tag);
-        return true;
+    public boolean create(TagDTO tagDTO) throws ServiceException {
+        if (!tagRepository.existByName(tagDTO.getName())) {
+            Tag tag = tagConverter.fromDTO(tagDTO);
+            tagRepository.save(tag);
+            return true;
+        } else {
+            log.log(WARN, "Tag with entered name '" + tagDTO.getName() + "' already exists");
+            throw new ServiceException("tag_dto.name.not_valid.exists_tag_by_name");
+        }
     }
 
     @Override
@@ -93,10 +98,21 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public TagDTO update(TagDTO tagDTO) throws ServiceException {
-        if (tagRepository.existsById(tagDTO.getId())) {
-            Tag tag = tagConverter.fromDTO(tagDTO);
-            tagRepository.update(tag.getName(), tag.getId());
-            return tagConverter.toDTO(tagRepository.getById(tag.getId()));
+        Optional<Tag> optionalTag = tagRepository.findById(tagDTO.getId());
+        if (optionalTag.isPresent()) {
+            Tag tag = optionalTag.get();
+            if (tag.getName().equals(tagDTO.getName())) {
+                return tagConverter.toDTO(tag);
+            } else {
+                if (!tagRepository.existByName(tagDTO.getName())) {
+                    tagRepository.update(tagDTO.getName(), tagDTO.getId());
+                    tag.setName(tagDTO.getName());
+                    return tagConverter.toDTO(tag);
+                } else {
+                    log.log(WARN, "Tag with entered name '" + tagDTO.getName() + "' already exists");
+                    throw new ServiceException("tag_dto.name.not_valid.exists_tag_by_name");
+                }
+            }
         } else {
             log.log(WARN, "Not found object with this ID: " + tagDTO.getId());
             throw new ServiceException(NO_ENTITY_WITH_ID);
