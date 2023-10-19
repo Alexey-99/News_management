@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +31,7 @@ import javax.validation.constraints.Size;
 import static com.mjc.school.name.SortField.MODIFIED;
 import static com.mjc.school.name.SortType.ASCENDING;
 import static com.mjc.school.name.SortType.DESCENDING;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
@@ -58,7 +58,7 @@ public class NewsController {
                                           NewsDTO newsDTO)
             throws ServiceException {
         boolean result = newsService.create(newsDTO);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(result, CREATED);
     }
 
     @ApiResponses(value = {
@@ -140,11 +140,7 @@ public class NewsController {
                                           NewsDTO newsDTO)
             throws ServiceException {
         newsDTO.setId(id);
-        NewsDTO newsDTO1 = newsService.update(newsDTO);
-        System.out.println(newsDTO1.getContent());
-        NewsDTO newsDTO2 = newsService.findById(id);
-        System.out.println(newsDTO2.getContent());
-        return new ResponseEntity<>(newsDTO2, OK);
+        return new ResponseEntity<>(newsService.update(newsDTO), OK);
     }
 
     @ApiResponses(value = {
@@ -242,6 +238,33 @@ public class NewsController {
                 newsService.findByTagId(tagId, page, size),
                 newsService.findByTagId(tagId),
                 page, size), OK);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
+    @ApiOperation(value = """
+            View news by author name.
+            Response: pagination of news.
+            """, response = Pagination.class)
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<Pagination<NewsDTO>> findNewsByAuthorId(@PathVariable
+                                                                  @Min(value = 1,
+                                                                          message = "news_controller.path_variable.id.in_valid.min")
+                                                                  long authorId,
+                                                                  @RequestAttribute(value = "size")
+                                                                  int size,
+                                                                  @RequestAttribute(value = "page")
+                                                                  int page)
+            throws ServiceException {
+        return new ResponseEntity<>(
+                newsService.getPagination(
+                        newsService.findByAuthorId(authorId, page, size),
+                        newsService.findByAuthorId(authorId),
+                        page, size), OK);
     }
 
     @ApiResponses(value = {

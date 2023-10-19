@@ -176,4 +176,11 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             WHERE title = :title
             """, nativeQuery = true)
     Optional<News> findNewsByTitle(@Param("title") String title);
+
+    @Query(value = """
+            SELECT COUNT(title) > 0
+            FROM news
+            WHERE title = :title
+            """, nativeQuery = true)
+    boolean existsByTitle(@Param("title") String title);
 }

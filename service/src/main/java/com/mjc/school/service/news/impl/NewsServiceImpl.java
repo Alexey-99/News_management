@@ -1,7 +1,6 @@
 package com.mjc.school.service.news.impl;
 
 import com.mjc.school.converter.impl.NewsConverter;
-import com.mjc.school.Author;
 import com.mjc.school.News;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.validation.dto.Pagination;
@@ -53,18 +52,13 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     @Override
     public boolean create(NewsDTO newsDTO) throws ServiceException {
-        if (newsRepository.findNewsByTitle(newsDTO.getTitle()).isEmpty()) {
-            Optional<Author> author = authorRepository.findById(newsDTO.getAuthorId());
-            if (author.isPresent()) {
-                newsDTO.setCreated(dateHandler.getCurrentDate());
-                newsDTO.setModified(dateHandler.getCurrentDate());
-                News news = newsConverter.fromDTO(newsDTO);
-                news.setAuthor(author.get());
-                newsRepository.save(news);
-                return true;
-            } else {
-                return false;
-            }
+        if (newsRepository.existsByTitle(newsDTO.getTitle())) {
+            newsDTO.setCreated(dateHandler.getCurrentDate());
+            newsDTO.setModified(dateHandler.getCurrentDate());
+            News news = newsConverter.fromDTO(newsDTO);
+            news.setAuthor(authorRepository.getById(newsDTO.getId()));
+            newsRepository.save(news);
+            return true;
         } else {
             log.log(WARN, "News with title '" + newsDTO.getTitle() + "' exists.");
             throw new ServiceException("news_dto.title.not_valid.exists_news_title");
@@ -114,17 +108,27 @@ public class NewsServiceImpl implements NewsService {
     public NewsDTO update(NewsDTO newsDTO) throws ServiceException {
         Optional<News> optionalNews = newsRepository.findById(newsDTO.getId());
         if (optionalNews.isPresent()) {
-//            News news = optionalNews.get();
-            if (!optionalNews.get().getTitle().equals(newsDTO.getTitle()) &&
-                    newsRepository.findNewsByTitle(newsDTO.getTitle()).isPresent()) {
-                log.log(WARN, "News with title '" + newsDTO.getTitle() + "' exists.");
-                throw new ServiceException("news_dto.title.not_valid.exists_news_title");
-            } else {
-                News news = newsConverter.fromDTO(newsDTO);
+            News news = optionalNews.get();
+            if (news.getTitle().equals(newsDTO.getTitle())) {
+                news.setContent(newsDTO.getContent());
+                news.setAuthor(authorRepository.getById(newsDTO.getId()));
                 news.setModified(dateHandler.getCurrentDate());
                 newsRepository.update(news.getTitle(), news.getContent(),
                         news.getAuthor().getId(), news.getModified(), news.getId());
-                return newsConverter.toDTO(newsRepository.getById(news.getId()));
+                return newsConverter.toDTO(news);
+            } else {
+                if (newsRepository.existsByTitle(newsDTO.getTitle())) {
+                    news.setTitle(newsDTO.getTitle());
+                    news.setContent(newsDTO.getContent());
+                    news.setAuthor(authorRepository.getById(newsDTO.getId()));
+                    news.setModified(dateHandler.getCurrentDate());
+                    newsRepository.update(news.getTitle(), news.getContent(),
+                            news.getAuthor().getId(), news.getModified(), news.getId());
+                    return newsConverter.toDTO(news);
+                } else {
+                    log.log(WARN, "News with title '" + newsDTO.getTitle() + "' exists.");
+                    throw new ServiceException("news_dto.title.not_valid.exists_news_title");
+                }
             }
         } else {
             log.log(WARN, "Not found object with this ID: " + newsDTO.getId());

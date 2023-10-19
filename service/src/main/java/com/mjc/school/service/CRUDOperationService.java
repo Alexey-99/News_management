@@ -9,14 +9,11 @@ public interface CRUDOperationService<T> {
 
     boolean deleteById(long id);
 
-    T update(T entity)
-            throws ServiceException;
+    T update(T entity) throws ServiceException;
 
-    List<T> findAll(int page, int size)
-            throws ServiceException;
+    List<T> findAll(int page, int size) throws ServiceException;
 
     List<T> findAll();
 
-    T findById(long id)
-            throws ServiceException;
+    T findById(long id) throws ServiceException;
 }

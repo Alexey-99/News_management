@@ -40,7 +40,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public boolean create(TagDTO tagDTO) throws ServiceException {
-        if (!tagRepository.existByName(tagDTO.getName())) {
+        if (!tagRepository.existsByName(tagDTO.getName())) {
             Tag tag = tagConverter.fromDTO(tagDTO);
             tagRepository.save(tag);
             return true;
@@ -104,7 +104,7 @@ public class TagServiceImpl implements TagService {
             if (tag.getName().equals(tagDTO.getName())) {
                 return tagConverter.toDTO(tag);
             } else {
-                if (!tagRepository.existByName(tagDTO.getName())) {
+                if (!tagRepository.existsByName(tagDTO.getName())) {
                     tagRepository.update(tagDTO.getName(), tagDTO.getId());
                     tag.setName(tagDTO.getName());
                     return tagConverter.toDTO(tag);

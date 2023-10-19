@@ -43,10 +43,15 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Transactional
     @Override
-    public boolean create(AuthorDTO authorDTO) {
-        Author author = authorConverter.fromDTO(authorDTO);
-        authorRepository.save(author);
-        return true;
+    public boolean create(AuthorDTO authorDTO) throws ServiceException {
+        if (authorRepository.existsByName(authorDTO.getName())) {
+            Author author = authorConverter.fromDTO(authorDTO);
+            authorRepository.save(author);
+            return true;
+        } else {
+            log.log(WARN, "Author with entered name '" + authorDTO.getName() + "' already exists");
+            throw new ServiceException("tag_dto.name.not_valid.exists_tag_by_name");
+        }
     }
 
     @Transactional
@@ -61,9 +66,21 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     @Override
     public AuthorDTO update(AuthorDTO authorDTO) throws ServiceException {
-        if (authorRepository.existsById(authorDTO.getId())) {
-            authorRepository.update(authorDTO.getId(), authorDTO.getName());
-            return authorConverter.toDTO(authorRepository.getById(authorDTO.getId()));
+        Optional<Author> optionalAuthor = authorRepository.findById(authorDTO.getId());
+        if (optionalAuthor.isPresent()) {
+            Author author = optionalAuthor.get();
+            if (author.getName().equals(authorDTO.getName())) {
+                return authorConverter.toDTO(author);
+            } else {
+                if (authorRepository.existsByName(authorDTO.getName())) {
+                    author.setName(authorDTO.getName());
+                    authorRepository.update(author.getId(), author.getName());
+                    return authorConverter.toDTO(author);
+                } else {
+                    log.log(WARN, "Author with entered name '" + authorDTO.getName() + "' already exists");
+                    throw new ServiceException("author_dto.name.not_valid.already_exists");
+                }
+            }
         } else {
             log.log(WARN, "Not found object with this ID: " + authorDTO.getId());
             throw new ServiceException(NO_ENTITY_WITH_ID);

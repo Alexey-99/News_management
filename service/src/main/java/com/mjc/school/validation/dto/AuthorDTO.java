@@ -1,7 +1,6 @@
 package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mjc.school.validation.annotation.IsNotExistsAuthorName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +25,7 @@ public class AuthorDTO implements Serializable {
     @NotNull(message = "author_dto.name.not_valid.null")
     @NotBlank(message = "author_dto.name.not_valid.is_blank")
     @Size(min = 3, max = 15, message = "author_dto.name.not_valid.size")
-    @IsNotExistsAuthorName(message = "author_dto.name.not_valid.already_exists")
+//    @IsNotExistsAuthorName(message = "author_dto.name.not_valid.already_exists")
     private String name;
 
     private int countNews;

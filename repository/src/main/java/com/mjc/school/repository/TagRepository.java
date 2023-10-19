@@ -86,5 +86,5 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             FROM tags
             WHERE name = :name
             """)
-    boolean existByName(@Param("name") String name);
+    boolean existsByName(@Param("name") String name);
 }

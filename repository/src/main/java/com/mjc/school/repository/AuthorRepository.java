@@ -8,16 +8,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     @Query(value = """
-            SELECT id, name
+            SELECT COUNT(name) > 0
             FROM authors
             WHERE name = :name
             """, nativeQuery = true)
-    Optional<Author> findAuthorByName(@Param("name") String name);
+    boolean existsByName(@Param("name") String name);
 
     @Modifying
     @Query(value = """

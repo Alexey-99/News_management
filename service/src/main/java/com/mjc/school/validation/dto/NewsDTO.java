@@ -3,7 +3,6 @@ package com.mjc.school.validation.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.validation.annotation.IsExistsAuthorById;
-import com.mjc.school.validation.annotation.IsNotExistsNewsTitle;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
