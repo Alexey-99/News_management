@@ -36,6 +36,8 @@ public interface NewsService {
 
     List<NewsDTO> findByTagName(String tagName);
 
+    long countAllNewsByTagName(String tagName);
+
     List<NewsDTO> findByTagId(long tagId, int page, int size) throws ServiceException;
 
     List<NewsDTO> findByTagId(long tagId);

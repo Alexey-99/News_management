@@ -160,7 +160,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public long countAllNews() {
-        return newsRepository.count();
+        return newsRepository.countAllNews();
     }
 
     @Override
@@ -175,10 +175,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByTagName(String tagName,
-                                       int page, int size) throws ServiceException {
-        List<News> newsList = newsRepository.findByTagName(
-                tagName,
+    public List<NewsDTO> findByTagName(String tagName, int page, int size) throws ServiceException {
+        List<News> newsList = newsRepository.findByTagName(tagName,
                 newsPagination.calcNumberFirstElement(page, size),
                 size);
         if (!newsList.isEmpty()) {
@@ -200,10 +198,13 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByTagId(long tagId,
-                                     int page, int size) throws ServiceException {
-        List<News> newsList = newsRepository.findByTagId(
-                tagId,
+    public long countAllNewsByTagName(String tagName) {
+        return newsRepository.countAllNewsByTagName(tagName);
+    }
+
+    @Override
+    public List<NewsDTO> findByTagId(long tagId, int page, int size) throws ServiceException {
+        List<News> newsList = newsRepository.findByTagId(tagId,
                 newsPagination.calcNumberFirstElement(page, size),
                 size);
         if (!newsList.isEmpty()) {

@@ -36,10 +36,10 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                 @Param("news_id") Long newsId);
 
     @Query(value = """
-            SELECT news.id, news.title, news.content, news.authors_id, news.created, news.modified
+            SELECT COUNT(id)
             FROM news
             """, nativeQuery = true)
-    List<News> countAllNews();
+    Long countAllNews();
 
     @Query(value = """
             SELECT news.id, news.title, news.content, news.authors_id,
@@ -58,8 +58,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                              @Param("indexFirstElement") Integer indexFirstElement,
                              @Param("size") Integer size);
 
-
-
     @Query(value = """
             SELECT news.id, news.title, news.content, news.authors_id,
             news.created, news.modified
@@ -73,6 +71,19 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                 AND tags.name = :tag_name
             """, nativeQuery = true)
     List<News> findByTagName(@Param("tag_name") String tagName);
+
+    @Query(value = """
+            SELECT COUNT(news.id)
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE
+                news_tags.tags_id = tags.id
+                AND tags.name = :tag_name
+            """, nativeQuery = true)
+    Long countAllNewsByTagName(@Param("tag_name") String tagName);
 
     @Query(value = """
             SELECT news.id, news.title, news.content, news.authors_id,
