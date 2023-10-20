@@ -21,7 +21,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             """, nativeQuery = true)
     void update(@Param("content") String content,
                 @Param("news_id") Long newsId,
-                @Param("modified") String modified);
+                @Param("modified") String modified,
+                @Param("id") Long commentId);
 
     @Modifying
     @Query(value = """

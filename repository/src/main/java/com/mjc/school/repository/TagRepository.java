@@ -85,6 +85,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             SELECT COUNT(name) > 0
             FROM tags
             WHERE name = :name
-            """)
+            """, nativeQuery = true)
     boolean existsByName(@Param("name") String name);
 }

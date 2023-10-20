@@ -95,7 +95,7 @@ public class TagController {
                                                   @RequestParam(value = "news")
                                                   @Min(value = 1,
                                                           message = "tag_controller.request_body.news_id.in_valid.min")
-                                                  long newsId) {
+                                                  long newsId) throws ServiceException {
         boolean result = tagService.deleteFromNews(tagId, newsId);
         return new ResponseEntity<>(result, OK);
     }
@@ -133,7 +133,7 @@ public class TagController {
     public ResponseEntity<Boolean> deleteFromAllNews(@PathVariable
                                                      @Min(value = 1,
                                                              message = "tag_controller.request_body.tag_id.in_valid.min")
-                                                     long id) {
+                                                     long id) throws ServiceException {
         boolean result = tagService.deleteFromAllNews(id);
         return new ResponseEntity<>(result, OK);
     }

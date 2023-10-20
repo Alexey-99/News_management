@@ -65,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
             comment.setNews(newsRepository.getById(commentDTO.getNewsId()));
             comment.setModified(dateHandler.getCurrentDate());
             commentRepository.update(comment.getContent(), comment.getNews().getId(),
-                    comment.getModified());
+                    comment.getModified(), comment.getId());
             return commentConverter.toDTO(comment);
         } else {
             log.log(WARN, "Not found object with this ID: " + commentDTO.getId());
@@ -119,8 +119,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDTO> findAll(int page, int size) throws ServiceException {
         Page<Comment> commentPage = commentRepository.findAll(
-                PageRequest.of(commentPagination.calcMaxNumberPage(page, size), size));
-        if (!commentPage.isEmpty()) {
+                PageRequest.of(commentPagination.calcNumberFirstElement(page, size), size));
+        if (commentPage.getSize() > 0) {
             return commentPage.stream()
                     .map(commentConverter::toDTO)
                     .toList();
@@ -166,7 +166,6 @@ public class CommentServiceImpl implements CommentService {
             log.log(ERROR, "list is null");
             throw new ServiceException(SORT_ERROR);
         }
-
     }
 
     @Override

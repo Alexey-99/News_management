@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +29,7 @@ import javax.validation.constraints.NotNull;
 import static com.mjc.school.name.SortField.MODIFIED;
 import static com.mjc.school.name.SortType.ASCENDING;
 import static com.mjc.school.name.SortType.DESCENDING;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
@@ -53,10 +53,9 @@ public class CommentController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
-                                          CommentDTO commentDTO)
-            throws ServiceException {
+                                          CommentDTO commentDTO) throws ServiceException {
         boolean result = commentService.create(commentDTO);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(result, CREATED);
     }
 
     @ApiResponses(value = {
@@ -77,8 +76,7 @@ public class CommentController {
                                              @Valid
                                              @RequestBody
                                              @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
-                                             CommentDTO commentDTO)
-            throws ServiceException {
+                                             CommentDTO commentDTO) throws ServiceException {
         commentDTO.setId(id);
         CommentDTO result = commentService.update(commentDTO);
         return new ResponseEntity<>(result, OK);
@@ -117,8 +115,7 @@ public class CommentController {
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable
                                                   @Min(value = 1,
                                                           message = "comment_controller.path_variable.id.in_valid.min")
-                                                  long newsId)
-            throws ServiceException {
+                                                  long newsId) throws ServiceException {
         boolean result = commentService.deleteByNewsId(newsId);
         return new ResponseEntity<>(result, OK);
     }
@@ -137,13 +134,11 @@ public class CommentController {
     public ResponseEntity<Pagination<CommentDTO>> findAll(@RequestAttribute(value = "size")
                                                           int size,
                                                           @RequestAttribute(value = "page")
-                                                          int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                commentService.getPagination(
-                        commentService.findAll(page, size),
-                        commentService.findAll(),
-                        page, size), OK);
+                                                          int page) throws ServiceException {
+        return new ResponseEntity<>(commentService.getPagination(
+                commentService.findAll(page, size),
+                commentService.findAll(),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -164,13 +159,11 @@ public class CommentController {
                                                                @RequestAttribute(value = "size")
                                                                int size,
                                                                @RequestAttribute(value = "page")
-                                                               int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                commentService.getPagination(
-                        commentService.findByNewsId(newsId, page, size),
-                        commentService.findByNewsId(newsId),
-                        page, size), OK);
+                                                               int page) throws ServiceException {
+        return new ResponseEntity<>(commentService.getPagination(
+                commentService.findByNewsId(newsId, page, size),
+                commentService.findByNewsId(newsId),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -186,8 +179,7 @@ public class CommentController {
     public ResponseEntity<CommentDTO> findById(@PathVariable
                                                @Min(value = 1,
                                                        message = "comment_controller.path_variable.id.in_valid.min")
-                                               long id)
-            throws ServiceException {
+                                               long id) throws ServiceException {
         return new ResponseEntity<>(commentService.findById(id), OK);
     }
 
@@ -213,8 +205,7 @@ public class CommentController {
                                                        @RequestParam(value = "type",
                                                                required = false,
                                                                defaultValue = DESCENDING)
-                                                       String sortingType)
-            throws ServiceException {
+                                                       String sortingType) throws ServiceException {
         Pagination<CommentDTO> sortedList = null;
         if (sortingField != null &&
                 sortingField.equals(SortField.CREATED)) {

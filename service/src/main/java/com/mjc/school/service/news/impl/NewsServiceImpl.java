@@ -111,16 +111,16 @@ public class NewsServiceImpl implements NewsService {
             News news = optionalNews.get();
             if (news.getTitle().equals(newsDTO.getTitle())) {
                 news.setContent(newsDTO.getContent());
-                news.setAuthor(authorRepository.getById(newsDTO.getId()));
+                news.setAuthor(authorRepository.getById(newsDTO.getAuthorId()));
                 news.setModified(dateHandler.getCurrentDate());
                 newsRepository.update(news.getTitle(), news.getContent(),
                         news.getAuthor().getId(), news.getModified(), news.getId());
                 return newsConverter.toDTO(news);
             } else {
-                if (newsRepository.existsByTitle(newsDTO.getTitle())) {
+                if (!newsRepository.existsByTitle(newsDTO.getTitle())) {
                     news.setTitle(newsDTO.getTitle());
                     news.setContent(newsDTO.getContent());
-                    news.setAuthor(authorRepository.getById(newsDTO.getId()));
+                    news.setAuthor(authorRepository.getById(newsDTO.getAuthorId()));
                     news.setModified(dateHandler.getCurrentDate());
                     newsRepository.update(news.getTitle(), news.getContent(),
                             news.getAuthor().getId(), news.getModified(), news.getId());
@@ -139,8 +139,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findAll(int page, int size) throws ServiceException {
         Page<News> newsPage = newsRepository.findAll(
-                PageRequest.of(newsPagination.calcNumberFirstElement(page, size),
-                        size));
+                PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size));
         if (!newsPage.isEmpty()) {
             return newsPage.stream()
                     .map(newsConverter::toDTO)

@@ -72,7 +72,7 @@ public class AuthorServiceImpl implements AuthorService {
             if (author.getName().equals(authorDTO.getName())) {
                 return authorConverter.toDTO(author);
             } else {
-                if (authorRepository.existsByName(authorDTO.getName())) {
+                if (!authorRepository.existsByName(authorDTO.getName())) {
                     author.setName(authorDTO.getName());
                     authorRepository.update(author.getId(), author.getName());
                     return authorConverter.toDTO(author);
@@ -186,19 +186,17 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO>
-    selectAllAuthorsIdWithAmountOfWrittenNews() {
+    public List<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsIdWithAmountOfWrittenNews() {
         return authorRepository.findAll()
                 .stream()
-                .map(author ->
-                        AuthorIdWithAmountOfWrittenNews
-                                .builder()
-                                .authorId(author.getId())
-                                .amountOfWrittenNews(
-                                        author.getNews() != null
-                                                ? author.getNews().size()
-                                                : 0)
-                                .build())
+                .map(author -> AuthorIdWithAmountOfWrittenNews
+                        .builder()
+                        .authorId(author.getId())
+                        .amountOfWrittenNews(
+                                author.getNews() != null
+                                        ? author.getNews().size()
+                                        : 0)
+                        .build())
                 .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
                 .toList();
     }
