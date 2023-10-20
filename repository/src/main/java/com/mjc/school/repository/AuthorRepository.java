@@ -51,6 +51,13 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findByPartOfName(@Param("partOfName") String partOfName);
 
     @Query(value = """
+            SELECT COUNT(id)
+            FROM authors
+            WHERE name LIKE :partOfName
+            """, nativeQuery = true)
+    Long countAllByPartOfName(@Param("partOfName") String partOfName);
+
+    @Query(value = """
             SELECT authors.id, authors.name
             FROM authors INNER JOIN news
             ON authors.id = news.authors_id

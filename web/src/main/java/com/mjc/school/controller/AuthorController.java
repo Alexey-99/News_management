@@ -158,7 +158,7 @@ public class AuthorController {
                                                                   int page) throws ServiceException {
         return new ResponseEntity<>(authorService.getPagination(
                 authorService.findByPartOfName(partOfName, page, size),
-                authorService.findByPartOfName(partOfName),
+                authorService.countAllByPartOfName(partOfName),
                 page, size), OK);
     }
 
@@ -175,8 +175,7 @@ public class AuthorController {
     public ResponseEntity<AuthorDTO> findByNewsId(@PathVariable
                                                   @Min(value = 1,
                                                           message = "author_controller.path_variable.id.in_valid.min")
-                                                  long newsId)
-            throws ServiceException {
+                                                  long newsId) throws ServiceException {
         return new ResponseEntity<>(authorService.findByNewsId(newsId), OK);
     }
 
@@ -195,13 +194,10 @@ public class AuthorController {
     selectAllAuthorsIdWithAmountOfWrittenNews(@RequestAttribute(value = "size")
                                               int size,
                                               @RequestAttribute(value = "page")
-                                              int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                        authorService.selectAllAuthorsIdWithAmountOfWrittenNews(page, size),
-                        authorService.selectAllAuthorsIdWithAmountOfWrittenNews(),
-                        page, size), OK);
+                                              int page) throws ServiceException {
+        return new ResponseEntity<>(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
+                authorService.selectAllAuthorsIdWithAmountOfWrittenNews(page, size),
+                authorService.countAll(), page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -219,12 +215,10 @@ public class AuthorController {
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc(@RequestAttribute(value = "size")
                                                 int size,
                                                 @RequestAttribute(value = "page")
-                                                int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                        authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(page, size),
-                        authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(),
-                        page, size), OK);
+                                                int page) throws ServiceException {
+        return new ResponseEntity<>(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
+                authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(page, size),
+                authorService.countAll(),
+                page, size), OK);
     }
 }

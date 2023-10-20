@@ -155,11 +155,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public long countAllByPartOfName(String partOfName) {
-        String patternPartOfName = "%" + partOfName + "%";
-        return authorRepository.findByPartOfName(patternPartOfName)
-                .stream()
-                .map(authorConverter::toDTO)
-                .toList();
+        return authorRepository.countAllByPartOfName("%" + partOfName + "%");
     }
 
     @Override
@@ -174,8 +170,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO>
-    selectAllAuthorsIdWithAmountOfWrittenNews(int page, int size) throws ServiceException {
+    public List<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsIdWithAmountOfWrittenNews(
+            int page, int size) throws ServiceException {
         Page<Author> authorPage = authorRepository.findAll(PageRequest.of(
                 authorPagination.calcNumberFirstElement(page, size),
                 size));
@@ -214,8 +210,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO>
-    sortAllAuthorsIdWithAmountOfWrittenNewsDesc(int page, int size) throws ServiceException {
+    public List<AuthorIdWithAmountOfWrittenNewsDTO> sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
+            int page, int size) throws ServiceException {
         List<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsList =
                 new LinkedList<>(authorRepository.sortAllAuthorsWithAmountWrittenNewsDesc(
                                 authorPagination.calcNumberFirstElement(page, size),
