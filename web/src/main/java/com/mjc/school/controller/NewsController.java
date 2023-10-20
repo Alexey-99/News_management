@@ -199,11 +199,10 @@ public class NewsController {
                                                                  int size,
                                                                  @RequestAttribute(value = "page")
                                                                  int page) throws ServiceException {
-        return new ResponseEntity<>(
-                newsService.getPagination(
-                        newsService.findByTagName(tagName, page, size),
-                        newsService.findByTagName(tagName),
-                        page, size), OK);
+        return new ResponseEntity<>(newsService.getPagination(
+                newsService.findByTagName(tagName, page, size),
+                newsService.countAllNewsByTagName(tagName),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -224,8 +223,7 @@ public class NewsController {
                                                                @RequestAttribute(value = "size")
                                                                int size,
                                                                @RequestAttribute(value = "page")
-                                                               int page)
-            throws ServiceException {
+                                                               int page) throws ServiceException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findByTagId(tagId, page, size),
                 newsService.findByTagId(tagId),
