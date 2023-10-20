@@ -28,19 +28,21 @@ public interface TagService {
 
     List<TagDTO> findAll();
 
+    long countAll();
+
     TagDTO findById(long id) throws ServiceException;
 
-    List<TagDTO> findByPartOfName(String partOfName, int page, int size)
-            throws ServiceException;
+    List<TagDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException;
 
     List<TagDTO> findByPartOfName(String partOfName);
 
-    List<TagDTO> findByNewsId(long newsId, int page, int size)
-            throws ServiceException;
+    long countAllByPartOfName(String partOfName);
+
+    List<TagDTO> findByNewsId(long newsId, int page, int size) throws ServiceException;
 
     List<TagDTO> findByNewsId(long newsId);
 
-    Pagination<TagDTO> getPagination(List<TagDTO> elementsOnPage,
-                                     List<TagDTO> allElementsList,
-                                     int page, int size);
+    long countAllByNewsId(long newsId);
+
+    Pagination<TagDTO> getPagination(List<TagDTO> elementsOnPage, long countAllElements, int page, int size);
 }

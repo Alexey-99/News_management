@@ -40,6 +40,12 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
                 @Param("tag_id") Long tagId);
 
     @Query(value = """
+            SELECT COUNT(id)
+            FROM tags
+            """, nativeQuery = true)
+    Long countAll();
+
+    @Query(value = """
             SELECT id, name
             FROM tags
             WHERE name LIKE :part_name
@@ -55,6 +61,13 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             WHERE name LIKE :part_name
             """, nativeQuery = true)
     List<Tag> findByPartOfName(@Param("part_name") String partOfName);
+
+    @Query(value = """
+            SELECT COUNT(id)
+            FROM tags
+            WHERE name LIKE :part_name
+            """, nativeQuery = true)
+    Long countAllByPartOfName(@Param("part_name") String partOfName);
 
     @Query(value = """
             SELECT tags.id, tags.name
@@ -80,6 +93,17 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             WHERE news_tags.news_id = :news_id
             """, nativeQuery = true)
     List<Tag> findByNewsId(@Param("news_id") Long newsId);
+
+    @Query(value = """
+            SELECT COUNT(news.id)
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
+            """, nativeQuery = true)
+    Long countAllByNewsId(@Param("news_id") Long newsId);
 
     @Query(value = """
             SELECT COUNT(name) > 0

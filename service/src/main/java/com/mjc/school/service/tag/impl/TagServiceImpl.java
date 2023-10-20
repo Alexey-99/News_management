@@ -156,6 +156,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public long countAll() {
+        return tagRepository.countAll();
+    }
+
+    @Override
     public TagDTO findById(long id) throws ServiceException {
         Optional<Tag> optionalTag = tagRepository.findById(id);
         if (optionalTag.isPresent()) {
@@ -167,8 +172,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findByPartOfName(String partOfName,
-                                         int page, int size) throws ServiceException {
+    public List<TagDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException {
         String patternPartOfName = "%" + partOfName + "%";
         List<Tag> tagList = tagRepository.findByPartOfName(patternPartOfName,
                 tagPagination.calcNumberFirstElement(page, size),
@@ -193,8 +197,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findByNewsId(long newsId,
-                                     int page, int size) throws ServiceException {
+    public long countAllByPartOfName(String partOfName) {
+        return tagRepository.countAllByPartOfName("%" + partOfName + "%");
+    }
+
+    @Override
+    public List<TagDTO> findByNewsId(long newsId, int page, int size) throws ServiceException {
         List<Tag> tagList = tagRepository.findByNewsId(newsId,
                 tagPagination.calcNumberFirstElement(page, size),
                 size);
@@ -217,11 +225,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Pagination<TagDTO> getPagination(List<TagDTO> elementsOnPage,
-                                            List<TagDTO> allElementsList,
-                                            int page, int size) {
-        return tagPagination.getPagination(elementsOnPage, allElementsList,
-                page, size);
+    public long countAllByNewsId(long newsId) {
+        return tagRepository.countAllByNewsId(newsId);
+    }
+
+    @Override
+    public Pagination<TagDTO> getPagination(List<TagDTO> elementsOnPage, long countAllElements, int page, int size) {
+        return tagPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 
     private boolean isNotExistsTagInNews(long tagId, long newsId) {

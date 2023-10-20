@@ -156,11 +156,9 @@ public class TagController {
                                          @Valid
                                          @RequestBody
                                          @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
-                                         TagDTO tagDTO)
-            throws ServiceException {
+                                         TagDTO tagDTO) throws ServiceException {
         tagDTO.setId(id);
-        TagDTO result = tagService.update(tagDTO);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(tagService.update(tagDTO), OK);
     }
 
     @ApiResponses(value = {
@@ -177,13 +175,11 @@ public class TagController {
     public ResponseEntity<Pagination<TagDTO>> findAll(@RequestAttribute(value = "size")
                                                       int size,
                                                       @RequestAttribute(value = "page")
-                                                      int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                tagService.getPagination(
-                        tagService.findAll(page, size),
-                        tagService.findAll(),
-                        page, size), OK);
+                                                      int page) throws ServiceException {
+        return new ResponseEntity<>(tagService.getPagination(
+                tagService.findAll(page, size),
+                tagService.countAll(),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -200,8 +196,7 @@ public class TagController {
     public ResponseEntity<TagDTO> findById(@PathVariable
                                            @Min(value = 1,
                                                    message = "tag_controller.request_body.tag_id.in_valid.min")
-                                           long id)
-            throws ServiceException {
+                                           long id) throws ServiceException {
         return new ResponseEntity<>(tagService.findById(id), OK);
     }
 
@@ -222,13 +217,11 @@ public class TagController {
                                                                @RequestAttribute(value = "size")
                                                                int size,
                                                                @RequestAttribute(value = "page")
-                                                               int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                tagService.getPagination(
-                        tagService.findByPartOfName(partOfName, page, size),
-                        tagService.findByPartOfName(partOfName),
-                        page, size), OK);
+                                                               int page) throws ServiceException {
+        return new ResponseEntity<>(tagService.getPagination(
+                tagService.findByPartOfName(partOfName, page, size),
+                tagService.countAllByPartOfName(partOfName),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -249,12 +242,10 @@ public class TagController {
                                                            @RequestAttribute(value = "size")
                                                            int size,
                                                            @RequestAttribute(value = "page")
-                                                           int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                tagService.getPagination(
+                                                           int page) throws ServiceException {
+        return new ResponseEntity<>(tagService.getPagination(
                         tagService.findByNewsId(newsId, page, size),
-                        tagService.findByNewsId(newsId),
+                        tagService.countAllByNewsId(newsId),
                         page, size), OK);
     }
 }
