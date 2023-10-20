@@ -31,7 +31,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
             SELECT COUNT(id)
             FROM authors
             """, nativeQuery = true)
-    Long countAllAuthors();
+    Long countAll();
 
     @Query(value = """
             SELECT id, name

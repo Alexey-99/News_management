@@ -117,7 +117,7 @@ public class AuthorController {
                                                          int page) throws ServiceException {
         return new ResponseEntity<>(authorService.getPagination(
                 authorService.findAll(page, size),
-                authorService.countAllAuthors(),
+                authorService.countAll(),
                 page, size), OK);
     }
 

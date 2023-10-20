@@ -112,8 +112,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public long countAllAuthors() {
-        return authorRepository.countAllAuthors();
+    public long countAll() {
+        return authorRepository.countAll();
     }
 
     @Override
@@ -146,6 +146,15 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDTO> findByPartOfName(String partOfName) {
+        String patternPartOfName = "%" + partOfName + "%";
+        return authorRepository.findByPartOfName(patternPartOfName)
+                .stream()
+                .map(authorConverter::toDTO)
+                .toList();
+    }
+
+    @Override
+    public long countAllByPartOfName(String partOfName) {
         String patternPartOfName = "%" + partOfName + "%";
         return authorRepository.findByPartOfName(patternPartOfName)
                 .stream()

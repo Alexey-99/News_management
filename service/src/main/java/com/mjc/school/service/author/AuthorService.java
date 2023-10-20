@@ -22,13 +22,15 @@ public interface AuthorService {
 
     List<AuthorDTO> findAll();
 
-    long countAllAuthors();
+    long countAll();
 
     AuthorDTO findById(long id) throws ServiceException;
 
     List<AuthorDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException;
 
     List<AuthorDTO> findByPartOfName(String partOfName);
+
+    long countAllByPartOfName(String partOfName);
 
     AuthorDTO findByNewsId(long newsId) throws ServiceException;
 
