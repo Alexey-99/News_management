@@ -225,8 +225,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName,
-                                                int page, int size) throws ServiceException {
+    public long countAllNewsByTagId(long tagId) {
+        return newsRepository.countAllNewsByTagId(tagId);
+    }
+
+    @Override
+    public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName, int page, int size) throws ServiceException {
         String patternPartOfAuthorName = "%" + partOfAuthorName + "%";
         List<News> newsList = newsRepository.findByPartOfAuthorName(
                 patternPartOfAuthorName,
@@ -249,12 +253,15 @@ public class NewsServiceImpl implements NewsService {
                 .stream()
                 .map(newsConverter::toDTO)
                 .toList();
-
     }
 
     @Override
-    public List<NewsDTO> findByAuthorId(long authorId,
-                                        int page, int size) throws ServiceException {
+    public long countAllNewsByPartOfAuthorName(String partOfAuthorName) {
+        return newsRepository.countAllNewsByPartOfAuthorName("%" + partOfAuthorName + "%");
+    }
+
+    @Override
+    public List<NewsDTO> findByAuthorId(long authorId, int page, int size) throws ServiceException {
         List<News> newsList = newsRepository.findByAuthorId(
                 authorId,
                 newsPagination.calcNumberFirstElement(page, size),
@@ -278,11 +285,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfTitle(String partOfTitle,
-                                           int page, int size) throws ServiceException {
+    public long countAllNewsByAuthorId(long authorId) {
+        return newsRepository.countAllNewsByAuthorId(authorId);
+    }
+
+    @Override
+    public List<NewsDTO> findByPartOfTitle(String partOfTitle, int page, int size) throws ServiceException {
         String patternPartOfTitle = "%" + partOfTitle + "%";
-        List<News> newsList = newsRepository.findByPartOfTitle(
-                patternPartOfTitle,
+        List<News> newsList = newsRepository.findByPartOfTitle(patternPartOfTitle,
                 newsPagination.calcNumberFirstElement(page, size),
                 size);
         if (!newsList.isEmpty()) {
@@ -305,8 +315,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfContent(String partOfContent,
-                                             int page, int size) throws ServiceException {
+    public long countAllNewsByPartOfTitle(String partOfTitle) {
+        return newsRepository.countAllNewsByPartOfTitle("%" + partOfTitle + "%");
+    }
+
+    @Override
+    public List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size) throws ServiceException {
         String patternPartOfContent = "%" + partOfContent + "%";
         List<News> newsList = newsRepository.findByPartOfContent(
                 patternPartOfContent,
@@ -329,6 +343,11 @@ public class NewsServiceImpl implements NewsService {
                 .stream()
                 .map(newsConverter::toDTO)
                 .toList();
+    }
+
+    @Override
+    public long countAllNewsByPartOfContent(String partOfContent) {
+        return newsRepository.countAllNewsByPartOfContent("%" + partOfContent + "%");
     }
 
     @Override

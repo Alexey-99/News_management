@@ -116,6 +116,19 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findByTagId(@Param("tag_id") Long tagId);
 
     @Query(value = """
+            SELECT COUNT(news.id)
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE
+                news_tags.tags_id = tags.id
+                AND tags.id = :tag_id
+            """, nativeQuery = true)
+    Long countAllNewsByTagId(@Param("tag_id") Long tagId);
+
+    @Query(value = """
             SELECT news.id, news.title, news.content, news.authors_id,
             news.created, news.modified
             FROM news
@@ -139,6 +152,15 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findByPartOfAuthorName(@Param("part_author_name") String partOfAuthorName);
 
     @Query(value = """
+            SELECT COUNT(news.id)
+            FROM news
+                INNER JOIN authors
+                    ON news.authors_id = authors.id
+            WHERE authors.name LIKE :part_author_name
+            """, nativeQuery = true)
+    Long countAllNewsByPartOfAuthorName(@Param("part_author_name") String partOfAuthorName);
+
+    @Query(value = """
             SELECT id, title, content, authors_id, created, modified
             FROM news
             WHERE authors_id = :author_id
@@ -154,6 +176,13 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             WHERE authors_id = :author_id
             """, nativeQuery = true)
     List<News> findByAuthorId(@Param("author_id") Long authorId);
+
+    @Query(value = """
+            SELECT COUNT(id)
+            FROM news
+            WHERE authors_id = :author_id
+            """, nativeQuery = true)
+    Long countAllNewsByAuthorId(@Param("author_id") Long authorId);
 
     @Query(value = """
             SELECT id, title, content, authors_id, created, modified
@@ -173,6 +202,13 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findByPartOfTitle(@Param("part_of_title") String partOfTitle);
 
     @Query(value = """
+            SELECT COUNT(id)
+            FROM news
+            WHERE title LIKE :part_of_title
+            """, nativeQuery = true)
+    Long countAllNewsByPartOfTitle(@Param("part_of_title") String partOfTitle);
+
+    @Query(value = """
             SELECT id, title, content, authors_id, created, modified
             FROM news
             WHERE content LIKE :part_of_content
@@ -188,6 +224,13 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             WHERE content LIKE :part_of_content
             """, nativeQuery = true)
     List<News> findByPartOfContent(@Param("part_of_content") String partOfContent);
+
+    @Query(value = """
+            SELECT COUNT(id)
+            FROM news
+            WHERE content LIKE :part_of_content
+            """, nativeQuery = true)
+    Long countAllNewsByPartOfContent(@Param("part_of_content") String partOfContent);
 
     @Query(value = """
             SELECT id, title, content, authors_id, created, modified

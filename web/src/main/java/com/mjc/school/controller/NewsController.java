@@ -226,7 +226,7 @@ public class NewsController {
                                                                int page) throws ServiceException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findByTagId(tagId, page, size),
-                newsService.findByTagId(tagId),
+                newsService.countAllNewsByTagId(tagId),
                 page, size), OK);
     }
 
@@ -248,13 +248,11 @@ public class NewsController {
                                                                   @RequestAttribute(value = "size")
                                                                   int size,
                                                                   @RequestAttribute(value = "page")
-                                                                  int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                newsService.getPagination(
-                        newsService.findByAuthorId(authorId, page, size),
-                        newsService.findByAuthorId(authorId),
-                        page, size), OK);
+                                                                  int page) throws ServiceException {
+        return new ResponseEntity<>(newsService.getPagination(
+                newsService.findByAuthorId(authorId, page, size),
+                newsService.countAllNewsByAuthorId(authorId),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -274,13 +272,11 @@ public class NewsController {
                                                                     @RequestAttribute(value = "size")
                                                                     int size,
                                                                     @RequestAttribute(value = "page")
-                                                                    int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                newsService.getPagination(
-                        newsService.findByPartOfAuthorName(partOfAuthorName, page, size),
-                        newsService.findByPartOfAuthorName(partOfAuthorName),
-                        page, size), OK);
+                                                                    int page) throws ServiceException {
+        return new ResponseEntity<>(newsService.getPagination(
+                newsService.findByPartOfAuthorName(partOfAuthorName, page, size),
+                newsService.countAllNewsByPartOfAuthorName(partOfAuthorName),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -300,13 +296,11 @@ public class NewsController {
                                                                      @RequestAttribute(value = "size")
                                                                      int size,
                                                                      @RequestAttribute(value = "page")
-                                                                     int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                newsService.getPagination(
-                        newsService.findByPartOfTitle(partOfTitle, page, size),
-                        newsService.findByPartOfTitle(partOfTitle),
-                        page, size), OK);
+                                                                     int page) throws ServiceException {
+        return new ResponseEntity<>(newsService.getPagination(
+                newsService.findByPartOfTitle(partOfTitle, page, size),
+                newsService.countAllNewsByPartOfTitle(partOfTitle),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -326,13 +320,11 @@ public class NewsController {
                                                                        @RequestAttribute(value = "size")
                                                                        int size,
                                                                        @RequestAttribute(value = "page")
-                                                                       int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                newsService.getPagination(
-                        newsService.findByPartOfContent(partOfContent, page, size),
-                        newsService.findByPartOfContent(partOfContent),
-                        page, size), OK);
+                                                                       int page) throws ServiceException {
+        return new ResponseEntity<>(newsService.getPagination(
+                newsService.findByPartOfContent(partOfContent, page, size),
+                newsService.countAllNewsByPartOfContent(partOfContent),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -357,8 +349,7 @@ public class NewsController {
                                                     @RequestParam(value = "type",
                                                             required = false,
                                                             defaultValue = DESCENDING)
-                                                    String sortingType)
-            throws ServiceException {
+                                                    String sortingType) throws ServiceException {
         Pagination<NewsDTO> sortedList = null;
         if (sortingField != null &&
                 sortingField.equals(SortField.CREATED)) {
@@ -367,15 +358,13 @@ public class NewsController {
                 sortedList = newsService.getPagination(
                         newsService.sortByCreatedDateTimeAsc(
                                 newsService.findAll(page, size)),
-                        newsService.sortByCreatedDateTimeAsc(
-                                newsService.findAll()),
+                        newsService.countAllNews(),
                         page, size);
             } else {
                 sortedList = newsService.getPagination(
                         newsService.sortByCreatedDateTimeDesc(
                                 newsService.findAll(page, size)),
-                        newsService.sortByCreatedDateTimeDesc(
-                                newsService.findAll()),
+                        newsService.countAllNews(),
                         page, size);
             }
         } else {
@@ -384,15 +373,13 @@ public class NewsController {
                 sortedList = newsService.getPagination(
                         newsService.sortByModifiedDateTimeAsc(
                                 newsService.findAll(page, size)),
-                        newsService.sortByModifiedDateTimeAsc(
-                                newsService.findAll()),
+                        newsService.countAllNews(),
                         page, size);
             } else {
                 sortedList = newsService.getPagination(
                         newsService.sortByModifiedDateTimeDesc(
                                 newsService.findAll(page, size)),
-                        newsService.sortByModifiedDateTimeDesc(
-                                newsService.findAll()),
+                        newsService.countAllNews(),
                         page, size);
             }
         }

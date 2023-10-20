@@ -42,21 +42,31 @@ public interface NewsService {
 
     List<NewsDTO> findByTagId(long tagId);
 
+    long countAllNewsByTagId(long tagId);
+
     List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName, int page, int size) throws ServiceException;
 
     List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName);
+
+    long countAllNewsByPartOfAuthorName(String partOfAuthorName);
 
     List<NewsDTO> findByAuthorId(long authorId, int page, int size) throws ServiceException;
 
     List<NewsDTO> findByAuthorId(long authorId);
 
+    long countAllNewsByAuthorId(long authorId);
+
     List<NewsDTO> findByPartOfTitle(String partOfTitle, int page, int size) throws ServiceException;
 
     List<NewsDTO> findByPartOfTitle(String partOfTitle);
 
+    long countAllNewsByPartOfTitle(String partOfTitle);
+
     List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size) throws ServiceException;
 
     List<NewsDTO> findByPartOfContent(String partOfContent);
+
+    long countAllNewsByPartOfContent(String partOfContent);
 
     List<NewsDTO> sort(List<NewsDTO> newsList, SortNewsComparator comparator) throws ServiceException;
 
