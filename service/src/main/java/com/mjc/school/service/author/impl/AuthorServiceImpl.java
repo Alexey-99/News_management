@@ -89,10 +89,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDTO> findAll(int page, int size) throws ServiceException {
-        Page<Author> authorPage = authorRepository.findAll(
-                PageRequest.of(
-                        authorPagination.calcNumberFirstElement(page, size),
-                        size));
+        Page<Author> authorPage = authorRepository.findAll(PageRequest.of(
+                authorPagination.calcNumberFirstElement(page, size),
+                size));
         if (!authorPage.isEmpty()) {
             return authorPage
                     .stream()
@@ -110,7 +109,11 @@ public class AuthorServiceImpl implements AuthorService {
                 .stream()
                 .map(authorConverter::toDTO)
                 .toList();
+    }
 
+    @Override
+    public long countAllAuthors() {
+        return authorRepository.countAllAuthors();
     }
 
     @Override
@@ -229,8 +232,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO>
-    sortAllAuthorsIdWithAmountOfWrittenNewsDesc() {
+    public List<AuthorIdWithAmountOfWrittenNewsDTO> sortAllAuthorsIdWithAmountOfWrittenNewsDesc() {
         return new LinkedList<>(authorRepository.sortAllAuthorsWithAmountWrittenNewsDesc()
                 .stream()
                 .map(author -> AuthorIdWithAmountOfWrittenNews
@@ -246,16 +248,15 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, List<AuthorDTO> allElementsList,
+    public Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements,
                                                int page, int size) {
-        return authorPagination.getPagination(elementsOnPage, allElementsList, page, size);
+        return authorPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 
     @Override
     public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
     getPaginationAuthorIdWithAmountOfWrittenNews(List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage,
-                                                 List<AuthorIdWithAmountOfWrittenNewsDTO> allElementsList,
-                                                 int page, int size) {
-        return amountOfWrittenNewsDTOPagination.getPagination(elementsOnPage, allElementsList, page, size);
+                                                 long countAllElements, int page, int size) {
+        return amountOfWrittenNewsDTOPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 }

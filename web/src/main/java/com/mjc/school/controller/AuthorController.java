@@ -52,8 +52,7 @@ public class AuthorController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
-                                          AuthorDTO authorDTO)
-            throws ServiceException {
+                                          AuthorDTO authorDTO) throws ServiceException {
         boolean result = authorService.create(authorDTO);
         return new ResponseEntity<>(result, CREATED);
     }
@@ -95,11 +94,9 @@ public class AuthorController {
                                             @RequestBody
                                             @Valid
                                             @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
-                                            AuthorDTO authorDTO)
-            throws ServiceException {
+                                            AuthorDTO authorDTO) throws ServiceException {
         authorDTO.setId(id);
-        AuthorDTO result = authorService.update(authorDTO);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(authorService.update(authorDTO), OK);
     }
 
     @ApiResponses(value = {
@@ -117,13 +114,11 @@ public class AuthorController {
     public ResponseEntity<Pagination<AuthorDTO>> findAll(@RequestAttribute(value = "size")
                                                          int size,
                                                          @RequestAttribute(value = "page")
-                                                         int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                authorService.getPagination(
-                        authorService.findAll(page, size),
-                        authorService.findAll(),
-                        page, size), OK);
+                                                         int page) throws ServiceException {
+        return new ResponseEntity<>(authorService.getPagination(
+                authorService.findAll(page, size),
+                authorService.countAllAuthors(),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -139,8 +134,7 @@ public class AuthorController {
     public ResponseEntity<AuthorDTO> findById(@PathVariable
                                               @Min(value = 1,
                                                       message = "author_controller.path_variable.id.in_valid.min")
-                                              long id)
-            throws ServiceException {
+                                              long id) throws ServiceException {
         return new ResponseEntity<>(authorService.findById(id), OK);
     }
 
@@ -161,13 +155,11 @@ public class AuthorController {
                                                                   @RequestAttribute(value = "size")
                                                                   int size,
                                                                   @RequestAttribute(value = "page")
-                                                                  int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                authorService.getPagination(
-                        authorService.findByPartOfName(partOfName, page, size),
-                        authorService.findByPartOfName(partOfName),
-                        page, size), OK);
+                                                                  int page) throws ServiceException {
+        return new ResponseEntity<>(authorService.getPagination(
+                authorService.findByPartOfName(partOfName, page, size),
+                authorService.findByPartOfName(partOfName),
+                page, size), OK);
     }
 
     @ApiResponses(value = {

@@ -28,6 +28,12 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     void update(@Param("id") Long id, @Param("name") String name);
 
     @Query(value = """
+            SELECT COUNT(id)
+            FROM authors
+            """, nativeQuery = true)
+    Long countAllAuthors();
+
+    @Query(value = """
             SELECT id, name
             FROM authors
             WHERE name LIKE :partOfName

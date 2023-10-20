@@ -22,10 +22,11 @@ public interface AuthorService {
 
     List<AuthorDTO> findAll();
 
+    long countAllAuthors();
+
     AuthorDTO findById(long id) throws ServiceException;
 
-    List<AuthorDTO> findByPartOfName(String partOfName,
-                                     int page, int size) throws ServiceException;
+    List<AuthorDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException;
 
     List<AuthorDTO> findByPartOfName(String partOfName);
 
@@ -43,12 +44,9 @@ public interface AuthorService {
     List<AuthorIdWithAmountOfWrittenNewsDTO>
     sortAllAuthorsIdWithAmountOfWrittenNewsDesc();
 
-    Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage,
-                                        List<AuthorDTO> allElementsList,
+    Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements,
                                         int page, int size);
 
-    Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
-    getPaginationAuthorIdWithAmountOfWrittenNews(List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage,
-                                                 List<AuthorIdWithAmountOfWrittenNewsDTO> allElementsList,
-                                                 int page, int size);
+    Pagination<AuthorIdWithAmountOfWrittenNewsDTO> getPaginationAuthorIdWithAmountOfWrittenNews(
+            List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage, long countAllElements, int page, int size);
 }
