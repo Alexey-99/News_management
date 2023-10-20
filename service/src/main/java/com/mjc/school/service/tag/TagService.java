@@ -14,10 +14,10 @@ public interface TagService {
     boolean deleteById(long id);
 
     @Transactional
-    boolean deleteFromNews(long tagId, long newsId);
+    boolean deleteFromNews(long tagId, long newsId) throws ServiceException;
 
     @Transactional
-    boolean deleteFromAllNews(long tagId);
+    boolean deleteFromAllNews(long tagId) throws ServiceException;
 
     @Transactional
     TagDTO update(TagDTO tagDTO) throws ServiceException;

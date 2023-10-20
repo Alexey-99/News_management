@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
@@ -49,7 +50,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
             ON authors.id = news.authors_id
             WHERE news.id = :newsId
             """, nativeQuery = true)
-    Author findByNewsId(@Param("newsId") Long newsId);
+    Optional<Author> findByNewsId(@Param("newsId") Long newsId);
 
     @Query(value = """
              SELECT authors.id, authors.name

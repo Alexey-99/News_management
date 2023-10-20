@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -80,11 +81,7 @@ public class NewsServiceImpl implements NewsService {
         if (authorRepository.existsById(authorId)) {
             newsRepository.findByAuthorId(authorId)
                     .forEach(news -> newsRepository.deleteById(news.getId()));
-            return newsRepository.findAll()
-                    .stream()
-                    .filter(news -> news.getAuthor().getId() == authorId)
-                    .toList()
-                    .isEmpty();
+            return true;
         } else {
             log.log(WARN, "Not found authors with ID: " + authorId);
             throw new ServiceException(NO_AUTHORS_WITH_ID);
@@ -94,9 +91,12 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     @Override
     public NewsDTO deleteAllTagsFromNews(long newsId) throws ServiceException {
-        if (newsRepository.existsById(newsId)) {
+        Optional<News> optionalNews = newsRepository.findById(newsId);
+        if (optionalNews.isPresent()) {
             newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
-            return newsConverter.toDTO(newsRepository.getById(newsId));
+            News news = optionalNews.get();
+            news.setTags(new ArrayList<>());
+            return newsConverter.toDTO(news);
         } else {
             log.log(WARN, "Not found news with ID: " + newsId);
             throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -172,8 +172,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByTagName(String tagName,
-                                       int page, int size)
-            throws ServiceException {
+                                       int page, int size) throws ServiceException {
         List<News> newsList = newsRepository.findByTagName(
                 tagName,
                 newsPagination.calcNumberFirstElement(page, size),
@@ -198,8 +197,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByTagId(long tagId,
-                                     int page, int size)
-            throws ServiceException {
+                                     int page, int size) throws ServiceException {
         List<News> newsList = newsRepository.findByTagId(
                 tagId,
                 newsPagination.calcNumberFirstElement(page, size),
@@ -223,8 +221,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName,
-                                                int page, int size)
-            throws ServiceException {
+                                                int page, int size) throws ServiceException {
         String patternPartOfAuthorName = "%" + partOfAuthorName + "%";
         List<News> newsList = newsRepository.findByPartOfAuthorName(
                 patternPartOfAuthorName,
@@ -252,8 +249,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByAuthorId(long authorId,
-                                        int page, int size)
-            throws ServiceException {
+                                        int page, int size) throws ServiceException {
         List<News> newsList = newsRepository.findByAuthorId(
                 authorId,
                 newsPagination.calcNumberFirstElement(page, size),
@@ -278,8 +274,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByPartOfTitle(String partOfTitle,
-                                           int page, int size)
-            throws ServiceException {
+                                           int page, int size) throws ServiceException {
         String patternPartOfTitle = "%" + partOfTitle + "%";
         List<News> newsList = newsRepository.findByPartOfTitle(
                 patternPartOfTitle,
@@ -306,8 +301,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByPartOfContent(String partOfContent,
-                                             int page, int size)
-            throws ServiceException {
+                                             int page, int size) throws ServiceException {
         String patternPartOfContent = "%" + partOfContent + "%";
         List<News> newsList = newsRepository.findByPartOfContent(
                 patternPartOfContent,
@@ -334,8 +328,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> sort(List<NewsDTO> newsList,
-                              SortNewsComparator comparator)
-            throws ServiceException {
+                              SortNewsComparator comparator) throws ServiceException {
         List<NewsDTO> sortedNewsList;
         if (newsList != null) {
             if (comparator != null) {
@@ -380,8 +373,7 @@ public class NewsServiceImpl implements NewsService {
     public Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage,
                                              List<NewsDTO> allElementsList,
                                              int page, int size) {
-        return newsPagination.getPagination(
-                elementsOnPage, allElementsList,
+        return newsPagination.getPagination(elementsOnPage, allElementsList,
                 page, size);
     }
 }

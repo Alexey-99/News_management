@@ -125,9 +125,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorDTO> findByPartOfName(String partOfName,
-                                            int page, int size)
-            throws ServiceException {
+    public List<AuthorDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException {
         String patternPartOfName = "%" + partOfName + "%";
         List<Author> authors = authorRepository.findByPartOfName(
                 patternPartOfName,
@@ -153,11 +151,10 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDTO findByNewsId(long newsId)
-            throws ServiceException {
-        Author author = authorRepository.findByNewsId(newsId);
-        if (author != null) {
-            return authorConverter.toDTO(author);
+    public AuthorDTO findByNewsId(long newsId) throws ServiceException {
+        Optional<Author> optionalAuthor = authorRepository.findByNewsId(newsId);
+        if (optionalAuthor.isPresent()) {
+            return authorConverter.toDTO(optionalAuthor.get());
         } else {
             log.log(WARN, "Not found objects with author news ID: " + newsId);
             throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
@@ -166,17 +163,14 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorIdWithAmountOfWrittenNewsDTO>
-    selectAllAuthorsIdWithAmountOfWrittenNews(int page, int size)
-            throws ServiceException {
-        Page<Author> authorPage = authorRepository.findAll(
-                PageRequest.of(
-                        authorPagination.calcNumberFirstElement(page, size),
-                        size));
+    selectAllAuthorsIdWithAmountOfWrittenNews(int page, int size) throws ServiceException {
+        Page<Author> authorPage = authorRepository.findAll(PageRequest.of(
+                authorPagination.calcNumberFirstElement(page, size),
+                size));
         if (!authorPage.isEmpty()) {
             return authorPage.stream()
                     .map(author ->
-                            AuthorIdWithAmountOfWrittenNews
-                                    .builder()
+                            AuthorIdWithAmountOfWrittenNews.builder()
                                     .authorId(author.getId())
                                     .amountOfWrittenNews(
                                             author.getNews() != null
@@ -211,8 +205,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorIdWithAmountOfWrittenNewsDTO>
-    sortAllAuthorsIdWithAmountOfWrittenNewsDesc(int page, int size)
-            throws ServiceException {
+    sortAllAuthorsIdWithAmountOfWrittenNewsDesc(int page, int size) throws ServiceException {
         List<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsList =
                 new LinkedList<>(authorRepository.sortAllAuthorsWithAmountWrittenNewsDesc(
                                 authorPagination.calcNumberFirstElement(page, size),
@@ -255,12 +248,9 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage,
-                                               List<AuthorDTO> allElementsList,
+    public Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, List<AuthorDTO> allElementsList,
                                                int page, int size) {
-        return authorPagination.getPagination(
-                elementsOnPage, allElementsList,
-                page, size);
+        return authorPagination.getPagination(elementsOnPage, allElementsList, page, size);
     }
 
     @Override
@@ -268,7 +258,6 @@ public class AuthorServiceImpl implements AuthorService {
     getPaginationAuthorIdWithAmountOfWrittenNews(List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage,
                                                  List<AuthorIdWithAmountOfWrittenNewsDTO> allElementsList,
                                                  int page, int size) {
-        return amountOfWrittenNewsDTOPagination.getPagination(
-                elementsOnPage, allElementsList, page, size);
+        return amountOfWrittenNewsDTOPagination.getPagination(elementsOnPage, allElementsList, page, size);
     }
 }

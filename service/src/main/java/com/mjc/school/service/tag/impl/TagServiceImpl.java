@@ -1,5 +1,6 @@
 package com.mjc.school.service.tag.impl;
 
+import com.mjc.school.News;
 import com.mjc.school.NewsTag;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.repository.NewsTagRepository;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
+import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_NEWS_WITH_TAG_ID;
 import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_TAGS_WITH_NEWS_ID;
 import static org.apache.logging.log4j.Level.WARN;
 
@@ -68,15 +70,21 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public boolean deleteFromNews(long tagId, long newsId) {
-        tagRepository.deleteFromNews(tagId, newsId);
-        return newsRepository.findById(newsId)
-                .filter(value -> !value.getTags()
-                        .stream()
-                        .filter(tag -> tag.getId() == tagId)
-                        .toList()
-                        .isEmpty())
-                .isEmpty();
+    public boolean deleteFromNews(long tagId, long newsId) throws ServiceException {
+        Optional<Tag> optionalTag = tagRepository.findById(tagId);
+        Optional<News> optionalNews = newsRepository.findById(newsId);
+        if (optionalTag.isPresent() && optionalNews.isPresent()) {
+            tagRepository.deleteFromNews(tagId, newsId);
+            return true;
+        } else {
+            if (optionalTag.isEmpty()) {
+                log.log(WARN, "Not found tag with this ID: " + tagId);
+                throw new ServiceException(NO_ENTITY_WITH_ID);
+            } else {
+                log.log(WARN, "Not found news with entered tag ID: " + tagId);
+                throw new ServiceException(NO_NEWS_WITH_TAG_ID);
+            }
+        }
     }
 
     @Transactional
@@ -90,9 +98,14 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public boolean deleteFromAllNews(long tagId) {
-        tagRepository.deleteFromAllNewsById(tagId);
-        return newsRepository.findByTagId(tagId).isEmpty();
+    public boolean deleteFromAllNews(long tagId) throws ServiceException {
+        if (tagRepository.existsById(tagId)) {
+            tagRepository.deleteFromAllNewsById(tagId);
+            return true;
+        } else {
+            log.log(WARN, "Not found tag with this ID: " + tagId);
+            throw new ServiceException(NO_ENTITY_WITH_ID);
+        }
     }
 
     @Transactional
@@ -120,14 +133,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findAll(int page, int size)
-            throws ServiceException {
-        Page<Tag> tagList = tagRepository.findAll(
-                PageRequest.of(
-                        tagPagination.calcNumberFirstElement(page, size),
-                        size));
-        if (!tagList.isEmpty()) {
-            return tagList.stream()
+    public List<TagDTO> findAll(int page, int size) throws ServiceException {
+        Page<Tag> tagPage = tagRepository.findAll(PageRequest.of(
+                tagPagination.calcNumberFirstElement(page, size),
+                size));
+        if (!tagPage.isEmpty()) {
+            return tagPage.stream()
                     .map(tagConverter::toDTO)
                     .toList();
         } else {
@@ -145,11 +156,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDTO findById(long id)
-            throws ServiceException {
-        Optional<Tag> tag = tagRepository.findById(id);
-        if (tag.isPresent()) {
-            return tagConverter.toDTO(tag.get());
+    public TagDTO findById(long id) throws ServiceException {
+        Optional<Tag> optionalTag = tagRepository.findById(id);
+        if (optionalTag.isPresent()) {
+            return tagConverter.toDTO(optionalTag.get());
         } else {
             log.log(WARN, "Not found tag with this ID: " + id);
             throw new ServiceException(NO_ENTITY_WITH_ID);
@@ -157,11 +167,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findByPartOfName(String partOfName, int page, int size)
-            throws ServiceException {
+    public List<TagDTO> findByPartOfName(String partOfName,
+                                         int page, int size) throws ServiceException {
         String patternPartOfName = "%" + partOfName + "%";
-        List<Tag> tagList = tagRepository.findByPartOfName(
-                patternPartOfName,
+        List<Tag> tagList = tagRepository.findByPartOfName(patternPartOfName,
                 tagPagination.calcNumberFirstElement(page, size),
                 size);
         if (!tagList.isEmpty()) {
@@ -169,8 +178,7 @@ public class TagServiceImpl implements TagService {
                     .map(tagConverter::toDTO)
                     .toList();
         } else {
-            log.log(WARN,
-                    "Not found tags with this part of name: " + partOfName);
+            log.log(WARN, "Not found tags with this part of name: " + partOfName);
             throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
         }
     }
@@ -185,10 +193,9 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findByNewsId(long newsId, int page, int size)
-            throws ServiceException {
-        List<Tag> tagList = tagRepository.findByNewsId(
-                newsId,
+    public List<TagDTO> findByNewsId(long newsId,
+                                     int page, int size) throws ServiceException {
+        List<Tag> tagList = tagRepository.findByNewsId(newsId,
                 tagPagination.calcNumberFirstElement(page, size),
                 size);
         if (!tagList.isEmpty()) {
@@ -213,8 +220,7 @@ public class TagServiceImpl implements TagService {
     public Pagination<TagDTO> getPagination(List<TagDTO> elementsOnPage,
                                             List<TagDTO> allElementsList,
                                             int page, int size) {
-        return tagPagination.getPagination(
-                elementsOnPage, allElementsList,
+        return tagPagination.getPagination(elementsOnPage, allElementsList,
                 page, size);
     }
 

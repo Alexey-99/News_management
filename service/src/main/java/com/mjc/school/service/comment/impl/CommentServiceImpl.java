@@ -22,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
@@ -140,8 +139,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO findById(long id)
-            throws ServiceException {
+    public CommentDTO findById(long id) throws ServiceException {
         Optional<Comment> comment = commentRepository.findById(id);
         if (comment.isPresent()) {
             return commentConverter.toDTO(comment.get());
@@ -199,8 +197,6 @@ public class CommentServiceImpl implements CommentService {
     public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage,
                                                 List<CommentDTO> allElementsList,
                                                 int page, int size) {
-        return commentPagination.getPagination(
-                elementsOnPage, allElementsList,
-                page, size);
+        return commentPagination.getPagination(elementsOnPage, allElementsList, page, size);
     }
 }
