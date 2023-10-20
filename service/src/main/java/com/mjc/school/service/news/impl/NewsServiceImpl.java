@@ -158,10 +158,10 @@ public class NewsServiceImpl implements NewsService {
                 .toList();
     }
 
-//    @Override
-//    public long countAllNews() {
-//        return newsRepository.;
-//    }
+    @Override
+    public long countAllNews() {
+        return newsRepository.count();
+    }
 
     @Override
     public NewsDTO findById(long id) throws ServiceException {

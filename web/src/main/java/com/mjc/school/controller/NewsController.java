@@ -55,8 +55,7 @@ public class NewsController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
-                                          NewsDTO newsDTO)
-            throws ServiceException {
+                                          NewsDTO newsDTO) throws ServiceException {
         boolean result = newsService.create(newsDTO);
         return new ResponseEntity<>(result, CREATED);
     }
@@ -94,8 +93,7 @@ public class NewsController {
     public ResponseEntity<Boolean> deleteByAuthorId(@PathVariable
                                                     @Min(value = 1,
                                                             message = "news_controller.path_variable.id.in_valid.min")
-                                                    long authorId)
-            throws ServiceException {
+                                                    long authorId) throws ServiceException {
         boolean result = newsService.deleteByAuthorId(authorId);
         return new ResponseEntity<>(result, OK);
     }
@@ -115,8 +113,7 @@ public class NewsController {
                                                                  @Min(value = 1,
                                                                          message = "news_controller.path_variable.id.in_valid.min")
                                                                  long newsId) throws ServiceException {
-        return new ResponseEntity<>(
-                newsService.deleteAllTagsFromNews(newsId), OK);
+        return new ResponseEntity<>(newsService.deleteAllTagsFromNews(newsId), OK);
     }
 
     @ApiResponses(value = {
@@ -137,8 +134,7 @@ public class NewsController {
                                           @Valid
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
-                                          NewsDTO newsDTO)
-            throws ServiceException {
+                                          NewsDTO newsDTO) throws ServiceException {
         newsDTO.setId(id);
         return new ResponseEntity<>(newsService.update(newsDTO), OK);
     }
@@ -157,13 +153,11 @@ public class NewsController {
     public ResponseEntity<Pagination<NewsDTO>> findAll(@RequestAttribute(value = "size")
                                                        int size,
                                                        @RequestAttribute(value = "page")
-                                                       int page)
-            throws ServiceException {
-        return new ResponseEntity<>(
-                newsService.getPagination(
-                        newsService.findAll(page, size),
-                        newsService.findAll(),
-                        page, size), OK);
+                                                       int page) throws ServiceException {
+        return new ResponseEntity<>(newsService.getPagination(
+                newsService.findAll(page, size),
+                newsService.countAllNews(),
+                page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -180,8 +174,7 @@ public class NewsController {
     public ResponseEntity<NewsDTO> findById(@PathVariable
                                             @Min(value = 1,
                                                     message = "news_controller.path_variable.id.in_valid.min")
-                                            long id)
-            throws ServiceException {
+                                            long id) throws ServiceException {
         return new ResponseEntity<>(newsService.findById(id), OK);
     }
 
@@ -205,8 +198,7 @@ public class NewsController {
                                                                  @RequestAttribute(value = "size")
                                                                  int size,
                                                                  @RequestAttribute(value = "page")
-                                                                 int page)
-            throws ServiceException {
+                                                                 int page) throws ServiceException {
         return new ResponseEntity<>(
                 newsService.getPagination(
                         newsService.findByTagName(tagName, page, size),

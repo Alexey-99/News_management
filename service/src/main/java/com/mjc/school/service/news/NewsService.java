@@ -28,6 +28,8 @@ public interface NewsService {
 
     List<NewsDTO> findAll();
 
+    long countAllNews();
+
     NewsDTO findById(long id) throws ServiceException;
 
     List<NewsDTO> findByTagName(String tagName, int page, int size) throws ServiceException;

@@ -36,6 +36,12 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                 @Param("news_id") Long newsId);
 
     @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id, news.created, news.modified
+            FROM news
+            """, nativeQuery = true)
+    List<News> countAllNews();
+
+    @Query(value = """
             SELECT news.id, news.title, news.content, news.authors_id,
             news.created, news.modified
             FROM news
@@ -51,6 +57,8 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findByTagName(@Param("tag_name") String tagName,
                              @Param("indexFirstElement") Integer indexFirstElement,
                              @Param("size") Integer size);
+
+
 
     @Query(value = """
             SELECT news.id, news.title, news.content, news.authors_id,
