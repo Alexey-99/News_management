@@ -50,8 +50,7 @@ public class TagController {
                                           @RequestBody
                                           @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
                                           TagDTO tagDTO) throws ServiceException {
-        boolean result = tagService.create(tagDTO);
-        return new ResponseEntity<>(result, CREATED);
+        return new ResponseEntity<>(tagService.create(tagDTO), CREATED);
     }
 
     @ApiResponses(value = {
@@ -73,8 +72,7 @@ public class TagController {
                                              @Min(value = 1,
                                                      message = "tag_controller.request_body.news_id.in_valid.min")
                                              long newsId) {
-        boolean result = tagService.addToNews(tagId, newsId);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(tagService.addToNews(tagId, newsId), OK);
     }
 
     @ApiResponses(value = {
@@ -96,8 +94,7 @@ public class TagController {
                                                   @Min(value = 1,
                                                           message = "tag_controller.request_body.news_id.in_valid.min")
                                                   long newsId) throws ServiceException {
-        boolean result = tagService.deleteFromNews(tagId, newsId);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(tagService.deleteFromNews(tagId, newsId), OK);
     }
 
     @ApiResponses(value = {
@@ -115,8 +112,7 @@ public class TagController {
                                               @Min(value = 1,
                                                       message = "tag_controller.request_body.tag_id.in_valid.min")
                                               long id) {
-        boolean result = tagService.deleteById(id);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(tagService.deleteById(id), OK);
     }
 
     @ApiResponses(value = {
@@ -134,8 +130,7 @@ public class TagController {
                                                      @Min(value = 1,
                                                              message = "tag_controller.request_body.tag_id.in_valid.min")
                                                      long id) throws ServiceException {
-        boolean result = tagService.deleteFromAllNews(id);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(tagService.deleteFromAllNews(id), OK);
     }
 
     @ApiResponses(value = {
@@ -244,8 +239,8 @@ public class TagController {
                                                            @RequestAttribute(value = "page")
                                                            int page) throws ServiceException {
         return new ResponseEntity<>(tagService.getPagination(
-                        tagService.findByNewsId(newsId, page, size),
-                        tagService.countAllByNewsId(newsId),
-                        page, size), OK);
+                tagService.findByNewsId(newsId, page, size),
+                tagService.countAllByNewsId(newsId),
+                page, size), OK);
     }
 }

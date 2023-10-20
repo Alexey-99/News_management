@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface TagService {
+    @Transactional
     boolean create(TagDTO tagDTO) throws ServiceException;
 
     @Transactional
@@ -39,8 +40,6 @@ public interface TagService {
     long countAllByPartOfName(String partOfName);
 
     List<TagDTO> findByNewsId(long newsId, int page, int size) throws ServiceException;
-
-    List<TagDTO> findByNewsId(long newsId);
 
     long countAllByNewsId(long newsId);
 

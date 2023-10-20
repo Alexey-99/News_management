@@ -32,9 +32,7 @@ public class LanguageFilter implements Filter {
     private final Translator translator;
 
     @Override
-    public void doFilter(ServletRequest servletRequest,
-                         ServletResponse servletResponse,
-                         FilterChain filterChain)
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String headerLang = req.getHeader(HttpHeaders.ACCEPT_LANGUAGE);

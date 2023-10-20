@@ -54,8 +54,7 @@ public class CommentController {
                                           @RequestBody
                                           @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
                                           CommentDTO commentDTO) throws ServiceException {
-        boolean result = commentService.create(commentDTO);
-        return new ResponseEntity<>(result, CREATED);
+        return new ResponseEntity<>(commentService.create(commentDTO), CREATED);
     }
 
     @ApiResponses(value = {
@@ -78,8 +77,7 @@ public class CommentController {
                                              @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
                                              CommentDTO commentDTO) throws ServiceException {
         commentDTO.setId(id);
-        CommentDTO result = commentService.update(commentDTO);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(commentService.update(commentDTO), OK);
     }
 
     @ApiResponses(value = {
@@ -97,8 +95,7 @@ public class CommentController {
                                               @Min(value = 1,
                                                       message = "comment_controller.path_variable.id.in_valid.min")
                                               long id) {
-        boolean result = commentService.deleteById(id);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(commentService.deleteById(id), OK);
     }
 
     @ApiResponses(value = {
@@ -116,8 +113,7 @@ public class CommentController {
                                                   @Min(value = 1,
                                                           message = "comment_controller.path_variable.id.in_valid.min")
                                                   long newsId) throws ServiceException {
-        boolean result = commentService.deleteByNewsId(newsId);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(commentService.deleteByNewsId(newsId), OK);
     }
 
     @ApiResponses(value = {

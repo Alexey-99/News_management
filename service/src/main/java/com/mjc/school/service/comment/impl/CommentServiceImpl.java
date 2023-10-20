@@ -151,8 +151,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDTO> sort(List<CommentDTO> list,
-                                 SortCommentComparator comparator) throws ServiceException {
+    public List<CommentDTO> sort(List<CommentDTO> list, SortCommentComparator comparator) throws ServiceException {
         List<CommentDTO> sortedList;
         if (list != null) {
             if (comparator != null) {
@@ -194,8 +193,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements,
-                                                int page, int size) {
+    public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size) {
         return commentPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 }

@@ -190,14 +190,6 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByTagName(String tagName) {
-        return newsRepository.findByTagName(tagName)
-                .stream()
-                .map(newsConverter::toDTO)
-                .toList();
-    }
-
-    @Override
     public long countAllNewsByTagName(String tagName) {
         return newsRepository.countAllNewsByTagName(tagName);
     }
@@ -215,13 +207,6 @@ public class NewsServiceImpl implements NewsService {
             log.log(WARN, "Not found news with entered tag ID: " + tagId);
             throw new ServiceException(NO_NEWS_WITH_TAG_ID);
         }
-    }
-
-    @Override
-    public List<NewsDTO> findByTagId(long tagId) {
-        return newsRepository.findByTagId(tagId).stream()
-                .map(newsConverter::toDTO)
-                .toList();
     }
 
     @Override
@@ -247,15 +232,6 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName) {
-        String patternPartOfAuthorName = "%" + partOfAuthorName + "%";
-        return newsRepository.findByPartOfAuthorName(patternPartOfAuthorName)
-                .stream()
-                .map(newsConverter::toDTO)
-                .toList();
-    }
-
-    @Override
     public long countAllNewsByPartOfAuthorName(String partOfAuthorName) {
         return newsRepository.countAllNewsByPartOfAuthorName("%" + partOfAuthorName + "%");
     }
@@ -274,14 +250,6 @@ public class NewsServiceImpl implements NewsService {
             log.log(WARN, "Not found news with entered author id: " + authorId);
             throw new ServiceException(NO_ENTITY_WITH_ID);
         }
-    }
-
-    @Override
-    public List<NewsDTO> findByAuthorId(long authorId) {
-        return newsRepository.findByAuthorId(authorId)
-                .stream()
-                .map(newsConverter::toDTO)
-                .toList();
     }
 
     @Override
@@ -306,15 +274,6 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfTitle(String partOfTitle) {
-        String patternPartOfTitle = "%" + partOfTitle + "%";
-        return newsRepository.findByPartOfTitle(patternPartOfTitle)
-                .stream()
-                .map(newsConverter::toDTO)
-                .toList();
-    }
-
-    @Override
     public long countAllNewsByPartOfTitle(String partOfTitle) {
         return newsRepository.countAllNewsByPartOfTitle("%" + partOfTitle + "%");
     }
@@ -322,8 +281,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size) throws ServiceException {
         String patternPartOfContent = "%" + partOfContent + "%";
-        List<News> newsList = newsRepository.findByPartOfContent(
-                patternPartOfContent,
+        List<News> newsList = newsRepository.findByPartOfContent(patternPartOfContent,
                 newsPagination.calcNumberFirstElement(page, size),
                 size);
         if (!newsList.isEmpty()) {
@@ -334,15 +292,6 @@ public class NewsServiceImpl implements NewsService {
             log.log(WARN, "Not found news with this part of content: " + partOfContent);
             throw new ServiceException(NO_ENTITY_WITH_PART_OF_CONTENT);
         }
-    }
-
-    @Override
-    public List<NewsDTO> findByPartOfContent(String partOfContent) {
-        String patternPartOfContent = "%" + partOfContent + "%";
-        return newsRepository.findByPartOfContent(patternPartOfContent)
-                .stream()
-                .map(newsConverter::toDTO)
-                .toList();
     }
 
     @Override
@@ -370,32 +319,27 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> sortByCreatedDateTimeAsc(List<NewsDTO> newsList)
-            throws ServiceException {
+    public List<NewsDTO> sortByCreatedDateTimeAsc(List<NewsDTO> newsList) throws ServiceException {
         return sort(newsList, new SortNewsComparatorByCreatedDateTimeAsc());
     }
 
     @Override
-    public List<NewsDTO> sortByCreatedDateTimeDesc(List<NewsDTO> newsList)
-            throws ServiceException {
+    public List<NewsDTO> sortByCreatedDateTimeDesc(List<NewsDTO> newsList) throws ServiceException {
         return sort(newsList, new SortNewsComparatorByCreatedDateTimeDesc());
     }
 
     @Override
-    public List<NewsDTO> sortByModifiedDateTimeAsc(List<NewsDTO> newsList)
-            throws ServiceException {
+    public List<NewsDTO> sortByModifiedDateTimeAsc(List<NewsDTO> newsList) throws ServiceException {
         return sort(newsList, new SortNewsComparatorByModifiedDateTimeAsc());
     }
 
     @Override
-    public List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList)
-            throws ServiceException {
+    public List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList) throws ServiceException {
         return sort(newsList, new SortNewsComparatorByModifiedDateTimeDesc());
     }
 
     @Override
-    public Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage, long countAllElements,
-                                             int page, int size) {
+    public Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage, long countAllElements, int page, int size) {
         return newsPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 }

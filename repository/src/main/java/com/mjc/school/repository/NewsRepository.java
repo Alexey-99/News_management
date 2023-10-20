@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
@@ -231,13 +230,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             WHERE content LIKE :part_of_content
             """, nativeQuery = true)
     Long countAllNewsByPartOfContent(@Param("part_of_content") String partOfContent);
-
-    @Query(value = """
-            SELECT id, title, content, authors_id, created, modified
-            FROM news
-            WHERE title = :title
-            """, nativeQuery = true)
-    Optional<News> findNewsByTitle(@Param("title") String title);
 
     @Query(value = """
             SELECT COUNT(title) > 0

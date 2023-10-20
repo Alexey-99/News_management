@@ -13,14 +13,12 @@ import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
 @RequiredArgsConstructor
-public class IsExistsNewsByIdImpl
-        implements ConstraintValidator<IsExistsNewsById, Long> {
+public class IsExistsNewsByIdImpl implements ConstraintValidator<IsExistsNewsById, Long> {
     private static final Logger log = LogManager.getLogger();
     private final NewsRepository newsRepository;
 
     @Override
-    public boolean isValid(Long newsId,
-                           ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Long newsId, ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
         if (newsRepository.existsById(newsId)) {
             log.log(INFO, "Correct entered comment news id: " + newsId);

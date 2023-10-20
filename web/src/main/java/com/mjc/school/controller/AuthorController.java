@@ -53,8 +53,7 @@ public class AuthorController {
                                           @RequestBody
                                           @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
                                           AuthorDTO authorDTO) throws ServiceException {
-        boolean result = authorService.create(authorDTO);
-        return new ResponseEntity<>(result, CREATED);
+        return new ResponseEntity<>(authorService.create(authorDTO), CREATED);
     }
 
     @ApiResponses(value = {
@@ -72,8 +71,7 @@ public class AuthorController {
                                               @Min(value = 1,
                                                       message = "author_controller.path_variable.id.in_valid.min")
                                               long id) {
-        boolean result = authorService.deleteById(id);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(authorService.deleteById(id), OK);
     }
 
     @ApiResponses(value = {
@@ -117,8 +115,7 @@ public class AuthorController {
                                                          int page) throws ServiceException {
         return new ResponseEntity<>(authorService.getPagination(
                 authorService.findAll(page, size),
-                authorService.countAll(),
-                page, size), OK);
+                authorService.countAll(), page, size), OK);
     }
 
     @ApiResponses(value = {
@@ -190,11 +187,11 @@ public class AuthorController {
             Response: objects with author id and amount written news, with pagination.
             """, response = Pagination.class)
     @GetMapping("/amount-news")
-    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>>
-    selectAllAuthorsIdWithAmountOfWrittenNews(@RequestAttribute(value = "size")
-                                              int size,
-                                              @RequestAttribute(value = "page")
-                                              int page) throws ServiceException {
+    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>> selectAllAuthorsIdWithAmountOfWrittenNews(
+            @RequestAttribute(value = "size")
+            int size,
+            @RequestAttribute(value = "page")
+            int page) throws ServiceException {
         return new ResponseEntity<>(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
                 authorService.selectAllAuthorsIdWithAmountOfWrittenNews(page, size),
                 authorService.countAll(), page, size), OK);
@@ -211,14 +208,13 @@ public class AuthorController {
             Response: pagination with objects with author id and amount written news.
             """, response = Pagination.class)
     @GetMapping("/sort/amount-news")
-    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>>
-    sortAllAuthorsIdWithAmountOfWrittenNewsDesc(@RequestAttribute(value = "size")
-                                                int size,
-                                                @RequestAttribute(value = "page")
-                                                int page) throws ServiceException {
+    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>> sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
+            @RequestAttribute(value = "size")
+            int size,
+            @RequestAttribute(value = "page")
+            int page) throws ServiceException {
         return new ResponseEntity<>(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
                 authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(page, size),
-                authorService.countAll(),
-                page, size), OK);
+                authorService.countAll(), page, size), OK);
     }
 }

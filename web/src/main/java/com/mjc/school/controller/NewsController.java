@@ -56,8 +56,7 @@ public class NewsController {
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
                                           NewsDTO newsDTO) throws ServiceException {
-        boolean result = newsService.create(newsDTO);
-        return new ResponseEntity<>(result, CREATED);
+        return new ResponseEntity<>(newsService.create(newsDTO), CREATED);
     }
 
     @ApiResponses(value = {
@@ -75,8 +74,7 @@ public class NewsController {
                                               @Min(value = 1,
                                                       message = "news_controller.path_variable.id.in_valid.min")
                                               long id) {
-        boolean result = newsService.deleteById(id);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(newsService.deleteById(id), OK);
     }
 
     @ApiResponses(value = {
@@ -94,8 +92,7 @@ public class NewsController {
                                                     @Min(value = 1,
                                                             message = "news_controller.path_variable.id.in_valid.min")
                                                     long authorId) throws ServiceException {
-        boolean result = newsService.deleteByAuthorId(authorId);
-        return new ResponseEntity<>(result, OK);
+        return new ResponseEntity<>(newsService.deleteByAuthorId(authorId), OK);
     }
 
     @ApiResponses(value = {

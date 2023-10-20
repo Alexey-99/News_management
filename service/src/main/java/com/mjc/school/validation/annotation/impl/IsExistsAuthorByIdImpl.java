@@ -13,14 +13,12 @@ import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
 @RequiredArgsConstructor
-public class IsExistsAuthorByIdImpl
-        implements ConstraintValidator<IsExistsAuthorById, Long> {
+public class IsExistsAuthorByIdImpl implements ConstraintValidator<IsExistsAuthorById, Long> {
     private static final Logger log = LogManager.getLogger();
     private final AuthorRepository authorRepository;
 
     @Override
-    public boolean isValid(Long authorId,
-                           ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Long authorId, ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
         if (authorRepository.existsById(authorId)) {
             log.log(INFO, "Correct entered author ID: " + authorId);

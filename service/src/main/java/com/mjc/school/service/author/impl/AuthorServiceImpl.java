@@ -145,15 +145,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorDTO> findByPartOfName(String partOfName) {
-        String patternPartOfName = "%" + partOfName + "%";
-        return authorRepository.findByPartOfName(patternPartOfName)
-                .stream()
-                .map(authorConverter::toDTO)
-                .toList();
-    }
-
-    @Override
     public long countAllByPartOfName(String partOfName) {
         return authorRepository.countAllByPartOfName("%" + partOfName + "%");
     }
@@ -194,22 +185,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsIdWithAmountOfWrittenNews() {
-        return authorRepository.findAll()
-                .stream()
-                .map(author -> AuthorIdWithAmountOfWrittenNews
-                        .builder()
-                        .authorId(author.getId())
-                        .amountOfWrittenNews(
-                                author.getNews() != null
-                                        ? author.getNews().size()
-                                        : 0)
-                        .build())
-                .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
-                .toList();
-    }
-
-    @Override
     public List<AuthorIdWithAmountOfWrittenNewsDTO> sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
             int page, int size) throws ServiceException {
         List<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsList =
@@ -234,22 +209,6 @@ public class AuthorServiceImpl implements AuthorService {
             log.log(WARN, "Not found objects");
             throw new ServiceException(NO_ENTITY);
         }
-    }
-
-    @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO> sortAllAuthorsIdWithAmountOfWrittenNewsDesc() {
-        return new LinkedList<>(authorRepository.sortAllAuthorsWithAmountWrittenNewsDesc()
-                .stream()
-                .map(author -> AuthorIdWithAmountOfWrittenNews
-                        .builder()
-                        .authorId(author.getId())
-                        .amountOfWrittenNews(
-                                author.getNews() != null
-                                        ? author.getNews().size()
-                                        : 0)
-                        .build())
-                .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
-                .toList());
     }
 
     @Override

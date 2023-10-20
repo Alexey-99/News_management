@@ -23,14 +23,13 @@ public class PaginationServiceImpl<T> implements PaginationService<T> {
     }
 
     @Override
-    public int calcMaxNumberPage(long allElementsSize, int sizeOnPage) {
-        int maxNumberPage = (int) Math.ceil((double) allElementsSize / sizeOnPage);
-        return maxNumberPage > 0 ? maxNumberPage : NUMBER_MIN_PAGE;
-    }
-
-    @Override
     public int calcNumberFirstElement(int numberPage, int size) {
         int numberStartElement = size * (numberPage - 1);
         return numberStartElement >= 0 ? numberStartElement : NUMBER_FIRST_ELEMENT;
+    }
+
+    private int calcMaxNumberPage(long allElementsSize, int sizeOnPage) {
+        int maxNumberPage = (int) Math.ceil((double) allElementsSize / sizeOnPage);
+        return maxNumberPage > 0 ? maxNumberPage : NUMBER_MIN_PAGE;
     }
 }

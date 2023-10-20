@@ -44,6 +44,5 @@ public interface CommentService {
 
     List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list) throws ServiceException;
 
-    Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements,
-                                         int page, int size);
+    Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size);
 }

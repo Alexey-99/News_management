@@ -7,9 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthorIdWithAmountOfWrittenNewsConverter
-        implements Converter<
-        AuthorIdWithAmountOfWrittenNewsDTO,
-        AuthorIdWithAmountOfWrittenNews> {
+        implements Converter<AuthorIdWithAmountOfWrittenNewsDTO, AuthorIdWithAmountOfWrittenNews> {
 
     @Override
     public AuthorIdWithAmountOfWrittenNews fromDTO(

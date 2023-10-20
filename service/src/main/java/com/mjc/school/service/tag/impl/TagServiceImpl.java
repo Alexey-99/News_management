@@ -40,6 +40,7 @@ public class TagServiceImpl implements TagService {
     private final TagConverter tagConverter;
     private final PaginationService<TagDTO> tagPagination;
 
+    @Transactional
     @Override
     public boolean create(TagDTO tagDTO) throws ServiceException {
         if (tagRepository.existsByName(tagDTO.getName())) {
@@ -52,6 +53,7 @@ public class TagServiceImpl implements TagService {
         }
     }
 
+    @Transactional
     @Override
     public boolean addToNews(long tagId, long newsId) {
         boolean result = false;
@@ -214,14 +216,6 @@ public class TagServiceImpl implements TagService {
             log.log(WARN, "Not found tags with news ID: " + newsId);
             throw new ServiceException(NO_TAGS_WITH_NEWS_ID);
         }
-    }
-
-    @Override
-    public List<TagDTO> findByNewsId(long newsId) {
-        return tagRepository.findByNewsId(newsId)
-                .stream()
-                .map(tagConverter::toDTO)
-                .toList();
     }
 
     @Override

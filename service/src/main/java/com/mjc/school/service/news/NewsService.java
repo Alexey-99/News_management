@@ -34,37 +34,25 @@ public interface NewsService {
 
     List<NewsDTO> findByTagName(String tagName, int page, int size) throws ServiceException;
 
-    List<NewsDTO> findByTagName(String tagName);
-
     long countAllNewsByTagName(String tagName);
 
     List<NewsDTO> findByTagId(long tagId, int page, int size) throws ServiceException;
-
-    List<NewsDTO> findByTagId(long tagId);
 
     long countAllNewsByTagId(long tagId);
 
     List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName, int page, int size) throws ServiceException;
 
-    List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName);
-
     long countAllNewsByPartOfAuthorName(String partOfAuthorName);
 
     List<NewsDTO> findByAuthorId(long authorId, int page, int size) throws ServiceException;
-
-    List<NewsDTO> findByAuthorId(long authorId);
 
     long countAllNewsByAuthorId(long authorId);
 
     List<NewsDTO> findByPartOfTitle(String partOfTitle, int page, int size) throws ServiceException;
 
-    List<NewsDTO> findByPartOfTitle(String partOfTitle);
-
     long countAllNewsByPartOfTitle(String partOfTitle);
 
     List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size) throws ServiceException;
-
-    List<NewsDTO> findByPartOfContent(String partOfContent);
 
     long countAllNewsByPartOfContent(String partOfContent);
 
@@ -78,6 +66,5 @@ public interface NewsService {
 
     List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList) throws ServiceException;
 
-    Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage, long countAllElements,
-                                      int page, int size);
+    Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage, long countAllElements, int page, int size);
 }
