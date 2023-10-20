@@ -61,4 +61,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             FROM comments
             """, nativeQuery = true)
     Long countAllComments();
+
+    boolean exists();
 }
