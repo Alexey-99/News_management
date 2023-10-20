@@ -351,10 +351,8 @@ public class NewsController {
                                                             defaultValue = DESCENDING)
                                                     String sortingType) throws ServiceException {
         Pagination<NewsDTO> sortedList = null;
-        if (sortingField != null &&
-                sortingField.equals(SortField.CREATED)) {
-            if (sortingType != null &&
-                    sortingType.equals(ASCENDING)) {
+        if (sortingField != null && sortingField.equals(SortField.CREATED)) {
+            if (sortingType != null && sortingType.equals(ASCENDING)) {
                 sortedList = newsService.getPagination(
                         newsService.sortByCreatedDateTimeAsc(
                                 newsService.findAll(page, size)),
@@ -368,8 +366,7 @@ public class NewsController {
                         page, size);
             }
         } else {
-            if (sortingType != null &&
-                    sortingType.equals(ASCENDING)) {
+            if (sortingType != null && sortingType.equals(ASCENDING)) {
                 sortedList = newsService.getPagination(
                         newsService.sortByModifiedDateTimeAsc(
                                 newsService.findAll(page, size)),
