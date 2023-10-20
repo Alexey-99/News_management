@@ -136,8 +136,7 @@ public class CommentController {
                                                           @RequestAttribute(value = "page")
                                                           int page) throws ServiceException {
         return new ResponseEntity<>(commentService.getPagination(
-                commentService.findAll(page, size),
-                commentService.findAll(),
+                commentService.findAll(page, size), commentService.countAllComments(),
                 page, size), OK);
     }
 
@@ -162,7 +161,7 @@ public class CommentController {
                                                                int page) throws ServiceException {
         return new ResponseEntity<>(commentService.getPagination(
                 commentService.findByNewsId(newsId, page, size),
-                commentService.findByNewsId(newsId),
+                commentService.countAllCommentsByNewsId(newsId),
                 page, size), OK);
     }
 
@@ -214,15 +213,13 @@ public class CommentController {
                 sortedList = commentService.getPagination(
                         commentService.sortByCreatedDateTimeAsc(
                                 commentService.findAll(page, size)),
-                        commentService.sortByCreatedDateTimeAsc(
-                                commentService.findAll()),
+                        commentService.countAllComments(),
                         page, size);
             } else {
                 sortedList = commentService.getPagination(
                         commentService.sortByCreatedDateTimeDesc(
                                 commentService.findAll(page, size)),
-                        commentService.sortByCreatedDateTimeDesc(
-                                commentService.findAll()),
+                        commentService.countAllComments(),
                         page, size);
             }
         } else {
@@ -231,15 +228,13 @@ public class CommentController {
                 sortedList = commentService.getPagination(
                         commentService.sortByModifiedDateTimeAsc(
                                 commentService.findAll(page, size)),
-                        commentService.sortByModifiedDateTimeAsc(
-                                commentService.findAll()),
+                        commentService.countAllComments(),
                         page, size);
             } else {
                 sortedList = commentService.getPagination(
                         commentService.sortByModifiedDateTimeDesc(
                                 commentService.findAll(page, size)),
-                        commentService.sortByModifiedDateTimeDesc(
-                                commentService.findAll()),
+                        commentService.countAllComments(),
                         page, size);
             }
         }

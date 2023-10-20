@@ -48,4 +48,17 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             WHERE news_id = :newsId
             """, nativeQuery = true)
     List<Comment> findByNewsId(@Param("newsId") Long newsId);
+
+    @Query(value = """
+            SELECT COUNT(id)
+            FROM comments
+            WHERE news_id = :newsId
+            """, nativeQuery = true)
+    Long countAllCommentsByNewsId(@Param("newsId") Long newsId);
+
+    @Query(value = """
+            SELECT COUNT(id)
+            FROM comments
+            """, nativeQuery = true)
+    Long countAllComments();
 }

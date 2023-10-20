@@ -26,29 +26,24 @@ public interface CommentService {
 
     List<CommentDTO> findAll();
 
+    long countAllComments();
+
     CommentDTO findById(long id) throws ServiceException;
 
-    List<CommentDTO> findByNewsId(long newsId,
-                                  int page, int size) throws ServiceException;
+    List<CommentDTO> findByNewsId(long newsId, int page, int size) throws ServiceException;
 
-    List<CommentDTO> findByNewsId(long newsId);
+    long countAllCommentsByNewsId(long newsId);
 
-    List<CommentDTO> sort(List<CommentDTO> list,
-                          SortCommentComparator comparator) throws ServiceException;
+    List<CommentDTO> sort(List<CommentDTO> list, SortCommentComparator comparator) throws ServiceException;
 
-    List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list)
-            throws ServiceException;
+    List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list) throws ServiceException;
 
-    List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list)
-            throws ServiceException;
+    List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list) throws ServiceException;
 
-    List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list)
-            throws ServiceException;
+    List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list) throws ServiceException;
 
-    List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list)
-            throws ServiceException;
+    List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list) throws ServiceException;
 
-    Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage,
-                                         List<CommentDTO> allElementsList,
+    Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements,
                                          int page, int size);
 }

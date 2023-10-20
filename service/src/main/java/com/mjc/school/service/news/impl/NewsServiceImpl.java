@@ -158,6 +158,11 @@ public class NewsServiceImpl implements NewsService {
                 .toList();
     }
 
+//    @Override
+//    public long countAllNews() {
+//        return newsRepository.;
+//    }
+
     @Override
     public NewsDTO findById(long id) throws ServiceException {
         Optional<News> news = newsRepository.findById(id);
@@ -369,10 +374,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage,
-                                             List<NewsDTO> allElementsList,
+    public Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage, long countAllElements,
                                              int page, int size) {
-        return newsPagination.getPagination(elementsOnPage, allElementsList,
-                page, size);
+        return newsPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 }

@@ -93,30 +93,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDTO> findByNewsId(long newsId, int page, int size)
-            throws ServiceException {
-        List<Comment> commentList = commentRepository.findByNewsId(newsId,
-                commentPagination.calcNumberFirstElement(page, size),
-                size);
-        if (!commentList.isEmpty()) {
-            return commentList.stream()
-                    .map(commentConverter::toDTO)
-                    .toList();
-        } else {
-            log.log(ERROR, "Not found objects with comment news ID: " + newsId);
-            throw new ServiceException(NO_ENTITY_WITH_COMMENT_NEWS_ID);
-        }
-    }
-
-    @Override
-    public List<CommentDTO> findByNewsId(long newsId) {
-        return commentRepository.findByNewsId(newsId)
-                .stream()
-                .map(commentConverter::toDTO)
-                .toList();
-    }
-
-    @Override
     public List<CommentDTO> findAll(int page, int size) throws ServiceException {
         Page<Comment> commentPage = commentRepository.findAll(
                 PageRequest.of(commentPagination.calcNumberFirstElement(page, size), size));
@@ -136,6 +112,31 @@ public class CommentServiceImpl implements CommentService {
                 .stream()
                 .map(commentConverter::toDTO)
                 .toList();
+    }
+
+    @Override
+    public long countAllComments() {
+        return commentRepository.countAllComments();
+    }
+
+    @Override
+    public List<CommentDTO> findByNewsId(long newsId, int page, int size) throws ServiceException {
+        List<Comment> commentList = commentRepository.findByNewsId(newsId,
+                commentPagination.calcNumberFirstElement(page, size),
+                size);
+        if (!commentList.isEmpty()) {
+            return commentList.stream()
+                    .map(commentConverter::toDTO)
+                    .toList();
+        } else {
+            log.log(ERROR, "Not found objects with comment news ID: " + newsId);
+            throw new ServiceException(NO_ENTITY_WITH_COMMENT_NEWS_ID);
+        }
+    }
+
+    @Override
+    public long countAllCommentsByNewsId(long newsId) {
+        return commentRepository.countAllCommentsByNewsId(newsId);
     }
 
     @Override
@@ -193,9 +194,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage,
-                                                List<CommentDTO> allElementsList,
+    public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements,
                                                 int page, int size) {
-        return commentPagination.getPagination(elementsOnPage, allElementsList, page, size);
+        return commentPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 }

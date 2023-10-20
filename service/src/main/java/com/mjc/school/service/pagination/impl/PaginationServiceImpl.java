@@ -12,14 +12,13 @@ public class PaginationServiceImpl<T> implements PaginationService<T> {
     private static final int NUMBER_FIRST_ELEMENT = 0;
 
     @Override
-    public Pagination<T> getPagination(List<T> elementsOnPage, List<T> allElementsList,
-                                       int page, int size) {
+    public Pagination<T> getPagination(List<T> elementsOnPage, long countAllElements, int page, int size) {
         return Pagination
                 .<T>builder()
                 .entity(elementsOnPage)
                 .size(size)
                 .numberPage(page)
-                .maxNumberPage(calcMaxNumberPage(allElementsList.size(), size))
+                .maxNumberPage(calcMaxNumberPage(countAllElements, size))
                 .build();
     }
 
