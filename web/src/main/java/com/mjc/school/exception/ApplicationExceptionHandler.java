@@ -30,16 +30,14 @@ public class ApplicationExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public final ResponseEntity<Object> handleConstraintViolationExceptions(
-            ConstraintViolationException ex) {
+    public final ResponseEntity<Object> handleConstraintViolationExceptions(ConstraintViolationException ex) {
         String details = translator.toLocale(ex.getLocalizedMessage());
         ErrorResponse errorResponse = new ErrorResponse(BAD_REQUEST.value(), details);
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public final ResponseEntity<Object> handleConstraintViolationExceptions(
-            MethodArgumentNotValidException ex) {
+    public final ResponseEntity<Object> handleConstraintViolationExceptions(MethodArgumentNotValidException ex) {
         String details = translator.toLocale(ex.getBindingResult()
                 .getFieldErrors()
                 .get(0)
@@ -48,8 +46,7 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
 
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class,
-            JsonProcessingException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, JsonProcessingException.class})
     public final ResponseEntity<Object> handleBadRequestExceptions() {
         String details = translator.toLocale("exception.badRequest");
         ErrorResponse errorResponse = new ErrorResponse(BAD_REQUEST.value(), details);
