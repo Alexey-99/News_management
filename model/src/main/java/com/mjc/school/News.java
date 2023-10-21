@@ -56,4 +56,22 @@ public class News implements Serializable {
         this.comments = new ArrayList<>();
         this.tags = new ArrayList<>();
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("News{");
+        sb.append("id=").append(id);
+        sb.append(", title='").append(title).append("'");
+        sb.append(", content='").append(content).append("'");
+        sb.append(", author=").append(author);
+        sb.append(", created='").append(created).append("'");
+        sb.append(", modified='").append(modified).append("'");
+        sb.append(", comments=").append(comments);
+        StringBuilder tagsStringBuilder = new StringBuilder();
+        tags.forEach(newsTag -> tagsStringBuilder.append(newsTag.getTag().toString()));
+        sb.append(", tags=").append(tagsStringBuilder.toString());
+        sb.append('}');
+        return sb.toString();
+    }
 }

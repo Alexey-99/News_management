@@ -37,4 +37,14 @@ public class Author implements Serializable {
     public Author() {
         this.news = new ArrayList<>();
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Author{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append("'");
+        sb.append('}');
+        return sb.toString();
+    }
 }
