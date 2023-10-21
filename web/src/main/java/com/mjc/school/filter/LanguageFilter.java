@@ -1,7 +1,6 @@
 package com.mjc.school.filter;
 
 import com.mjc.school.config.language.Translator;
-import com.mjc.school.name.LanguageLocale;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -19,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
 
+import static com.mjc.school.name.LanguageLocale.getLocale;
 import static org.apache.logging.log4j.Level.INFO;
 
 @RequiredArgsConstructor
@@ -36,7 +36,7 @@ public class LanguageFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String headerLang = req.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        translator.setLocale(LanguageLocale.getLocale(headerLang));
+        translator.setLocale(getLocale(headerLang));
         log.log(INFO, "Request URI is: " + req.getRequestURI());
         filterChain.doFilter(servletRequest, servletResponse);
         log.log(INFO, "Response Status Code is: " + ((HttpServletResponse) servletResponse).getStatus());
