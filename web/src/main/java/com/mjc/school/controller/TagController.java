@@ -71,7 +71,7 @@ public class TagController {
                                              @RequestParam(value = "news")
                                              @Min(value = 1,
                                                      message = "tag_controller.request_body.news_id.in_valid.min")
-                                             long newsId) {
+                                             long newsId) throws ServiceException {
         return new ResponseEntity<>(tagService.addToNews(tagId, newsId), OK);
     }
 

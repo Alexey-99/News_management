@@ -56,15 +56,15 @@ public interface NewsService {
 
     long countAllNewsByPartOfContent(String partOfContent);
 
-    List<NewsDTO> sort(List<NewsDTO> newsList, SortNewsComparator comparator) throws ServiceException;
+    List<NewsDTO> sort(List<NewsDTO> newsList, SortNewsComparator comparator);
 
-    List<NewsDTO> sortByCreatedDateTimeAsc(List<NewsDTO> newsList) throws ServiceException;
+    List<NewsDTO> sortByCreatedDateTimeAsc(List<NewsDTO> newsList);
 
-    List<NewsDTO> sortByCreatedDateTimeDesc(List<NewsDTO> newsList) throws ServiceException;
+    List<NewsDTO> sortByCreatedDateTimeDesc(List<NewsDTO> newsList);
 
-    List<NewsDTO> sortByModifiedDateTimeAsc(List<NewsDTO> newsList) throws ServiceException;
+    List<NewsDTO> sortByModifiedDateTimeAsc(List<NewsDTO> newsList);
 
-    List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList) throws ServiceException;
+    List<NewsDTO> sortByModifiedDateTimeDesc(List<NewsDTO> newsList);
 
     Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage, long countAllElements, int page, int size);
 }

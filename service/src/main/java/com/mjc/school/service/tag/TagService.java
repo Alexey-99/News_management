@@ -23,7 +23,7 @@ public interface TagService {
     @Transactional
     TagDTO update(TagDTO tagDTO) throws ServiceException;
 
-    boolean addToNews(long tagId, long newsId);
+    boolean addToNews(long tagId, long newsId) throws ServiceException;
 
     List<TagDTO> findAll(int page, int size) throws ServiceException;
 
@@ -34,8 +34,6 @@ public interface TagService {
     TagDTO findById(long id) throws ServiceException;
 
     List<TagDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException;
-
-    List<TagDTO> findByPartOfName(String partOfName);
 
     long countAllByPartOfName(String partOfName);
 

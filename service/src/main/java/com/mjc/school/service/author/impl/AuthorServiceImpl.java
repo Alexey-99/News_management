@@ -21,12 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_AUTHOR_NEWS_ID;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_PART_OF_NAME;
 import static org.apache.logging.log4j.Level.WARN;
 
 @RequiredArgsConstructor
@@ -35,11 +30,9 @@ public class AuthorServiceImpl implements AuthorService {
     private static final Logger log = LogManager.getLogger();
     private final AuthorRepository authorRepository;
     private final AuthorConverter authorConverter;
-    private final AuthorIdWithAmountOfWrittenNewsConverter
-            authorIdWithAmountOfWrittenNewsConverter;
+    private final AuthorIdWithAmountOfWrittenNewsConverter authorIdWithAmountOfWrittenNewsConverter;
     private final PaginationService<AuthorDTO> authorPagination;
-    private final PaginationService<AuthorIdWithAmountOfWrittenNewsDTO>
-            amountOfWrittenNewsDTOPagination;
+    private final PaginationService<AuthorIdWithAmountOfWrittenNewsDTO> amountOfWrittenNewsDTOPagination;
 
     @Transactional
     @Override
@@ -66,24 +59,21 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     @Override
     public AuthorDTO update(AuthorDTO authorDTO) throws ServiceException {
-        Optional<Author> optionalAuthor = authorRepository.findById(authorDTO.getId());
-        if (optionalAuthor.isPresent()) {
-            Author author = optionalAuthor.get();
-            if (author.getName().equals(authorDTO.getName())) {
+        Author author = authorRepository.findById(authorDTO.getId()).orElseThrow(() -> {
+            log.log(WARN, "Not found authors by ID: " + authorDTO.getId());
+            return new ServiceException("service.exception.not_found_authors_by_id");
+        });
+        if (author.getName().equals(authorDTO.getName())) {
+            return authorConverter.toDTO(author);
+        } else {
+            if (!authorRepository.existsByName(authorDTO.getName())) {
+                author.setName(authorDTO.getName());
+                authorRepository.update(author.getId(), author.getName());
                 return authorConverter.toDTO(author);
             } else {
-                if (!authorRepository.existsByName(authorDTO.getName())) {
-                    author.setName(authorDTO.getName());
-                    authorRepository.update(author.getId(), author.getName());
-                    return authorConverter.toDTO(author);
-                } else {
-                    log.log(WARN, "Author with entered name '" + authorDTO.getName() + "' already exists");
-                    throw new ServiceException("author_dto.name.not_valid.already_exists");
-                }
+                log.log(WARN, "Author with entered name '" + authorDTO.getName() + "' already exists");
+                throw new ServiceException("author_dto.name.not_valid.already_exists");
             }
-        } else {
-            log.log(WARN, "Not found object with this ID: " + authorDTO.getId());
-            throw new ServiceException(NO_ENTITY_WITH_ID);
         }
     }
 
@@ -98,8 +88,8 @@ public class AuthorServiceImpl implements AuthorService {
                     .map(authorConverter::toDTO)
                     .toList();
         } else {
-            log.log(WARN, "Not found objects");
-            throw new ServiceException(NO_ENTITY);
+            log.log(WARN, "Not found authors");
+            throw new ServiceException("service.exception.not_found_authors");
         }
     }
 
@@ -118,29 +108,27 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDTO findById(long id) throws ServiceException {
-        Optional<Author> author = authorRepository.findById(id);
-        if (author.isPresent()) {
-            return authorConverter.toDTO(author.get());
-        } else {
-            log.log(WARN, "Not found object with this ID: " + id);
-            throw new ServiceException(NO_ENTITY_WITH_ID);
-        }
+        Author author = authorRepository.findById(id).orElseThrow(() -> {
+            log.log(WARN, "Not found author by ID: " + id);
+            return new ServiceException("service.exception.not_found_author_by_id");
+        });
+        return authorConverter.toDTO(author);
+
     }
 
     @Override
     public List<AuthorDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException {
-        String patternPartOfName = "%" + partOfName + "%";
-        List<Author> authors = authorRepository.findByPartOfName(
-                patternPartOfName,
+        List<Author> authorsList = authorRepository.findByPartOfName(
+                "%" + partOfName + "%",
                 authorPagination.calcNumberFirstElement(page, size),
                 size);
-        if (!authors.isEmpty()) {
-            return authors.stream()
+        if (!authorsList.isEmpty()) {
+            return authorsList.stream()
                     .map(authorConverter::toDTO)
                     .toList();
         } else {
-            log.log(WARN, "Not found object with this part of name: " + partOfName);
-            throw new ServiceException(NO_ENTITY_WITH_PART_OF_NAME);
+            log.log(WARN, "Not found authors by part of name: " + partOfName);
+            throw new ServiceException("service.exception.not_found_authors_by_part_of_name");
         }
     }
 
@@ -151,13 +139,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDTO findByNewsId(long newsId) throws ServiceException {
-        Optional<Author> optionalAuthor = authorRepository.findByNewsId(newsId);
-        if (optionalAuthor.isPresent()) {
-            return authorConverter.toDTO(optionalAuthor.get());
-        } else {
-            log.log(WARN, "Not found objects with author news ID: " + newsId);
-            throw new ServiceException(NO_ENTITY_WITH_AUTHOR_NEWS_ID);
-        }
+        Author author = authorRepository.findByNewsId(newsId).orElseThrow(() -> {
+            log.log(WARN, "Not found authors by news ID: " + newsId);
+            return new ServiceException("service.exception.not_found_authors_by_news_id");
+        });
+        return authorConverter.toDTO(author);
     }
 
     @Override
@@ -168,19 +154,16 @@ public class AuthorServiceImpl implements AuthorService {
                 size));
         if (!authorPage.isEmpty()) {
             return authorPage.stream()
-                    .map(author ->
-                            AuthorIdWithAmountOfWrittenNews.builder()
-                                    .authorId(author.getId())
-                                    .amountOfWrittenNews(
-                                            author.getNews() != null
-                                                    ? author.getNews().size()
-                                                    : 0)
-                                    .build())
+                    .map(author -> AuthorIdWithAmountOfWrittenNews.builder()
+                            .authorId(author.getId())
+                            .amountOfWrittenNews(author.getNews() != null
+                                    ? author.getNews().size() : 0)
+                            .build())
                     .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
                     .toList();
         } else {
-            log.log(WARN, "Not found objects");
-            throw new ServiceException(NO_ENTITY);
+            log.log(WARN, "Not found authors");
+            throw new ServiceException("service.exception.not_found_authors");
         }
     }
 
@@ -195,10 +178,8 @@ public class AuthorServiceImpl implements AuthorService {
                         .map(author -> AuthorIdWithAmountOfWrittenNews
                                 .builder()
                                 .authorId(author.getId())
-                                .amountOfWrittenNews(
-                                        author.getNews() != null
-                                                ? author.getNews().size()
-                                                : 0)
+                                .amountOfWrittenNews(author.getNews() != null
+                                        ? author.getNews().size() : 0)
                                 .build())
                         .toList());
         if (!authorIdWithAmountOfWrittenNewsList.isEmpty()) {
@@ -206,8 +187,8 @@ public class AuthorServiceImpl implements AuthorService {
                     .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
                     .toList();
         } else {
-            log.log(WARN, "Not found objects");
-            throw new ServiceException(NO_ENTITY);
+            log.log(WARN, "Not found authors");
+            throw new ServiceException("service.exception.not_found_authors");
         }
     }
 
@@ -218,9 +199,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO>
-    getPaginationAuthorIdWithAmountOfWrittenNews(List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage,
-                                                 long countAllElements, int page, int size) {
+    public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> getPaginationAuthorIdWithAmountOfWrittenNews(
+            List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage, long countAllElements, int page, int size) {
         return amountOfWrittenNewsDTOPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 }

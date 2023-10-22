@@ -34,15 +34,15 @@ public interface CommentService {
 
     long countAllCommentsByNewsId(long newsId);
 
-    List<CommentDTO> sort(List<CommentDTO> list, SortCommentComparator comparator) throws ServiceException;
+    List<CommentDTO> sort(List<CommentDTO> list, SortCommentComparator comparator);
 
-    List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list) throws ServiceException;
+    List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list);
 
-    List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list) throws ServiceException;
+    List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list);
 
-    List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list) throws ServiceException;
+    List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list);
 
-    List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list) throws ServiceException;
+    List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list);
 
     Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size);
 }

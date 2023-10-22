@@ -25,12 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_COMMENT_NEWS_ID;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.NO_ENTITY_WITH_ID;
-import static com.mjc.school.exception.code.ExceptionServiceMessageCodes.SORT_ERROR;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 
@@ -58,19 +53,17 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentDTO update(CommentDTO commentDTO) throws ServiceException {
-        Optional<Comment> optionalComment = commentRepository.findById(commentDTO.getId());
-        if (optionalComment.isPresent()) {
-            Comment comment = optionalComment.get();
-            comment.setContent(commentDTO.getContent());
-            comment.setNews(newsRepository.getById(commentDTO.getNewsId()));
-            comment.setModified(dateHandler.getCurrentDate());
-            commentRepository.update(comment.getContent(), comment.getNews().getId(),
-                    comment.getModified(), comment.getId());
-            return commentConverter.toDTO(comment);
-        } else {
-            log.log(WARN, "Not found object with this ID: " + commentDTO.getId());
-            throw new ServiceException(NO_ENTITY_WITH_ID);
-        }
+        Comment comment = commentRepository.findById(commentDTO.getId()).orElseThrow(() -> {
+            log.log(WARN, "Not found comment by ID: " + commentDTO.getId());
+            return new ServiceException("service.exception.not_found_comment_by_id");
+        });
+        comment.setContent(commentDTO.getContent());
+        comment.setNews(newsRepository.getById(commentDTO.getNewsId()));
+        comment.setModified(dateHandler.getCurrentDate());
+        commentRepository.update(comment.getContent(), comment.getNews().getId(),
+                comment.getModified(), comment.getId());
+        return commentConverter.toDTO(comment);
+
 
     }
 
@@ -94,15 +87,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> findAll(int page, int size) throws ServiceException {
-        Page<Comment> commentPage = commentRepository.findAll(
-                PageRequest.of(commentPagination.calcNumberFirstElement(page, size), size));
+        Page<Comment> commentPage = commentRepository.findAll(PageRequest.of(
+                commentPagination.calcNumberFirstElement(page, size), size));
         if (commentPage.getSize() > 0) {
             return commentPage.stream()
                     .map(commentConverter::toDTO)
                     .toList();
         } else {
-            log.log(WARN, "Not found objects");
-            throw new ServiceException(NO_ENTITY);
+            log.log(WARN, "Not found comments");
+            throw new ServiceException("service.exception.not_found_comments");
         }
     }
 
@@ -129,8 +122,8 @@ public class CommentServiceImpl implements CommentService {
                     .map(commentConverter::toDTO)
                     .toList();
         } else {
-            log.log(ERROR, "Not found objects with comment news ID: " + newsId);
-            throw new ServiceException(NO_ENTITY_WITH_COMMENT_NEWS_ID);
+            log.log(ERROR, "Not found comments by news ID: " + newsId);
+            throw new ServiceException("service.exception.not_found_comments_by_news_id");
         }
     }
 
@@ -141,59 +134,44 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO findById(long id) throws ServiceException {
-        Optional<Comment> comment = commentRepository.findById(id);
-        if (comment.isPresent()) {
-            return commentConverter.toDTO(comment.get());
-        } else {
-            log.log(WARN, "Not found object with this ID: " + id);
-            throw new ServiceException(NO_ENTITY_WITH_ID);
-        }
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> {
+            log.log(WARN, "Not found comment by ID: " + id);
+            return new ServiceException("service.exception.not_found_comment_by_id");
+        });
+        return commentConverter.toDTO(comment);
+
     }
 
     @Override
-    public List<CommentDTO> sort(List<CommentDTO> list, SortCommentComparator comparator) throws ServiceException {
-        List<CommentDTO> sortedList;
-        if (list != null) {
-            if (comparator != null) {
-                sortedList = new LinkedList<>(list);
-                sortedList.sort(comparator);
-                return sortedList;
-            } else {
-                log.log(ERROR, "comparator is null");
-                throw new ServiceException(SORT_ERROR);
-            }
-        } else {
-            log.log(ERROR, "list is null");
-            throw new ServiceException(SORT_ERROR);
-        }
+    public List<CommentDTO> sort(List<CommentDTO> list, SortCommentComparator comparator) {
+        List<CommentDTO> sortedList = new LinkedList<>(list);
+        sortedList.sort(comparator);
+        return sortedList;
     }
 
     @Override
-    public List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list)
-            throws ServiceException {
+    public List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list) {
         return sort(list, new SortCommentComparatorByCreatedDateTimeAsc());
     }
 
     @Override
-    public List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list)
-            throws ServiceException {
+    public List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list) {
         return sort(list, new SortCommentComparatorByCreatedDateTimeDesc());
     }
 
     @Override
-    public List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list)
-            throws ServiceException {
+    public List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list) {
         return sort(list, new SortCommentComparatorByModifiedDateTimeAsc());
     }
 
     @Override
-    public List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list)
-            throws ServiceException {
+    public List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list) {
         return sort(list, new SortCommentComparatorByModifiedDateTimeDesc());
     }
 
     @Override
-    public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size) {
+    public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage,
+                                                long countAllElements, int page, int size) {
         return commentPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 }
