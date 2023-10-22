@@ -1,6 +1,5 @@
 package com.mjc.school.validation.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.validation.annotation.IsExistsAuthorById;
 import lombok.AllArgsConstructor;
@@ -43,15 +42,7 @@ public class NewsDTO implements Serializable {
 
     private long countTags;
 
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            timezone = "UTC")
     private String created;
 
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            timezone = "UTC")
     private String modified;
 }

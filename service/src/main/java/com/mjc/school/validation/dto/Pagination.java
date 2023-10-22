@@ -22,8 +22,8 @@ public class Pagination<T> implements Serializable {
 
     public Pagination() {
         this.entity = new ArrayList<>();
-        this.maxNumberPage = DEFAULT_NUMBER_PAGE;
-        this.numberPage = DEFAULT_NUMBER_PAGE;
         this.size = DEFAULT_SIZE;
+        this.numberPage = DEFAULT_NUMBER_PAGE;
+        this.maxNumberPage = DEFAULT_NUMBER_PAGE;
     }
 }
