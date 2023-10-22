@@ -38,6 +38,40 @@ public class Tag implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = result * PRIME + Long.hashCode(this.id);
+        result = result * PRIME + (this.name != null ? this.name.hashCode() : 1);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null) {
+            return false;
+        }
+        if (!this.getClass().equals(object.getClass())) {
+            return false;
+        }
+        Tag otherTag = (Tag) object;
+        if (this.id != otherTag.id) {
+            return false;
+        }
+        if (this.name == null) {
+            if (otherTag.name != null) {
+                return false;
+            }
+        } else if (!this.name.equals(otherTag.name)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("Tag{");

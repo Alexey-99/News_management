@@ -45,15 +45,70 @@ public class Comment implements Serializable {
     private String modified;
 
     @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = result * PRIME + Long.hashCode(this.id);
+        result = result * PRIME + (this.content != null ? this.content.hashCode() : 1);
+        result = result * PRIME + Long.hashCode(this.newsId);
+        result = result * PRIME + (this.created != null ? this.created.hashCode() : 1);
+        result = result * PRIME + (this.modified != null ? this.modified.hashCode() : 1);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null) {
+            return false;
+        }
+        if (!this.getClass().equals(object.getClass())) {
+            return false;
+        }
+        Comment otherComment = (Comment) object;
+        if (this.id != otherComment.getId()) {
+            return false;
+        }
+        if (this.content == null) {
+            if (otherComment.content != null) {
+                return false;
+            }
+        } else if (!this.content.equals(otherComment.content)) {
+            return false;
+        }
+        if (this.newsId != otherComment.newsId) {
+            return false;
+        }
+        if (this.created == null) {
+            if (otherComment.created != null) {
+                return false;
+            }
+        } else if (!this.created.equals(otherComment.created)) {
+            return false;
+        }
+        if (this.modified == null) {
+            if (otherComment.modified != null) {
+                return false;
+            }
+        } else if (!this.modified.equals(otherComment.modified)) {
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("Comment{");
-        sb.append("id=").append(id);
-        sb.append(", content='").append(content).append("'");
-        sb.append(", newsId=").append(newsId);
-        sb.append(", created='").append(created).append("'");
-        sb.append(", modified='").append(modified).append("'");
-        sb.append('}');
-        return sb.toString();
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Comment{");
+        builder.append("id=").append(id).append("'");
+        builder.append(", content='").append(content).append("'");
+        builder.append(", newsId=").append(newsId).append("'");
+        builder.append(", created='").append(created).append("'");
+        builder.append(", modified='").append(modified).append("'");
+        builder.append("}");
+        return builder.toString();
     }
 }

@@ -60,7 +60,7 @@ public class Author implements Serializable {
             return false;
         }
         Author otherAuthor = (Author) object;
-        if (this.id != otherAuthor.getId()) {
+        if (this.id != otherAuthor.id) {
             return false;
         }
         if (this.name == null) {
