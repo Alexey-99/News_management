@@ -34,7 +34,6 @@
 			<AppenderRef ref="LogToConsole" />
 			<AppenderRef ref="LogToRollingFile" />
 		</Root>
-
 	</Loggers>
 
 </Configuration>
