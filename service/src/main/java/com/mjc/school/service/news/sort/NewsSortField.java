@@ -5,15 +5,11 @@ import java.util.Optional;
 public enum NewsSortField {
     CREATED, MODIFIED;
 
-    public static String getSortField(String sortField) {
-        Optional<String> currentSortField = Optional.empty();
-        if (sortField != null) {
-            for (NewsSortField newsSortFieldElement : values()) {
-                if (newsSortFieldElement.toString().equalsIgnoreCase(sortField)) {
-                    currentSortField = Optional.of(newsSortFieldElement.toString().toLowerCase());
-                }
-            }
+    public static Optional<String> getSortField(String sortField) {
+        try {
+            return Optional.of(valueOf(sortField.toUpperCase()).toString().toLowerCase());
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
         }
-        return currentSortField.orElse(MODIFIED.toString().toLowerCase());
     }
 }

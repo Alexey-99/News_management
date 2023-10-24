@@ -4,6 +4,7 @@ import com.mjc.school.converter.impl.NewsConverter;
 import com.mjc.school.News;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.service.SortType;
+import com.mjc.school.service.news.sort.NewsSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.handler.DateHandler;
@@ -123,10 +124,10 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> findAll(int page, int size,
                                  String sortingField, String sortingType) throws ServiceException {
         Page<News> newsPage = newsRepository.findAll(PageRequest.of(
-                newsPagination.calcNumberFirstElement(page, size),
-                size,
+                newsPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                        getSortField(sortingField))));
+                        getSortField(sortingField)
+                                .orElse(NewsSortField.MODIFIED.toString().toLowerCase()))));
         if (!newsPage.isEmpty()) {
             return newsPage.stream()
                     .map(newsConverter::toDTO)
@@ -164,8 +165,9 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> findByTagName(String tagName, int page, int size,
                                        String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByTagName(tagName,
-                newsPagination.calcNumberFirstElement(page, size),
-                size, getSortField(sortingField), getSortType(sortingType));
+                newsPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortingField).orElse(NewsSortField.MODIFIED.toString().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.DESC.toString()));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -185,10 +187,9 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> findByTagId(long tagId, int page, int size,
                                      String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByTagId(tagId,
-                newsPagination.calcNumberFirstElement(page, size),
-                size,
-                getSortField(sortingField),
-                getSortType(sortingType));
+                newsPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortingField).orElse(NewsSortField.MODIFIED.toString().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.DESC.toString()));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -209,10 +210,9 @@ public class NewsServiceImpl implements NewsService {
                                                 String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByPartOfAuthorName(
                 "%" + partOfAuthorName + "%",
-                newsPagination.calcNumberFirstElement(page, size),
-                size,
-                getSortField(sortingField),
-                getSortType(sortingType));
+                newsPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortingField).orElse(NewsSortField.MODIFIED.toString().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.DESC.toString()));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -232,10 +232,9 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> findByAuthorId(long authorId, int page, int size,
                                         String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByAuthorId(authorId,
-                newsPagination.calcNumberFirstElement(page, size),
-                size,
-                getSortField(sortingField),
-                getSortType(sortingType));
+                newsPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortingField).orElse(NewsSortField.MODIFIED.toString().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.DESC.toString()));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -256,10 +255,9 @@ public class NewsServiceImpl implements NewsService {
                                            String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByPartOfTitle(
                 "%" + partOfTitle + "%",
-                newsPagination.calcNumberFirstElement(page, size),
-                size,
-                getSortField(sortingField),
-                getSortType(sortingType));
+                newsPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortingField).orElse(NewsSortField.MODIFIED.toString().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.DESC.toString()));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -280,10 +278,9 @@ public class NewsServiceImpl implements NewsService {
                                              String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByPartOfContent(
                 "%" + partOfContent + "%",
-                newsPagination.calcNumberFirstElement(page, size),
-                size,
-                getSortField(sortingField),
-                getSortType(sortingType));
+                newsPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortingField).orElse(NewsSortField.MODIFIED.toString().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.DESC.toString()));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)

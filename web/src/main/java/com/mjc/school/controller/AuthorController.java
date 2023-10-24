@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -112,7 +113,9 @@ public class AuthorController {
     public ResponseEntity<Pagination<AuthorDTO>> findAll(@RequestAttribute(value = "size")
                                                          int size,
                                                          @RequestAttribute(value = "page")
-                                                         int page) throws ServiceException {
+                                                         int page,
+                                                         @RequestParam(value = "sort-type", required = false)
+                                                         String sortingType) throws ServiceException {
         return new ResponseEntity<>(authorService.getPagination(
                 authorService.findAll(page, size),
                 authorService.countAll(), page, size), OK);

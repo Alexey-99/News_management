@@ -2,6 +2,8 @@ package com.mjc.school.service.comment.impl;
 
 import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.Comment;
+import com.mjc.school.service.SortType;
+import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.handler.DateHandler;
@@ -88,10 +90,10 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> findAll(int page, int size,
                                     String sortingField, String sortingType) throws ServiceException {
         Page<Comment> commentPage = commentRepository.findAll(PageRequest.of(
-                commentPagination.calcNumberFirstElement(page, size),
-                size,
+                commentPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                        getSortField(sortingField))));
+                        getSortField(sortingField)
+                                .orElse(CommentSortField.MODIFIED.toString().toLowerCase()))));
         if (commentPage.getSize() > 0) {
             return commentPage.stream()
                     .map(commentConverter::toDTO)
@@ -119,8 +121,9 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> findByNewsId(long newsId, int page, int size,
                                          String sortingField, String sortingType) throws ServiceException {
         List<Comment> commentList = commentRepository.findByNewsId(newsId,
-                commentPagination.calcNumberFirstElement(page, size),
-                size, getSortField(sortingField), getSortType(sortingType));
+                commentPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortingField).orElse(CommentSortField.MODIFIED.toString().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.DESC.toString()));
         if (!commentList.isEmpty()) {
             return commentList.stream()
                     .map(commentConverter::toDTO)

@@ -37,18 +37,14 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
             SELECT id, name
             FROM authors
             WHERE name LIKE :partOfName
+            ORDER BY :sortField :sortType
             LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
     List<Author> findByPartOfName(@Param("partOfName") String partOfName,
                                   @Param("indexFirstElement") Integer indexFirstElement,
-                                  @Param("size") Integer size);
-
-    @Query(value = """
-            SELECT id, name
-            FROM authors
-            WHERE name LIKE :partOfName
-            """, nativeQuery = true)
-    List<Author> findByPartOfName(@Param("partOfName") String partOfName);
+                                  @Param("size") Integer size,
+                                  @Param("sortField") String sortField,
+                                  @Param("sortType") String sortType);
 
     @Query(value = """
             SELECT COUNT(id)
@@ -70,18 +66,10 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
              FROM authors LEFT JOIN news
              ON authors.id = news.authors_id
              GROUP BY authors.id
-             ORDER BY COUNT(news.authors_id) DESC
+             ORDER BY COUNT(news.authors_id) :sortType
              LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
-    List<Author> sortAllAuthorsWithAmountWrittenNewsDesc(@Param("indexFirstElement") Integer indexFirstElement,
-                                                         @Param("size") Integer size);
-
-    @Query(value = """
-             SELECT authors.id, authors.name
-             FROM authors LEFT JOIN news
-             ON authors.id = news.authors_id
-             GROUP BY authors.id
-             ORDER BY COUNT(news.authors_id) DESC
-            """, nativeQuery = true)
-    List<Author> sortAllAuthorsWithAmountWrittenNewsDesc();
+    List<Author> findAllAuthorsWithAmountWrittenNews(@Param("indexFirstElement") Integer indexFirstElement,
+                                                     @Param("size") Integer size,
+                                                     @Param("sortType") String sortType);
 }
