@@ -25,7 +25,7 @@ public interface TagService {
 
     boolean addToNews(long tagId, long newsId) throws ServiceException;
 
-    List<TagDTO> findAll(int page, int size) throws ServiceException;
+    List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceException;
 
     List<TagDTO> findAll();
 
@@ -33,11 +33,11 @@ public interface TagService {
 
     TagDTO findById(long id) throws ServiceException;
 
-    List<TagDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException;
+    List<TagDTO> findByPartOfName(String partOfName, int page, int size, String sortField, String sortType) throws ServiceException;
 
     long countAllByPartOfName(String partOfName);
 
-    List<TagDTO> findByNewsId(long newsId, int page, int size) throws ServiceException;
+    List<TagDTO> findByNewsId(long newsId, int page, int size, String sortField, String sortType) throws ServiceException;
 
     long countAllByNewsId(long newsId);
 

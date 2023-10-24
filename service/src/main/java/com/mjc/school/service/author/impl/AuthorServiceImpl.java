@@ -5,6 +5,7 @@ import com.mjc.school.converter.impl.AuthorIdWithAmountOfWrittenNewsConverter;
 import com.mjc.school.Author;
 import com.mjc.school.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.service.SortType;
+import com.mjc.school.service.author.impl.sort.AuthorSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.pagination.PaginationService;
@@ -24,6 +25,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 import static com.mjc.school.service.SortType.getSortType;
+import static com.mjc.school.service.author.impl.sort.AuthorSortField.NAME;
+import static com.mjc.school.service.author.impl.sort.AuthorSortField.getSortField;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
@@ -82,10 +85,11 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorDTO> findAll(int page, int size, String sortingType) throws ServiceException {
+    public List<AuthorDTO> findAll(int page, int size, String sortField, String sortingType) throws ServiceException {
         Page<Author> authorPage = authorRepository.findAll(PageRequest.of(
-                authorPagination.calcNumberFirstElement(page, size),
-                size, Sort.by(fromOptionalString(sortingType).orElse(ASC), "name")));
+                authorPagination.calcNumberFirstElement(page, size), size,
+                Sort.by(fromOptionalString(sortingType).orElse(ASC),
+                        getSortField(sortField).orElse(AuthorSortField.NAME.toString().toLowerCase()))));
         if (!authorPage.isEmpty()) {
             return authorPage
                     .stream()
@@ -121,11 +125,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorDTO> findByPartOfName(String partOfName, int page, int size, String sortingType) throws ServiceException {
+    public List<AuthorDTO> findByPartOfName(String partOfName, int page, int size,
+                                            String sortField, String sortingType) throws ServiceException {
         List<Author> authorsList = authorRepository.findByPartOfName(
                 "%" + partOfName + "%",
-                authorPagination.calcNumberFirstElement(page, size),
-                size, "name", getSortType(sortingType).orElse(SortType.ASC.toString()));
+                authorPagination.calcNumberFirstElement(page, size), size,
+                AuthorSortField.getSortField(sortField).orElse(NAME.toString().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.ASC.toString()));
         if (!authorsList.isEmpty()) {
             return authorsList.stream()
                     .map(authorConverter::toDTO)
@@ -154,8 +160,7 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(
             int page, int size, String sortingType) throws ServiceException {
         List<Author> authorList = authorRepository.findAllAuthorsWithAmountWrittenNews(
-                authorPagination.calcNumberFirstElement(page, size),
-                size,
+                authorPagination.calcNumberFirstElement(page, size), size,
                 SortType.getSortType(sortingType).orElse(SortType.ASC.toString()));
         if (!authorList.isEmpty()) {
             return authorList.stream()

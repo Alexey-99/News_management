@@ -49,18 +49,14 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             SELECT id, name
             FROM tags
             WHERE name LIKE :part_name
+            ORDER BY :sortField :sortType
             LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
     List<Tag> findByPartOfName(@Param("part_name") String partOfName,
                                @Param("indexFirstElement") Integer indexFirstElement,
-                               @Param("size") Integer size);
-
-    @Query(value = """
-            SELECT id, name
-            FROM tags
-            WHERE name LIKE :part_name
-            """, nativeQuery = true)
-    List<Tag> findByPartOfName(@Param("part_name") String partOfName);
+                               @Param("size") Integer size,
+                               @Param("sortField") String sortField,
+                               @Param("sortType") String sortType);
 
     @Query(value = """
             SELECT COUNT(id)
@@ -77,11 +73,14 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
                 INNER JOIN tags
                     ON news_tags.tags_id = tags.id
             WHERE news_tags.news_id = :news_id
+            ORDER BY :sortField :sortType
             LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
     List<Tag> findByNewsId(@Param("news_id") Long newsId,
                            @Param("indexFirstElement") Integer indexFirstElement,
-                           @Param("size") Integer size);
+                           @Param("size") Integer size,
+                           @Param("sortField") String sortField,
+                           @Param("sortType") String sortType);
 
     @Query(value = """
             SELECT tags.id, tags.name

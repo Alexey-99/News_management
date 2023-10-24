@@ -3,6 +3,7 @@ package com.mjc.school.service.tag.impl;
 import com.mjc.school.NewsTag;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.repository.NewsTagRepository;
+import com.mjc.school.service.SortType;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.Tag;
 import com.mjc.school.exception.ServiceException;
@@ -16,12 +17,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static com.mjc.school.service.SortType.getSortType;
+import static com.mjc.school.service.tag.impl.sort.TagSortField.NAME;
+import static com.mjc.school.service.tag.impl.sort.TagSortField.getSortField;
 import static org.apache.logging.log4j.Level.WARN;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
 @RequiredArgsConstructor
 @Service
@@ -124,10 +131,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findAll(int page, int size) throws ServiceException {
+    public List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceException {
         Page<Tag> tagPage = tagRepository.findAll(PageRequest.of(
-                tagPagination.calcNumberFirstElement(page, size),
-                size));
+                tagPagination.calcNumberFirstElement(page, size), size,
+                Sort.by(fromOptionalString(sortType).orElse(ASC),
+                        getSortField(sortField).orElse(NAME.toString().toLowerCase()))));
         if (!tagPage.isEmpty()) {
             return tagPage.stream()
                     .map(tagConverter::toDTO)
@@ -161,10 +169,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findByPartOfName(String partOfName, int page, int size) throws ServiceException {
+    public List<TagDTO> findByPartOfName(String partOfName, int page, int size,
+                                         String sortField, String sortType) throws ServiceException {
         List<Tag> tagList = tagRepository.findByPartOfName("%" + partOfName + "%",
-                tagPagination.calcNumberFirstElement(page, size),
-                size);
+                tagPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortField).orElse(NAME.toString().toLowerCase()),
+                getSortType(sortType).orElse(SortType.ASC.toString()));
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)
@@ -181,10 +191,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findByNewsId(long newsId, int page, int size) throws ServiceException {
+    public List<TagDTO> findByNewsId(long newsId, int page, int size,
+                                     String sortField, String sortType) throws ServiceException {
         List<Tag> tagList = tagRepository.findByNewsId(newsId,
-                tagPagination.calcNumberFirstElement(page, size),
-                size);
+                tagPagination.calcNumberFirstElement(page, size), size,
+                getSortField(sortField).orElse(NAME.toString().toLowerCase()),
+                getSortType(sortType).orElse(SortType.ASC.toString()));
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)

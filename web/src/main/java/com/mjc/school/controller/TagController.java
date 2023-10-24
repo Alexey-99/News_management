@@ -170,9 +170,13 @@ public class TagController {
     public ResponseEntity<Pagination<TagDTO>> findAll(@RequestAttribute(value = "size")
                                                       int size,
                                                       @RequestAttribute(value = "page")
-                                                      int page) throws ServiceException {
+                                                      int page,
+                                                      @RequestParam(value = "sort-field", required = false)
+                                                      String sortingField,
+                                                      @RequestParam(value = "sort-type", required = false)
+                                                      String sortingType) throws ServiceException {
         return new ResponseEntity<>(tagService.getPagination(
-                tagService.findAll(page, size),
+                tagService.findAll(page, size, sortingField, sortingType),
                 tagService.countAll(),
                 page, size), OK);
     }
@@ -212,9 +216,13 @@ public class TagController {
                                                                @RequestAttribute(value = "size")
                                                                int size,
                                                                @RequestAttribute(value = "page")
-                                                               int page) throws ServiceException {
+                                                               int page,
+                                                               @RequestParam(value = "sort-field", required = false)
+                                                               String sortingField,
+                                                               @RequestParam(value = "sort-type", required = false)
+                                                               String sortingType) throws ServiceException {
         return new ResponseEntity<>(tagService.getPagination(
-                tagService.findByPartOfName(partOfName, page, size),
+                tagService.findByPartOfName(partOfName, page, size, sortingField, sortingType),
                 tagService.countAllByPartOfName(partOfName),
                 page, size), OK);
     }
@@ -237,9 +245,13 @@ public class TagController {
                                                            @RequestAttribute(value = "size")
                                                            int size,
                                                            @RequestAttribute(value = "page")
-                                                           int page) throws ServiceException {
+                                                           int page,
+                                                           @RequestParam(value = "sort-field", required = false)
+                                                           String sortingField,
+                                                           @RequestParam(value = "sort-type", required = false)
+                                                           String sortingType) throws ServiceException {
         return new ResponseEntity<>(tagService.getPagination(
-                tagService.findByNewsId(newsId, page, size),
+                tagService.findByNewsId(newsId, page, size, sortingField, sortingType),
                 tagService.countAllByNewsId(newsId),
                 page, size), OK);
     }

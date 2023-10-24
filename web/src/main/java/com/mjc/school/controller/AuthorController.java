@@ -114,10 +114,12 @@ public class AuthorController {
                                                          int size,
                                                          @RequestAttribute(value = "page")
                                                          int page,
+                                                         @RequestParam(value = "sort-field", required = false)
+                                                         String sortingField,
                                                          @RequestParam(value = "sort-type", required = false)
                                                          String sortingType) throws ServiceException {
         return new ResponseEntity<>(authorService.getPagination(
-                authorService.findAll(page, size, sortingType),
+                authorService.findAll(page, size, sortingField, sortingType),
                 authorService.countAll(), page, size), OK);
     }
 
@@ -156,10 +158,12 @@ public class AuthorController {
                                                                   int size,
                                                                   @RequestAttribute(value = "page")
                                                                   int page,
+                                                                  @RequestParam(value = "sort-field", required = false)
+                                                                  String sortingField,
                                                                   @RequestParam(value = "sort-type", required = false)
                                                                   String sortingType) throws ServiceException {
         return new ResponseEntity<>(authorService.getPagination(
-                authorService.findByPartOfName(partOfName, page, size, sortingType),
+                authorService.findByPartOfName(partOfName, page, size, sortingField, sortingType),
                 authorService.countAllByPartOfName(partOfName),
                 page, size), OK);
     }
@@ -192,36 +196,15 @@ public class AuthorController {
             Response: objects with author id and amount written news, with pagination.
             """, response = Pagination.class)
     @GetMapping("/amount-news")
-    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>> selectAllAuthorsIdWithAmountOfWrittenNews(
-            @RequestAttribute(value = "size")
-            int size,
-            @RequestAttribute(value = "page")
-            int page,
-            @RequestParam(value = "sort-type", required = false)
-            String sortingType) throws ServiceException {
+    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>>
+    selectAllAuthorsIdWithAmountOfWrittenNews(@RequestAttribute(value = "size")
+                                              int size,
+                                              @RequestAttribute(value = "page")
+                                              int page,
+                                              @RequestParam(value = "sort-type", required = false)
+                                              String sortingType) throws ServiceException {
         return new ResponseEntity<>(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
                 authorService.findAllAuthorsIdWithAmountOfWrittenNews(page, size, sortingType),
                 authorService.countAll(), page, size), OK);
     }
-
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Successful completed request"),
-//            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-//            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-//            @ApiResponse(code = 500, message = "Application failed to process the request")
-//    })
-//    @ApiOperation(value = """
-//            View sorted authors id with amount of written news.
-//            Response: pagination with objects with author id and amount written news.
-//            """, response = Pagination.class)
-//    @GetMapping("/sort/amount-news")
-//    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>> sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
-//            @RequestAttribute(value = "size")
-//            int size,
-//            @RequestAttribute(value = "page")
-//            int page) throws ServiceException {
-//        return new ResponseEntity<>(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-//                authorService.sortAllAuthorsIdWithAmountOfWrittenNewsDesc(page, size),
-//                authorService.countAll(), page, size), OK);
-//    }
 }

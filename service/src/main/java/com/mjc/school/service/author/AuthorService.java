@@ -18,7 +18,7 @@ public interface AuthorService {
     @Transactional
     AuthorDTO update(AuthorDTO authorDTO) throws ServiceException;
 
-    List<AuthorDTO> findAll(int page, int size, String sortingType) throws ServiceException;
+    List<AuthorDTO> findAll(int page, int size, String sortField, String sortingType) throws ServiceException;
 
     List<AuthorDTO> findAll();
 
@@ -26,7 +26,7 @@ public interface AuthorService {
 
     AuthorDTO findById(long id) throws ServiceException;
 
-    List<AuthorDTO> findByPartOfName(String partOfName, int page, int size, String sortingType) throws ServiceException;
+    List<AuthorDTO> findByPartOfName(String partOfName, int page, int size, String sortField, String sortingType) throws ServiceException;
 
     long countAllByPartOfName(String partOfName);
 
