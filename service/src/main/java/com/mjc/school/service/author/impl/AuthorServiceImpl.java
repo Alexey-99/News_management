@@ -21,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.mjc.school.service.SortType.getSortType;
@@ -152,43 +151,19 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO> selectAllAuthorsIdWithAmountOfWrittenNews(
-            int page, int size) throws ServiceException {
-        Page<Author> authorPage = authorRepository.findAll(PageRequest.of(
+    public List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(
+            int page, int size, String sortingType) throws ServiceException {
+        List<Author> authorList = authorRepository.findAllAuthorsWithAmountWrittenNews(
                 authorPagination.calcNumberFirstElement(page, size),
-                size, Sort.by(ASC, "name")));
-        if (!authorPage.isEmpty()) {
-            return authorPage.stream()
+                size,
+                SortType.getSortType(sortingType).orElse(SortType.ASC.toString()));
+        if (!authorList.isEmpty()) {
+            return authorList.stream()
                     .map(author -> AuthorIdWithAmountOfWrittenNews.builder()
                             .authorId(author.getId())
                             .amountOfWrittenNews(author.getNews() != null
                                     ? author.getNews().size() : 0)
                             .build())
-                    .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
-                    .toList();
-        } else {
-            log.log(WARN, "Not found authors");
-            throw new ServiceException("service.exception.not_found_authors");
-        }
-    }
-
-    @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO> sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
-            int page, int size) throws ServiceException {
-        List<AuthorIdWithAmountOfWrittenNews> authorIdWithAmountOfWrittenNewsList =
-                new LinkedList<>(authorRepository.findAllAuthorsWithAmountWrittenNews(
-                                authorPagination.calcNumberFirstElement(page, size),
-                                size, "DESC")
-                        .stream()
-                        .map(author -> AuthorIdWithAmountOfWrittenNews
-                                .builder()
-                                .authorId(author.getId())
-                                .amountOfWrittenNews(author.getNews() != null
-                                        ? author.getNews().size() : 0)
-                                .build())
-                        .toList());
-        if (!authorIdWithAmountOfWrittenNewsList.isEmpty()) {
-            return authorIdWithAmountOfWrittenNewsList.stream()
                     .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
                     .toList();
         } else {

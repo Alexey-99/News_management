@@ -32,11 +32,8 @@ public interface AuthorService {
 
     AuthorDTO findByNewsId(long newsId) throws ServiceException;
 
-    List<AuthorIdWithAmountOfWrittenNewsDTO>
-    selectAllAuthorsIdWithAmountOfWrittenNews(int page, int size) throws ServiceException;
-
-    List<AuthorIdWithAmountOfWrittenNewsDTO> sortAllAuthorsIdWithAmountOfWrittenNewsDesc(
-            int page, int size) throws ServiceException;
+    List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(
+            int page, int size, String sortingType) throws ServiceException;
 
     Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements, int page, int size);
 
