@@ -11,11 +11,6 @@ import com.mjc.school.handler.DateHandler;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.news.NewsService;
-import com.mjc.school.service.news.impl.comparator.SortNewsComparator;
-import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparatorByCreatedDateTimeAsc;
-import com.mjc.school.service.news.impl.comparator.impl.created.SortNewsComparatorByCreatedDateTimeDesc;
-import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeAsc;
-import com.mjc.school.service.news.impl.comparator.impl.modified.SortNewsComparatorByModifiedDateTimeDesc;
 import com.mjc.school.validation.dto.NewsDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.apache.logging.log4j.Level.WARN;
@@ -123,7 +117,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findAll(int page, int size, String sortingField, String sortingType) throws ServiceException {
+    public List<NewsDTO> findAll(int page, int size,
+                                 String sortingField, String sortingType) throws ServiceException {
         Page<News> newsPage = newsRepository.findAll(PageRequest.of(
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
@@ -164,8 +159,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByTagName(String tagName, int page, int size,
-                                       String sortingField, String sortingType)
-            throws ServiceException {
+                                       String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByTagName(tagName,
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
@@ -187,8 +181,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByTagId(long tagId, int page, int size, String sortingField, String sortingType)
-            throws ServiceException {
+    public List<NewsDTO> findByTagId(long tagId, int page, int size,
+                                     String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByTagId(tagId,
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
@@ -211,8 +205,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName, int page, int size,
-                                                String sortingField, String sortingType)
-            throws ServiceException {
+                                                String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByPartOfAuthorName(
                 "%" + partOfAuthorName + "%",
                 newsPagination.calcNumberFirstElement(page, size),
@@ -236,8 +229,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByAuthorId(long authorId, int page, int size,
-                                        String sortingField, String sortingType)
-            throws ServiceException {
+                                        String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByAuthorId(authorId,
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
@@ -260,8 +252,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByPartOfTitle(String partOfTitle, int page, int size,
-                                           String sortingField, String sortingType)
-            throws ServiceException {
+                                           String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByPartOfTitle(
                 "%" + partOfTitle + "%",
                 newsPagination.calcNumberFirstElement(page, size),
@@ -285,8 +276,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size,
-                                             String sortingField, String sortingType)
-            throws ServiceException {
+                                             String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByPartOfContent(
                 "%" + partOfContent + "%",
                 newsPagination.calcNumberFirstElement(page, size),
