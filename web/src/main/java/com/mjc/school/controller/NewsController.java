@@ -27,8 +27,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static com.mjc.school.service.news.sort.NewsSortField.MODIFIED;
-import static com.mjc.school.name.SortType.DESCENDING;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 

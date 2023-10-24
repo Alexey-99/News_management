@@ -1,4 +1,4 @@
-package com.mjc.school.service.news.sort;
+package com.mjc.school.service;
 
 public enum SortType {
     ASC, DESC;

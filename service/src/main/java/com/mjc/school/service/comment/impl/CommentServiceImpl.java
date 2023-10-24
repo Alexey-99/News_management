@@ -9,25 +9,24 @@ import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.service.comment.CommentService;
-import com.mjc.school.service.comment.impl.comparator.SortCommentComparator;
-import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentComparatorByCreatedDateTimeAsc;
-import com.mjc.school.service.comment.impl.comparator.impl.created.SortCommentComparatorByCreatedDateTimeDesc;
-import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeDesc;
-import com.mjc.school.service.comment.impl.comparator.impl.modified.SortCommentComparatorByModifiedDateTimeAsc;
 import com.mjc.school.validation.dto.CommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.LinkedList;
 import java.util.List;
 
+import static com.mjc.school.service.SortType.getSortType;
+import static com.mjc.school.service.comment.impl.sort.CommentSortField.getSortField;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
 @RequiredArgsConstructor
 @Service
@@ -86,9 +85,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDTO> findAll(int page, int size) throws ServiceException {
+    public List<CommentDTO> findAll(int page, int size,
+                                    String sortingField, String sortingType) throws ServiceException {
         Page<Comment> commentPage = commentRepository.findAll(PageRequest.of(
-                commentPagination.calcNumberFirstElement(page, size), size));
+                commentPagination.calcNumberFirstElement(page, size),
+                size,
+                Sort.by(fromOptionalString(sortingType).orElse(DESC),
+                        getSortField(sortingField))));
         if (commentPage.getSize() > 0) {
             return commentPage.stream()
                     .map(commentConverter::toDTO)
@@ -113,10 +116,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDTO> findByNewsId(long newsId, int page, int size) throws ServiceException {
+    public List<CommentDTO> findByNewsId(long newsId, int page, int size,
+                                         String sortingField, String sortingType) throws ServiceException {
         List<Comment> commentList = commentRepository.findByNewsId(newsId,
                 commentPagination.calcNumberFirstElement(page, size),
-                size);
+                size, getSortField(sortingField), getSortType(sortingType));
         if (!commentList.isEmpty()) {
             return commentList.stream()
                     .map(commentConverter::toDTO)
@@ -139,34 +143,6 @@ public class CommentServiceImpl implements CommentService {
             return new ServiceException("service.exception.not_found_comment_by_id");
         });
         return commentConverter.toDTO(comment);
-
-    }
-
-    @Override
-    public List<CommentDTO> sort(List<CommentDTO> list, SortCommentComparator comparator) {
-        List<CommentDTO> sortedList = new LinkedList<>(list);
-        sortedList.sort(comparator);
-        return sortedList;
-    }
-
-    @Override
-    public List<CommentDTO> sortByCreatedDateTimeAsc(List<CommentDTO> list) {
-        return sort(list, new SortCommentComparatorByCreatedDateTimeAsc());
-    }
-
-    @Override
-    public List<CommentDTO> sortByCreatedDateTimeDesc(List<CommentDTO> list) {
-        return sort(list, new SortCommentComparatorByCreatedDateTimeDesc());
-    }
-
-    @Override
-    public List<CommentDTO> sortByModifiedDateTimeAsc(List<CommentDTO> list) {
-        return sort(list, new SortCommentComparatorByModifiedDateTimeAsc());
-    }
-
-    @Override
-    public List<CommentDTO> sortByModifiedDateTimeDesc(List<CommentDTO> list) {
-        return sort(list, new SortCommentComparatorByModifiedDateTimeDesc());
     }
 
     @Override

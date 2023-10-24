@@ -70,7 +70,7 @@ public class News implements Serializable {
         sb.append(", comments=").append(comments);
         StringBuilder tagsStringBuilder = new StringBuilder();
         tags.forEach(newsTag -> tagsStringBuilder.append(newsTag.getTag().toString()));
-        sb.append(", tags=").append(tagsStringBuilder.toString());
+        sb.append(", tags=").append(tagsStringBuilder);
         sb.append('}');
         return sb.toString();
     }

@@ -2,7 +2,6 @@ package com.mjc.school.controller;
 
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.service.news.sort.NewsSortField;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
 import io.swagger.annotations.Api;
@@ -26,9 +25,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import static com.mjc.school.service.news.sort.NewsSortField.MODIFIED;
-import static com.mjc.school.name.SortType.ASCENDING;
-import static com.mjc.school.name.SortType.DESCENDING;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -130,9 +126,14 @@ public class CommentController {
     public ResponseEntity<Pagination<CommentDTO>> findAll(@RequestAttribute(value = "size")
                                                           int size,
                                                           @RequestAttribute(value = "page")
-                                                          int page) throws ServiceException {
+                                                          int page,
+                                                          @RequestParam(value = "sort-field", required = false)
+                                                          String sortingField,
+                                                          @RequestParam(value = "sort-type", required = false)
+                                                          String sortingType) throws ServiceException {
         return new ResponseEntity<>(commentService.getPagination(
-                commentService.findAll(page, size), commentService.countAllComments(),
+                commentService.findAll(page, size, sortingField, sortingType),
+                commentService.countAllComments(),
                 page, size), OK);
     }
 
@@ -154,9 +155,13 @@ public class CommentController {
                                                                @RequestAttribute(value = "size")
                                                                int size,
                                                                @RequestAttribute(value = "page")
-                                                               int page) throws ServiceException {
+                                                               int page,
+                                                               @RequestParam(value = "sort-field", required = false)
+                                                               String sortingField,
+                                                               @RequestParam(value = "sort-type", required = false)
+                                                               String sortingType) throws ServiceException {
         return new ResponseEntity<>(commentService.getPagination(
-                commentService.findByNewsId(newsId, page, size),
+                commentService.findByNewsId(newsId, page, size, sortingField, sortingType),
                 commentService.countAllCommentsByNewsId(newsId),
                 page, size), OK);
     }
@@ -176,64 +181,5 @@ public class CommentController {
                                                        message = "comment_controller.path_variable.id.in_valid.min")
                                                long id) throws ServiceException {
         return new ResponseEntity<>(commentService.findById(id), OK);
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful completed request"),
-            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    })
-    @ApiOperation(value = """
-            View sorted comments.
-            Response: pagination of comments.
-            """, response = Pagination.class)
-    @GetMapping("/sort")
-    public ResponseEntity<Pagination<CommentDTO>> sort(@RequestAttribute(value = "size")
-                                                       int size,
-                                                       @RequestAttribute(value = "page")
-                                                       int page,
-                                                       @RequestParam(value = "field",
-                                                               required = false,
-                                                               defaultValue = MODIFIED)
-                                                       String sortingField,
-                                                       @RequestParam(value = "type",
-                                                               required = false,
-                                                               defaultValue = DESCENDING)
-                                                       String sortingType) throws ServiceException {
-        Pagination<CommentDTO> sortedList = null;
-        if (sortingField != null &&
-                sortingField.equals(NewsSortField.CREATED)) {
-            if (sortingType != null &&
-                    sortingType.equals(ASCENDING)) {
-                sortedList = commentService.getPagination(
-                        commentService.sortByCreatedDateTimeAsc(
-                                commentService.findAll(page, size)),
-                        commentService.countAllComments(),
-                        page, size);
-            } else {
-                sortedList = commentService.getPagination(
-                        commentService.sortByCreatedDateTimeDesc(
-                                commentService.findAll(page, size)),
-                        commentService.countAllComments(),
-                        page, size);
-            }
-        } else {
-            if (sortingType != null &&
-                    sortingType.equals(ASCENDING)) {
-                sortedList = commentService.getPagination(
-                        commentService.sortByModifiedDateTimeAsc(
-                                commentService.findAll(page, size)),
-                        commentService.countAllComments(),
-                        page, size);
-            } else {
-                sortedList = commentService.getPagination(
-                        commentService.sortByModifiedDateTimeDesc(
-                                commentService.findAll(page, size)),
-                        commentService.countAllComments(),
-                        page, size);
-            }
-        }
-        return new ResponseEntity<>(sortedList, OK);
     }
 }

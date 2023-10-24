@@ -3,8 +3,7 @@ package com.mjc.school.service.news.impl;
 import com.mjc.school.converter.impl.NewsConverter;
 import com.mjc.school.News;
 import com.mjc.school.repository.AuthorRepository;
-import com.mjc.school.service.news.sort.NewsSortField;
-import com.mjc.school.service.news.sort.SortType;
+import com.mjc.school.service.SortType;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.handler.DateHandler;
@@ -24,7 +23,11 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mjc.school.service.SortType.getSortType;
+import static com.mjc.school.service.news.sort.NewsSortField.getSortField;
 import static org.apache.logging.log4j.Level.WARN;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
 @RequiredArgsConstructor
 @Service
@@ -122,8 +125,8 @@ public class NewsServiceImpl implements NewsService {
         Page<News> newsPage = newsRepository.findAll(PageRequest.of(
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
-                Sort.by(Sort.Direction.fromOptionalString(sortingType).orElse(Sort.Direction.DESC),
-                        NewsSortField.getSortField(sortingField))));
+                Sort.by(fromOptionalString(sortingType).orElse(DESC),
+                        getSortField(sortingField))));
         if (!newsPage.isEmpty()) {
             return newsPage.stream()
                     .map(newsConverter::toDTO)
@@ -162,9 +165,7 @@ public class NewsServiceImpl implements NewsService {
                                        String sortingField, String sortingType) throws ServiceException {
         List<News> newsList = newsRepository.findByTagName(tagName,
                 newsPagination.calcNumberFirstElement(page, size),
-                size,
-                NewsSortField.getSortField(sortingField),
-                SortType.getSortType(sortingType));
+                size, getSortField(sortingField), getSortType(sortingType));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -186,8 +187,8 @@ public class NewsServiceImpl implements NewsService {
         List<News> newsList = newsRepository.findByTagId(tagId,
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
-                NewsSortField.getSortField(sortingField),
-                SortType.getSortType(sortingType));
+                getSortField(sortingField),
+                getSortType(sortingType));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -210,8 +211,8 @@ public class NewsServiceImpl implements NewsService {
                 "%" + partOfAuthorName + "%",
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
-                NewsSortField.getSortField(sortingField),
-                SortType.getSortType(sortingType));
+                getSortField(sortingField),
+                getSortType(sortingType));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -233,8 +234,8 @@ public class NewsServiceImpl implements NewsService {
         List<News> newsList = newsRepository.findByAuthorId(authorId,
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
-                NewsSortField.getSortField(sortingField),
-                SortType.getSortType(sortingType));
+                getSortField(sortingField),
+                getSortType(sortingType));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -257,8 +258,8 @@ public class NewsServiceImpl implements NewsService {
                 "%" + partOfTitle + "%",
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
-                NewsSortField.getSortField(sortingField),
-                SortType.getSortType(sortingType));
+                getSortField(sortingField),
+                getSortType(sortingType));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -281,8 +282,8 @@ public class NewsServiceImpl implements NewsService {
                 "%" + partOfContent + "%",
                 newsPagination.calcNumberFirstElement(page, size),
                 size,
-                NewsSortField.getSortField(sortingField),
-                SortType.getSortType(sortingType));
+                getSortField(sortingField),
+                getSortType(sortingType));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)

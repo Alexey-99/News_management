@@ -36,11 +36,14 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             SELECT id, content, news_id, created, modified
             FROM comments
             WHERE news_id = :newsId
+            ORDER BY :sortField :sortType
             LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
     List<Comment> findByNewsId(@Param("newsId") Long newsId,
                                @Param("indexFirstElement") Integer indexFirstElement,
-                               @Param("size") Integer size);
+                               @Param("size") Integer size,
+                               @Param("sortField") String sortField,
+                               @Param("sortType") String sortType);
 
     @Query(value = """
             SELECT id, content, news_id, created, modified
