@@ -1,37 +1,27 @@
 package com.mjc.school.config.security;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+
 @EnableWebSecurity
 public class WebSecurityConfig {
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(requests -> requests.regexMatchers("/", "/home")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
-                .formLogin(form -> form.loginPage("/login").permitAll())
-                .logout(LogoutConfigurer::permitAll)
-                .build();
-    }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("password")
-                        .roles("USER")
-                        .build();
-        return new InMemoryUserDetailsManager(user);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.anonymous().disable().and()
+                .anonymous(AbstractHttpConfigurer::disable)         // AnonymousAuthenticationFilter
+                .anonymous().disable()
+                .csrf(AbstractHttpConfigurer::disable)              // CsrfFilter
+                .sessionManagement(AbstractHttpConfigurer::disable) // DisableEncodeUrlFilter, SessionManagementFilter
+                .exceptionHandling(AbstractHttpConfigurer::disable) // ExceptionTranslationFilter
+                .headers(AbstractHttpConfigurer::disable)           // HeaderWriterFilter
+                .logout(AbstractHttpConfigurer::disable)            // LogoutFilter
+                .requestCache(AbstractHttpConfigurer::disable)      // RequestCacheAwareFilter
+                .servletApi(AbstractHttpConfigurer::disable)        // SecurityContextHolderAwareRequestFilter
+                .securityContext(AbstractHttpConfigurer::disable)   // SecurityContextPersistenceFilter
+                .build();
     }
 }
