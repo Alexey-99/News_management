@@ -2,7 +2,6 @@ package com.mjc.school.controller;
 
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.name.SortField;
 import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
 import io.swagger.annotations.Api;
@@ -28,8 +27,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static com.mjc.school.name.SortField.MODIFIED;
-import static com.mjc.school.name.SortType.ASCENDING;
+import static com.mjc.school.service.news.sort.NewsSortField.MODIFIED;
 import static com.mjc.school.name.SortType.DESCENDING;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -150,9 +148,13 @@ public class NewsController {
     public ResponseEntity<Pagination<NewsDTO>> findAll(@RequestAttribute(value = "size")
                                                        int size,
                                                        @RequestAttribute(value = "page")
-                                                       int page) throws ServiceException {
+                                                       int page,
+                                                       @RequestParam(value = "sort-field", required = false)
+                                                       String sortingField,
+                                                       @RequestParam(value = "sort-type", required = false)
+                                                       String sortingType) throws ServiceException {
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findAll(page, size),
+                newsService.findAll(page, size, sortingField, sortingType),
                 newsService.countAllNews(),
                 page, size), OK);
     }
@@ -195,9 +197,13 @@ public class NewsController {
                                                                  @RequestAttribute(value = "size")
                                                                  int size,
                                                                  @RequestAttribute(value = "page")
-                                                                 int page) throws ServiceException {
+                                                                 int page,
+                                                                 @RequestParam(value = "sort-field", required = false)
+                                                                 String sortingField,
+                                                                 @RequestParam(value = "sort-type", required = false)
+                                                                 String sortingType) throws ServiceException {
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByTagName(tagName, page, size),
+                newsService.findByTagName(tagName, page, size, sortingField, sortingType),
                 newsService.countAllNewsByTagName(tagName),
                 page, size), OK);
     }
@@ -220,10 +226,42 @@ public class NewsController {
                                                                @RequestAttribute(value = "size")
                                                                int size,
                                                                @RequestAttribute(value = "page")
-                                                               int page) throws ServiceException {
+                                                               int page,
+                                                               @RequestParam(value = "sort-field", required = false)
+                                                               String sortingField,
+                                                               @RequestParam(value = "sort-type", required = false)
+                                                               String sortingType) throws ServiceException {
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByTagId(tagId, page, size),
+                newsService.findByTagId(tagId, page, size, sortingField, sortingType),
                 newsService.countAllNewsByTagId(tagId),
+                page, size), OK);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
+    @ApiOperation(value = """
+            View news by author name.
+            Response: pagination of news.
+            """, response = Pagination.class)
+    @GetMapping("/author/part-name/{partOfAuthorName}")
+    public ResponseEntity<Pagination<NewsDTO>> findNewsByAuthorName(@PathVariable
+                                                                    @NotNull(message = "news_controller.path_variable.author_name.in_valid.null")
+                                                                    String partOfAuthorName,
+                                                                    @RequestAttribute(value = "size")
+                                                                    int size,
+                                                                    @RequestAttribute(value = "page")
+                                                                    int page,
+                                                                    @RequestParam(value = "sort-field", required = false)
+                                                                    String sortingField,
+                                                                    @RequestParam(value = "sort-type", required = false)
+                                                                    String sortingType) throws ServiceException {
+        return new ResponseEntity<>(newsService.getPagination(
+                newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortingField, sortingType),
+                newsService.countAllNewsByPartOfAuthorName(partOfAuthorName),
                 page, size), OK);
     }
 
@@ -245,34 +283,14 @@ public class NewsController {
                                                                   @RequestAttribute(value = "size")
                                                                   int size,
                                                                   @RequestAttribute(value = "page")
-                                                                  int page) throws ServiceException {
+                                                                  int page,
+                                                                  @RequestParam(value = "sort-field", required = false)
+                                                                  String sortingField,
+                                                                  @RequestParam(value = "sort-type", required = false)
+                                                                  String sortingType) throws ServiceException {
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByAuthorId(authorId, page, size),
+                newsService.findByAuthorId(authorId, page, size, sortingField, sortingType),
                 newsService.countAllNewsByAuthorId(authorId),
-                page, size), OK);
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful completed request"),
-            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    })
-    @ApiOperation(value = """
-            View news by author name.
-            Response: pagination of news.
-            """, response = Pagination.class)
-    @GetMapping("/author/part-name/{partOfAuthorName}")
-    public ResponseEntity<Pagination<NewsDTO>> findNewsByAuthorName(@PathVariable
-                                                                    @NotNull(message = "news_controller.path_variable.author_name.in_valid.null")
-                                                                    String partOfAuthorName,
-                                                                    @RequestAttribute(value = "size")
-                                                                    int size,
-                                                                    @RequestAttribute(value = "page")
-                                                                    int page) throws ServiceException {
-        return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByPartOfAuthorName(partOfAuthorName, page, size),
-                newsService.countAllNewsByPartOfAuthorName(partOfAuthorName),
                 page, size), OK);
     }
 
@@ -293,9 +311,13 @@ public class NewsController {
                                                                      @RequestAttribute(value = "size")
                                                                      int size,
                                                                      @RequestAttribute(value = "page")
-                                                                     int page) throws ServiceException {
+                                                                     int page,
+                                                                     @RequestParam(value = "sort-field", required = false)
+                                                                     String sortingField,
+                                                                     @RequestParam(value = "sort-type", required = false)
+                                                                     String sortingType) throws ServiceException {
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByPartOfTitle(partOfTitle, page, size),
+                newsService.findByPartOfTitle(partOfTitle, page, size, sortingField, sortingType),
                 newsService.countAllNewsByPartOfTitle(partOfTitle),
                 page, size), OK);
     }
@@ -317,66 +339,14 @@ public class NewsController {
                                                                        @RequestAttribute(value = "size")
                                                                        int size,
                                                                        @RequestAttribute(value = "page")
-                                                                       int page) throws ServiceException {
+                                                                       int page,
+                                                                       @RequestParam(value = "sort-field", required = false)
+                                                                       String sortingField,
+                                                                       @RequestParam(value = "sort-type", required = false)
+                                                                       String sortingType) throws ServiceException {
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByPartOfContent(partOfContent, page, size),
+                newsService.findByPartOfContent(partOfContent, page, size, sortingField, sortingType),
                 newsService.countAllNewsByPartOfContent(partOfContent),
                 page, size), OK);
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful completed request"),
-            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    })
-    @ApiOperation(value = """
-            View sorted all news.
-            Response: pagination of news.
-            """, response = Pagination.class)
-    @GetMapping("/sort")
-    public ResponseEntity<Pagination<NewsDTO>> sort(@RequestAttribute(value = "size")
-                                                    int size,
-                                                    @RequestAttribute(value = "page")
-                                                    int page,
-                                                    @RequestParam(value = "field",
-                                                            required = false,
-                                                            defaultValue = MODIFIED)
-                                                    String sortingField,
-                                                    @RequestParam(value = "type",
-                                                            required = false,
-                                                            defaultValue = DESCENDING)
-                                                    String sortingType) throws ServiceException {
-        Pagination<NewsDTO> sortedList = null;
-        if (sortingField != null && sortingField.equals(SortField.CREATED)) {
-            if (sortingType != null && sortingType.equals(ASCENDING)) {
-                sortedList = newsService.getPagination(
-                        newsService.sortByCreatedDateTimeAsc(
-                                newsService.findAll(page, size)),
-                        newsService.countAllNews(),
-                        page, size);
-            } else {
-                sortedList = newsService.getPagination(
-                        newsService.sortByCreatedDateTimeDesc(
-                                newsService.findAll(page, size)),
-                        newsService.countAllNews(),
-                        page, size);
-            }
-        } else {
-            if (sortingType != null && sortingType.equals(ASCENDING)) {
-                sortedList = newsService.getPagination(
-                        newsService.sortByModifiedDateTimeAsc(
-                                newsService.findAll(page, size)),
-                        newsService.countAllNews(),
-                        page, size);
-            } else {
-                sortedList = newsService.getPagination(
-                        newsService.sortByModifiedDateTimeDesc(
-                                newsService.findAll(page, size)),
-                        newsService.countAllNews(),
-                        page, size);
-            }
-        }
-        return new ResponseEntity<>(sortedList, OK);
     }
 }

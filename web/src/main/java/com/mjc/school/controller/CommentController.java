@@ -2,7 +2,7 @@ package com.mjc.school.controller;
 
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
-import com.mjc.school.name.SortField;
+import com.mjc.school.service.news.sort.NewsSortField;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
 import io.swagger.annotations.Api;
@@ -26,7 +26,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import static com.mjc.school.name.SortField.MODIFIED;
+import static com.mjc.school.service.news.sort.NewsSortField.MODIFIED;
 import static com.mjc.school.name.SortType.ASCENDING;
 import static com.mjc.school.name.SortType.DESCENDING;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -203,7 +203,7 @@ public class CommentController {
                                                        String sortingType) throws ServiceException {
         Pagination<CommentDTO> sortedList = null;
         if (sortingField != null &&
-                sortingField.equals(SortField.CREATED)) {
+                sortingField.equals(NewsSortField.CREATED)) {
             if (sortingType != null &&
                     sortingType.equals(ASCENDING)) {
                 sortedList = commentService.getPagination(

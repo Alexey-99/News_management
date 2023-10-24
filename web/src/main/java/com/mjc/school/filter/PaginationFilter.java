@@ -11,11 +11,7 @@ import java.io.IOException;
 import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER_PAGE;
 import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 
-@WebFilter(urlPatterns = {
-        "/api/v2/news/*",
-        "/api/v2/author/*",
-        "/api/v2/comment/*",
-        "/api/v2/tag/*"})
+@WebFilter(urlPatterns = "/api/*")
 public class PaginationFilter implements Filter {
 
     @Override
