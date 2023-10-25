@@ -50,19 +50,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             SELECT id, name
             FROM tags
             WHERE name LIKE :part_name
-            ORDER BY :sortField :sortType
-            LIMIT :size OFFSET :indexFirstElement
-            """, nativeQuery = true)
-    List<Tag> findByPartOfName(@Param("part_name") String partOfName,
-                               @Param("sortField") String sortField,
-                               @Param("sortType") String sortType,
-                               @Param("size") Integer size,
-                               @Param("indexFirstElement") Integer indexFirstElement);
-
-    @Query(value = """
-            SELECT id, name
-            FROM tags
-            WHERE name LIKE :part_name
             """, nativeQuery = true)
     List<Tag> findByPartOfName(@Param("part_name") String partOfName, Pageable pageable);
 
@@ -72,24 +59,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             WHERE name LIKE :part_name
             """, nativeQuery = true)
     Long countAllByPartOfName(@Param("part_name") String partOfName);
-
-    @Query(value = """
-            SELECT tags.id, tags.name
-            FROM news
-                INNER JOIN news_tags
-                    ON news.id = news_tags.news_id
-                INNER JOIN tags
-                    ON news_tags.tags_id = tags.id
-            WHERE news_tags.news_id = :news_id
-            ORDER BY :sortField
-                :sortType
-            LIMIT :size OFFSET :indexFirstElement
-            """, nativeQuery = true)
-    List<Tag> findByNewsId(@Param("news_id") Long newsId,
-                           @Param("indexFirstElement") Integer indexFirstElement,
-                           @Param("size") Integer size,
-                           @Param("sortField") String sortField,
-                           @Param("sortType") String sortType);
 
     @Query(value = """
             SELECT tags.id, tags.name

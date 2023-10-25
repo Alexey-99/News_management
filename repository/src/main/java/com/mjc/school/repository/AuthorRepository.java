@@ -1,6 +1,7 @@
 package com.mjc.school.repository;
 
 import com.mjc.school.model.Author;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -37,14 +38,8 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
             SELECT id, name
             FROM authors
             WHERE name LIKE :partOfName
-            ORDER BY :sortField :sortType
-            LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
-    List<Author> findByPartOfName(@Param("partOfName") String partOfName,
-                                  @Param("indexFirstElement") Integer indexFirstElement,
-                                  @Param("size") Integer size,
-                                  @Param("sortField") String sortField,
-                                  @Param("sortType") String sortType);
+    List<Author> findByPartOfName(@Param("partOfName") String partOfName, Pageable pageable);
 
     @Query(value = """
             SELECT COUNT(id)
@@ -66,10 +61,16 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
              FROM authors LEFT JOIN news
              ON authors.id = news.authors_id
              GROUP BY authors.id
-             ORDER BY COUNT(news.authors_id) :sortType
-             LIMIT :size OFFSET :indexFirstElement
+             ORDER BY COUNT(news.authors_id) ASC
             """, nativeQuery = true)
-    List<Author> findAllAuthorsWithAmountWrittenNews(@Param("indexFirstElement") Integer indexFirstElement,
-                                                     @Param("size") Integer size,
-                                                     @Param("sortType") String sortType);
+    List<Author> findAllAuthorsWithAmountWrittenNewsAsc(Pageable pageable);
+
+    @Query(value = """
+             SELECT authors.id, authors.name
+             FROM authors LEFT JOIN news
+             ON authors.id = news.authors_id
+             GROUP BY authors.id
+             ORDER BY COUNT(news.authors_id) DESC
+            """, nativeQuery = true)
+    List<Author> findAllAuthorsWithAmountWrittenNewsDesc(Pageable pageable);
 }

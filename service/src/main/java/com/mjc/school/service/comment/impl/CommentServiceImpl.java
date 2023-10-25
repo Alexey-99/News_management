@@ -2,7 +2,6 @@ package com.mjc.school.service.comment.impl;
 
 import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.model.Comment;
-import com.mjc.school.service.SortType;
 import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static com.mjc.school.service.SortType.getSortType;
 import static com.mjc.school.service.comment.impl.sort.CommentSortField.getSortField;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
@@ -121,9 +119,10 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> findByNewsId(long newsId, int page, int size,
                                          String sortingField, String sortingType) throws ServiceException {
         List<Comment> commentList = commentRepository.findByNewsId(newsId,
-                commentPagination.calcNumberFirstElement(page, size), size,
-                getSortField(sortingField).orElse(CommentSortField.MODIFIED.name().toLowerCase()),
-                getSortType(sortingType).orElse(SortType.DESC.name()));
+                PageRequest.of(commentPagination.calcNumberFirstElement(page, size), size,
+                        Sort.by(fromOptionalString(sortingType).orElse(DESC),
+                                getSortField(sortingField)
+                                        .orElse(CommentSortField.MODIFIED.name().toLowerCase()))));
         if (!commentList.isEmpty()) {
             return commentList.stream()
                     .map(commentConverter::toDTO)

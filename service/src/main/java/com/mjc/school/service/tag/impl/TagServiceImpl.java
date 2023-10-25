@@ -46,7 +46,7 @@ public class TagServiceImpl implements TagService {
             tagRepository.save(tag);
             return true;
         } else {
-            log.log(WARN, "Tag with entered name '" + tagDTO.getName() + "' already exists");
+            log.log(WARN, "Tag with entered name '%s' already exists".formatted(tagDTO.getName()));
             throw new ServiceException("tag_dto.name.not_valid.exists_tag_by_name");
         }
     }

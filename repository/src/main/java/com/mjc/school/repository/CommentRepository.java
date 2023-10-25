@@ -1,6 +1,7 @@
 package com.mjc.school.repository;
 
 import com.mjc.school.model.Comment;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,11 +40,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             ORDER BY :sortField :sortType
             LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
-    List<Comment> findByNewsId(@Param("newsId") Long newsId,
-                               @Param("indexFirstElement") Integer indexFirstElement,
-                               @Param("size") Integer size,
-                               @Param("sortField") String sortField,
-                               @Param("sortType") String sortType);
+    List<Comment> findByNewsId(@Param("newsId") Long newsId, Pageable pageable);
 
     @Query(value = """
             SELECT id, content, news_id, created, modified

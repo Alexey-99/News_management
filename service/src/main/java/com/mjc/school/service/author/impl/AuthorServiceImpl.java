@@ -4,7 +4,6 @@ import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.converter.impl.AuthorIdWithAmountOfWrittenNewsConverter;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.AuthorIdWithAmountOfWrittenNews;
-import com.mjc.school.service.SortType;
 import com.mjc.school.service.author.impl.sort.AuthorSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
@@ -24,11 +23,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static com.mjc.school.service.SortType.getSortType;
-import static com.mjc.school.service.author.impl.sort.AuthorSortField.NAME;
 import static com.mjc.school.service.author.impl.sort.AuthorSortField.getSortField;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
 @RequiredArgsConstructor
@@ -129,9 +127,9 @@ public class AuthorServiceImpl implements AuthorService {
                                             String sortField, String sortingType) throws ServiceException {
         List<Author> authorsList = authorRepository.findByPartOfName(
                 "%" + partOfName + "%",
-                authorPagination.calcNumberFirstElement(page, size), size,
-                AuthorSortField.getSortField(sortField).orElse(NAME.name().toLowerCase()),
-                getSortType(sortingType).orElse(SortType.ASC.name()));
+                PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size,
+                        Sort.by(fromOptionalString(sortingType).orElse(ASC),
+                                getSortField(sortField).orElse(AuthorSortField.NAME.name().toLowerCase()))));
         if (!authorsList.isEmpty()) {
             return authorsList.stream()
                     .map(authorConverter::toDTO)
@@ -159,9 +157,17 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(
             int page, int size, String sortingType) throws ServiceException {
-        List<Author> authorList = authorRepository.findAllAuthorsWithAmountWrittenNews(
-                authorPagination.calcNumberFirstElement(page, size), size,
-                SortType.getSortType(sortingType).orElse(SortType.ASC.name()));
+        String sortType = sortingType != null ?
+                Sort.Direction.fromOptionalString(sortingType).orElse(DESC).name() :
+                DESC.name();
+        List<Author> authorList = null;
+        if (sortType.equalsIgnoreCase("ASC")) {
+            authorList = authorRepository.findAllAuthorsWithAmountWrittenNewsAsc(
+                    PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size));
+        } else {
+            authorList = authorRepository.findAllAuthorsWithAmountWrittenNewsDesc(
+                    PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size));
+        }
         if (!authorList.isEmpty()) {
             return authorList.stream()
                     .map(author -> AuthorIdWithAmountOfWrittenNews.builder()
