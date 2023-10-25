@@ -135,7 +135,7 @@ public class TagServiceImpl implements TagService {
         Page<Tag> tagPage = tagRepository.findAll(PageRequest.of(
                 tagPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortType).orElse(ASC),
-                        getSortField(sortField).orElse(NAME.toString().toLowerCase()))));
+                        getSortField(sortField).orElse(NAME.name().toLowerCase()))));
         if (!tagPage.isEmpty()) {
             return tagPage.stream()
                     .map(tagConverter::toDTO)
@@ -172,9 +172,11 @@ public class TagServiceImpl implements TagService {
     public List<TagDTO> findByPartOfName(String partOfName, int page, int size,
                                          String sortField, String sortType) throws ServiceException {
         List<Tag> tagList = tagRepository.findByPartOfName("%" + partOfName + "%",
-                tagPagination.calcNumberFirstElement(page, size), size,
-                getSortField(sortField).orElse(NAME.toString().toLowerCase()),
-                getSortType(sortType).orElse(SortType.ASC.toString()));
+                getSortField(sortField).orElse(NAME.name().toLowerCase()),
+                getSortType(sortType).orElse(SortType.ASC.name()),
+                tagPagination.calcNumberFirstElement(page, size), size
+
+        );
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)
@@ -195,8 +197,8 @@ public class TagServiceImpl implements TagService {
                                      String sortField, String sortType) throws ServiceException {
         List<Tag> tagList = tagRepository.findByNewsId(newsId,
                 tagPagination.calcNumberFirstElement(page, size), size,
-                getSortField(sortField).orElse(NAME.toString().toLowerCase()),
-                getSortType(sortType).orElse(SortType.ASC.toString()));
+                getSortField(sortField).orElse(NAME.name().toLowerCase()),
+                getSortType(sortType).orElse(SortType.ASC.name()));
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)

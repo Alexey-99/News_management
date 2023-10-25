@@ -7,7 +7,9 @@ public enum TagSortField {
 
     public static Optional<String> getSortField(String sortField) {
         try {
-            return Optional.of(valueOf(sortField.toUpperCase()).toString().toLowerCase());
+            return sortField != null ?
+                    Optional.of(valueOf(sortField.toUpperCase()).name().toLowerCase()) :
+                    Optional.empty();
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

@@ -1,4 +1,4 @@
-package com.mjc.school.service.news.sort;
+package com.mjc.school.service.news.impl.sort;
 
 import java.util.Optional;
 
@@ -7,7 +7,9 @@ public enum NewsSortField {
 
     public static Optional<String> getSortField(String sortField) {
         try {
-            return Optional.of(valueOf(sortField.toUpperCase()).toString().toLowerCase());
+            return sortField != null ?
+                    Optional.of(valueOf(sortField.toUpperCase()).name().toLowerCase()) :
+                    Optional.empty();
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

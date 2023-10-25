@@ -93,7 +93,7 @@ public class CommentServiceImpl implements CommentService {
                 commentPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
                         getSortField(sortingField)
-                                .orElse(CommentSortField.MODIFIED.toString().toLowerCase()))));
+                                .orElse(CommentSortField.MODIFIED.name().toLowerCase()))));
         if (commentPage.getSize() > 0) {
             return commentPage.stream()
                     .map(commentConverter::toDTO)
@@ -122,8 +122,8 @@ public class CommentServiceImpl implements CommentService {
                                          String sortingField, String sortingType) throws ServiceException {
         List<Comment> commentList = commentRepository.findByNewsId(newsId,
                 commentPagination.calcNumberFirstElement(page, size), size,
-                getSortField(sortingField).orElse(CommentSortField.MODIFIED.toString().toLowerCase()),
-                getSortType(sortingType).orElse(SortType.DESC.toString()));
+                getSortField(sortingField).orElse(CommentSortField.MODIFIED.name().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.DESC.name()));
         if (!commentList.isEmpty()) {
             return commentList.stream()
                     .map(commentConverter::toDTO)

@@ -7,7 +7,9 @@ public enum SortType {
 
     public static Optional<String> getSortType(String sortType) {
         try {
-            return Optional.of(valueOf(sortType.toUpperCase()).toString());
+            return sortType != null ?
+                    Optional.of(valueOf(sortType.toUpperCase()).toString()) :
+                    Optional.empty();
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

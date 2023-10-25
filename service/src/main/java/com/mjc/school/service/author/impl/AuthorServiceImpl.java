@@ -89,7 +89,7 @@ public class AuthorServiceImpl implements AuthorService {
         Page<Author> authorPage = authorRepository.findAll(PageRequest.of(
                 authorPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(ASC),
-                        getSortField(sortField).orElse(AuthorSortField.NAME.toString().toLowerCase()))));
+                        getSortField(sortField).orElse(AuthorSortField.NAME.name().toLowerCase()))));
         if (!authorPage.isEmpty()) {
             return authorPage
                     .stream()
@@ -130,8 +130,8 @@ public class AuthorServiceImpl implements AuthorService {
         List<Author> authorsList = authorRepository.findByPartOfName(
                 "%" + partOfName + "%",
                 authorPagination.calcNumberFirstElement(page, size), size,
-                AuthorSortField.getSortField(sortField).orElse(NAME.toString().toLowerCase()),
-                getSortType(sortingType).orElse(SortType.ASC.toString()));
+                AuthorSortField.getSortField(sortField).orElse(NAME.name().toLowerCase()),
+                getSortType(sortingType).orElse(SortType.ASC.name()));
         if (!authorsList.isEmpty()) {
             return authorsList.stream()
                     .map(authorConverter::toDTO)
@@ -161,7 +161,7 @@ public class AuthorServiceImpl implements AuthorService {
             int page, int size, String sortingType) throws ServiceException {
         List<Author> authorList = authorRepository.findAllAuthorsWithAmountWrittenNews(
                 authorPagination.calcNumberFirstElement(page, size), size,
-                SortType.getSortType(sortingType).orElse(SortType.ASC.toString()));
+                SortType.getSortType(sortingType).orElse(SortType.ASC.name()));
         if (!authorList.isEmpty()) {
             return authorList.stream()
                     .map(author -> AuthorIdWithAmountOfWrittenNews.builder()
