@@ -3,7 +3,6 @@ package com.mjc.school;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -14,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import static com.mjc.school.User.UserRole.ROLE_USER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Builder
@@ -33,13 +31,16 @@ public class User {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "login", unique = true)
+    private String login;
 
     @Column(name = "password")
     private String password;
 
+    @Column(name = "email")
+    private String email;
+
     @ManyToOne
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "roles_id")
     private Role role;
 }

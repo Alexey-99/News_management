@@ -32,7 +32,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //private final UserDetailsService userDetailsService;
-    private final CustomAccessDeniedHandlerImpl accessDeniedHandler;
+    //private final CustomAccessDeniedHandlerImpl accessDeniedHandler;
 //    private final CustomTokenFilter tokenFilter;
 
     @Override
@@ -99,7 +99,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.build();
+        return http.cors().and().csrf().disable()
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.accessDeniedHandler(new AccessDeniedHandler() {
+                            @Override
+                            public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                                System.out.println("handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)");
+                            }
+                        })
+                ).authorizeHttpRequests(authorizeHttpRequests -> {
+                            //authorizeHttpRequests.antMatchers("/auth/**").permitAll();
+                            authorizeHttpRequests.antMatchers(HttpMethod.GET, "").permitAll();
+                            authorizeHttpRequests.anyRequest().authenticated();
+                        }
+                ).build();
 //                http.cors().and().csrf().disable()
 //                .exceptionHandling()
 //                .accessDeniedHandler(new AccessDeniedHandler() {

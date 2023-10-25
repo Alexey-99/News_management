@@ -17,16 +17,16 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
-@Component
-public class CustomAccessDeniedHandlerImpl implements AccessDeniedHandler {
+//@RequiredArgsConstructor
+//@Component
+public class CustomAccessDeniedHandlerImpl/* implements AccessDeniedHandler*/ {
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ERROR_CODE = "errorCode";
     private static final int ACCESS_DENIED = 40301;
 
-    private final MessageSource messageSource;
+    private  MessageSource messageSource;
 
-    @Override
+//    @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);

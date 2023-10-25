@@ -18,16 +18,16 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
-@RequiredArgsConstructor
-public class CustomAuthenticationEntryPointImpl implements AuthenticationEntryPoint {
+//@Component
+//@RequiredArgsConstructor
+public class CustomAuthenticationEntryPointImpl /*implements AuthenticationEntryPoint */ {
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ERROR_CODE = "errorCode";
     private static final int UNAUTHORIZED = 40101;
 
-    private final MessageSource messageSource;
+    private MessageSource messageSource;
 
-    @Override
+    //@Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
