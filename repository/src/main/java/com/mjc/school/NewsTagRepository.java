@@ -1,4 +1,4 @@
-package com.mjc.school.repository;
+package com.mjc.school;
 
 import com.mjc.school.NewsTag;
 import org.springframework.data.jpa.repository.JpaRepository;

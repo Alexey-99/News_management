@@ -27,35 +27,49 @@ import java.io.IOException;
 
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService;
+    //private final UserDetailsService userDetailsService;
     private final CustomAccessDeniedHandlerImpl accessDeniedHandler;
 //    private final CustomTokenFilter tokenFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        //auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .exceptionHandling()
-                .accessDeniedHandler(new AccessDeniedHandler() {
-                    @Override
-                    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-
-                    }
-                })
-                .and()
-                .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers(HttpMethod.GET, "").permitAll()
-                .anyRequest()
-                .authenticated();
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.accessDeniedHandler(new AccessDeniedHandler() {
+                            @Override
+                            public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                                System.out.println("handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)");
+                            }
+                        })
+                )
+//                .accessDeniedHandler(new AccessDeniedHandler() {
+//                    @Override
+//                    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+//                        System.out.println("handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)");
+//                    }
+//                })
+//                .and()
+                .authorizeHttpRequests(authorizeHttpRequests -> {
+                            authorizeHttpRequests.antMatchers("/auth/**").permitAll();
+                            authorizeHttpRequests.antMatchers(HttpMethod.GET, "").permitAll();
+                            authorizeHttpRequests.anyRequest().authenticated();
+                        }
+                )
+//                .authorizeRequests()
+//                .antMatchers("/auth/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+                .build();
 //        http
 //                .cors().and().csrf().disable()
 //                .exceptionHandling()

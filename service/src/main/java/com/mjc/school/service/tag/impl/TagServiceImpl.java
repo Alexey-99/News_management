@@ -2,14 +2,14 @@ package com.mjc.school.service.tag.impl;
 
 import com.mjc.school.NewsTag;
 import com.mjc.school.converter.impl.TagConverter;
-import com.mjc.school.repository.NewsTagRepository;
+import com.mjc.school.NewsTagRepository;
 import com.mjc.school.service.SortType;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.Tag;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.pagination.PaginationService;
-import com.mjc.school.repository.NewsRepository;
-import com.mjc.school.repository.TagRepository;
+import com.mjc.school.NewsRepository;
+import com.mjc.school.TagRepository;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.TagDTO;
 import lombok.RequiredArgsConstructor;

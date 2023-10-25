@@ -2,14 +2,14 @@ package com.mjc.school.service.news.impl;
 
 import com.mjc.school.converter.impl.NewsConverter;
 import com.mjc.school.News;
-import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.AuthorRepository;
 import com.mjc.school.service.SortType;
 import com.mjc.school.service.news.sort.NewsSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.handler.DateHandler;
 import com.mjc.school.service.pagination.PaginationService;
-import com.mjc.school.repository.NewsRepository;
+import com.mjc.school.NewsRepository;
 import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,5 @@
-package com.mjc.school.repository;
+package com.mjc.school;
 
-import com.mjc.school.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
