@@ -1,7 +1,7 @@
 package com.mjc.school.service.user.impl;
 
-import com.mjc.school.User;
-import com.mjc.school.UserRepository;
+import com.mjc.school.model.User;
+import com.mjc.school.repository.UserRepository;
 import com.mjc.school.converter.impl.UserConverter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.service.spi.ServiceException;

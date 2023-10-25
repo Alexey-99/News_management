@@ -1,6 +1,6 @@
 package com.mjc.school.converter.impl;
 
-import com.mjc.school.User;
+import com.mjc.school.model.User;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;

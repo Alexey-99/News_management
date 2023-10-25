@@ -1,6 +1,6 @@
-package com.mjc.school;
+package com.mjc.school.repository;
 
-import com.mjc.school.Comment;
+import com.mjc.school.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

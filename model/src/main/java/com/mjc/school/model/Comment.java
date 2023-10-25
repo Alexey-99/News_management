@@ -1,4 +1,4 @@
-package com.mjc.school;
+package com.mjc.school.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

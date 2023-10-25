@@ -1,7 +1,7 @@
 package com.mjc.school.converter.impl;
 
 import com.mjc.school.converter.Converter;
-import com.mjc.school.Comment;
+import com.mjc.school.model.Comment;
 import com.mjc.school.validation.dto.CommentDTO;
 import org.springframework.stereotype.Component;
 

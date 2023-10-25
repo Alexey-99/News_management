@@ -1,5 +1,6 @@
-package com.mjc.school;
+package com.mjc.school.model;
 
+import com.mjc.school.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import java.io.Serializable;
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Builder
@@ -22,18 +21,27 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "news_tags")
-public class NewsTag implements Serializable {
+@Table(name = "users")
+public class User {
+    public enum UserRole {
+        ROLE_USER, ROLE_ADMIN;
+    }
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "news_id")
-    private News news;
+    @Column(name = "login", unique = true)
+    private String login;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "email")
+    private String email;
 
     @ManyToOne
-    @JoinColumn(name = "tags_id")
-    private Tag tag;
+    @JoinColumn(name = "roles_id")
+    private Role role;
 }

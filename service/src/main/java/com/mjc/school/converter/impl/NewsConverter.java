@@ -1,10 +1,10 @@
 package com.mjc.school.converter.impl;
 
 import com.mjc.school.converter.Converter;
-import com.mjc.school.News;
-import com.mjc.school.AuthorRepository;
-import com.mjc.school.CommentRepository;
-import com.mjc.school.NewsTagRepository;
+import com.mjc.school.model.News;
+import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.CommentRepository;
+import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.validation.dto.NewsDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

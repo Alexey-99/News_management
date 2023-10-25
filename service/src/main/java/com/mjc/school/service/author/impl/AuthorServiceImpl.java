@@ -2,14 +2,14 @@ package com.mjc.school.service.author.impl;
 
 import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.converter.impl.AuthorIdWithAmountOfWrittenNewsConverter;
-import com.mjc.school.Author;
-import com.mjc.school.AuthorIdWithAmountOfWrittenNews;
+import com.mjc.school.model.Author;
+import com.mjc.school.model.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.service.SortType;
 import com.mjc.school.service.author.impl.sort.AuthorSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.pagination.PaginationService;
-import com.mjc.school.AuthorRepository;
+import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;

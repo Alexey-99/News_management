@@ -1,4 +1,4 @@
-package com.mjc.school;
+package com.mjc.school.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,19 +21,20 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @AllArgsConstructor
 @Entity
-@Table(name = "tags")
-public class Tag implements Serializable {
+@Table(name = "authors")
+public class Author implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id")
     private long id;
 
     @Column(name = "name", nullable = false, length = 15, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "tag", cascade = {ALL})
-    private List<NewsTag> news;
+    @OneToMany(mappedBy = "author", cascade = ALL)
+    private List<News> news;
 
-    public Tag() {
+    public Author() {
         this.news = new ArrayList<>();
     }
 
@@ -57,27 +58,28 @@ public class Tag implements Serializable {
         if (!this.getClass().equals(object.getClass())) {
             return false;
         }
-        Tag otherTag = (Tag) object;
-        if (this.id != otherTag.id) {
+        Author otherAuthor = (Author) object;
+        if (this.id != otherAuthor.id) {
             return false;
         }
         if (this.name == null) {
-            if (otherTag.name != null) {
+            if (otherAuthor.name != null) {
                 return false;
             }
-        } else if (!this.name.equals(otherTag.name)) {
+        } else if (!this.name.equals(otherAuthor.name)) {
             return false;
         }
         return true;
     }
 
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("Tag{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append("'");
-        sb.append('}');
-        return sb.toString();
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Author{");
+        builder.append("id='").append(id).append("'");
+        builder.append(", name='").append(name).append("'");
+        builder.append("}");
+        return builder.toString();
     }
 }
