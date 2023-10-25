@@ -1,6 +1,7 @@
 package com.mjc.school;
 
 import com.mjc.school.Tag;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -59,6 +60,13 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
                                @Param("indexFirstElement") Integer indexFirstElement);
 
     @Query(value = """
+            SELECT id, name
+            FROM tags
+            WHERE name LIKE :part_name
+            """, nativeQuery = true)
+    List<Tag> findByPartOfName(@Param("part_name") String partOfName, Pageable pageable);
+
+    @Query(value = """
             SELECT COUNT(id)
             FROM tags
             WHERE name LIKE :part_name
@@ -82,6 +90,17 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
                            @Param("size") Integer size,
                            @Param("sortField") String sortField,
                            @Param("sortType") String sortType);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
+            """, nativeQuery = true)
+    List<Tag> findByNewsId(@Param("news_id") Long newsId, Pageable pageable);
 
     @Query(value = """
             SELECT tags.id, tags.name

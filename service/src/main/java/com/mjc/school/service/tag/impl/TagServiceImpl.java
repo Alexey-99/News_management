@@ -172,10 +172,9 @@ public class TagServiceImpl implements TagService {
     public List<TagDTO> findByPartOfName(String partOfName, int page, int size,
                                          String sortField, String sortType) throws ServiceException {
         List<Tag> tagList = tagRepository.findByPartOfName("%" + partOfName + "%",
-                getSortField(sortField).orElse(NAME.name().toLowerCase()),
-                getSortType(sortType).orElse(SortType.ASC.name()),
-                tagPagination.calcNumberFirstElement(page, size), size
-
+                PageRequest.of(tagPagination.calcNumberFirstElement(page, size), size,
+                        Sort.by(fromOptionalString(sortType).orElse(ASC),
+                                getSortField(sortField).orElse(NAME.name().toLowerCase())))
         );
         if (!tagList.isEmpty()) {
             return tagList.stream()
@@ -196,9 +195,9 @@ public class TagServiceImpl implements TagService {
     public List<TagDTO> findByNewsId(long newsId, int page, int size,
                                      String sortField, String sortType) throws ServiceException {
         List<Tag> tagList = tagRepository.findByNewsId(newsId,
-                tagPagination.calcNumberFirstElement(page, size), size,
-                getSortField(sortField).orElse(NAME.name().toLowerCase()),
-                getSortType(sortType).orElse(SortType.ASC.name()));
+                PageRequest.of(tagPagination.calcNumberFirstElement(page, size), size,
+                        Sort.by(fromOptionalString(sortType).orElse(ASC),
+                                getSortField(sortField).orElse(NAME.name().toLowerCase()))));
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)
