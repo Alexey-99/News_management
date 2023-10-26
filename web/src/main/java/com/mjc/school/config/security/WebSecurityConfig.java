@@ -7,25 +7,23 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor
-public class WebSecurityConfig {
-
+public class WebSecurityConfig extends AbstractHttpConfigurer<WebSecurityConfig, HttpSecurity> {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic().and()
-//                .exceptionHandling(exceptionHandling ->
-//                        exceptionHandling.accessDeniedHandler(new AccessDeniedHandler() {
-//                            @Override
-//                            public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-//                                System.out.println("handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)");
-//                            }
-//                        })
-//                )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.accessDeniedHandler((request, response, accessDeniedException) ->
+                                accessDeniedException.printStackTrace())
+                )
                 .authorizeHttpRequests(authorizeHttpRequests -> {
                             authorizeHttpRequests.antMatchers(HttpMethod.GET, "/api/v2/**").permitAll();
                             authorizeHttpRequests.anyRequest().authenticated();
