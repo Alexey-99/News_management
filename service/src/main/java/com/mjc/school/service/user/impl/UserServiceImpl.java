@@ -7,12 +7,8 @@ import com.mjc.school.repository.UserRepository;
 import com.mjc.school.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.apache.logging.log4j.Level.WARN;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -20,9 +16,6 @@ import static org.apache.logging.log4j.Level.WARN;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final UserConverter userConverter;
-
-
 
     @Override
     @Transactional
