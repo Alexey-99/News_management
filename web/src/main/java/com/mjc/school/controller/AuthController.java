@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RestController
+@RestController(value = "/auth")
 public class AuthController {
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping
+    @PostMapping("/token")
     public ResponseEntity<JwtResponse> createAuthToken(@RequestBody JwtRequest authRequest) {
         try {
             authenticationManager.authenticate(
