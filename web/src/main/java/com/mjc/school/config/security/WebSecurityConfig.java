@@ -30,7 +30,8 @@ public class WebSecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorizeRequests -> {
                     authorizeRequests.antMatchers(HttpMethod.GET,
-                            "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*").permitAll(); //TODO: ADD ANT PATTERN REGISTRATION AND SIGN_IN FOR GUEST
+                            "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*")
+                            .permitAll(); //TODO: ADD ANT PATTERN REGISTRATION AND SIGN_IN FOR GUEST
                     authorizeRequests.antMatchers(HttpMethod.POST,
                             "/api/v2/comment/*", "/api/v2/news/*").hasRole("USER");
                     authorizeRequests.anyRequest().hasRole("ADMIN");
