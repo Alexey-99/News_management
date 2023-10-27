@@ -1,11 +1,12 @@
 package com.mjc.school.name;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Locale;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Getter
 public enum LanguageLocale {
     RU(new Locale("ru")), EN(new Locale("en"));

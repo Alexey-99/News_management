@@ -1,6 +1,5 @@
 package com.mjc.school.model;
 
-import com.mjc.school.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

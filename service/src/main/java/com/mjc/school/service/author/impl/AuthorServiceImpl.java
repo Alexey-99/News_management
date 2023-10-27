@@ -13,8 +13,7 @@ import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,10 +28,10 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class AuthorServiceImpl implements AuthorService {
-    private static final Logger log = LogManager.getLogger();
     private final AuthorRepository authorRepository;
     private final AuthorConverter authorConverter;
     private final AuthorIdWithAmountOfWrittenNewsConverter authorIdWithAmountOfWrittenNewsConverter;

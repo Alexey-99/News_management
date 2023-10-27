@@ -12,6 +12,7 @@ import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
@@ -28,10 +29,10 @@ import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class NewsServiceImpl implements NewsService {
-    private static final Logger log = LogManager.getLogger();
     private final NewsRepository newsRepository;
     private final AuthorRepository authorRepository;
     private final NewsConverter newsConverter;

@@ -1,4 +1,10 @@
 package com.mjc.school.service.user;
 
-public interface UserService {
+import com.mjc.school.model.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+public interface UserService extends UserDetailsService {
+
+    boolean create(User user);
+
 }

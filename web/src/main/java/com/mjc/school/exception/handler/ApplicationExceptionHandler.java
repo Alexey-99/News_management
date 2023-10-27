@@ -1,7 +1,9 @@
-package com.mjc.school.exception;
+package com.mjc.school.exception.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mjc.school.config.language.Translator;
+import com.mjc.school.exception.ErrorResponse;
+import com.mjc.school.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;

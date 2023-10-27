@@ -12,8 +12,8 @@ import com.mjc.school.repository.TagRepository;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.TagDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,10 +28,11 @@ import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class TagServiceImpl implements TagService {
-    private static final Logger log = LogManager.getLogger();
+
     private final TagRepository tagRepository;
     private final NewsRepository newsRepository;
     private final NewsTagRepository newsTagRepository;

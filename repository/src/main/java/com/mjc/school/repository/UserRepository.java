@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             FROM users
             WHERE login = :login
             """, nativeQuery = true)
-    Optional<User> findByName(@Param("login") String login);
+    Optional<User> findByLogin(@Param("login") String login);
 }

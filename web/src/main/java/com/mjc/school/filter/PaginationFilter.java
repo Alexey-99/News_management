@@ -5,6 +5,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import static com.mjc.school.service.pagination.PaginationService.DEFAULT_NUMBER
 import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 
 @Component
+@WebFilter(urlPatterns = "api/v2/*")
 public class PaginationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

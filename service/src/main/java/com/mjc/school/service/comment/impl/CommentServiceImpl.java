@@ -12,8 +12,7 @@ import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,10 +27,10 @@ import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
-    private static final Logger log = LogManager.getLogger();
     private final CommentRepository commentRepository;
     private final NewsRepository newsRepository;
     private final CommentConverter commentConverter;

@@ -6,10 +6,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.function.Function;
 
 @Component
-public class UserConverter {
-    public CustomUserDetails toCustomUserDetails(User user) {
+public class UserConverter implements Function<User, CustomUserDetails> {
+    @Override
+    public CustomUserDetails apply(User user) {
         return CustomUserDetails.builder()
                 .id(user.getId())
                 .login(user.getLogin())
