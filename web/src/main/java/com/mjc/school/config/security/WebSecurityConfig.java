@@ -1,6 +1,6 @@
 package com.mjc.school.config.security;
 
-import com.mjc.school.service.user.UserService;
+import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
-    private final UserService userService;
+    private final CustomUserDetailsServiceImpl customUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,7 +30,7 @@ public class WebSecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorizeRequests -> {
                     authorizeRequests.antMatchers(HttpMethod.GET,
-                            "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*")
+                                    "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*")
                             .permitAll(); //TODO: ADD ANT PATTERN REGISTRATION AND SIGN_IN FOR GUEST
                     authorizeRequests.antMatchers(HttpMethod.POST,
                             "/api/v2/comment/*", "/api/v2/news/*").hasRole("USER");
@@ -48,7 +48,7 @@ public class WebSecurityConfig {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(userService);
+        daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
         return daoAuthenticationProvider;
     }
 
