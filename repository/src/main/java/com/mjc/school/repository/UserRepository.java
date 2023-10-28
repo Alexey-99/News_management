@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = """
-            SELECT id, email, password, login, roles_id
+            SELECT id, email, login, password, roles_id
             FROM users
             WHERE login = :login
             """, nativeQuery = true)

@@ -42,7 +42,7 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     @Override
     public boolean create(NewsDTO newsDTO) throws ServiceException {
-        if (newsRepository.existsByTitle(newsDTO.getTitle())) {
+        if (!newsRepository.existsByTitle(newsDTO.getTitle())) {
             newsDTO.setCreated(dateHandler.getCurrentDate());
             newsDTO.setModified(dateHandler.getCurrentDate());
             News news = newsConverter.fromDTO(newsDTO);

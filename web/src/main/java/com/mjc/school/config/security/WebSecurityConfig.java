@@ -1,5 +1,6 @@
 package com.mjc.school.config.security;
 
+import com.mjc.school.filter.JwtRequestFilter;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +17,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.Filter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
     private final CustomUserDetailsServiceImpl customUserDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,17 +35,18 @@ public class WebSecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorizeRequests -> {
                     authorizeRequests.antMatchers(HttpMethod.GET,
-                                    "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*")
-                            .permitAll(); //TODO: ADD ANT PATTERN REGISTRATION AND SIGN_IN FOR GUEST
+                            "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*").permitAll();
                     authorizeRequests.antMatchers(HttpMethod.POST,
-                            "/api/v2/comment/*", "/api/v2/news/*").hasRole("USER");
+                            "/api/v2/auth/token").permitAll();
+                    authorizeRequests.antMatchers(HttpMethod.POST,
+                            "/api/v2/comment", "/api/v2/news").hasRole("USER");
                     authorizeRequests.anyRequest().hasRole("ADMIN");
                 })
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                //TODO .addFilterBefore()
+                .addFilterBefore((Filter) jwtRequestFilter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

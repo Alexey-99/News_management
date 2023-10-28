@@ -17,6 +17,7 @@ import java.util.function.Function;
 @Component
 public class UserConverter implements Function<User, CustomUserDetails>, Converter<RegistrationUserDto, User> {
     private final RoleRepository roleRepository;
+
     @Override
     public CustomUserDetails apply(User user) {
         return CustomUserDetails.builder()
@@ -36,8 +37,7 @@ public class UserConverter implements Function<User, CustomUserDetails>, Convert
                 .login(entityDTO.getLogin())
                 .password(entityDTO.getPassword())
                 .email(entityDTO.getEmail())
-                .role(roleRepository.findById(entityDTO.getRoleId())
-                        .orElse(new Role(1, User.UserRole.ROLE_USER)))
+                .role(roleRepository.getById(entityDTO.getRoleId()))
                 .build();
 
     }
