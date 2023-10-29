@@ -42,7 +42,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     @Override
     public boolean create(AuthorDTO authorDTO) throws ServiceBadRequestParameterException {
-        if (authorRepository.existsByName(authorDTO.getName())) {
+        if (authorRepository.notExistsByName(authorDTO.getName())) {
             Author author = authorConverter.fromDTO(authorDTO);
             authorRepository.save(author);
             return true;
@@ -71,7 +71,7 @@ public class AuthorServiceImpl implements AuthorService {
         if (author.getName().equals(authorDTO.getName())) {
             return authorConverter.toDTO(author);
         } else {
-            if (!authorRepository.existsByName(authorDTO.getName())) {
+            if (authorRepository.notExistsByName(authorDTO.getName())) {
                 author.setName(authorDTO.getName());
                 authorRepository.update(author.getId(), author.getName());
                 return authorConverter.toDTO(author);

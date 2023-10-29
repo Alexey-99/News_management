@@ -14,11 +14,11 @@ import java.util.Optional;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     @Query(value = """
-            SELECT COUNT(name) > 0
+            SELECT COUNT(name) = 0
             FROM authors
             WHERE name = :name
             """, nativeQuery = true)
-    Boolean existsByName(@Param("name") String name);
+    boolean notExistsByName(@Param("name") String name);
 
     @Modifying
     @Query(value = """
