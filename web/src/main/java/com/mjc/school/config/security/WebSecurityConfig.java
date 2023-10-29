@@ -27,6 +27,8 @@ import javax.servlet.Filter;
 public class WebSecurityConfig {
     private final CustomUserDetailsServiceImpl customUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
+    private static final String USER_ROLE_NAME = "USER";
+    private static final String ADMIN_ROLE_NAME = "ADMIN";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,11 +42,11 @@ public class WebSecurityConfig {
                     authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/auth/token").permitAll();
 
                     authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news")
-                            .hasRole("USER");
+                            .hasRole(USER_ROLE_NAME);
 
                     authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news")
-                            .hasRole("ADMIN");
-                    authorizeRequests.anyRequest().hasRole("ADMIN");
+                            .hasRole(ADMIN_ROLE_NAME);
+                    authorizeRequests.anyRequest().hasRole(ADMIN_ROLE_NAME);
                 })
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
