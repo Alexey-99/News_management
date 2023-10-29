@@ -34,7 +34,6 @@ public class UserConverter implements Function<User, CustomUserDetails>, Convert
     @Override
     public User fromDTO(RegistrationUserDto entityDTO) {
         return User.builder()
-                .id(entityDTO.getId())
                 .login(entityDTO.getLogin())
                 .password(entityDTO.getPassword())
                 .email(entityDTO.getEmail())
@@ -46,11 +45,9 @@ public class UserConverter implements Function<User, CustomUserDetails>, Convert
     @Override
     public RegistrationUserDto toDTO(User entity) {
         return RegistrationUserDto.builder()
-                .id(entity.getId())
                 .login(entity.getLogin())
                 .password(entity.getPassword())
                 .email(entity.getEmail())
-                .roleId(entity.getRole().getId())
                 .build();
     }
 }

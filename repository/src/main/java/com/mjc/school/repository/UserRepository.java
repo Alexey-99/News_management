@@ -22,5 +22,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             FROM users
             WHERE login = :login
             """, nativeQuery = true)
-    Boolean existsByLogin(@Param("login") String login);
+    boolean existsByLogin(@Param("login") String login);
 }

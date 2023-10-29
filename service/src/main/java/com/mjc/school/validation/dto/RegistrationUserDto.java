@@ -1,6 +1,5 @@
 package com.mjc.school.validation.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Builder
@@ -17,27 +17,21 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Validated
 public class RegistrationUserDto {
-    @JsonIgnore
-    private long id;
-
-    @NotNull
-    @NotBlank
-    @Size(min = 3)
+    @NotNull(message = "")
+    @NotBlank(message = "")
+    @Size(min = 3, message = "")
     private String login;
 
-    @NotNull
-    @NotBlank
-    @Size(min = 3)
+    @NotNull(message = "")
+    @NotBlank(message = "")
+    @Size(min = 3, message = "")
     private String password;
 
-    @NotNull
-    @NotBlank
-    @Size(min = 3)
+    @NotNull(message = "")
+    @NotBlank(message = "")
+    @Size(min = 3, message = "")
     private String confirmPassword;
 
+    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", message = "")
     private String email;
-
-    @JsonIgnore
-    //@IsExistsRoleById
-    private long roleId;
 }

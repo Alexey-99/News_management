@@ -163,9 +163,9 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     Long countAllNewsByPartOfContent(@Param("part_of_content") String partOfContent);
 
     @Query(value = """
-            SELECT COUNT(title) > 0
+            SELECT COUNT(title) = 0
             FROM news
             WHERE title = :title
             """, nativeQuery = true)
-    boolean existsByTitle(@Param("title") String title);
+    boolean notExistsByTitle(@Param("title") String title);
 }

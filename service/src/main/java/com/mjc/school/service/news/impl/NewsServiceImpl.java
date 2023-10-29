@@ -40,7 +40,7 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     @Override
     public boolean create(NewsDTO newsDTO) throws ServiceBadRequestParameterException {
-        if (!newsRepository.existsByTitle(newsDTO.getTitle())) {
+        if (newsRepository.notExistsByTitle(newsDTO.getTitle())) {
             newsDTO.setCreated(dateHandler.getCurrentDate());
             newsDTO.setModified(dateHandler.getCurrentDate());
             News news = newsConverter.fromDTO(newsDTO);
@@ -101,7 +101,7 @@ public class NewsServiceImpl implements NewsService {
                     news.getAuthor().getId(), news.getModified(), news.getId());
             return newsConverter.toDTO(news);
         } else {
-            if (!newsRepository.existsByTitle(newsDTO.getTitle())) {
+            if (newsRepository.notExistsByTitle(newsDTO.getTitle())) {
                 news.setTitle(newsDTO.getTitle());
                 news.setContent(newsDTO.getContent());
                 news.setAuthor(authorRepository.getById(newsDTO.getAuthorId()));
