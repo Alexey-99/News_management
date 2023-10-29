@@ -1,11 +1,11 @@
 package com.mjc.school.service.news.impl;
 
 import com.mjc.school.converter.impl.NewsConverter;
+import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.AuthorRepository;
-import com.mjc.school.service.news.impl.sort.NewsSortField;
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.exception.ServiceException;
 import com.mjc.school.handler.DateHandler;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.NewsRepository;
@@ -13,17 +13,15 @@ import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.mjc.school.service.news.impl.sort.NewsSortField.MODIFIED;
 import static com.mjc.school.service.news.impl.sort.NewsSortField.getSortField;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -41,7 +39,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public boolean create(NewsDTO newsDTO) throws ServiceException {
+    public boolean create(NewsDTO newsDTO) throws ServiceBadRequestParameterException {
         if (!newsRepository.existsByTitle(newsDTO.getTitle())) {
             newsDTO.setCreated(dateHandler.getCurrentDate());
             newsDTO.setModified(dateHandler.getCurrentDate());
@@ -50,7 +48,7 @@ public class NewsServiceImpl implements NewsService {
             return true;
         } else {
             log.log(WARN, "News with title '" + newsDTO.getTitle() + "' exists.");
-            throw new ServiceException("news_dto.title.not_valid.exists_news_title");
+            throw new ServiceBadRequestParameterException("news_dto.title.not_valid.exists_news_title");
         }
     }
 
@@ -65,35 +63,35 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public boolean deleteByAuthorId(long authorId) throws ServiceException {
+    public boolean deleteByAuthorId(long authorId) throws ServiceBadRequestParameterException {
         if (authorRepository.existsById(authorId)) {
             newsRepository.findByAuthorId(authorId)
                     .forEach(news -> newsRepository.deleteById(news.getId()));
             return true;
         } else {
             log.log(WARN, "Not found author by ID: " + authorId);
-            throw new ServiceException("service.exception.not_found_author_by_id");
+            throw new ServiceBadRequestParameterException("service.exception.not_found_author_by_id");
         }
     }
 
     @Transactional
     @Override
-    public NewsDTO deleteAllTagsFromNews(long newsId) throws ServiceException {
+    public NewsDTO deleteAllTagsFromNews(long newsId) throws ServiceBadRequestParameterException {
         News news = newsRepository.findById(newsId).orElseThrow(() -> {
             log.log(WARN, "Not found news by ID: " + newsId);
-            return new ServiceException("service.exception.not_found_news_by_id");
+            return new ServiceBadRequestParameterException("service.exception.not_found_news_by_id");
         });
         newsRepository.deleteAllTagsFromNewsByNewsId(newsId);
-        news.setTags(new ArrayList<>());
+        news.setTags(List.of());
         return newsConverter.toDTO(news);
     }
 
     @Transactional
     @Override
-    public NewsDTO update(NewsDTO newsDTO) throws ServiceException {
+    public NewsDTO update(NewsDTO newsDTO) throws ServiceBadRequestParameterException {
         News news = newsRepository.findById(newsDTO.getId()).orElseThrow(() -> {
             log.log(WARN, "Not found news by ID: " + newsDTO.getId());
-            return new ServiceException("service.exception.not_found_news_by_id");
+            return new ServiceBadRequestParameterException("service.exception.not_found_news_by_id");
         });
         if (news.getTitle().equals(newsDTO.getTitle())) {
             news.setContent(newsDTO.getContent());
@@ -113,26 +111,26 @@ public class NewsServiceImpl implements NewsService {
                 return newsConverter.toDTO(news);
             } else {
                 log.log(WARN, "News with title '" + newsDTO.getTitle() + "' exists.");
-                throw new ServiceException("news_dto.title.not_valid.exists_news_title");
+                throw new ServiceBadRequestParameterException("news_dto.title.not_valid.exists_news_title");
             }
         }
     }
 
     @Override
     public List<NewsDTO> findAll(int page, int size,
-                                 String sortingField, String sortingType) throws ServiceException {
+                                 String sortingField, String sortingType) throws ServiceNoContentException {
         Page<News> newsPage = newsRepository.findAll(PageRequest.of(
                 newsPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
                         getSortField(sortingField)
-                                .orElse(NewsSortField.MODIFIED.name().toLowerCase()))));
+                                .orElse(MODIFIED.name().toLowerCase()))));
         if (!newsPage.isEmpty()) {
             return newsPage.stream()
                     .map(newsConverter::toDTO)
                     .toList();
         } else {
             log.log(WARN, "Not found news");
-            throw new ServiceException("service.exception.not_found_news");
+            throw new ServiceNoContentException("service.exception.not_found_news");
         }
     }
 
@@ -150,30 +148,30 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsDTO findById(long id) throws ServiceException {
+    public NewsDTO findById(long id) throws ServiceNoContentException {
         News news = newsRepository.findById(id).orElseThrow(() -> {
             log.log(WARN, "Not found news by ID: " + id);
-            return new ServiceException("service.exception.not_found_news_by_id");
+            return new ServiceNoContentException("service.exception.not_found_news_by_id");
         });
         return newsConverter.toDTO(news);
-
     }
 
     @Override
-    public List<NewsDTO> findByTagName(String tagName, int page, int size,
-                                       String sortingField, String sortingType) throws ServiceException {
+    public List<NewsDTO> findByTagName(String tagName,
+                                       int page, int size,
+                                       String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByTagName(tagName,
                 PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
-                                        .orElse(NewsSortField.MODIFIED.name().toLowerCase()))));
+                                        .orElse(MODIFIED.name().toLowerCase()))));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
                     .toList();
         } else {
             log.log(WARN, "Not found news with entered tag name: " + tagName);
-            throw new ServiceException("service.exception.not_found_news_by_tag_name");
+            throw new ServiceNoContentException("service.exception.not_found_news_by_tag_name");
         }
     }
 
@@ -183,20 +181,21 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByTagId(long tagId, int page, int size,
-                                     String sortingField, String sortingType) throws ServiceException {
+    public List<NewsDTO> findByTagId(long tagId,
+                                     int page, int size,
+                                     String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByTagId(tagId,
                 PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
-                                        .orElse(NewsSortField.MODIFIED.name().toLowerCase()))));
+                                        .orElse(MODIFIED.name().toLowerCase()))));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
                     .toList();
         } else {
             log.log(WARN, "Not found news with entered tag ID: " + tagId);
-            throw new ServiceException("service.exception.not_found_news_by_tag_id");
+            throw new ServiceNoContentException("service.exception.not_found_news_by_tag_id");
         }
     }
 
@@ -206,21 +205,22 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName, int page, int size,
-                                                String sortingField, String sortingType) throws ServiceException {
+    public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName,
+                                                int page, int size,
+                                                String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByPartOfAuthorName(
                 "%" + partOfAuthorName + "%",
                 PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
-                                        .orElse(NewsSortField.MODIFIED.name().toLowerCase()))));
+                                        .orElse(MODIFIED.name().toLowerCase()))));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
                     .toList();
         } else {
             log.log(WARN, "Not found news with entered part of author name: " + partOfAuthorName);
-            throw new ServiceException("service.exception.not_found_news_by_part_of_author_name");
+            throw new ServiceNoContentException("service.exception.not_found_news_by_part_of_author_name");
         }
     }
 
@@ -230,20 +230,21 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByAuthorId(long authorId, int page, int size,
-                                        String sortingField, String sortingType) throws ServiceException {
+    public List<NewsDTO> findByAuthorId(long authorId,
+                                        int page, int size,
+                                        String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByAuthorId(authorId,
                 PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
-                                        .orElse(NewsSortField.MODIFIED.name().toLowerCase()))));
+                                        .orElse(MODIFIED.name().toLowerCase()))));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
                     .toList();
         } else {
             log.log(WARN, "Not found news by author id: " + authorId);
-            throw new ServiceException("service.exception.not_found_news_by_author_id");
+            throw new ServiceNoContentException("service.exception.not_found_news_by_author_id");
         }
     }
 
@@ -253,21 +254,22 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfTitle(String partOfTitle, int page, int size,
-                                           String sortingField, String sortingType) throws ServiceException {
+    public List<NewsDTO> findByPartOfTitle(String partOfTitle,
+                                           int page, int size,
+                                           String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByPartOfTitle(
                 "%" + partOfTitle + "%",
                 PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
-                                        .orElse(NewsSortField.MODIFIED.name().toLowerCase()))));
+                                        .orElse(MODIFIED.name().toLowerCase()))));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
                     .toList();
         } else {
             log.log(WARN, "Not found news with this part of title: " + partOfTitle);
-            throw new ServiceException("service.exception.not_found_news_by_part_of_title");
+            throw new ServiceNoContentException("service.exception.not_found_news_by_part_of_title");
         }
     }
 
@@ -277,21 +279,22 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findByPartOfContent(String partOfContent, int page, int size,
-                                             String sortingField, String sortingType) throws ServiceException {
+    public List<NewsDTO> findByPartOfContent(String partOfContent,
+                                             int page, int size,
+                                             String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByPartOfContent(
                 "%" + partOfContent + "%",
                 PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
-                                        .orElse(NewsSortField.MODIFIED.name().toLowerCase()))));
+                                        .orElse(MODIFIED.name().toLowerCase()))));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
                     .toList();
         } else {
             log.log(WARN, "Not found news by part of content: " + partOfContent);
-            throw new ServiceException("service.exception.not_found_news_by_part_of_content");
+            throw new ServiceNoContentException("service.exception.not_found_news_by_part_of_content");
         }
     }
 

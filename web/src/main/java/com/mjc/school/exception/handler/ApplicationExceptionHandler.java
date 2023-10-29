@@ -3,11 +3,13 @@ package com.mjc.school.exception.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mjc.school.config.language.Translator;
 import com.mjc.school.exception.ErrorResponse;
-import com.mjc.school.exception.ServiceException;
+import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNoContentException;
+import com.mjc.school.exception.ServiceNotFoundException;
+import com.mjc.school.exception.UnauthorizedException;
 import com.mjc.school.handler.DateHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +22,7 @@ import javax.validation.ConstraintViolationException;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RequiredArgsConstructor
@@ -28,8 +31,8 @@ public class ApplicationExceptionHandler {
     private final Translator translator;
     private final DateHandler dateHandler;
 
-    @ExceptionHandler(ServiceException.class)
-    public final ResponseEntity<Object> handleServiceExceptions(ServiceException ex) {
+    @ExceptionHandler(ServiceNotFoundException.class)
+    public final ResponseEntity<Object> handleServiceExceptions(ServiceNotFoundException ex) {
         String details = translator.toLocale(ex.getLocalizedMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .errorCode(NOT_FOUND.value())
@@ -37,6 +40,39 @@ public class ApplicationExceptionHandler {
                 .timestamp(dateHandler.getCurrentDate())
                 .build();
         return new ResponseEntity<>(errorResponse, NOT_FOUND);
+    }
+
+    @ExceptionHandler(ServiceBadRequestParameterException.class)
+    public final ResponseEntity<Object> handleServiceBadRequestParameterException(ServiceBadRequestParameterException ex) {
+        String details = translator.toLocale(ex.getLocalizedMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .errorCode(BAD_REQUEST.value())
+                .errorMessage(details)
+                .timestamp(dateHandler.getCurrentDate())
+                .build();
+        return new ResponseEntity<>(errorResponse, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public final ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
+        String details = translator.toLocale(ex.getLocalizedMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .errorCode(UNAUTHORIZED.value())
+                .errorMessage(details)
+                .timestamp(dateHandler.getCurrentDate())
+                .build();
+        return new ResponseEntity<>(errorResponse, UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ServiceNoContentException.class)
+    public final ResponseEntity<Object> handleServiceNoContentException(ServiceNoContentException ex) {
+        String details = translator.toLocale(ex.getLocalizedMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .errorCode(NO_CONTENT.value())
+                .errorMessage(details)
+                .timestamp(dateHandler.getCurrentDate())
+                .build();
+        return new ResponseEntity<>(errorResponse, NO_CONTENT);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -62,17 +98,6 @@ public class ApplicationExceptionHandler {
                 .timestamp(dateHandler.getCurrentDate())
                 .build();
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public final ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
-        String details = translator.toLocale(ex.getLocalizedMessage());
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .errorCode(UNAUTHORIZED.value())
-                .errorMessage(details)
-                .timestamp(dateHandler.getCurrentDate())
-                .build();
-        return new ResponseEntity<>(errorResponse, UNAUTHORIZED);
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class, JsonProcessingException.class})

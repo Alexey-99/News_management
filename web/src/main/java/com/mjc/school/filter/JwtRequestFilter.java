@@ -26,7 +26,7 @@ import static org.apache.logging.log4j.Level.DEBUG;
 public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
-    private static final String START_WITH_AUTHORIZATION_HEADER = "Bearer ";
+    private static final String START_WITH_AUTHORIZATION_HEADER_VALUE = "Bearer ";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -34,7 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(AUTHORIZATION_HEADER_NAME);
         String userName = null;
         String jwt = null;
-        if (authHeader != null && authHeader.startsWith(START_WITH_AUTHORIZATION_HEADER)) {
+        if (authHeader != null && authHeader.startsWith(START_WITH_AUTHORIZATION_HEADER_VALUE)) {
             jwt = authHeader.substring(7);
             try {
                 userName = jwtTokenUtil.getUserName(jwt);

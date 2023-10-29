@@ -1,9 +1,11 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.exception.ErrorResponse;
+import com.mjc.school.exception.UnauthorizedException;
 import com.mjc.school.service.user.UserService;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import com.mjc.school.util.JwtTokenUtil;
+import com.mjc.school.validation.dto.RegistrationUserDto;
 import com.mjc.school.validation.dto.jwt.JwtRequest;
 import com.mjc.school.validation.dto.jwt.JwtResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +34,28 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/token")
-    public ResponseEntity<JwtResponse> createAuthToken(@Valid @RequestBody JwtRequest authRequest) {
+    public ResponseEntity<JwtResponse> createAuthToken(@Valid
+                                                       @RequestBody
+                                                       JwtRequest authRequest) throws UnauthorizedException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Не корректный логин или пароль");
+            throw new UnauthorizedException("Не корректный логин или пароль");
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUserName());
         String token = jwtTokenUtil.generateToken(userDetails);
         return new ResponseEntity<>(new JwtResponse(token), HttpStatus.OK);
+    }
+
+    @PostMapping("/registration")
+    public ResponseEntity<Boolean> createUser(@Valid
+                                              @RequestBody
+                                              RegistrationUserDto userDto) throws UnauthorizedException {
+        if (userDto.getPassword().equals(userDto.getConfirmPassword())) {
+
+        } else {
+            throw new UnauthorizedException("Пароли не совпадают");
+        }
+        return null;
     }
 }

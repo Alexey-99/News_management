@@ -1,6 +1,7 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.exception.ServiceException;
+import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNotFoundException;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
@@ -53,7 +54,7 @@ public class AuthorController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
-                                          AuthorDTO authorDTO) throws ServiceException {
+                                          AuthorDTO authorDTO) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(authorService.create(authorDTO), CREATED);
     }
 
@@ -93,7 +94,7 @@ public class AuthorController {
                                             @RequestBody
                                             @Valid
                                             @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
-                                            AuthorDTO authorDTO) throws ServiceException {
+                                            AuthorDTO authorDTO) throws ServiceBadRequestParameterException {
         authorDTO.setId(id);
         return new ResponseEntity<>(authorService.update(authorDTO), OK);
     }
@@ -117,7 +118,7 @@ public class AuthorController {
                                                          @RequestParam(value = "sort-field", required = false)
                                                          String sortingField,
                                                          @RequestParam(value = "sort-type", required = false)
-                                                         String sortingType) throws ServiceException {
+                                                         String sortingType) throws ServiceNotFoundException {
         return new ResponseEntity<>(authorService.getPagination(
                 authorService.findAll(page, size, sortingField, sortingType),
                 authorService.countAll(), page, size), OK);
@@ -136,7 +137,7 @@ public class AuthorController {
     public ResponseEntity<AuthorDTO> findById(@PathVariable
                                               @Min(value = 1,
                                                       message = "author_controller.path_variable.id.in_valid.min")
-                                              long id) throws ServiceException {
+                                              long id) throws ServiceNotFoundException {
         return new ResponseEntity<>(authorService.findById(id), OK);
     }
 
@@ -161,7 +162,7 @@ public class AuthorController {
                                                                   @RequestParam(value = "sort-field", required = false)
                                                                   String sortingField,
                                                                   @RequestParam(value = "sort-type", required = false)
-                                                                  String sortingType) throws ServiceException {
+                                                                  String sortingType) throws ServiceNotFoundException {
         return new ResponseEntity<>(authorService.getPagination(
                 authorService.findByPartOfName(partOfName, page, size, sortingField, sortingType),
                 authorService.countAllByPartOfName(partOfName),
@@ -181,7 +182,7 @@ public class AuthorController {
     public ResponseEntity<AuthorDTO> findByNewsId(@PathVariable
                                                   @Min(value = 1,
                                                           message = "author_controller.path_variable.id.in_valid.min")
-                                                  long newsId) throws ServiceException {
+                                                  long newsId) throws ServiceNotFoundException {
         return new ResponseEntity<>(authorService.findByNewsId(newsId), OK);
     }
 
@@ -202,7 +203,7 @@ public class AuthorController {
                                               @RequestAttribute(value = "page")
                                               int page,
                                               @RequestParam(value = "sort-type", required = false)
-                                              String sortingType) throws ServiceException {
+                                              String sortingType) throws ServiceNotFoundException {
         return new ResponseEntity<>(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
                 authorService.findAllAuthorsIdWithAmountOfWrittenNews(page, size, sortingType),
                 authorService.countAll(), page, size), OK);

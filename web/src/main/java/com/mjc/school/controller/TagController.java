@@ -1,7 +1,8 @@
 package com.mjc.school.controller;
 
+import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.TagDTO;
 import io.swagger.annotations.Api;
@@ -49,7 +50,7 @@ public class TagController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
-                                          TagDTO tagDTO) throws ServiceException {
+                                          TagDTO tagDTO) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(tagService.create(tagDTO), CREATED);
     }
 
@@ -71,7 +72,7 @@ public class TagController {
                                              @RequestParam(value = "news")
                                              @Min(value = 1,
                                                      message = "tag_controller.request_body.news_id.in_valid.min")
-                                             long newsId) throws ServiceException {
+                                             long newsId) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(tagService.addToNews(tagId, newsId), OK);
     }
 
@@ -93,7 +94,7 @@ public class TagController {
                                                   @RequestParam(value = "news")
                                                   @Min(value = 1,
                                                           message = "tag_controller.request_body.news_id.in_valid.min")
-                                                  long newsId) throws ServiceException {
+                                                  long newsId) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(tagService.deleteFromNews(tagId, newsId), OK);
     }
 
@@ -129,7 +130,7 @@ public class TagController {
     public ResponseEntity<Boolean> deleteFromAllNews(@PathVariable
                                                      @Min(value = 1,
                                                              message = "tag_controller.request_body.tag_id.in_valid.min")
-                                                     long id) throws ServiceException {
+                                                     long id) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(tagService.deleteFromAllNews(id), OK);
     }
 
@@ -151,7 +152,7 @@ public class TagController {
                                          @Valid
                                          @RequestBody
                                          @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
-                                         TagDTO tagDTO) throws ServiceException {
+                                         TagDTO tagDTO) throws ServiceBadRequestParameterException {
         tagDTO.setId(id);
         return new ResponseEntity<>(tagService.update(tagDTO), OK);
     }
@@ -174,7 +175,7 @@ public class TagController {
                                                       @RequestParam(value = "sort-field", required = false)
                                                       String sortingField,
                                                       @RequestParam(value = "sort-type", required = false)
-                                                      String sortingType) throws ServiceException {
+                                                      String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(tagService.getPagination(
                 tagService.findAll(page, size, sortingField, sortingType),
                 tagService.countAll(),
@@ -195,7 +196,7 @@ public class TagController {
     public ResponseEntity<TagDTO> findById(@PathVariable
                                            @Min(value = 1,
                                                    message = "tag_controller.request_body.tag_id.in_valid.min")
-                                           long id) throws ServiceException {
+                                           long id) throws ServiceNoContentException {
         return new ResponseEntity<>(tagService.findById(id), OK);
     }
 
@@ -220,7 +221,7 @@ public class TagController {
                                                                @RequestParam(value = "sort-field", required = false)
                                                                String sortingField,
                                                                @RequestParam(value = "sort-type", required = false)
-                                                               String sortingType) throws ServiceException {
+                                                               String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(tagService.getPagination(
                 tagService.findByPartOfName(partOfName, page, size, sortingField, sortingType),
                 tagService.countAllByPartOfName(partOfName),
@@ -249,7 +250,7 @@ public class TagController {
                                                            @RequestParam(value = "sort-field", required = false)
                                                            String sortingField,
                                                            @RequestParam(value = "sort-type", required = false)
-                                                           String sortingType) throws ServiceException {
+                                                           String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(tagService.getPagination(
                 tagService.findByNewsId(newsId, page, size, sortingField, sortingType),
                 tagService.countAllByNewsId(newsId),

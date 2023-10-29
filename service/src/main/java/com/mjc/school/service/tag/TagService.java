@@ -1,6 +1,7 @@
 package com.mjc.school.service.tag;
 
-import com.mjc.school.exception.ServiceException;
+import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.validation.dto.TagDTO;
 
@@ -9,35 +10,35 @@ import java.util.List;
 
 public interface TagService {
     @Transactional
-    boolean create(TagDTO tagDTO) throws ServiceException;
+    boolean create(TagDTO tagDTO) throws ServiceBadRequestParameterException;
 
     @Transactional
     boolean deleteById(long id);
 
     @Transactional
-    boolean deleteFromNews(long tagId, long newsId) throws ServiceException;
+    boolean deleteFromNews(long tagId, long newsId) throws ServiceBadRequestParameterException;
 
     @Transactional
-    boolean deleteFromAllNews(long tagId) throws ServiceException;
+    boolean deleteFromAllNews(long tagId) throws ServiceBadRequestParameterException;
 
     @Transactional
-    TagDTO update(TagDTO tagDTO) throws ServiceException;
+    TagDTO update(TagDTO tagDTO) throws ServiceBadRequestParameterException;
 
-    boolean addToNews(long tagId, long newsId) throws ServiceException;
+    boolean addToNews(long tagId, long newsId) throws ServiceBadRequestParameterException;
 
-    List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceException;
+    List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException;
 
     List<TagDTO> findAll();
 
     long countAll();
 
-    TagDTO findById(long id) throws ServiceException;
+    TagDTO findById(long id) throws ServiceNoContentException;
 
-    List<TagDTO> findByPartOfName(String partOfName, int page, int size, String sortField, String sortType) throws ServiceException;
+    List<TagDTO> findByPartOfName(String partOfName, int page, int size, String sortField, String sortType) throws ServiceNoContentException;
 
     long countAllByPartOfName(String partOfName);
 
-    List<TagDTO> findByNewsId(long newsId, int page, int size, String sortField, String sortType) throws ServiceException;
+    List<TagDTO> findByNewsId(long newsId, int page, int size, String sortField, String sortType) throws ServiceNoContentException;
 
     long countAllByNewsId(long newsId);
 

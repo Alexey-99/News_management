@@ -1,7 +1,6 @@
 package com.mjc.school.converter.impl;
 
 import com.mjc.school.converter.Converter;
-import com.mjc.school.model.Role;
 import com.mjc.school.model.User;
 import com.mjc.school.repository.RoleRepository;
 import com.mjc.school.validation.dto.RegistrationUserDto;

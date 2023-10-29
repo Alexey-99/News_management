@@ -1,7 +1,7 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.exception.ServiceException;
+import com.mjc.school.exception.ServiceNotFoundException;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
 import io.swagger.annotations.Api;
@@ -49,7 +49,7 @@ public class CommentController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
-                                          CommentDTO commentDTO) throws ServiceException {
+                                          CommentDTO commentDTO) throws ServiceNotFoundException {
         return new ResponseEntity<>(commentService.create(commentDTO), CREATED);
     }
 
@@ -71,7 +71,7 @@ public class CommentController {
                                              @Valid
                                              @RequestBody
                                              @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
-                                             CommentDTO commentDTO) throws ServiceException {
+                                             CommentDTO commentDTO) throws ServiceNotFoundException {
         commentDTO.setId(id);
         return new ResponseEntity<>(commentService.update(commentDTO), OK);
     }
@@ -108,7 +108,7 @@ public class CommentController {
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable
                                                   @Min(value = 1,
                                                           message = "comment_controller.path_variable.id.in_valid.min")
-                                                  long newsId) throws ServiceException {
+                                                  long newsId) throws ServiceNotFoundException {
         return new ResponseEntity<>(commentService.deleteByNewsId(newsId), OK);
     }
 
@@ -130,7 +130,7 @@ public class CommentController {
                                                           @RequestParam(value = "sort-field", required = false)
                                                           String sortingField,
                                                           @RequestParam(value = "sort-type", required = false)
-                                                          String sortingType) throws ServiceException {
+                                                          String sortingType) throws ServiceNotFoundException {
         return new ResponseEntity<>(commentService.getPagination(
                 commentService.findAll(page, size, sortingField, sortingType),
                 commentService.countAllComments(),
@@ -159,7 +159,7 @@ public class CommentController {
                                                                @RequestParam(value = "sort-field", required = false)
                                                                String sortingField,
                                                                @RequestParam(value = "sort-type", required = false)
-                                                               String sortingType) throws ServiceException {
+                                                               String sortingType) throws ServiceNotFoundException {
         return new ResponseEntity<>(commentService.getPagination(
                 commentService.findByNewsId(newsId, page, size, sortingField, sortingType),
                 commentService.countAllCommentsByNewsId(newsId),
@@ -179,7 +179,7 @@ public class CommentController {
     public ResponseEntity<CommentDTO> findById(@PathVariable
                                                @Min(value = 1,
                                                        message = "comment_controller.path_variable.id.in_valid.min")
-                                               long id) throws ServiceException {
+                                               long id) throws ServiceNotFoundException {
         return new ResponseEntity<>(commentService.findById(id), OK);
     }
 }

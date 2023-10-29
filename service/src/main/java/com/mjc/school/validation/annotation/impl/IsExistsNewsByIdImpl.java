@@ -3,6 +3,7 @@ package com.mjc.school.validation.annotation.impl;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.validation.annotation.IsExistsNewsById;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,9 +13,9 @@ import javax.validation.ConstraintValidatorContext;
 import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.WARN;
 
+@Log4j2
 @RequiredArgsConstructor
 public class IsExistsNewsByIdImpl implements ConstraintValidator<IsExistsNewsById, Long> {
-    private static final Logger log = LogManager.getLogger();
     private final NewsRepository newsRepository;
 
     @Override

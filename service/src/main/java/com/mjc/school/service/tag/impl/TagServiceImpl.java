@@ -1,11 +1,13 @@
 package com.mjc.school.service.tag.impl;
 
+import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.NewsTag;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.model.Tag;
-import com.mjc.school.exception.ServiceException;
+import com.mjc.school.exception.ServiceNotFoundException;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
@@ -41,44 +43,44 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public boolean create(TagDTO tagDTO) throws ServiceException {
+    public boolean create(TagDTO tagDTO) throws ServiceBadRequestParameterException {
         if (tagRepository.existsByName(tagDTO.getName())) {
             Tag tag = tagConverter.fromDTO(tagDTO);
             tagRepository.save(tag);
             return true;
         } else {
             log.log(WARN, "Tag with entered name '%s' already exists".formatted(tagDTO.getName()));
-            throw new ServiceException("tag_dto.name.not_valid.exists_tag_by_name");
+            throw new ServiceBadRequestParameterException("tag_dto.name.not_valid.exists_tag_by_name");
         }
     }
 
     @Transactional
     @Override
-    public boolean addToNews(long tagId, long newsId) throws ServiceException {
+    public boolean addToNews(long tagId, long newsId) throws ServiceBadRequestParameterException {
         NewsTag newsTag = NewsTag.builder()
                 .tag(tagRepository.findById(tagId).orElseThrow(() ->
-                        new ServiceException("service.exception.not_found_tag_by_id")))
+                        new ServiceBadRequestParameterException("service.exception.not_found_tag_by_id")))
                 .news(newsRepository.findById(newsId).orElseThrow(() ->
-                        new ServiceException("service.exception.not_found_news_by_id")))
+                        new ServiceBadRequestParameterException("service.exception.not_found_news_by_id")))
                 .build();
         if (isNotExistsTagInNews(tagId, newsId)) {
             newsTagRepository.save(newsTag);
             return true;
         } else {
             log.log(WARN, "Tag with entered ID '" + tagId + "' exists in news");
-            throw new ServiceException("service.exception.exists_tag_in_news");
+            throw new ServiceBadRequestParameterException("service.exception.exists_tag_in_news");
         }
     }
 
     @Transactional
     @Override
-    public boolean deleteFromNews(long tagId, long newsId) throws ServiceException {
+    public boolean deleteFromNews(long tagId, long newsId) throws ServiceBadRequestParameterException {
         if (!tagRepository.existsById(tagId)) {
             log.log(WARN, "Not found tag by ID: " + tagId);
-            throw new ServiceException("service.exception.not_found_tag_by_id");
+            throw new ServiceBadRequestParameterException("service.exception.not_found_tag_by_id");
         } else if (!newsRepository.existsById(newsId)) {
             log.log(WARN, "Not found news by ID: " + newsId);
-            throw new ServiceException("service.exception.not_found_news_by_id");
+            throw new ServiceBadRequestParameterException("service.exception.not_found_news_by_id");
         } else {
             if (!isNotExistsTagInNews(tagId, newsId)) {
                 tagRepository.deleteFromNews(tagId, newsId);
@@ -98,22 +100,22 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public boolean deleteFromAllNews(long tagId) throws ServiceException {
+    public boolean deleteFromAllNews(long tagId) throws ServiceBadRequestParameterException {
         if (tagRepository.existsById(tagId)) {
             tagRepository.deleteFromAllNewsById(tagId);
             return true;
         } else {
             log.log(WARN, "Not found tag by ID: " + tagId);
-            throw new ServiceException("service.exception.not_found_tag_by_id");
+            throw new ServiceBadRequestParameterException("service.exception.not_found_tag_by_id");
         }
     }
 
     @Transactional
     @Override
-    public TagDTO update(TagDTO tagDTO) throws ServiceException {
+    public TagDTO update(TagDTO tagDTO) throws ServiceBadRequestParameterException {
         Tag tag = tagRepository.findById(tagDTO.getId()).orElseThrow(() -> {
             log.log(WARN, "Not found tag by ID: " + tagDTO.getId());
-            return new ServiceException("service.exception.not_found_tag_by_id");
+            return new ServiceBadRequestParameterException("service.exception.not_found_tag_by_id");
         });
         if (tag.getName().equals(tagDTO.getName())) {
             return tagConverter.toDTO(tag);
@@ -124,13 +126,13 @@ public class TagServiceImpl implements TagService {
                 return tagConverter.toDTO(tag);
             } else {
                 log.log(WARN, "Tag with entered name '" + tagDTO.getName() + "' already exists");
-                throw new ServiceException("tag_dto.name.not_valid.exists_tag_by_name");
+                throw new ServiceBadRequestParameterException("tag_dto.name.not_valid.exists_tag_by_name");
             }
         }
     }
 
     @Override
-    public List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceException {
+    public List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException {
         Page<Tag> tagPage = tagRepository.findAll(PageRequest.of(
                 tagPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortType).orElse(ASC),
@@ -141,7 +143,7 @@ public class TagServiceImpl implements TagService {
                     .toList();
         } else {
             log.log(WARN, "Not found tags");
-            throw new ServiceException("service.exception.not_found_tags");
+            throw new ServiceNoContentException("service.exception.not_found_tags");
         }
     }
 
@@ -159,17 +161,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDTO findById(long id) throws ServiceException {
+    public TagDTO findById(long id) throws ServiceNoContentException {
         Tag tag = tagRepository.findById(id).orElseThrow(() -> {
             log.log(WARN, "Not found tag with this ID: " + id);
-            return new ServiceException("service.exception.not_found_tag_by_id");
+            return new ServiceNoContentException("service.exception.not_found_tag_by_id");
         });
         return tagConverter.toDTO(tag);
     }
 
     @Override
     public List<TagDTO> findByPartOfName(String partOfName, int page, int size,
-                                         String sortField, String sortType) throws ServiceException {
+                                         String sortField, String sortType) throws ServiceNoContentException {
         List<Tag> tagList = tagRepository.findByPartOfName("%" + partOfName + "%",
                 PageRequest.of(tagPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortType).orElse(ASC),
@@ -181,7 +183,7 @@ public class TagServiceImpl implements TagService {
                     .toList();
         } else {
             log.log(WARN, "Not found tags by part of name: " + partOfName);
-            throw new ServiceException("service.exception.not_found_tags_by_part_of_name");
+            throw new ServiceNoContentException("service.exception.not_found_tags_by_part_of_name");
         }
     }
 
@@ -192,7 +194,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDTO> findByNewsId(long newsId, int page, int size,
-                                     String sortField, String sortType) throws ServiceException {
+                                     String sortField, String sortType) throws ServiceNoContentException {
         List<Tag> tagList = tagRepository.findByNewsId(newsId,
                 PageRequest.of(tagPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortType).orElse(ASC),
@@ -203,7 +205,7 @@ public class TagServiceImpl implements TagService {
                     .toList();
         } else {
             log.log(WARN, "Not found tags by news ID: " + newsId);
-            throw new ServiceException("service.exception.not_found_tags_by_news_id");
+            throw new ServiceNoContentException("service.exception.not_found_tags_by_news_id");
         }
     }
 

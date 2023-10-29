@@ -39,7 +39,8 @@ public class WebSecurityConfig {
                     authorizeRequests.antMatchers(HttpMethod.GET, "/api/v2/author/*",
                                     "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*")
                             .permitAll();
-                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/auth/token").permitAll();
+                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/auth/token", "/api/v2/auth/registration")
+                            .permitAll();
 
                     authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news")
                             .hasRole(USER_ROLE_NAME);

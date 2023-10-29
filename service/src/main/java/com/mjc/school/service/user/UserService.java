@@ -1,7 +1,7 @@
 package com.mjc.school.service.user;
 
-import com.mjc.school.model.User;
+import com.mjc.school.validation.dto.RegistrationUserDto;
 
 public interface UserService {
-    boolean create(User user);
+    boolean create(RegistrationUserDto userDto);
 }

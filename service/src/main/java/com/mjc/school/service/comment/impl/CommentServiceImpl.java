@@ -1,10 +1,11 @@
 package com.mjc.school.service.comment.impl;
 
 import com.mjc.school.converter.impl.CommentConverter;
+import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.model.Comment;
 import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.exception.ServiceException;
+import com.mjc.school.exception.ServiceNotFoundException;
 import com.mjc.school.handler.DateHandler;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.pagination.PaginationService;
@@ -50,10 +51,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentDTO update(CommentDTO commentDTO) throws ServiceException {
+    public CommentDTO update(CommentDTO commentDTO) throws ServiceBadRequestParameterException {
         Comment comment = commentRepository.findById(commentDTO.getId()).orElseThrow(() -> {
             log.log(WARN, "Not found comment by ID: " + commentDTO.getId());
-            return new ServiceException("service.exception.not_found_comment_by_id");
+            return new ServiceBadRequestParameterException("service.exception.not_found_comment_by_id");
         });
         comment.setContent(commentDTO.getContent());
         comment.setNews(newsRepository.getById(commentDTO.getNewsId()));
@@ -85,7 +86,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> findAll(int page, int size,
-                                    String sortingField, String sortingType) throws ServiceException {
+                                    String sortingField, String sortingType) throws ServiceNotFoundException {
         Page<Comment> commentPage = commentRepository.findAll(PageRequest.of(
                 commentPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
@@ -97,7 +98,7 @@ public class CommentServiceImpl implements CommentService {
                     .toList();
         } else {
             log.log(WARN, "Not found comments");
-            throw new ServiceException("service.exception.not_found_comments");
+            throw new ServiceNotFoundException("service.exception.not_found_comments");
         }
     }
 
@@ -116,7 +117,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> findByNewsId(long newsId, int page, int size,
-                                         String sortingField, String sortingType) throws ServiceException {
+                                         String sortingField, String sortingType) throws ServiceNotFoundException {
         List<Comment> commentList = commentRepository.findByNewsId(newsId,
                 PageRequest.of(commentPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
@@ -128,7 +129,7 @@ public class CommentServiceImpl implements CommentService {
                     .toList();
         } else {
             log.log(ERROR, "Not found comments by news ID: " + newsId);
-            throw new ServiceException("service.exception.not_found_comments_by_news_id");
+            throw new ServiceNotFoundException("service.exception.not_found_comments_by_news_id");
         }
     }
 
@@ -138,10 +139,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO findById(long id) throws ServiceException {
+    public CommentDTO findById(long id) throws ServiceNotFoundException {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> {
             log.log(WARN, "Not found comment by ID: " + id);
-            return new ServiceException("service.exception.not_found_comment_by_id");
+            return new ServiceNotFoundException("service.exception.not_found_comment_by_id");
         });
         return commentConverter.toDTO(comment);
     }

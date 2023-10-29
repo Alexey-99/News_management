@@ -1,7 +1,8 @@
 package com.mjc.school.controller;
 
+import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.exception.ServiceException;
 import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
 import io.swagger.annotations.Api;
@@ -51,7 +52,7 @@ public class NewsController {
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
-                                          NewsDTO newsDTO) throws ServiceException {
+                                          NewsDTO newsDTO) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(newsService.create(newsDTO), CREATED);
     }
 
@@ -87,7 +88,7 @@ public class NewsController {
     public ResponseEntity<Boolean> deleteByAuthorId(@PathVariable
                                                     @Min(value = 1,
                                                             message = "news_controller.path_variable.id.in_valid.min")
-                                                    long authorId) throws ServiceException {
+                                                    long authorId) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(newsService.deleteByAuthorId(authorId), OK);
     }
 
@@ -105,7 +106,7 @@ public class NewsController {
     public ResponseEntity<NewsDTO> deleteAllTagsFromNewsByNewsId(@PathVariable
                                                                  @Min(value = 1,
                                                                          message = "news_controller.path_variable.id.in_valid.min")
-                                                                 long newsId) throws ServiceException {
+                                                                 long newsId) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(newsService.deleteAllTagsFromNews(newsId), OK);
     }
 
@@ -127,7 +128,7 @@ public class NewsController {
                                           @Valid
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
-                                          NewsDTO newsDTO) throws ServiceException {
+                                          NewsDTO newsDTO) throws ServiceBadRequestParameterException {
         newsDTO.setId(id);
         return new ResponseEntity<>(newsService.update(newsDTO), OK);
     }
@@ -150,7 +151,7 @@ public class NewsController {
                                                        @RequestParam(value = "sort-field", required = false)
                                                        String sortingField,
                                                        @RequestParam(value = "sort-type", required = false)
-                                                       String sortingType) throws ServiceException {
+                                                       String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findAll(page, size, sortingField, sortingType),
                 newsService.countAllNews(),
@@ -171,7 +172,7 @@ public class NewsController {
     public ResponseEntity<NewsDTO> findById(@PathVariable
                                             @Min(value = 1,
                                                     message = "news_controller.path_variable.id.in_valid.min")
-                                            long id) throws ServiceException {
+                                            long id) throws ServiceNoContentException {
         return new ResponseEntity<>(newsService.findById(id), OK);
     }
 
@@ -199,7 +200,7 @@ public class NewsController {
                                                                  @RequestParam(value = "sort-field", required = false)
                                                                  String sortingField,
                                                                  @RequestParam(value = "sort-type", required = false)
-                                                                 String sortingType) throws ServiceException {
+                                                                 String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findByTagName(tagName, page, size, sortingField, sortingType),
                 newsService.countAllNewsByTagName(tagName),
@@ -228,7 +229,7 @@ public class NewsController {
                                                                @RequestParam(value = "sort-field", required = false)
                                                                String sortingField,
                                                                @RequestParam(value = "sort-type", required = false)
-                                                               String sortingType) throws ServiceException {
+                                                               String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findByTagId(tagId, page, size, sortingField, sortingType),
                 newsService.countAllNewsByTagId(tagId),
@@ -256,7 +257,7 @@ public class NewsController {
                                                                     @RequestParam(value = "sort-field", required = false)
                                                                     String sortingField,
                                                                     @RequestParam(value = "sort-type", required = false)
-                                                                    String sortingType) throws ServiceException {
+                                                                    String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortingField, sortingType),
                 newsService.countAllNewsByPartOfAuthorName(partOfAuthorName),
@@ -285,7 +286,7 @@ public class NewsController {
                                                                   @RequestParam(value = "sort-field", required = false)
                                                                   String sortingField,
                                                                   @RequestParam(value = "sort-type", required = false)
-                                                                  String sortingType) throws ServiceException {
+                                                                  String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findByAuthorId(authorId, page, size, sortingField, sortingType),
                 newsService.countAllNewsByAuthorId(authorId),
@@ -313,7 +314,7 @@ public class NewsController {
                                                                      @RequestParam(value = "sort-field", required = false)
                                                                      String sortingField,
                                                                      @RequestParam(value = "sort-type", required = false)
-                                                                     String sortingType) throws ServiceException {
+                                                                     String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findByPartOfTitle(partOfTitle, page, size, sortingField, sortingType),
                 newsService.countAllNewsByPartOfTitle(partOfTitle),
@@ -341,7 +342,7 @@ public class NewsController {
                                                                        @RequestParam(value = "sort-field", required = false)
                                                                        String sortingField,
                                                                        @RequestParam(value = "sort-type", required = false)
-                                                                       String sortingType) throws ServiceException {
+                                                                       String sortingType) throws ServiceNoContentException {
         return new ResponseEntity<>(newsService.getPagination(
                 newsService.findByPartOfContent(partOfContent, page, size, sortingField, sortingType),
                 newsService.countAllNewsByPartOfContent(partOfContent),
