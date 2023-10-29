@@ -5,7 +5,6 @@ import com.mjc.school.config.language.Translator;
 import com.mjc.school.exception.ErrorResponse;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
-import com.mjc.school.exception.ServiceNotFoundException;
 import com.mjc.school.exception.UnauthorizedException;
 import com.mjc.school.handler.DateHandler;
 import lombok.RequiredArgsConstructor;
@@ -30,17 +29,6 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public class ApplicationExceptionHandler {
     private final Translator translator;
     private final DateHandler dateHandler;
-
-    @ExceptionHandler(ServiceNotFoundException.class)
-    public final ResponseEntity<Object> handleServiceExceptions(ServiceNotFoundException ex) {
-        String details = translator.toLocale(ex.getLocalizedMessage());
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .errorCode(NOT_FOUND.value())
-                .errorMessage(details)
-                .timestamp(dateHandler.getCurrentDate())
-                .build();
-        return new ResponseEntity<>(errorResponse, NOT_FOUND);
-    }
 
     @ExceptionHandler(ServiceBadRequestParameterException.class)
     public final ResponseEntity<Object> handleServiceBadRequestParameterException(ServiceBadRequestParameterException ex) {
