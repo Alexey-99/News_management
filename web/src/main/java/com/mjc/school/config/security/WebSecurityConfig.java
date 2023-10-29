@@ -34,12 +34,16 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorizeRequests -> {
-                    authorizeRequests.antMatchers(HttpMethod.GET,
-                            "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*").permitAll();
-                    authorizeRequests.antMatchers(HttpMethod.POST,
-                            "/api/v2/auth/token").permitAll();
-                    authorizeRequests.antMatchers(HttpMethod.POST,
-                            "/api/v2/comment", "/api/v2/news").hasRole("USER");
+                    authorizeRequests.antMatchers(HttpMethod.GET, "/api/v2/author/*",
+                                    "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*")
+                            .permitAll();
+                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/auth/token").permitAll();
+
+                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news")
+                            .hasRole("USER");
+
+                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news")
+                            .hasRole("ADMIN");
                     authorizeRequests.anyRequest().hasRole("ADMIN");
                 })
                 .sessionManagement(sessionManagement ->

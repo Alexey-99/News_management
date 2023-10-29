@@ -46,7 +46,6 @@ public class NewsServiceImpl implements NewsService {
             newsDTO.setCreated(dateHandler.getCurrentDate());
             newsDTO.setModified(dateHandler.getCurrentDate());
             News news = newsConverter.fromDTO(newsDTO);
-            news.setAuthor(authorRepository.getById(newsDTO.getAuthorId()));
             newsRepository.save(news);
             return true;
         } else {
