@@ -1,7 +1,6 @@
 package com.mjc.school.validation.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mjc.school.validation.annotation.IsExistsRoleById;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,19 +19,25 @@ import javax.validation.constraints.Size;
 public class RegistrationUserDto {
     @JsonIgnore
     private long id;
+
     @NotNull
     @NotBlank
     @Size(min = 3)
     private String login;
+
     @NotNull
     @NotBlank
     @Size(min = 3)
     private String password;
+
     @NotNull
     @NotBlank
     @Size(min = 3)
     private String confirmPassword;
+
     private String email;
-    @IsExistsRoleById
+
+    @JsonIgnore
+    //@IsExistsRoleById
     private long roleId;
 }

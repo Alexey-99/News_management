@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.function.Function;
 
+import static com.mjc.school.model.User.UserRole.ROLE_USER;
+
 @RequiredArgsConstructor
 @Component
 public class UserConverter implements Function<User, CustomUserDetails>, Converter<RegistrationUserDto, User> {
@@ -36,7 +38,7 @@ public class UserConverter implements Function<User, CustomUserDetails>, Convert
                 .login(entityDTO.getLogin())
                 .password(entityDTO.getPassword())
                 .email(entityDTO.getEmail())
-                .role(roleRepository.getById(entityDTO.getRoleId()))
+                .role(roleRepository.getByName(ROLE_USER.name()))
                 .build();
 
     }

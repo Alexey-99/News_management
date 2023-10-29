@@ -16,4 +16,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             WHERE login = :login
             """, nativeQuery = true)
     Optional<User> findByLogin(@Param("login") String login);
+
+    @Query(value = """
+            SELECT COUNT(id) > 0
+            FROM users
+            WHERE login = :login
+            """, nativeQuery = true)
+    Boolean existsByLogin(@Param("login") String login);
 }
