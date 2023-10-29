@@ -7,7 +7,6 @@ import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.model.Tag;
-import com.mjc.school.exception.ServiceNotFoundException;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;

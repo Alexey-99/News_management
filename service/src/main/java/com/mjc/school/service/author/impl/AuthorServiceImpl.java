@@ -3,11 +3,11 @@ package com.mjc.school.service.author.impl;
 import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.converter.impl.AuthorIdWithAmountOfWrittenNewsConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.AuthorIdWithAmountOfWrittenNews;
 import com.mjc.school.service.author.impl.sort.AuthorSortField;
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.exception.ServiceNotFoundException;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.service.author.AuthorService;
@@ -83,7 +83,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorDTO> findAll(int page, int size, String sortField, String sortingType) throws ServiceNotFoundException {
+    public List<AuthorDTO> findAll(int page, int size, String sortField, String sortingType) throws ServiceNoContentException {
         Page<Author> authorPage = authorRepository.findAll(PageRequest.of(
                 authorPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(ASC),
@@ -95,7 +95,7 @@ public class AuthorServiceImpl implements AuthorService {
                     .toList();
         } else {
             log.log(WARN, "Not found authors");
-            throw new ServiceNotFoundException("service.exception.not_found_authors");
+            throw new ServiceNoContentException("service.exception.not_found_authors");
         }
     }
 
@@ -113,18 +113,19 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDTO findById(long id) throws ServiceNotFoundException {
+    public AuthorDTO findById(long id) throws ServiceNoContentException {
         Author author = authorRepository.findById(id).orElseThrow(() -> {
             log.log(WARN, "Not found author by ID: " + id);
-            return new ServiceNotFoundException("service.exception.not_found_author_by_id");
+            return new ServiceNoContentException("service.exception.not_found_author_by_id");
         });
         return authorConverter.toDTO(author);
 
     }
 
     @Override
-    public List<AuthorDTO> findByPartOfName(String partOfName, int page, int size,
-                                            String sortField, String sortingType) throws ServiceNotFoundException {
+    public List<AuthorDTO> findByPartOfName(String partOfName,
+                                            int page, int size,
+                                            String sortField, String sortingType) throws ServiceNoContentException {
         List<Author> authorsList = authorRepository.findByPartOfName(
                 "%" + partOfName + "%",
                 PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size,
@@ -136,7 +137,7 @@ public class AuthorServiceImpl implements AuthorService {
                     .toList();
         } else {
             log.log(WARN, "Not found authors by part of name: " + partOfName);
-            throw new ServiceNotFoundException("service.exception.not_found_authors_by_part_of_name");
+            throw new ServiceNoContentException("service.exception.not_found_authors_by_part_of_name");
         }
     }
 
@@ -146,22 +147,22 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDTO findByNewsId(long newsId) throws ServiceNotFoundException {
+    public AuthorDTO findByNewsId(long newsId) throws ServiceNoContentException {
         Author author = authorRepository.findByNewsId(newsId).orElseThrow(() -> {
             log.log(WARN, "Not found authors by news ID: " + newsId);
-            return new ServiceNotFoundException("service.exception.not_found_authors_by_news_id");
+            return new ServiceNoContentException("service.exception.not_found_authors_by_news_id");
         });
         return authorConverter.toDTO(author);
     }
 
     @Override
-    public List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(
-            int page, int size, String sortingType) throws ServiceNotFoundException {
+    public List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(int page, int size,
+                                                                                            String sortingType) throws ServiceNoContentException {
         String sortType = sortingType != null ?
                 Sort.Direction.fromOptionalString(sortingType).orElse(DESC).name() :
                 DESC.name();
-        List<Author> authorList = null;
-        if (sortType.equalsIgnoreCase("ASC")) {
+        List<Author> authorList;
+        if (sortType.equalsIgnoreCase(ASC.name())) {
             authorList = authorRepository.findAllAuthorsWithAmountWrittenNewsAsc(
                     PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size));
         } else {
@@ -179,7 +180,7 @@ public class AuthorServiceImpl implements AuthorService {
                     .toList();
         } else {
             log.log(WARN, "Not found authors");
-            throw new ServiceNotFoundException("service.exception.not_found_authors");
+            throw new ServiceNoContentException("service.exception.not_found_authors");
         }
     }
 

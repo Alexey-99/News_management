@@ -1,7 +1,7 @@
 package com.mjc.school.service.comment;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.exception.ServiceNotFoundException;
+import com.mjc.school.exception.ServiceNoContentException;
 
 import com.mjc.school.validation.dto.CommentDTO;
 import com.mjc.school.validation.dto.Pagination;
@@ -20,17 +20,17 @@ public interface CommentService {
     CommentDTO update(CommentDTO commentDTO) throws ServiceBadRequestParameterException;
 
     @Transactional
-    boolean deleteByNewsId(long newsId) throws ServiceNotFoundException;
+    boolean deleteByNewsId(long newsId);
 
-    List<CommentDTO> findAll(int page, int size, String sortingField, String sortingType) throws ServiceNotFoundException;
+    List<CommentDTO> findAll(int page, int size, String sortingField, String sortingType) throws ServiceNoContentException;
 
     List<CommentDTO> findAll();
 
     long countAllComments();
 
-    CommentDTO findById(long id) throws ServiceNotFoundException;
+    CommentDTO findById(long id) throws ServiceNoContentException;
 
-    List<CommentDTO> findByNewsId(long newsId, int page, int size, String sortingField, String sortingType) throws ServiceNotFoundException;
+    List<CommentDTO> findByNewsId(long newsId, int page, int size, String sortingField, String sortingType) throws ServiceNoContentException;
 
     long countAllCommentsByNewsId(long newsId);
 

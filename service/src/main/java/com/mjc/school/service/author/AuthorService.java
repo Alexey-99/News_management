@@ -1,7 +1,7 @@
 package com.mjc.school.service.author;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.exception.ServiceNotFoundException;
+import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import com.mjc.school.validation.dto.Pagination;
@@ -19,22 +19,22 @@ public interface AuthorService {
     @Transactional
     AuthorDTO update(AuthorDTO authorDTO) throws ServiceBadRequestParameterException;
 
-    List<AuthorDTO> findAll(int page, int size, String sortField, String sortingType) throws ServiceNotFoundException;
+    List<AuthorDTO> findAll(int page, int size, String sortField, String sortingType) throws ServiceNoContentException;
 
     List<AuthorDTO> findAll();
 
     long countAll();
 
-    AuthorDTO findById(long id) throws ServiceNotFoundException;
+    AuthorDTO findById(long id) throws ServiceNoContentException;
 
-    List<AuthorDTO> findByPartOfName(String partOfName, int page, int size, String sortField, String sortingType) throws ServiceNotFoundException;
+    List<AuthorDTO> findByPartOfName(String partOfName, int page, int size, String sortField, String sortingType) throws ServiceNoContentException;
 
     long countAllByPartOfName(String partOfName);
 
-    AuthorDTO findByNewsId(long newsId) throws ServiceNotFoundException;
+    AuthorDTO findByNewsId(long newsId) throws ServiceNoContentException;
 
-    List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(
-            int page, int size, String sortingType) throws ServiceNotFoundException;
+    List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(int page, int size,
+                                                                                     String sortingType) throws ServiceNoContentException;
 
     Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements, int page, int size);
 
