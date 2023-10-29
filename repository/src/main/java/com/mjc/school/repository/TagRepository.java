@@ -94,9 +94,9 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     Long countAllByNewsId(@Param("news_id") Long newsId);
 
     @Query(value = """
-            SELECT COUNT(name) > 0
+            SELECT COUNT(name) = 0
             FROM tags
             WHERE name = :name
             """, nativeQuery = true)
-    boolean existsByName(@Param("name") String name);
+    boolean notExistsByName(@Param("name") String name);
 }

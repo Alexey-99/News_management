@@ -43,7 +43,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public boolean create(TagDTO tagDTO) throws ServiceBadRequestParameterException {
-        if (tagRepository.existsByName(tagDTO.getName())) {
+        if (tagRepository.notExistsByName(tagDTO.getName())) {
             Tag tag = tagConverter.fromDTO(tagDTO);
             tagRepository.save(tag);
             return true;
@@ -119,7 +119,7 @@ public class TagServiceImpl implements TagService {
         if (tag.getName().equals(tagDTO.getName())) {
             return tagConverter.toDTO(tag);
         } else {
-            if (!tagRepository.existsByName(tagDTO.getName())) {
+            if (tagRepository.notExistsByName(tagDTO.getName())) {
                 tagRepository.update(tagDTO.getName(), tagDTO.getId());
                 tag.setName(tagDTO.getName());
                 return tagConverter.toDTO(tag);
