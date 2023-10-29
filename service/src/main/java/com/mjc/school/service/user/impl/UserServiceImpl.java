@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean create(RegistrationUserDto userDto) throws ServiceBadRequestParameterException {
         if (userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            if (!userRepository.existsByLogin(userDto.getLogin())) {
+            if (userRepository.notExistsByLogin(userDto.getLogin())) {
                 User user = userConverter.fromDTO(userDto);
                 user.setPassword(passwordEncoder.encode(userDto.getPassword()));
                 userRepository.save(user);
