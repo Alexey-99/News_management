@@ -2,7 +2,6 @@ package com.mjc.school.controller;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
-import com.mjc.school.exception.ServiceNotFoundException;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
