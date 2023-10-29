@@ -45,6 +45,4 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                 .modified(news.getModified())
                 .build();
     }
-
-
 }
