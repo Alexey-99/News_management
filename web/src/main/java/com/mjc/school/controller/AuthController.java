@@ -2,8 +2,8 @@ package com.mjc.school.controller;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.service.auth.AuthService;
-import com.mjc.school.validation.dto.jwt.JwtRequest;
-import com.mjc.school.validation.dto.jwt.JwtResponse;
+import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
+import com.mjc.school.validation.dto.jwt.JwtTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,9 +24,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/token")
-    public ResponseEntity<JwtResponse> createAuthToken(@Valid
+    public ResponseEntity<JwtTokenResponse> createAuthToken(@Valid
                                                        @RequestBody
-                                                       JwtRequest authRequest) throws ServiceBadRequestParameterException {
-        return new ResponseEntity<>(new JwtResponse(authService.createAuthToken(authRequest)), CREATED);
+                                                       CreateJwtTokenRequest authRequest) throws ServiceBadRequestParameterException {
+        return new ResponseEntity<>(new JwtTokenResponse(authService.createAuthToken(authRequest)), CREATED);
     }
 }

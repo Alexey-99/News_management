@@ -1,5 +1,6 @@
 package com.mjc.school.validation.dto.user;
 
+import com.mjc.school.validation.annotation.IsNotExistsUserByLogin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,21 +18,23 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Validated
 public class RegistrationUserDto {
-    @NotNull(message = "")
-    @NotBlank(message = "")
-    @Size(min = 3, message = "")
+    @NotNull(message = "registration_user_dto.login.not_valid.null")
+    @NotBlank(message = "registration_user_dto.login.not_valid.is_blank")
+    @Size(min = 3, message = "registration_user_dto.login.not_valid.size")
+    @IsNotExistsUserByLogin(message="registration_user_dto.login.not_valid.exists")
     private String login;
 
-    @NotNull(message = "")
-    @NotBlank(message = "")
-    @Size(min = 3, message = "")
+    @NotNull(message = "registration_user_dto.password.not_valid.null")
+    @NotBlank(message = "registration_user_dto.password.not_valid.is_blank")
+    @Size(min = 5, message = "registration_user_dto.password.not_valid.size")
     private String password;
 
-    @NotNull(message = "")
-    @NotBlank(message = "")
-    @Size(min = 3, message = "")
+    @NotNull(message = "registration_user_dto.confirm_password.not_valid.null")
+    @NotBlank(message = "registration_user_dto.confirm_password.not_valid.is_blank")
+    @Size(min = 5, message = "registration_user_dto.confirm_password.not_valid.size")
     private String confirmPassword;
 
-    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", message = "")
+    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$",
+            message = "registration_user_dto.email.not_valid.format")
     private String email;
 }

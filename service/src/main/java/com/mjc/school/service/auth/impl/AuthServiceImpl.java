@@ -4,7 +4,7 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.service.auth.AuthService;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import com.mjc.school.util.JwtTokenUtil;
-import com.mjc.school.validation.dto.jwt.JwtRequest;
+import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,7 +20,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtil jwtTokenUtil;
 
     @Override
-    public String createAuthToken(JwtRequest authRequest) throws ServiceBadRequestParameterException {
+    public String createAuthToken(CreateJwtTokenRequest authRequest) throws ServiceBadRequestParameterException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authRequest.getUserName(),

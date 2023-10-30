@@ -37,6 +37,6 @@ public class UserChangeRoleDto {
     @IsExistsUserByLogin(message = "user_change_role_dto.user_login.not_valid.not_exists")
     private String userLogin;
 
-    @IsExistsRoleById(message = "user_change_role_dto.role_id.not_valid")
+    @IsExistsRoleById(message = "user_change_role_dto.role_id.not_valid.not_exists")
     private long roleId;
 }

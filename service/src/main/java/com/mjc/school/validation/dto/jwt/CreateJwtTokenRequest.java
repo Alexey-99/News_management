@@ -1,5 +1,6 @@
 package com.mjc.school.validation.dto.jwt;
 
+import com.mjc.school.validation.annotation.IsExistsUserByLogin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,13 +16,15 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtRequest {
-    @NotNull
-    @NotBlank
-    @Size(min = 3)
+public class CreateJwtTokenRequest {
+    @NotNull(message = "")
+    @NotBlank(message = "")
+    @Size(min = 3, message = "")
+    @IsExistsUserByLogin(message = "")
     private String userName;
-    @NotNull
-    @NotBlank
-    @Size(min = 3)
+
+    @NotNull(message = "")
+    @NotBlank(message = "")
+    @Size(min = 3, message = "")
     private String password;
 }

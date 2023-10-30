@@ -1,8 +1,8 @@
 package com.mjc.school.service.auth;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.validation.dto.jwt.JwtRequest;
+import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
 
 public interface AuthService {
-    String createAuthToken(JwtRequest authRequest) throws ServiceBadRequestParameterException;
+    String createAuthToken(CreateJwtTokenRequest authRequest) throws ServiceBadRequestParameterException;
 }
