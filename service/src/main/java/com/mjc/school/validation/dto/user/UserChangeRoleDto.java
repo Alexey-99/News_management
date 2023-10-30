@@ -17,15 +17,20 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Validated
 public class UserChangeRoleDto {
-    @NotNull(message = "")
-    @NotBlank(message = "")
-    @Size(min = 3, message = "")
-    private String login;
+    @NotNull(message = "user_change_role_dto.admin_login.not_valid.null")
+    @NotBlank(message = "user_change_role_dto.admin_login.not_valid.is_blank")
+    @Size(min = 3, message = "user_change_role_dto.admin_login.not_valid.size")
+    private String adminLogin;
 
-    @NotNull(message = "")
-    @NotBlank(message = "")
-    @Size(min = 5, message = "")
-    private String password;
+    @NotNull(message = "user_change_role_dto.admin_password.not_valid.null")
+    @NotBlank(message = "user_change_role_dto.admin_password.not_valid.is_blank")
+    @Size(min = 5, message = "user_change_role_dto.admin_password.not_valid.size")
+    private String adminPassword;
+
+    @NotNull(message = "user_change_role_dto.user_login.not_valid.null")
+    @NotBlank(message = "user_change_role_dto.user_login.not_valid.is_blank")
+    @Size(min = 3, message = "user_change_role_dto.user_login.not_valid.size")
+    private String userLogin;
 
     @IsExistsRoleById(message = "")
     private long roleId;

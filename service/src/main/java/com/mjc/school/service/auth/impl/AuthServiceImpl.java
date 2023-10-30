@@ -25,10 +25,10 @@ public class AuthServiceImpl implements AuthService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authRequest.getUserName(),
                     authRequest.getPassword()));
+            UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUserName());
+            return jwtTokenUtil.generateToken(userDetails);
         } catch (BadCredentialsException e) {
             throw new ServiceBadRequestParameterException("Не корректный логин или пароль");
         }
-        UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUserName());
-        return jwtTokenUtil.generateToken(userDetails);
     }
 }
