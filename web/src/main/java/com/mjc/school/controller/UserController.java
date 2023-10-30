@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
 @Validated
@@ -34,7 +35,7 @@ public class UserController {
     @PatchMapping("/role")
     public ResponseEntity<Boolean> changeRole(@Valid
                                               @RequestBody
-                                              UserChangeRoleDto userChangeRoleDto) {
-        return null;
+                                              UserChangeRoleDto userChangeRoleDto) throws ServiceBadRequestParameterException {
+        return new ResponseEntity<>(userService.changeRole(userChangeRoleDto), OK);
     }
 }

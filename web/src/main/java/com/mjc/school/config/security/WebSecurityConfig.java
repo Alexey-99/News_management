@@ -12,14 +12,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.Filter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -33,25 +30,18 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .authorizeRequests(authorizeRequests -> {
-                    authorizeRequests.antMatchers(HttpMethod.GET, "/api/v2/author/*",
-                                    "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*")
-                            .permitAll();
-                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/auth/token", "/api/v2/user/registration")
-                            .permitAll();
-
-                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news")
-                            .hasAnyRole(ADMIN_ROLE_NAME, USER_ROLE_NAME);
-
-                    authorizeRequests.anyRequest().hasRole(ADMIN_ROLE_NAME);
-                })
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .addFilterBefore((Filter) jwtRequestFilter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class)
+                .csrf().and().cors().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v2/auth/token", "/api/v2/user/registration").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news").hasAnyRole(ADMIN_ROLE_NAME, USER_ROLE_NAME)
+                .anyRequest().hasRole(ADMIN_ROLE_NAME)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                .and()
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
