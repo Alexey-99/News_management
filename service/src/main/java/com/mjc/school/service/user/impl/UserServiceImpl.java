@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             return true;
         } else {
+            log.log(ERROR, "The entered passwords do not match.");
             throw new ServiceBadRequestParameterException("service.exception.registration.passwords_not_match");
         }
     }
@@ -45,8 +46,8 @@ public class UserServiceImpl implements UserService {
             userRepository.changeRole(userChangeRoleDto.getUserLogin(), userChangeRoleDto.getRoleId());
             return true;
         } else {
-            log.log(ERROR, "Не верно введён логин или пароль администратора");
-            throw new ServiceBadRequestParameterException("Не верно введён логин или пароль администратора");
+            log.log(ERROR, "The administrator login or password was entered incorrectly.");
+            throw new ServiceBadRequestParameterException("service.exception.change_role.incorrect_admin_password_or_login");
         }
     }
 }
