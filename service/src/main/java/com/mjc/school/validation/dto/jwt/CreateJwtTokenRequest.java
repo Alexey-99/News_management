@@ -17,14 +17,14 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateJwtTokenRequest {
-    @NotNull(message = "")
-    @NotBlank(message = "")
-    @Size(min = 3, message = "")
-    @IsExistsUserByLogin(message = "")
+    @NotNull(message = "create_jwt_token_request.user_name.not_valid.null")
+    @NotBlank(message = "create_jwt_token_request.user_name.not_valid.is_blank")
+    @Size(min = 3, message = "create_jwt_token_request.user_name.not_valid.size")
+    @IsExistsUserByLogin(message = "create_jwt_token_request.user_name.not_valid.user_not_exists_by_login")
     private String userName;
 
-    @NotNull(message = "")
-    @NotBlank(message = "")
-    @Size(min = 3, message = "")
+    @NotNull(message = "create_jwt_token_request.password.not_valid.null")
+    @NotBlank(message = "create_jwt_token_request.password.not_valid.is_blank")
+    @Size(min = 5, message = "create_jwt_token_request.password.not_valid.size")
     private String password;
 }
