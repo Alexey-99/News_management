@@ -1,6 +1,6 @@
 package com.mjc.school.converter.impl;
 
-import com.mjc.school.model.User;
+import com.mjc.school.model.user.User;
 import com.mjc.school.repository.RoleRepository;
 import com.mjc.school.validation.dto.RegistrationUserDto;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.function.Function;
 
-import static com.mjc.school.model.User.UserRole.ROLE_USER;
+import static com.mjc.school.model.user.User.UserRole.ROLE_USER;
 
 @RequiredArgsConstructor
 @Component

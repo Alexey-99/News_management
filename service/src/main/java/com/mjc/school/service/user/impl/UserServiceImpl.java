@@ -2,7 +2,7 @@ package com.mjc.school.service.user.impl;
 
 import com.mjc.school.converter.impl.UserConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.model.User;
+import com.mjc.school.model.user.User;
 import com.mjc.school.repository.UserRepository;
 import com.mjc.school.service.user.UserService;
 import com.mjc.school.validation.dto.RegistrationUserDto;

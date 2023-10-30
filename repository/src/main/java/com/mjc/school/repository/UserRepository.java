@@ -1,6 +1,6 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.model.User;
+import com.mjc.school.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

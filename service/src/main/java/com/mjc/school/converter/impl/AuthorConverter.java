@@ -1,7 +1,7 @@
 package com.mjc.school.converter.impl;
 
 import com.mjc.school.converter.Converter;
-import com.mjc.school.model.Author;
+import com.mjc.school.model.author.Author;
 import com.mjc.school.validation.dto.AuthorDTO;
 import org.springframework.stereotype.Component;
 

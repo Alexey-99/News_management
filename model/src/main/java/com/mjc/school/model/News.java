@@ -1,5 +1,6 @@
 package com.mjc.school.model;
 
+import com.mjc.school.model.author.Author;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

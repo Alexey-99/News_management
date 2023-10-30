@@ -1,7 +1,7 @@
 package com.mjc.school.service.user.impl;
 
 import com.mjc.school.converter.impl.UserConverter;
-import com.mjc.school.model.User;
+import com.mjc.school.model.user.User;
 import com.mjc.school.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

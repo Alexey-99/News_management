@@ -1,5 +1,6 @@
-package com.mjc.school.model;
+package com.mjc.school.model.author;
 
+import com.mjc.school.model.News;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
