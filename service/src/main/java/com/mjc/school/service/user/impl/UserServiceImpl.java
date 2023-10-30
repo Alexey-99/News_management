@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             return true;
         } else {
-            throw new ServiceBadRequestParameterException("Пароли не совпадают");
+            throw new ServiceBadRequestParameterException("service.exception.registration.passwords_not_match");
         }
     }
 
