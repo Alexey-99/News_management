@@ -39,14 +39,12 @@ public class WebSecurityConfig {
                     authorizeRequests.antMatchers(HttpMethod.GET, "/api/v2/author/*",
                                     "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*")
                             .permitAll();
-                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/auth/token", "/api/v2/auth/registration")
+                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/auth/token", "/api/v2/user/registration")
                             .permitAll();
 
                     authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news")
-                            .hasRole(USER_ROLE_NAME);
+                            .hasAnyRole(ADMIN_ROLE_NAME, USER_ROLE_NAME);
 
-                    authorizeRequests.antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news")
-                            .hasRole(ADMIN_ROLE_NAME);
                     authorizeRequests.anyRequest().hasRole(ADMIN_ROLE_NAME);
                 })
                 .sessionManagement(sessionManagement ->

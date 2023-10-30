@@ -1,4 +1,4 @@
-package com.mjc.school.converter.impl;
+package com.mjc.school.converter;
 
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.RoleRepository;
@@ -15,7 +15,7 @@ import static com.mjc.school.model.user.User.UserRole.ROLE_USER;
 
 @RequiredArgsConstructor
 @Component
-public class UserConverter implements Function<User, CustomUserDetails>/*, Converter<UserDto, User>*/ {
+public class UserConverter implements Function<User, CustomUserDetails> {
     private final RoleRepository roleRepository;
 
     @Override
@@ -30,7 +30,6 @@ public class UserConverter implements Function<User, CustomUserDetails>/*, Conve
                 .build();
     }
 
-    //@Override
     public User fromDTO(RegistrationUserDto entityDTO) {
         return User.builder()
                 .login(entityDTO.getLogin())
@@ -39,13 +38,4 @@ public class UserConverter implements Function<User, CustomUserDetails>/*, Conve
                 .role(roleRepository.getByName(ROLE_USER.name()))
                 .build();
     }
-
-    //@Override
-//    public UserDto toDTO(User entity) {
-//        return UserDto.builder()
-//                .login(entity.getLogin())
-//                .password(entity.getPassword())
-//                .email(entity.getEmail())
-//                .build();
-//    }
 }

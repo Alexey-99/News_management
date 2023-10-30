@@ -1,6 +1,6 @@
 package com.mjc.school.service.auth.impl;
 
-import com.mjc.school.exception.UnauthorizedException;
+import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.service.auth.AuthService;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import com.mjc.school.util.JwtTokenUtil;
@@ -20,11 +20,13 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtil jwtTokenUtil;
 
     @Override
-    public String createAuthToken(JwtRequest authRequest) throws UnauthorizedException {
+    public String createAuthToken(JwtRequest authRequest) throws ServiceBadRequestParameterException {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    authRequest.getUserName(),
+                    authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new UnauthorizedException("Не корректный логин или пароль");
+            throw new ServiceBadRequestParameterException("Не корректный логин или пароль");
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUserName());
         return jwtTokenUtil.generateToken(userDetails);
