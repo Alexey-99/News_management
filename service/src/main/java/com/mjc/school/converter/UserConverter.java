@@ -2,7 +2,7 @@ package com.mjc.school.converter;
 
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.RoleRepository;
-import com.mjc.school.validation.dto.RegistrationUserDto;
+import com.mjc.school.validation.dto.user.RegistrationUserDto;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

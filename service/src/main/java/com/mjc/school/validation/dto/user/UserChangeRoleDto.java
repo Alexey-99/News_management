@@ -1,5 +1,6 @@
-package com.mjc.school.validation.dto;
+package com.mjc.school.validation.dto.user;
 
+import com.mjc.school.validation.annotation.IsExistsRoleById;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Builder
@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Validated
-public class RegistrationUserDto {
+public class UserChangeRoleDto {
     @NotNull(message = "")
     @NotBlank(message = "")
     @Size(min = 3, message = "")
@@ -24,14 +24,9 @@ public class RegistrationUserDto {
 
     @NotNull(message = "")
     @NotBlank(message = "")
-    @Size(min = 3, message = "")
+    @Size(min = 5, message = "")
     private String password;
 
-    @NotNull(message = "")
-    @NotBlank(message = "")
-    @Size(min = 3, message = "")
-    private String confirmPassword;
-
-    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", message = "")
-    private String email;
+    @IsExistsRoleById(message = "")
+    private long roleId;
 }

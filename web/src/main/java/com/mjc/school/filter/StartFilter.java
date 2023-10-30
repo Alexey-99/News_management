@@ -16,7 +16,8 @@ import java.io.IOException;
 @WebFilter(urlPatterns = "api/*")
 public class StartFilter extends OncePerRequestFilter {
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         log.info("Request URI is: " + request.getRequestURI());
         filterChain.doFilter(request, response);
         log.info("Response Status Code is: " + response.getStatus());

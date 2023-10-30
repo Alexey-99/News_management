@@ -5,7 +5,7 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.UserRepository;
 import com.mjc.school.service.user.UserService;
-import com.mjc.school.validation.dto.RegistrationUserDto;
+import com.mjc.school.validation.dto.user.RegistrationUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;

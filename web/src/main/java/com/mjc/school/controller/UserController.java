@@ -2,12 +2,13 @@ package com.mjc.school.controller;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.service.user.UserService;
-import com.mjc.school.validation.dto.RegistrationUserDto;
+import com.mjc.school.validation.dto.user.RegistrationUserDto;
+import com.mjc.school.validation.dto.user.UserChangeRoleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +29,12 @@ public class UserController {
                                               @RequestBody
                                               RegistrationUserDto registrationUserDto) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(userService.create(registrationUserDto), CREATED);
+    }
+
+    @PatchMapping("/role")
+    public ResponseEntity<Boolean> changeRole(@Valid
+                                              @RequestBody
+                                              UserChangeRoleDto userChangeRoleDto) {
+        return null;
     }
 }

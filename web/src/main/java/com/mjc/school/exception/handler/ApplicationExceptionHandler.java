@@ -5,7 +5,6 @@ import com.mjc.school.config.language.Translator;
 import com.mjc.school.exception.ErrorResponse;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
-import com.mjc.school.exception.UnauthorizedException;
 import com.mjc.school.handler.DateHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -39,17 +37,6 @@ public class ApplicationExceptionHandler {
                 .timestamp(dateHandler.getCurrentDate())
                 .build();
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    public final ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
-        String details = translator.toLocale(ex.getLocalizedMessage());
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .errorCode(UNAUTHORIZED.value())
-                .errorMessage(details)
-                .timestamp(dateHandler.getCurrentDate())
-                .build();
-        return new ResponseEntity<>(errorResponse, UNAUTHORIZED);
     }
 
     @ExceptionHandler(ServiceNoContentException.class)
