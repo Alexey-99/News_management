@@ -14,8 +14,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @TestConfiguration
-@ComponentScan("com.mjc.school")
-@TestPropertySource("classpath:application.properties")
 public class DataBaseConfigTest {
     @Value("${db.url}")
     private String url;

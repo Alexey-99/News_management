@@ -2,6 +2,7 @@ package com.mjc.school.service.tag.impl;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
+import com.mjc.school.model.News;
 import com.mjc.school.model.NewsTag;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.repository.NewsTagRepository;
@@ -33,7 +34,6 @@ import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 @RequiredArgsConstructor
 @Service
 public class TagServiceImpl implements TagService {
-
     private final TagRepository tagRepository;
     private final NewsRepository newsRepository;
     private final NewsTagRepository newsTagRepository;
@@ -57,12 +57,16 @@ public class TagServiceImpl implements TagService {
     @Override
     public boolean addToNews(long tagId, long newsId) throws ServiceBadRequestParameterException {
         NewsTag newsTag = NewsTag.builder()
-                .tag(tagRepository.findById(tagId).orElseThrow(() ->
-                        new ServiceBadRequestParameterException("service.exception.not_found_tag_by_id")))
-                .news(newsRepository.findById(newsId).orElseThrow(() ->
-                        new ServiceBadRequestParameterException("service.exception.not_found_news_by_id")))
+                .tag(tagRepository.findById(tagId).orElseThrow(() -> {
+                    log.log(WARN, "Not found tag by ID: " + tagId);
+                    return new ServiceBadRequestParameterException("service.exception.not_found_tag_by_id");
+                }))
+                .news(newsRepository.findById(newsId).orElseThrow(() -> {
+                    log.log(WARN, "Not found news by ID: " + newsId);
+                    return new ServiceBadRequestParameterException("service.exception.not_found_news_by_id");
+                }))
                 .build();
-        if (isNotExistsTagInNews(tagId, newsId)) {
+        if (isNotExistsTagInNews(newsTag.getTag(), newsTag.getNews())) {
             newsTagRepository.save(newsTag);
             return true;
         } else {
@@ -74,18 +78,19 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public boolean deleteFromNews(long tagId, long newsId) throws ServiceBadRequestParameterException {
-        if (!tagRepository.existsById(tagId)) {
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> {
             log.log(WARN, "Not found tag by ID: " + tagId);
-            throw new ServiceBadRequestParameterException("service.exception.not_found_tag_by_id");
-        } else if (!newsRepository.existsById(newsId)) {
+            return new ServiceBadRequestParameterException("service.exception.not_found_tag_by_id");
+        });
+        News news = newsRepository.findById(newsId).orElseThrow(() -> {
             log.log(WARN, "Not found news by ID: " + newsId);
-            throw new ServiceBadRequestParameterException("service.exception.not_found_news_by_id");
-        } else {
-            if (!isNotExistsTagInNews(tagId, newsId)) {
-                tagRepository.deleteFromNews(tagId, newsId);
-            }
-            return true;
+            return new ServiceBadRequestParameterException("service.exception.not_found_news_by_id");
+        });
+        if (!isNotExistsTagInNews(tag, news)) {
+            tagRepository.deleteFromNews(tagId, newsId);
         }
+        return true;
+
     }
 
     @Transactional
@@ -218,11 +223,11 @@ public class TagServiceImpl implements TagService {
         return tagPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 
-    private boolean isNotExistsTagInNews(long tagId, long newsId) {
-        return newsRepository.getById(newsId)
+    private boolean isNotExistsTagInNews(Tag tag, News news) {
+        return news
                 .getTags()
                 .stream()
-                .filter(newsTag -> newsTag.getTag().getId() == tagId)
+                .filter(newsTag -> newsTag.getTag().getId() == tag.getId())
                 .toList()
                 .isEmpty();
     }

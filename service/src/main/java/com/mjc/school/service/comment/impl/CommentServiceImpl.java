@@ -40,9 +40,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public boolean create(CommentDTO commentDTO) {
+    public boolean create(CommentDTO commentDTO) throws ServiceBadRequestParameterException {
         Comment comment = commentConverter.fromDTO(commentDTO);
-        comment.setNews(newsRepository.getById(comment.getNewsId()));
+        comment.setNews(newsRepository.findById(comment.getNewsId()).orElseThrow(() -> {
+            log.log(WARN, "Not found news by ID: " + commentDTO.getNewsId());
+            return new ServiceBadRequestParameterException("service.exception.not_exists_news_by_id");
+        }));
         comment.setCreated(dateHandler.getCurrentDate());
         comment.setModified(dateHandler.getCurrentDate());
         commentRepository.save(comment);
@@ -57,13 +60,14 @@ public class CommentServiceImpl implements CommentService {
             return new ServiceBadRequestParameterException("service.exception.not_found_comment_by_id");
         });
         comment.setContent(commentDTO.getContent());
-        comment.setNews(newsRepository.getById(commentDTO.getNewsId()));
+        comment.setNews(newsRepository.findById(commentDTO.getNewsId()).orElseThrow(() -> {
+            log.log(WARN, "Not found news by ID: " + commentDTO.getNewsId());
+            return new ServiceBadRequestParameterException("service.exception.not_exists_news_by_id");
+        }));
         comment.setModified(dateHandler.getCurrentDate());
         commentRepository.update(comment.getContent(), comment.getNews().getId(),
                 comment.getModified(), comment.getId());
         return commentConverter.toDTO(comment);
-
-
     }
 
     @Transactional
@@ -148,8 +152,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage,
-                                                long countAllElements, int page, int size) {
+    public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size) {
         return commentPagination.getPagination(elementsOnPage, countAllElements, page, size);
     }
 }
