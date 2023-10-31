@@ -2,7 +2,9 @@ package com.mjc.school.filter;
 
 import com.mjc.school.util.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -39,9 +41,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 userName = jwtTokenUtil.getUserName(jwt);
             } catch (ExpiredJwtException ex) {
-                log.log(DEBUG, "Token lifetime has expired");
+                log.log(DEBUG, "Token lifetime has expired. Message: " + ex.getMessage());
             } catch (SignatureException ex) {
-                log.log(DEBUG, "The signature is not correct");
+                log.log(DEBUG, "The signature is not correct. Message: " + ex.getMessage());
+            } catch (UnsupportedJwtException unsEx) {
+                log.log(DEBUG, "Unsupported jwt. Message: " + unsEx.getMessage());
+            } catch (MalformedJwtException ex) {
+                log.log(DEBUG, "Malformed jwt. Message: " + ex.getMessage());
+            } catch (Exception ex) {
+                log.log(DEBUG, "Invalid token. Message: " + ex.getMessage());
             }
         }
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {

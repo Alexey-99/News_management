@@ -14,11 +14,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
+@EnableAuthorizationServer
+@EnableResourceServer
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
@@ -32,9 +36,14 @@ public class WebSecurityConfig {
         return http
                 .csrf().and().cors().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/v2/author/*", "/api/v2/comment/*", "/api/v2/news/*", "/api/v2/tag/*").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v2/auth/token", "/api/v2/user/registration").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v2/comment", "/api/v2/news").hasAnyRole(ADMIN_ROLE_NAME, USER_ROLE_NAME)
+                .antMatchers(HttpMethod.GET, "/api/v2/author/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v2/comment/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v2/news/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v2/tag/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v2/auth/token").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v2/user/registration").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v2/comment").hasAnyRole(USER_ROLE_NAME, ADMIN_ROLE_NAME)
+                .antMatchers(HttpMethod.POST, "/api/v2/news").hasAnyRole(USER_ROLE_NAME, ADMIN_ROLE_NAME)
                 .anyRequest().hasRole(ADMIN_ROLE_NAME)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
