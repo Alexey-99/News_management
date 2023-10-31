@@ -8,7 +8,8 @@ import java.util.Locale;
 @AllArgsConstructor
 @Getter
 public enum LanguageLocale {
-    RU(new Locale("ru")), EN(new Locale("en"));
+    RU(new Locale("ru")),
+    EN(new Locale("en"));
 
     private final Locale locale;
 

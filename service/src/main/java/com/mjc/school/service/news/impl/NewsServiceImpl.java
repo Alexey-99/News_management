@@ -95,7 +95,10 @@ public class NewsServiceImpl implements NewsService {
         });
         if (news.getTitle().equals(newsDTO.getTitle())) {
             news.setContent(newsDTO.getContent());
-            news.setAuthor(authorRepository.getById(newsDTO.getAuthorId()));
+            news.setAuthor(authorRepository.findById(newsDTO.getAuthorId()).orElseThrow(() -> {
+                log.log(WARN, "Not found author by ID: " + newsDTO.getAuthorId());
+                return new ServiceBadRequestParameterException("service.exception.not_exists_author_by_id");
+            }));
             news.setModified(dateHandler.getCurrentDate());
             newsRepository.update(news.getTitle(), news.getContent(),
                     news.getAuthor().getId(), news.getModified(), news.getId());
@@ -104,7 +107,10 @@ public class NewsServiceImpl implements NewsService {
             if (newsRepository.notExistsByTitle(newsDTO.getTitle())) {
                 news.setTitle(newsDTO.getTitle());
                 news.setContent(newsDTO.getContent());
-                news.setAuthor(authorRepository.getById(newsDTO.getAuthorId()));
+                news.setAuthor(authorRepository.findById(newsDTO.getAuthorId()).orElseThrow(() -> {
+                    log.log(WARN, "Not found author by ID: " + newsDTO.getAuthorId());
+                    return new ServiceBadRequestParameterException("service.exception.not_exists_author_by_id");
+                }));
                 news.setModified(dateHandler.getCurrentDate());
                 newsRepository.update(news.getTitle(), news.getContent(),
                         news.getAuthor().getId(), news.getModified(), news.getId());
