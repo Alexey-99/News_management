@@ -41,15 +41,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 userName = jwtTokenUtil.getUserName(jwt);
             } catch (ExpiredJwtException ex) {
-                log.log(DEBUG, "Token lifetime has expired. Message: " + ex.getMessage());
+                log.log(DEBUG, "Token lifetime has expired. Message: ".concat(ex.getMessage()));
             } catch (SignatureException ex) {
-                log.log(DEBUG, "The signature is not correct. Message: " + ex.getMessage());
-            } catch (UnsupportedJwtException unsEx) {
-                log.log(DEBUG, "Unsupported jwt. Message: " + unsEx.getMessage());
+                log.log(DEBUG, "The signature is not correct. Message: ".concat(ex.getMessage()));
+            } catch (UnsupportedJwtException ex) {
+                log.log(DEBUG, "Unsupported jwt. Message: ".concat(ex.getMessage()));
             } catch (MalformedJwtException ex) {
-                log.log(DEBUG, "Malformed jwt. Message: " + ex.getMessage());
+                log.log(DEBUG, "Malformed jwt. Message: ".concat(ex.getMessage()));
             } catch (Exception ex) {
-                log.log(DEBUG, "Invalid token. Message: " + ex.getMessage());
+                log.log(DEBUG, "Invalid token. Message: ".concat(ex.getMessage()));
             }
         }
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
