@@ -1,7 +1,7 @@
 package com.mjc.school.config.security;
 
 import com.mjc.school.filter.JwtRequestFilter;
-import com.mjc.school.oauth.CustomSuccessHandler;
+import com.mjc.school.oauth.CustomOAuth2AuthenticationSuccessHandler;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,7 +27,7 @@ public class WebSecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private static final String USER_ROLE_NAME = "USER";
     private static final String ADMIN_ROLE_NAME = "ADMIN";
-    private final CustomSuccessHandler customSuccessHandler;
+    private final CustomOAuth2AuthenticationSuccessHandler customSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
