@@ -46,7 +46,7 @@ public class CommentController {
             Create a comment.
             Response: true - if successful created comment, if didn't create comment - false.
             """, response = Boolean.class)
-    @PostMapping
+    @PostMapping //TODO user, admin
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
@@ -64,7 +64,7 @@ public class CommentController {
             Update a comment.
             Response: true - if successful updated comment, if didn't update comment - false.
             """, response = Boolean.class)
-    @PutMapping("/{id}")
+    @PutMapping("/{id}")//TODO  admin
     public ResponseEntity<CommentDTO> update(@PathVariable
                                              @Min(value = 1,
                                                      message = "comment_controller.path_variable.id.in_valid.min")
@@ -87,7 +87,7 @@ public class CommentController {
             Delete a comment by id.
             Response: true - if successful deleted comment, if didn't delete comment - false.
             """, response = Boolean.class)
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") //TODO  admin
     public ResponseEntity<Boolean> deleteById(@PathVariable
                                               @Min(value = 1,
                                                       message = "comment_controller.path_variable.id.in_valid.min")
@@ -105,7 +105,7 @@ public class CommentController {
             Delete a comment by news id.
             Response: true - if successful deleted comment, if didn't delete comment - false.
             """, response = Boolean.class)
-    @DeleteMapping("/news/{newsId}")
+    @DeleteMapping("/news/{newsId}") //TODO  admin
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable
                                                   @Min(value = 1,
                                                           message = "comment_controller.path_variable.id.in_valid.min")
@@ -123,7 +123,7 @@ public class CommentController {
             View all comments.
             Response: pagination of comments.
             """, response = Pagination.class)
-    @GetMapping("/all")
+    @GetMapping("/all")//TODO all
     public ResponseEntity<Pagination<CommentDTO>> findAll(@RequestAttribute(value = "size")
                                                           int size,
                                                           @RequestAttribute(value = "page")
@@ -148,7 +148,7 @@ public class CommentController {
             View comments by news id.
             Response: pagination of comments.
             """, response = Pagination.class)
-    @GetMapping("/news/{newsId}")
+    @GetMapping("/news/{newsId}") //TODO all
     public ResponseEntity<Pagination<CommentDTO>> findByNewsId(@PathVariable
                                                                @Min(value = 1,
                                                                        message = "comment_controller.path_variable.id.in_valid.min")
@@ -176,7 +176,7 @@ public class CommentController {
     @ApiOperation(value = """
             View comment by id.
             """, response = CommentDTO.class)
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") //TODO all
     public ResponseEntity<CommentDTO> findById(@PathVariable
                                                @Min(value = 1,
                                                        message = "comment_controller.path_variable.id.in_valid.min")

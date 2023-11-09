@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 import static org.apache.logging.log4j.Level.DEBUG;
 
@@ -61,6 +62,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                             .toList());
             SecurityContextHolder.getContext().setAuthentication(token);
         }
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
     }
 }

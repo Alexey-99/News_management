@@ -1,12 +1,10 @@
 package com.mjc.school.config.security;
 
 import com.mjc.school.filter.JwtRequestFilter;
-import com.mjc.school.oauth.CustomOAuth2AuthenticationSuccessHandler;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,6 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+
 @Log4j2
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -27,36 +30,30 @@ public class WebSecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private static final String USER_ROLE_NAME = "USER";
     private static final String ADMIN_ROLE_NAME = "ADMIN";
-    private final CustomOAuth2AuthenticationSuccessHandler customSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().and().cors().disable()
-//                .formLogin().loginPage("/login").successHandler(customSuccessHandler)
-//                .and()
-                .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
-                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/v2/author/*").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v2/comment/*").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v2/news/*").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v2/tag/*").authenticated()
-                .antMatchers(HttpMethod.POST, "/api/v2/auth/token").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v2/user/registration").permitAll()
-                .antMatchers(HttpMethod.GET, "/code").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v2/comment").hasAnyRole(USER_ROLE_NAME, ADMIN_ROLE_NAME)
-                .antMatchers(HttpMethod.POST, "/api/v2/news").hasAnyRole(USER_ROLE_NAME, ADMIN_ROLE_NAME)
-                .anyRequest().hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(POST, "/api/v2/comment", "/api/v2/news").authenticated()
+
+                .antMatchers(POST, "/api/v2/tag").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(PUT, "/api/v2/tag/to-news", "/api/v2/tag/{id}",
+                        "/api/v2/news/{id}",
+                        "api/v2/comment/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(PATCH, "/api/v2/user/role").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/tag/from-news", "/api/v2/tag/{id}", "/api/v2/tag/all-news/{id}",
+                        "/api/v2/news/{id}", "/api/v2/news/author/{authorId}", "/api/v2/news/all-tags/{newsId}",
+                        "api/v2/comment/{id}", "api/v2/comment/news/{newsId}").hasRole(ADMIN_ROLE_NAME)
+                .anyRequest().permitAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
-//                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+//                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // It doesn't work with oAuth2
                 .and()
                 .oauth2Login()
-//                .loginPage("/login")
-                .successHandler(customSuccessHandler)
                 .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
