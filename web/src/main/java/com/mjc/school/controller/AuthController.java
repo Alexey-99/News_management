@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -18,10 +19,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 @Validated
 @RequiredArgsConstructor
 @RestController
+@RequestMapping(value = "/api/v2/auth")
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/api/v2/auth/token")
+    @PostMapping("/token")// TODO all
     public ResponseEntity<JwtTokenResponse> createAuthToken(@Valid
                                                             @RequestBody
                                                             CreateJwtTokenRequest authRequest) throws ServiceBadRequestParameterException {
