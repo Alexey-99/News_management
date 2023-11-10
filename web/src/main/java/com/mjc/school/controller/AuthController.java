@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/token")// TODO all
+    @PostMapping("/token")
     public ResponseEntity<JwtTokenResponse> createAuthToken(@Valid
                                                             @RequestBody
                                                             CreateJwtTokenRequest authRequest) throws ServiceBadRequestParameterException {

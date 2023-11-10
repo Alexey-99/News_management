@@ -28,7 +28,6 @@ import static org.springframework.http.HttpMethod.PUT;
 public class WebSecurityConfig {
     private final CustomUserDetailsServiceImpl customUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
-    private static final String USER_ROLE_NAME = "USER";
     private static final String ADMIN_ROLE_NAME = "ADMIN";
 
     @Bean

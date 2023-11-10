@@ -25,14 +25,14 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/registration") //TODO all
+    @PostMapping("/registration")
     public ResponseEntity<Boolean> createUser(@Valid
                                               @RequestBody
                                               RegistrationUserDto registrationUserDto) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(userService.create(registrationUserDto), CREATED);
     }
 
-    @PatchMapping("/role") //TODO amdin
+    @PatchMapping("/role")
     public ResponseEntity<Boolean> changeRole(@Valid
                                               @RequestBody
                                               UserChangeRoleDto userChangeRoleDto) throws ServiceBadRequestParameterException {

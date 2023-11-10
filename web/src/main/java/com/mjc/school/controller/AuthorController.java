@@ -50,7 +50,7 @@ public class AuthorController {
             Create a author.
             Response: true - if successful created author, if didn't create author - false.
             """, response = Boolean.class)
-    @PostMapping// TODO admin
+    @PostMapping
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
@@ -68,7 +68,7 @@ public class AuthorController {
             Delete a author by id.
             Response: true - if successful deleted author, if didn't delete author - false.
             """, response = Boolean.class)
-    @DeleteMapping("/{id}") // TODO admin
+    @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable
                                               @Min(value = 1,
                                                       message = "author_controller.path_variable.id.in_valid.min")
@@ -86,7 +86,7 @@ public class AuthorController {
             Update a author by id.
             Response: true - if successful updated author, if didn't update author - false.
             """, response = Boolean.class)
-    @PutMapping("/{id}") // TODO admin
+    @PutMapping("/{id}")
     public ResponseEntity<AuthorDTO> update(@PathVariable
                                             @Min(value = 1,
                                                     message = "author_controller.path_variable.id.in_valid.min")
@@ -109,7 +109,7 @@ public class AuthorController {
             View all authors.
             Response: pagination with authors.
             """, response = Pagination.class)
-    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE) //TODO all
+    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Pagination<AuthorDTO>> findAll(@RequestAttribute(value = "size")
                                                          int size,
                                                          @RequestAttribute(value = "page")
@@ -132,7 +132,7 @@ public class AuthorController {
     @ApiOperation(value = """
             View author by id
             """, response = AuthorDTO.class)
-    @GetMapping("/{id}") //TODO all
+    @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> findById(@PathVariable
                                               @Min(value = 1,
                                                       message = "author_controller.path_variable.id.in_valid.min")
@@ -150,7 +150,7 @@ public class AuthorController {
             View authors by part of name.
             Response: pagination with authors.
             """, response = Pagination.class)
-    @GetMapping("/part-name/{partOfName}") //TODO all
+    @GetMapping("/part-name/{partOfName}")
     public ResponseEntity<Pagination<AuthorDTO>> findByPartOfName(@PathVariable
                                                                   @NotNull(message = "author_controller.path_variable.part_of_tag_name.in_valid.null")
                                                                   String partOfName,
@@ -177,7 +177,7 @@ public class AuthorController {
     @ApiOperation(value = """
             View author by news id.
             """, response = AuthorDTO.class)
-    @GetMapping("/news/{newsId}") //TODO all
+    @GetMapping("/news/{newsId}")
     public ResponseEntity<AuthorDTO> findByNewsId(@PathVariable
                                                   @Min(value = 1,
                                                           message = "author_controller.path_variable.id.in_valid.min")
@@ -195,7 +195,7 @@ public class AuthorController {
             View all authors with amount of written news.
             Response: objects with author id and amount written news, with pagination.
             """, response = Pagination.class)
-    @GetMapping("/amount-news") //TODO all
+    @GetMapping("/amount-news")
     public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>>
     selectAllAuthorsIdWithAmountOfWrittenNews(@RequestAttribute(value = "size")
                                               int size,

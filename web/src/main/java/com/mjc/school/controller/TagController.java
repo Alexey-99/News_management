@@ -46,7 +46,7 @@ public class TagController {
             Create a tag.
             Response: true - if successful created tag, if didn't create tag - false.
             """, response = Boolean.class)
-    @PostMapping //TODO amdin
+    @PostMapping
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
@@ -64,7 +64,7 @@ public class TagController {
             Add a tag to news.
             Response: true - if successful added a tag to news, if didn't add a tag to news - false.
             """, response = Boolean.class)
-    @PutMapping("/to-news") //TODO amdin
+    @PutMapping("/to-news")
     public ResponseEntity<Boolean> addToNews(@RequestParam(value = "tag")
                                              @Min(value = 1,
                                                      message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -86,7 +86,7 @@ public class TagController {
             Delete a tag from news.
             Response: true - if successful deleted a tag from news, if didn't delete a tag from news - false.
             """, response = Boolean.class)
-    @DeleteMapping("/from-news") //TODO amdin
+    @DeleteMapping("/from-news")
     public ResponseEntity<Boolean> deleteFromNews(@RequestParam(value = "tag")
                                                   @Min(value = 1,
                                                           message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -108,7 +108,7 @@ public class TagController {
             Delete a tag by id.
             Response: true - if successful deleted a tag, if didn't delete a tag - false.
             """, response = Boolean.class)
-    @DeleteMapping("/{id}") //TODO amdin
+    @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable
                                               @Min(value = 1,
                                                       message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -126,7 +126,7 @@ public class TagController {
             Delete a tag from all news by tag id.
             Response: true - if successful deleted a tag from all news, if didn't delete a tag from all news - false.
             """, response = Boolean.class)
-    @DeleteMapping("/all-news/{id}") //TODO amdin
+    @DeleteMapping("/all-news/{id}")
     public ResponseEntity<Boolean> deleteFromAllNews(@PathVariable
                                                      @Min(value = 1,
                                                              message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -144,7 +144,7 @@ public class TagController {
             Update a tag by id.
             Response: true - if successful updated a tag, if didn't update a tag - false.
             """, response = Boolean.class)
-    @PutMapping("/{id}") //TODO amdin
+    @PutMapping("/{id}")
     public ResponseEntity<TagDTO> update(@PathVariable
                                          @Min(value = 1,
                                                  message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -167,7 +167,7 @@ public class TagController {
             View all tags.
             Response: pagination of tags.
             """, response = Pagination.class)
-    @GetMapping("/all") //TODO all
+    @GetMapping("/all")
     public ResponseEntity<Pagination<TagDTO>> findAll(@RequestAttribute(value = "size")
                                                       int size,
                                                       @RequestAttribute(value = "page")
@@ -192,7 +192,7 @@ public class TagController {
             View tag by id.
             Response: tags.
             """, response = TagDTO.class)
-    @GetMapping("/{id}") //TODO all
+    @GetMapping("/{id}")
     public ResponseEntity<TagDTO> findById(@PathVariable
                                            @Min(value = 1,
                                                    message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -210,7 +210,7 @@ public class TagController {
             View tag by part of name.
             Response: pagination of tags.
             """, response = Pagination.class)
-    @GetMapping("/part-name/{partOfName}") //TODO all
+    @GetMapping("/part-name/{partOfName}")
     public ResponseEntity<Pagination<TagDTO>> findByPartOfName(@PathVariable
                                                                @NotNull(message = "news_controller.path_variable.part_of_tag_name.in_valid.null")
                                                                String partOfName,
@@ -238,7 +238,7 @@ public class TagController {
             View tag by news id.
             Response: pagination of tags.
             """, response = Pagination.class)
-    @GetMapping("/news/{newsId}") //TODO all
+    @GetMapping("/news/{newsId}")
     public ResponseEntity<Pagination<TagDTO>> findByNewsId(@PathVariable
                                                            @Min(value = 1,
                                                                    message = "tag_controller.request_body.news_id.in_valid.min")

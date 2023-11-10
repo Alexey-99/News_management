@@ -48,7 +48,7 @@ public class NewsController {
             Create a news.
             Response: true - if successful created news, if didn't create news - false.
             """, response = Boolean.class)
-    @PostMapping //TODO user, admin
+    @PostMapping
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
@@ -66,7 +66,7 @@ public class NewsController {
             Delete a news by id.
             Response: true - if successful deleted news, if didn't delete news - false.
             """, response = Boolean.class)
-    @DeleteMapping("/{id}") //TODO admin
+    @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteById(@PathVariable
                                               @Min(value = 1,
                                                       message = "news_controller.path_variable.id.in_valid.min")
@@ -84,7 +84,7 @@ public class NewsController {
             Delete a news by author id.
             Response: true - if successful deleted news, if didn't delete news - false.
             """, response = Boolean.class)
-    @DeleteMapping("/author/{authorId}") //TODO admin
+    @DeleteMapping("/author/{authorId}")
     public ResponseEntity<Boolean> deleteByAuthorId(@PathVariable
                                                     @Min(value = 1,
                                                             message = "news_controller.path_variable.id.in_valid.min")
@@ -102,7 +102,7 @@ public class NewsController {
             Delete all tags from news by news id.
             Response: true - if successful deleted all tags from news, if didn't delete all tags from news - false.
             """, response = Boolean.class)
-    @DeleteMapping("/all-tags/{newsId}") //TODO admin
+    @DeleteMapping("/all-tags/{newsId}")
     public ResponseEntity<NewsDTO> deleteAllTagsFromNewsByNewsId(@PathVariable
                                                                  @Min(value = 1,
                                                                          message = "news_controller.path_variable.id.in_valid.min")
@@ -120,7 +120,7 @@ public class NewsController {
             Update a news.
             Response: true - if successful updated news, if didn't update news - false.
             """, response = Boolean.class)
-    @PutMapping(value = "/{id}") //TODO admin
+    @PutMapping(value = "/{id}")
     public ResponseEntity<NewsDTO> update(@PathVariable
                                           @Min(value = 1,
                                                   message = "news_controller.path_variable.id.in_valid.min")
@@ -143,7 +143,7 @@ public class NewsController {
             View all news.
             Response: pagination of news.
             """, response = Pagination.class)
-    @GetMapping("/all") //TODO all
+    @GetMapping("/all")
     public ResponseEntity<Pagination<NewsDTO>> findAll(@RequestAttribute(value = "size")
                                                        int size,
                                                        @RequestAttribute(value = "page")
@@ -168,7 +168,7 @@ public class NewsController {
             View news by id.
             Response: news.
             """, response = NewsDTO.class)
-    @GetMapping("/{id}") //TODO all
+    @GetMapping("/{id}")
     public ResponseEntity<NewsDTO> findById(@PathVariable
                                             @Min(value = 1,
                                                     message = "news_controller.path_variable.id.in_valid.min")
@@ -186,7 +186,7 @@ public class NewsController {
             View news by tag name.
             Response: pagination of news.
             """, response = Pagination.class)
-    @GetMapping("/tag-name/{tagName}") //TODO all
+    @GetMapping("/tag-name/{tagName}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByTagName(@PathVariable
                                                                  @NotNull(message = "news_controller.path_variable.tag_name.in_valid.null")
                                                                  @NotBlank(message = "news_controller.path_variable.tag_name.in_valid.is_blank")
@@ -217,7 +217,7 @@ public class NewsController {
             View news by tag id.
             Response: pagination of news.
             """, response = Pagination.class)
-    @GetMapping("/tag/{tagId}") //TODO all
+    @GetMapping("/tag/{tagId}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByTagId(@PathVariable
                                                                @Min(value = 1,
                                                                        message = "news_controller.path_variable.id.in_valid.min")
@@ -246,7 +246,7 @@ public class NewsController {
             View news by author name.
             Response: pagination of news.
             """, response = Pagination.class)
-    @GetMapping("/author/part-name/{partOfAuthorName}") //TODO all
+    @GetMapping("/author/part-name/{partOfAuthorName}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByAuthorName(@PathVariable
                                                                     @NotNull(message = "news_controller.path_variable.author_name.in_valid.null")
                                                                     String partOfAuthorName,
@@ -274,7 +274,7 @@ public class NewsController {
             View news by author name.
             Response: pagination of news.
             """, response = Pagination.class)
-    @GetMapping("/author/{authorId}") //TODO all
+    @GetMapping("/author/{authorId}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByAuthorId(@PathVariable
                                                                   @Min(value = 1,
                                                                           message = "news_controller.path_variable.id.in_valid.min")
@@ -303,7 +303,7 @@ public class NewsController {
             View news by part of title.
             Response: pagination of news.
             """, response = Pagination.class)
-    @GetMapping("/part-title/{partOfTitle}") //TODO all
+    @GetMapping("/part-title/{partOfTitle}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByPartOfTitle(@PathVariable
                                                                      @NotNull(message = "news_controller.path_variable.part_of_news_title.in_valid.null")
                                                                      String partOfTitle,
@@ -331,7 +331,7 @@ public class NewsController {
             View news by part of content.
             Response: pagination of news.
             """, response = Pagination.class)
-    @GetMapping("/part-content/{partOfContent}") //TODO all
+    @GetMapping("/part-content/{partOfContent}")
     public ResponseEntity<Pagination<NewsDTO>> findNewsByPartOfContent(@PathVariable
                                                                        @NotNull(message = "news_controller.path_variable.part_of_news_content.in_valid.null")
                                                                        String partOfContent,
