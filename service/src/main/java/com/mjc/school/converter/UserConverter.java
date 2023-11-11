@@ -9,17 +9,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.function.Function;
 
 import static com.mjc.school.model.user.User.UserRole.ROLE_USER;
 
 @RequiredArgsConstructor
 @Component
-public class UserConverter implements Function<User, CustomUserDetails> {
+public class UserConverter {
     private final RoleRepository roleRepository;
 
-    @Override
-    public CustomUserDetails apply(User user) {
+    public CustomUserDetails toUserDetails(User user) {
         return CustomUserDetails.builder()
                 .id(user.getId())
                 .login(user.getLogin())
@@ -30,11 +28,11 @@ public class UserConverter implements Function<User, CustomUserDetails> {
                 .build();
     }
 
-    public User fromDTO(RegistrationUserDto entityDTO) {
+    public User fromRegistrationUserDTO(RegistrationUserDto registrationUserDto) {
         return User.builder()
-                .login(entityDTO.getLogin())
-                .password(entityDTO.getPassword())
-                .email(entityDTO.getEmail())
+                .login(registrationUserDto.getLogin())
+                .password(registrationUserDto.getPassword())
+                .email(registrationUserDto.getEmail())
                 .role(roleRepository.getByName(ROLE_USER.name()))
                 .build();
     }

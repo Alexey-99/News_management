@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean create(RegistrationUserDto userDto) throws ServiceBadRequestParameterException {
         if (userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            User user = userConverter.fromDTO(userDto);
+            User user = userConverter.fromRegistrationUserDTO(userDto);
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             userRepository.save(user);
             return true;
@@ -37,8 +37,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Transactional
     @Override
+    @Transactional
     public boolean changeRole(UserChangeRoleDto userChangeRoleDto) throws ServiceBadRequestParameterException {
         String passwordBD = userRepository.getPasswordByLogin(userChangeRoleDto.getAdminLogin());
         String passwordEnteredEncoded = passwordEncoder.encode(userChangeRoleDto.getAdminPassword());

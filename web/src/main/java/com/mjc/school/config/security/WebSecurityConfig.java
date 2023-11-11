@@ -11,13 +11,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PATCH;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
@@ -36,7 +34,6 @@ public class WebSecurityConfig {
         return http
                 .csrf().and().cors().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v2/tag/all").authenticated()
                 .antMatchers(POST, "/api/v2/comment", "/api/v2/news").authenticated()
                 .antMatchers(POST, "/api/v2/tag", "/api/v2/author").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(PUT, "/api/v2/tag/to-news", "/api/v2/tag/{id}",
@@ -47,9 +44,10 @@ public class WebSecurityConfig {
                         "api/v2/comment/{id}", "api/v2/comment/news/{newsId}",
                         "/api/v2/author/{id}").hasRole(ADMIN_ROLE_NAME)
                 .anyRequest().permitAll()
+                .and()
 //                .and()
 //                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // It doesn't work with oAuth2
-                .and()
+//                .and()
 //                .exceptionHandling()
 //                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // It doesn't work with oAuth2
 //                .and()

@@ -16,10 +16,11 @@ import java.util.Map;
 
 @Component
 public class JwtTokenUtil {
+    private static final String CLAIM_NAME_ROLES = "roles";
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.lifetime}")
+    @Value("${jwt.life-time}")
     private Duration lifeTime;
 
     public String generateToken(UserDetails userDetails) {
@@ -28,7 +29,7 @@ public class JwtTokenUtil {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-        claims.put("roles", rolesList);
+        claims.put(CLAIM_NAME_ROLES, rolesList);
 
         Date issuedDate = new Date();
         Date expiredDate = new Date(issuedDate.getTime() + lifeTime.toMillis());
@@ -46,7 +47,7 @@ public class JwtTokenUtil {
     }
 
     public List<String> getRoles(String token) {
-        return getAllClaimsFromToken(token).get("roles", List.class);
+        return getAllClaimsFromToken(token).get(CLAIM_NAME_ROLES, List.class);
     }
 
     private Claims getAllClaimsFromToken(String token) {

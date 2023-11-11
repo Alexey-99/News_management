@@ -27,6 +27,6 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
             log.log(WARN, "Not found user with login " + login);
             return new UsernameNotFoundException("service.exception.user_not_exists");
         });
-        return userConverter.apply(user);
+        return userConverter.toUserDetails(user);
     }
 }
