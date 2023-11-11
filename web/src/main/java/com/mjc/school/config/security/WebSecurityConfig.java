@@ -46,7 +46,7 @@ public class WebSecurityConfig {
                 .anyRequest().permitAll()
                 .and()
 //                .and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // It doesn't work with oAuth2
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // SessionCreationPolicy.STATELESS doesn't work with oAuth2
 //                .and()
 //                .exceptionHandling()
 //                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // It doesn't work with oAuth2
