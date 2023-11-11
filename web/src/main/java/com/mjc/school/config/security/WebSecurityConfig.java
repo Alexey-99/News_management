@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PATCH;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
@@ -24,7 +25,7 @@ import static org.springframework.http.HttpMethod.PUT;
 @Log4j2
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
     private final CustomUserDetailsServiceImpl customUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
@@ -35,6 +36,7 @@ public class WebSecurityConfig {
         return http
                 .csrf().and().cors().disable()
                 .authorizeRequests()
+                .antMatchers("/api/v2/tag/all").authenticated()
                 .antMatchers(POST, "/api/v2/comment", "/api/v2/news").authenticated()
                 .antMatchers(POST, "/api/v2/tag", "/api/v2/author").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(PUT, "/api/v2/tag/to-news", "/api/v2/tag/{id}",
@@ -45,12 +47,12 @@ public class WebSecurityConfig {
                         "api/v2/comment/{id}", "api/v2/comment/news/{newsId}",
                         "/api/v2/author/{id}").hasRole(ADMIN_ROLE_NAME)
                 .anyRequest().permitAll()
+//                .and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // It doesn't work with oAuth2
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
+//                .exceptionHandling()
 //                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // It doesn't work with oAuth2
-                .and()
+//                .and()
                 .oauth2Login()
                 .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
