@@ -1,10 +1,8 @@
 package com.mjc.school.converter;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@RequiredArgsConstructor
 class UserConverterTest {
     @Autowired
     private UserConverter userConverter;

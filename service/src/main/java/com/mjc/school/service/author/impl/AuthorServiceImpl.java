@@ -1,11 +1,9 @@
 package com.mjc.school.service.author.impl;
 
 import com.mjc.school.converter.impl.AuthorConverter;
-import com.mjc.school.converter.impl.AuthorIdWithAmountOfWrittenNewsConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
-import com.mjc.school.model.author.Author;
-import com.mjc.school.model.author.AuthorIdWithAmountOfWrittenNews;
+import com.mjc.school.model.Author;
 import com.mjc.school.service.author.impl.sort.AuthorSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.service.pagination.PaginationService;
@@ -35,7 +33,6 @@ import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorConverter authorConverter;
-    private final AuthorIdWithAmountOfWrittenNewsConverter authorIdWithAmountOfWrittenNewsConverter;
     private final PaginationService<AuthorDTO> authorPagination;
     private final PaginationService<AuthorIdWithAmountOfWrittenNewsDTO> amountOfWrittenNewsDTOPagination;
 
@@ -171,12 +168,11 @@ public class AuthorServiceImpl implements AuthorService {
         }
         if (!authorList.isEmpty()) {
             return authorList.stream()
-                    .map(author -> AuthorIdWithAmountOfWrittenNews.builder()
+                    .map(author -> AuthorIdWithAmountOfWrittenNewsDTO.builder()
                             .authorId(author.getId())
                             .amountOfWrittenNews(author.getNews() != null
                                     ? author.getNews().size() : 0)
                             .build())
-                    .map(authorIdWithAmountOfWrittenNewsConverter::toDTO)
                     .toList();
         } else {
             log.log(WARN, "Not found authors");

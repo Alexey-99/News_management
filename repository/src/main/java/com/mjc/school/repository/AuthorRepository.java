@@ -1,6 +1,6 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.model.author.Author;
+import com.mjc.school.model.Author;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
