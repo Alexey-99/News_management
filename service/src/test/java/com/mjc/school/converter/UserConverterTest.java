@@ -64,10 +64,7 @@ class UserConverterTest {
                 .build();
 
         when(roleRepository.getByName(ROLE_USER.name()))
-                .thenReturn(Role.builder()
-                        .id(1)
-                        .role(ROLE_USER)
-                        .build());
+                .thenReturn(Role.builder().id(1).role(ROLE_USER).build());
 
         userActual = userConverter.fromRegistrationUserDTO(registrationUserDtoTesting);
         assertEquals(user, userActual);
