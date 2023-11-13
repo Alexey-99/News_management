@@ -17,8 +17,7 @@ public class TagConverter implements Converter<TagDTO, Tag> {
 
     @Override
     public TagDTO toDTO(Tag tag) {
-        return TagDTO
-                .builder()
+        return TagDTO.builder()
                 .id(tag.getId())
                 .name(tag.getName())
                 .countNews(tag.getNews() != null

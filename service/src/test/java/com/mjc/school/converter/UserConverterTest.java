@@ -33,17 +33,8 @@ class UserConverterTest {
 
     @Test
     void toUserDetails() {
-        user = User.builder()
-                .id(1)
-                .login("login_test")
-                .password("password_test")
-                .email("email_test@gmail.com")
-                .role(Role.builder()
-                        .id(1)
-                        .role(ROLE_USER)
-                        .build())
-                .build();
-
+        user = new User(1, "login_test", "password_test", "email_test@gmail.com",
+                new Role(1, ROLE_USER));
         customUserDetailsExpected = CustomUserDetails.builder()
                 .id(user.getId())
                 .login(user.getLogin())
@@ -60,13 +51,8 @@ class UserConverterTest {
 
     @Test
     void fromRegistrationUserDTO() {
-        registrationUserDtoTesting = RegistrationUserDto.builder()
-                .login("login_test")
-                .password("password_test")
-                .confirmPassword("password_test")
-                .email("email_test@gmail.com")
-                .build();
-
+        registrationUserDtoTesting = new RegistrationUserDto("login_test", "password_test",
+                "password_test", "email_test@gmail.com");
         user = User.builder()
                 .login("login_test")
                 .password("password_test")
