@@ -1,58 +1,101 @@
 package com.mjc.school.converter;
 
-import com.mjc.school.service.tag.TagService;
-import com.mjc.school.validation.dto.TagDTO;
+import com.mjc.school.model.user.Role;
+import com.mjc.school.model.user.User;
+import com.mjc.school.repository.RoleRepository;
+import com.mjc.school.validation.dto.security.CustomUserDetails;
+import com.mjc.school.validation.dto.user.RegistrationUserDto;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.List;
+import java.util.Collections;
 
+import static com.mjc.school.model.user.User.UserRole.ROLE_ADMIN;
+import static com.mjc.school.model.user.User.UserRole.ROLE_USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@ContextConfiguration
-@Testcontainers
-@Profile(value = "test")
+@ExtendWith(MockitoExtension.class)
 class UserConverterTest {
-    @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>
-            ("postgres:13")
-            .withDatabaseName("news_management_test")
-            .withUsername("root")
-            .withPassword("8201499Al")
-            .withInitScript("data.sql");;
-
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of(
-                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
-            ).applyTo(configurableApplicationContext.getEnvironment());
-        }
-    }
-
-    @Autowired
-    private TagService tagService;
-    @Autowired
+    @InjectMocks
     private UserConverter userConverter;
+    @Mock
+    private RoleRepository roleRepository;
+    private static User user;
+    private static User userActual;
+    private static CustomUserDetails customUserDetailsExpected;
+    private static CustomUserDetails customUserDetailsActual;
+    private static RegistrationUserDto registrationUserDtoTesting;
 
     @Test
     void toUserDetails() {
-        List<TagDTO> tagList = tagService.findAll();
+        user = User.builder()
+                .id(1)
+                .login("login_test")
+                .password("password_test")
+                .email("email_test@gmail.com")
+                .role(Role.builder()
+                        .id(1)
+                        .role(ROLE_USER)
+                        .build())
+                .build();
+
+        customUserDetailsExpected = CustomUserDetails.builder()
+                .id(user.getId())
+                .login(user.getLogin())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .grantedAuthorities(Collections.singletonList(
+                        new SimpleGrantedAuthority(user.getRole().getRole().name())))
+                .build();
+
+        customUserDetailsActual = userConverter.toUserDetails(user);
+        assertEquals(customUserDetailsExpected, customUserDetailsActual);
 
     }
 
     @Test
     void fromRegistrationUserDTO() {
+        registrationUserDtoTesting = RegistrationUserDto.builder()
+                .login("login_test")
+                .password("password_test")
+                .confirmPassword("password_test")
+                .email("email_test@gmail.com")
+                .build();
+
+        user = User.builder()
+                .login("login_test")
+                .password("password_test")
+                .email("email_test@gmail.com")
+                .role(Role.builder()
+                        .id(1)
+                        .role(ROLE_USER)
+                        .build())
+                .build();
+
+        when(roleRepository.getByName(ROLE_USER.name()))
+                .thenReturn(Role.builder()
+                        .id(1)
+                        .role(ROLE_USER)
+                        .build());
+
+        userActual = userConverter.fromRegistrationUserDTO(registrationUserDtoTesting);
+        assertEquals(user, userActual);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        customUserDetailsActual = null;
+        customUserDetailsExpected = null;
+        user = null;
+        userActual = null;
+        registrationUserDtoTesting = null;
     }
 }
