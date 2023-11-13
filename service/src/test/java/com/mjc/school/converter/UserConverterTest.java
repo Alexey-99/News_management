@@ -15,11 +15,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
 
-import static com.mjc.school.model.user.User.UserRole.ROLE_ADMIN;
 import static com.mjc.school.model.user.User.UserRole.ROLE_USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
