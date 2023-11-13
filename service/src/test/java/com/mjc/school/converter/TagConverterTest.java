@@ -1,13 +1,21 @@
 package com.mjc.school.converter;
 
 import com.mjc.school.converter.impl.TagConverter;
+import com.mjc.school.model.News;
+import com.mjc.school.model.NewsTag;
 import com.mjc.school.model.Tag;
 import com.mjc.school.validation.dto.TagDTO;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,8 +41,78 @@ class TagConverterTest {
         assertEquals(tagExpected, tagActual);
     }
 
-    @Test
-    void toDTO() {
+    @ParameterizedTest
+    @MethodSource(value = "providerTagParams")
+    void toDTO(Tag tag, TagDTO tagDTOExpected) {
+        TagDTO tagDTOActual = tagConverter.toDTO(tag);
+        assertEquals(tagDTOExpected, tagDTOActual);
+    }
+
+    static List<Arguments> providerTagParams() {
+        List<Arguments> testCases = new ArrayList<>();
+        testCases.add(Arguments.of(
+                Tag.builder()
+                        .id(1)
+                        .name("Tag_name_test")
+                        .news(List.of())
+                        .build(),
+                TagDTO.builder()
+                        .id(1)
+                        .name("Tag_name_test")
+                        .countNews(0)
+                        .build()));
+
+        testCases.add(Arguments.of(
+                Tag.builder()
+                        .id(1)
+                        .name("Tag_name_test")
+                        .news(List.of(
+                                NewsTag.builder()
+                                        .tag(Tag.builder()
+                                                .id(1)
+                                                .name("Tag_name_test")
+                                                .build())
+                                        .news(News.builder()
+                                                .id(1)
+                                                .build())
+                                        .build(),
+                                NewsTag.builder()
+                                        .tag(Tag.builder()
+                                                .id(1)
+                                                .name("Tag_name_test")
+                                                .build())
+                                        .news(News.builder()
+                                                .id(2)
+                                                .build())
+                                        .build(),
+                                NewsTag.builder()
+                                        .tag(Tag.builder()
+                                                .id(1)
+                                                .name("Tag_name_test")
+                                                .build())
+                                        .news(News.builder()
+                                                .id(3)
+                                                .build())
+                                        .build()))
+                        .build(),
+                TagDTO.builder()
+                        .id(1)
+                        .name("Tag_name_test")
+                        .countNews(3)
+                        .build()));
+
+        testCases.add(Arguments.of(
+                Tag.builder()
+                        .id(1)
+                        .name("Tag_name_test")
+                        .news(null)
+                        .build(),
+                TagDTO.builder()
+                        .id(1)
+                        .name("Tag_name_test")
+                        .countNews(0)
+                        .build()));
+        return testCases;
     }
 
     @AfterAll
