@@ -1,7 +1,7 @@
 package com.mjc.school.validation.annotation;
 
-import com.mjc.school.repository.RoleRepository;
-import com.mjc.school.validation.annotation.impl.IsExistsRoleByIdImpl;
+import com.mjc.school.repository.NewsRepository;
+import com.mjc.school.validation.annotation.impl.IsExistsNewsByIdImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,27 +15,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class IsExistsRoleByIdImplTest {
+class IsExistsNewsByIdImplTest {
     @InjectMocks
-    private IsExistsRoleByIdImpl isExistsRoleById;
+    private IsExistsNewsByIdImpl isExistsNewsById;
     @Mock
-    private RoleRepository roleRepository;
+    private NewsRepository newsRepository;
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
-
     @Test
-    void isValid_when_existsRole() {
-        long roleId = 1L;
-        when(roleRepository.existsById(roleId)).thenReturn(true);
-        boolean actualResult = isExistsRoleById.isValid(roleId, constraintValidatorContext);
+    void isValid_when_existsNews() {
+        long newsId = 1L;
+        when(newsRepository.existsById(newsId)).thenReturn(true);
+        boolean actualResult = isExistsNewsById.isValid(newsId, constraintValidatorContext);
         assertTrue(actualResult);
     }
 
     @Test
-    void isValid_when_notExistsRole() {
-        long roleId = 1L;
-        when(roleRepository.existsById(roleId)).thenReturn(false);
-        boolean actualResult = isExistsRoleById.isValid(roleId, constraintValidatorContext);
+    void isValid_when_notExistsNews() {
+        long newsId = 1L;
+        when(newsRepository.existsById(newsId)).thenReturn(false);
+        boolean actualResult = isExistsNewsById.isValid(newsId, constraintValidatorContext);
         assertFalse(actualResult);
     }
 }

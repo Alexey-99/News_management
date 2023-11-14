@@ -38,7 +38,6 @@ class NewsConverterTest {
     private CommentRepository commentRepository;
     @Mock
     private NewsTagRepository newsTagRepository;
-    private static News newsTesting;
     private static News newsActual;
     private static News newsExpected;
     private static NewsDTO newsDTOTesting;
@@ -322,7 +321,6 @@ class NewsConverterTest {
                                 .build()
                 ),
 
-
                 Arguments.of(
                         News.builder()
                                 .id(1)
@@ -414,7 +412,6 @@ class NewsConverterTest {
 
     @AfterAll
     static void afterAll() {
-        newsTesting = null;
         newsDTOTesting = null;
         newsActual = null;
         newsExpected = null;
