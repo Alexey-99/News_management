@@ -208,7 +208,9 @@ class AuthorServiceImplTest {
 
     @Test
     void countAllAuthors() {
-        when(authorRepository.countAll()).thenReturn(3L);
+        long countAllAuthors = 3L;
+
+        when(authorRepository.countAll()).thenReturn(countAllAuthors);
 
         long countAllActual = authorService.countAll();
         long countAllExpected = 3L;
@@ -245,15 +247,73 @@ class AuthorServiceImplTest {
     }
 
     @Test
-    void findByPartOfName() {
+    void findByPartOfNameWithPages_when_foundAuthors() throws ServiceNoContentException {
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "ASC";
+        String sortField = "name";
+        String partOfName = "m";
+
+        when(authorConverter.toDTO(Author.builder().id(3).name("Bam").build()))
+                .thenReturn(AuthorDTO.builder().id(3).name("Bam").build());
+        when(authorConverter.toDTO(Author.builder().id(2).name("Sem").build()))
+                .thenReturn(AuthorDTO.builder().id(2).name("Sem").build());
+
+        when(authorRepository.findByPartOfName("%" + partOfName + "%",
+                PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
+                .thenReturn(List.of(
+                        Author.builder().id(3).name("Bam").build(),
+                        Author.builder().id(2).name("Sem").build()));
+
+        List<AuthorDTO> authorDTOListExpected = List.of(
+                AuthorDTO.builder().id(3).name("Bam").build(),
+                AuthorDTO.builder().id(2).name("Sem").build());
+
+        List<AuthorDTO> authorDTOListActual = authorService.findByPartOfName(partOfName, page, size, sortField, sortType);
+        assertEquals(authorDTOListExpected, authorDTOListActual);
+    }
+
+    @Test
+    void findByPartOfNameWithPages_when_notFoundAuthors() {
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "ASC";
+        String sortField = "name";
+        String partOfName = "m";
+
+        when(authorRepository.findByPartOfName("%" + partOfName + "%",
+                PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
+                .thenReturn(List.of());
+
+        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+                () -> authorService.findByPartOfName(partOfName, page, size, sortField, sortType));
+
+        assertEquals("service.exception.not_found_authors_by_part_of_name", exceptionActual.getMessage());
     }
 
     @Test
     void countAllByPartOfName() {
+        long countAllByPartOfName = 2L;
+        String partOfName = "m";
+
+        when(authorRepository.countAllByPartOfName("%" + partOfName + "%")).thenReturn(countAllByPartOfName);
+
+        long countAllActual = authorService.countAllByPartOfName(partOfName);
+        long countAllExpected = 2L;
+
+        assertEquals(countAllExpected, countAllActual);
     }
 
     @Test
-    void findByNewsId() {
+    void findByNewsId_when_foundAuthors() {
+
+    }
+
+    @Test
+    void findByNewsId_when_notFoundAuthors() {
+
     }
 
     @Test
