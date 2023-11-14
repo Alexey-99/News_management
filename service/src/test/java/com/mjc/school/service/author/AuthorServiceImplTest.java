@@ -4,6 +4,7 @@ import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Author;
+import com.mjc.school.model.News;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.service.author.impl.AuthorServiceImpl;
 import com.mjc.school.service.author.impl.sort.AuthorSortField;
@@ -307,17 +308,43 @@ class AuthorServiceImplTest {
     }
 
     @Test
-    void findByNewsId_when_foundAuthors() {
+    void findByNewsId_when_foundAuthors() throws ServiceNoContentException {
+        long newsId = 1L;
+
+        Author authorFromDB = Author.builder()
+                .id(1L)
+                .name("author name test")
+                .news(List.of(News.builder()
+                        .id(1L)
+                        .build()))
+                .build();
+        when(authorRepository.findByNewsId(newsId))
+                .thenReturn(Optional.of(authorFromDB));
+
+        authorDTOExpected = AuthorDTO.builder()
+                .id(1L)
+                .name("author name test")
+                .countNews(1)
+                .build();
+        when(authorConverter.toDTO(authorFromDB)).thenReturn(authorDTOExpected);
+
+        authorDTOActual = authorService.findByNewsId(newsId);
+        assertEquals(authorDTOExpected, authorDTOActual);
 
     }
 
     @Test
     void findByNewsId_when_notFoundAuthors() {
-
+        long newsId = 1L;
+        when(authorRepository.findByNewsId(newsId)).thenReturn(Optional.empty());
+        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+                () -> authorService.findByNewsId(newsId));
+        assertEquals("service.exception.not_found_authors_by_news_id", exceptionActual.getMessage());
     }
 
     @Test
     void findAllAuthorsIdWithAmountOfWrittenNews() {
+
     }
 
     @Test

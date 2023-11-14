@@ -156,7 +156,7 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(int page, int size,
                                                                                             String sortingType) throws ServiceNoContentException {
         String sortType = sortingType != null ?
-                Sort.Direction.fromOptionalString(sortingType).orElse(DESC).name() :
+                fromOptionalString(sortingType).orElse(DESC).name() :
                 DESC.name();
         List<Author> authorList;
         if (sortType.equalsIgnoreCase(ASC.name())) {
