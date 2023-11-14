@@ -4,13 +4,11 @@ import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.validation.annotation.IsExistsAuthorById;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static org.apache.logging.log4j.Level.INFO;
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.apache.logging.log4j.Level.WARN;
 
 @Log4j2
@@ -22,7 +20,7 @@ public class IsExistsAuthorByIdImpl implements ConstraintValidator<IsExistsAutho
     public boolean isValid(Long authorId, ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
         if (authorRepository.existsById(authorId)) {
-            log.log(INFO, "Correct entered author ID: " + authorId);
+            log.log(DEBUG, "Correct entered author ID: " + authorId);
             result = true;
         } else {
             log.log(WARN, "Not found objects with author ID: " + authorId);

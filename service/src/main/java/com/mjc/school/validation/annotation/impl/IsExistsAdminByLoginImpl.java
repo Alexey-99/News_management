@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
 
-import static org.apache.logging.log4j.Level.INFO;
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.apache.logging.log4j.Level.WARN;
 
 @Log4j2
@@ -23,10 +23,10 @@ public class IsExistsAdminByLoginImpl implements ConstraintValidator<IsExistsAdm
         boolean result = false;
         Optional<User> optionalUser = userRepository.findByLogin(adminLogin);
         if (optionalUser.isPresent()) {
-            log.log(INFO, "Found user with login " + adminLogin);
+            log.log(DEBUG, "Found user with login " + adminLogin);
             User user = optionalUser.get();
             if (user.getRole().getRole().name().equals(User.UserRole.ROLE_ADMIN.name())) {
-                log.log(INFO, "Exists administrator with login: " + adminLogin);
+                log.log(DEBUG, "Exists administrator with login: " + adminLogin);
                 result = true;
             } else {
                 log.log(WARN, "Not Found administrator by login: " + adminLogin);

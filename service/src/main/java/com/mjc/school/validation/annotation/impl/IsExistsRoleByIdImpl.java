@@ -8,7 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static org.apache.logging.log4j.Level.INFO;
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.apache.logging.log4j.Level.WARN;
 
 @Log4j2
@@ -20,7 +20,7 @@ public class IsExistsRoleByIdImpl implements ConstraintValidator<IsExistsRoleByI
     public boolean isValid(Long roleId, ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
         if (roleRepository.existsById(roleId)) {
-            log.log(INFO, "Correct entered role id: " + roleId);
+            log.log(DEBUG, "Correct entered role id: " + roleId);
             result = true;
         } else {
             log.log(WARN, "Not found role by ID: " + roleId);

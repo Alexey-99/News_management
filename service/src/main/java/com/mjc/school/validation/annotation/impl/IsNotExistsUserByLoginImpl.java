@@ -8,7 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static org.apache.logging.log4j.Level.INFO;
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.apache.logging.log4j.Level.WARN;
 
 @Log4j2
@@ -20,7 +20,7 @@ public class IsNotExistsUserByLoginImpl implements ConstraintValidator<IsNotExis
     public boolean isValid(String login, ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
         if (userRepository.notExistsByLogin(login)) {
-            log.log(INFO, "Not exists user with login " + login);
+            log.log(DEBUG, "Not exists user with login " + login);
             result = true;
         } else {
             log.log(WARN, "Exists user with login " + login);
