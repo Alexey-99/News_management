@@ -76,9 +76,12 @@ class AuthorServiceImplTest {
     @Test
     void update_when_notFoundAuthorById() throws ServiceBadRequestParameterException {
         authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
+
         when(authorRepository.findById(authorDTOTesting.getId())).thenReturn(Optional.empty());
+
         ServiceBadRequestParameterException exception = assertThrows(ServiceBadRequestParameterException.class,
                 () -> authorService.update(authorDTOTesting));
+
         assertEquals("service.exception.not_found_authors_by_id", exception.getMessage());
     }
 
