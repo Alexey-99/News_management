@@ -73,4 +73,10 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
              ORDER BY COUNT(news.authors_id) DESC
             """, nativeQuery = true)
     List<Author> findAllAuthorsWithAmountWrittenNewsDesc(Pageable pageable);
+
+    @Query(value = """
+            SELECT id, name
+            FROM authors
+            """, nativeQuery = true)
+    List<Author> findAllList(Pageable pageable);
 }

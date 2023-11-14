@@ -13,15 +13,15 @@ import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
-import static com.mjc.school.service.author.impl.sort.AuthorSortField.getSortField;
+import static com.mjc.school.service.author.impl.sort.AuthorSortField.NAME;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -81,12 +81,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDTO> findAll(int page, int size, String sortField, String sortingType) throws ServiceNoContentException {
-        Page<Author> authorPage = authorRepository.findAll(PageRequest.of(
+        PageRequest pageRequest = PageRequest.of(
                 authorPagination.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(ASC),
-                        getSortField(sortField).orElse(AuthorSortField.NAME.name().toLowerCase()))));
-        if (!authorPage.isEmpty()) {
-            return authorPage
+                        getOptionalSortField(sortField).orElse(NAME).name().toLowerCase()));
+        List<Author> authorList = authorRepository.findAllList(pageRequest);
+        if (!authorList.isEmpty()) {
+            return authorList
                     .stream()
                     .map(authorConverter::toDTO)
                     .toList();
@@ -116,7 +117,6 @@ public class AuthorServiceImpl implements AuthorService {
             return new ServiceNoContentException("service.exception.not_found_author_by_id");
         });
         return authorConverter.toDTO(author);
-
     }
 
     @Override
@@ -127,7 +127,7 @@ public class AuthorServiceImpl implements AuthorService {
                 "%" + partOfName + "%",
                 PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(ASC),
-                                getSortField(sortField).orElse(AuthorSortField.NAME.name().toLowerCase()))));
+                                getOptionalSortField(sortField).orElse(NAME).name().toLowerCase())));
         if (!authorsList.isEmpty()) {
             return authorsList.stream()
                     .map(authorConverter::toDTO)
@@ -190,5 +190,16 @@ public class AuthorServiceImpl implements AuthorService {
     public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> getPaginationAuthorIdWithAmountOfWrittenNews(
             List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage, long countAllElements, int page, int size) {
         return amountOfWrittenNewsDTOPagination.getPagination(elementsOnPage, countAllElements, page, size);
+    }
+
+    @Override
+    public Optional<AuthorSortField> getOptionalSortField(String sortField) {
+        try {
+            return sortField != null ?
+                    Optional.of(AuthorSortField.valueOf(sortField.toUpperCase())) :
+                    Optional.empty();
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 }
