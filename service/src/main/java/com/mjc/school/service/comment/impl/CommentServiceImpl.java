@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
     private final NewsRepository newsRepository;
     private final CommentConverter commentConverter;
     private final DateHandler dateHandler;
-    private final PaginationService<CommentDTO> commentPagination;
+    private final PaginationService<CommentDTO> paginationService;
 
     @Transactional
     @Override
@@ -92,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> findAll(int page, int size,
                                     String sortingField, String sortingType) throws ServiceNoContentException {
         Page<Comment> commentPage = commentRepository.findAll(PageRequest.of(
-                commentPagination.calcNumberFirstElement(page, size), size,
+                paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
                         getSortField(sortingField).orElse(MODIFIED.name().toLowerCase()))));
         if (commentPage.getSize() > 0) {
@@ -123,7 +123,7 @@ public class CommentServiceImpl implements CommentService {
                                          int page, int size,
                                          String sortingField, String sortingType) throws ServiceNoContentException {
         List<Comment> commentList = commentRepository.findByNewsId(newsId,
-                PageRequest.of(commentPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
                                         .orElse(MODIFIED.name().toLowerCase()))));
@@ -153,6 +153,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size) {
-        return commentPagination.getPagination(elementsOnPage, countAllElements, page, size);
+        return Pagination
+                .<CommentDTO>builder()
+                .entity(elementsOnPage)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
+                .build();
     }
 }

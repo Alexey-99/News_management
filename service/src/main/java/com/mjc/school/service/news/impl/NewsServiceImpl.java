@@ -35,7 +35,7 @@ public class NewsServiceImpl implements NewsService {
     private final AuthorRepository authorRepository;
     private final NewsConverter newsConverter;
     private final DateHandler dateHandler;
-    private final PaginationService<NewsDTO> newsPagination;
+    private final PaginationService<NewsDTO> paginationService;
 
     @Transactional
     @Override
@@ -126,7 +126,7 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> findAll(int page, int size,
                                  String sortingField, String sortingType) throws ServiceNoContentException {
         Page<News> newsPage = newsRepository.findAll(PageRequest.of(
-                newsPagination.calcNumberFirstElement(page, size), size,
+                paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
                         getSortField(sortingField)
                                 .orElse(MODIFIED.name().toLowerCase()))));
@@ -167,7 +167,7 @@ public class NewsServiceImpl implements NewsService {
                                        int page, int size,
                                        String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByTagName(tagName,
-                PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
                                         .orElse(MODIFIED.name().toLowerCase()))));
@@ -191,7 +191,7 @@ public class NewsServiceImpl implements NewsService {
                                      int page, int size,
                                      String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByTagId(tagId,
-                PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
                                         .orElse(MODIFIED.name().toLowerCase()))));
@@ -216,7 +216,7 @@ public class NewsServiceImpl implements NewsService {
                                                 String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByPartOfAuthorName(
                 "%" + partOfAuthorName + "%",
-                PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
                                         .orElse(MODIFIED.name().toLowerCase()))));
@@ -240,7 +240,7 @@ public class NewsServiceImpl implements NewsService {
                                         int page, int size,
                                         String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByAuthorId(authorId,
-                PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
                                         .orElse(MODIFIED.name().toLowerCase()))));
@@ -265,7 +265,7 @@ public class NewsServiceImpl implements NewsService {
                                            String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByPartOfTitle(
                 "%" + partOfTitle + "%",
-                PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
                                         .orElse(MODIFIED.name().toLowerCase()))));
@@ -290,7 +290,7 @@ public class NewsServiceImpl implements NewsService {
                                              String sortingField, String sortingType) throws ServiceNoContentException {
         List<News> newsList = newsRepository.findByPartOfContent(
                 "%" + partOfContent + "%",
-                PageRequest.of(newsPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
                                 getSortField(sortingField)
                                         .orElse(MODIFIED.name().toLowerCase()))));
@@ -311,6 +311,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage, long countAllElements, int page, int size) {
-        return newsPagination.getPagination(elementsOnPage, countAllElements, page, size);
+        return Pagination
+                .<NewsDTO>builder()
+                .entity(elementsOnPage)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
+                .build();
     }
 }

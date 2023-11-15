@@ -38,7 +38,7 @@ public class TagServiceImpl implements TagService {
     private final NewsRepository newsRepository;
     private final NewsTagRepository newsTagRepository;
     private final TagConverter tagConverter;
-    private final PaginationService<TagDTO> tagPagination;
+    private final PaginationService<TagDTO> paginationService;
 
     @Transactional
     @Override
@@ -66,7 +66,7 @@ public class TagServiceImpl implements TagService {
                     return new ServiceBadRequestParameterException("service.exception.not_found_news_by_id");
                 }))
                 .build();
-        if (isNotExistsTagInNews(newsTag.getTag(), newsTag.getNews())) {
+        if (isNotPresentTagInNews(newsTag.getTag(), newsTag.getNews())) {
             newsTagRepository.save(newsTag);
             return true;
         } else {
@@ -86,7 +86,7 @@ public class TagServiceImpl implements TagService {
             log.log(WARN, "Not found news by ID: " + newsId);
             return new ServiceBadRequestParameterException("service.exception.not_found_news_by_id");
         });
-        if (!isNotExistsTagInNews(tag, news)) {
+        if (!isNotPresentTagInNews(tag, news)) {
             tagRepository.deleteFromNews(tagId, newsId);
         }
         return true;
@@ -138,7 +138,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException {
         Page<Tag> tagPage = tagRepository.findAll(PageRequest.of(
-                tagPagination.calcNumberFirstElement(page, size), size,
+                paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortType).orElse(ASC),
                         getSortField(sortField).orElse(NAME.name().toLowerCase()))));
         if (!tagPage.isEmpty()) {
@@ -177,7 +177,7 @@ public class TagServiceImpl implements TagService {
     public List<TagDTO> findByPartOfName(String partOfName, int page, int size,
                                          String sortField, String sortType) throws ServiceNoContentException {
         List<Tag> tagList = tagRepository.findByPartOfName("%" + partOfName + "%",
-                PageRequest.of(tagPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortType).orElse(ASC),
                                 getSortField(sortField).orElse(NAME.name().toLowerCase())))
         );
@@ -200,7 +200,7 @@ public class TagServiceImpl implements TagService {
     public List<TagDTO> findByNewsId(long newsId, int page, int size,
                                      String sortField, String sortType) throws ServiceNoContentException {
         List<Tag> tagList = tagRepository.findByNewsId(newsId,
-                PageRequest.of(tagPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortType).orElse(ASC),
                                 getSortField(sortField).orElse(NAME.name().toLowerCase()))));
         if (!tagList.isEmpty()) {
@@ -220,12 +220,17 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Pagination<TagDTO> getPagination(List<TagDTO> elementsOnPage, long countAllElements, int page, int size) {
-        return tagPagination.getPagination(elementsOnPage, countAllElements, page, size);
+        return Pagination
+                .<TagDTO>builder()
+                .entity(elementsOnPage)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
+                .build();
     }
 
-    private boolean isNotExistsTagInNews(Tag tag, News news) {
-        return news
-                .getTags()
+    private boolean isNotPresentTagInNews(Tag tag, News news) {
+        return news.getTags()
                 .stream()
                 .filter(newsTag -> newsTag.getTag().getId() == tag.getId())
                 .toList()

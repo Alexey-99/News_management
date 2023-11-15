@@ -33,7 +33,7 @@ import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorConverter authorConverter;
-    private final PaginationService<AuthorDTO> authorPagination;
+    private final PaginationService<AuthorDTO> paginationService;
     private final PaginationService<AuthorIdWithAmountOfWrittenNewsDTO> amountOfWrittenNewsDTOPagination;
 
     @Transactional
@@ -82,7 +82,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorDTO> findAll(int page, int size, String sortField, String sortingType) throws ServiceNoContentException {
         PageRequest pageRequest = PageRequest.of(
-                authorPagination.calcNumberFirstElement(page, size), size,
+                paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(ASC),
                         getOptionalSortField(sortField).orElse(NAME).name().toLowerCase()));
         List<Author> authorList = authorRepository.findAllList(pageRequest);
@@ -125,7 +125,7 @@ public class AuthorServiceImpl implements AuthorService {
                                             String sortField, String sortingType) throws ServiceNoContentException {
         List<Author> authorsList = authorRepository.findByPartOfName(
                 "%" + partOfName + "%",
-                PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size,
+                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(ASC),
                                 getOptionalSortField(sortField).orElse(NAME).name().toLowerCase())));
         if (!authorsList.isEmpty()) {
@@ -161,10 +161,10 @@ public class AuthorServiceImpl implements AuthorService {
         List<Author> authorList;
         if (sortType.equalsIgnoreCase(ASC.name())) {
             authorList = authorRepository.findAllAuthorsWithAmountWrittenNewsAsc(
-                    PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size));
+                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
         } else {
             authorList = authorRepository.findAllAuthorsWithAmountWrittenNewsDesc(
-                    PageRequest.of(authorPagination.calcNumberFirstElement(page, size), size));
+                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
         }
         if (!authorList.isEmpty()) {
             return authorList.stream()
@@ -183,13 +183,27 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements,
                                                int page, int size) {
-        return authorPagination.getPagination(elementsOnPage, countAllElements, page, size);
+        Pagination<AuthorDTO> authorDTOPagination = Pagination
+                .<AuthorDTO>builder()
+                .entity(elementsOnPage)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
+                .build();
+        System.out.println(authorDTOPagination.getMaxNumberPage());
+        return authorDTOPagination;
     }
 
     @Override
     public Pagination<AuthorIdWithAmountOfWrittenNewsDTO> getPaginationAuthorIdWithAmountOfWrittenNews(
             List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage, long countAllElements, int page, int size) {
-        return amountOfWrittenNewsDTOPagination.getPagination(elementsOnPage, countAllElements, page, size);
+        return Pagination
+                .<AuthorIdWithAmountOfWrittenNewsDTO>builder()
+                .entity(elementsOnPage)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
+                .build();
     }
 
     @Override

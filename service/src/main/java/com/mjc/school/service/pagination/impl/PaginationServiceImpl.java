@@ -11,7 +11,7 @@ public class PaginationServiceImpl<T> implements PaginationService<T> {
     private static final int NUMBER_MIN_PAGE = 1;
     private static final int NUMBER_FIRST_ELEMENT = 0;
 
-    @Override
+    //@Override
     public Pagination<T> getPagination(List<T> elementsOnPage, long countAllElements, int page, int size) {
         return Pagination
                 .<T>builder()
@@ -28,7 +28,8 @@ public class PaginationServiceImpl<T> implements PaginationService<T> {
         return numberStartElement >= 0 ? numberStartElement : NUMBER_FIRST_ELEMENT;
     }
 
-    private int calcMaxNumberPage(long allElementsSize, int sizeOnPage) {
+    @Override
+    public int calcMaxNumberPage(long allElementsSize, int sizeOnPage) {
         int maxNumberPage = (int) Math.ceil((double) allElementsSize / sizeOnPage);
         return maxNumberPage > 0 ? maxNumberPage : NUMBER_MIN_PAGE;
     }

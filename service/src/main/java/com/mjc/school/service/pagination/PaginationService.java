@@ -8,7 +8,9 @@ public interface PaginationService<T> {
     String DEFAULT_SIZE = "5";
     String DEFAULT_NUMBER_PAGE = "1";
 
-    Pagination<T> getPagination(List<T> elementsOnPage, long countAllElements, int page, int size);
+//    Pagination<T> getPagination(List<T> elementsOnPage, long countAllElements, int page, int size);
 
     int calcNumberFirstElement(int page, int size);
+
+    int calcMaxNumberPage(long allElementsSize, int sizeOnPage);
 }
