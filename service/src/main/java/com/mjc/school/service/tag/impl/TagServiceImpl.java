@@ -38,7 +38,7 @@ public class TagServiceImpl implements TagService {
     private final NewsRepository newsRepository;
     private final NewsTagRepository newsTagRepository;
     private final TagConverter tagConverter;
-    private final PaginationService<TagDTO> paginationService;
+    private final PaginationService paginationService;
 
     @Transactional
     @Override

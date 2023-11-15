@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
     private final NewsRepository newsRepository;
     private final CommentConverter commentConverter;
     private final DateHandler dateHandler;
-    private final PaginationService<CommentDTO> paginationService;
+    private final PaginationService paginationService;
 
     @Transactional
     @Override

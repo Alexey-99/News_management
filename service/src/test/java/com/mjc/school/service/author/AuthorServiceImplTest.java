@@ -7,15 +7,17 @@ import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.service.author.impl.AuthorServiceImpl;
+import com.mjc.school.service.author.impl.sort.AuthorSortField;
 import com.mjc.school.service.pagination.PaginationService;
-import com.mjc.school.service.pagination.impl.PaginationServiceImpl;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,8 +30,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -42,9 +42,7 @@ class AuthorServiceImplTest {
     @Mock
     private AuthorConverter authorConverter;
     @Mock
-    private PaginationService<AuthorDTO> authorDTOPaginationService;
-    @Mock
-    private PaginationServiceImpl<AuthorIdWithAmountOfWrittenNewsDTO> amountOfWrittenNewsDTOPagination;
+    private PaginationService paginationService;
     private static AuthorDTO authorDTOTesting;
     private static AuthorDTO authorDTOExpected;
     private static AuthorDTO authorDTOActual;
@@ -491,9 +489,6 @@ class AuthorServiceImplTest {
         assertEquals("service.exception.not_found_authors", exceptionActual.getMessage());
     }
 
-    @Mock
-    private PaginationService<AuthorDTO> paginationService;
-
     @Test
     void getPagination() {
         List<AuthorDTO> authorDTOList = List.of(
@@ -506,7 +501,7 @@ class AuthorServiceImplTest {
         int page = 1;
         int size = 5;
 
-        when(paginationService.calcMaxNumberPage(10, 5)).thenReturn(2);
+        when(paginationService.calcMaxNumberPage(countAllElements, size)).thenReturn(2);
 
         Pagination<AuthorDTO> authorDTOPaginationExpected = Pagination.<AuthorDTO>builder()
                 .entity(authorDTOList)
@@ -516,8 +511,6 @@ class AuthorServiceImplTest {
                 .build();
         Pagination<AuthorDTO> authorDTOPaginationActual =
                 authorService.getPagination(authorDTOList, countAllElements, page, size);
-        System.out.println("authorDTOPaginationExpected = " + authorDTOPaginationExpected);
-        System.out.println("authorDTOPaginationActual = " + authorDTOPaginationActual);
         assertEquals(authorDTOPaginationExpected, authorDTOPaginationActual);
     }
 
@@ -533,6 +526,8 @@ class AuthorServiceImplTest {
         int page = 1;
         int size = 5;
 
+        when(paginationService.calcMaxNumberPage(countAllElements, size)).thenReturn(2);
+
         Pagination<AuthorIdWithAmountOfWrittenNewsDTO> authorIdWithAmountOfWrittenNewsDTOPaginationExpected =
                 Pagination.<AuthorIdWithAmountOfWrittenNewsDTO>builder()
                         .entity(authorIdWithAmountOfWrittenNewsDTOList)
@@ -540,19 +535,39 @@ class AuthorServiceImplTest {
                         .numberPage(page)
                         .maxNumberPage(2)
                         .build();
-        when(amountOfWrittenNewsDTOPagination.getPagination(authorIdWithAmountOfWrittenNewsDTOList, countAllElements,
-                page, size))
-                .thenReturn(authorIdWithAmountOfWrittenNewsDTOPaginationExpected);
-
-
         Pagination<AuthorIdWithAmountOfWrittenNewsDTO> authorIdWithAmountOfWrittenNewsDTOPaginationActual =
                 authorService.getPaginationAuthorIdWithAmountOfWrittenNews(authorIdWithAmountOfWrittenNewsDTOList,
                         countAllElements, page, size);
         assertEquals(authorIdWithAmountOfWrittenNewsDTOPaginationExpected, authorIdWithAmountOfWrittenNewsDTOPaginationActual);
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "providerSortFieldParams_when_foundSortField")
+    void getOptionalSortField_when_foundSortField(String sortField, String sortFieldExpected) {
+        String sortFieldActual = authorService.getOptionalSortField(sortField)
+                .get()
+                .name()
+                .toLowerCase();
+        assertEquals(sortFieldExpected, sortFieldActual);
+    }
+
+    static List<Arguments> providerSortFieldParams_when_foundSortField() {
+        return List.of(
+                Arguments.of("id", AuthorSortField.ID.name().toLowerCase()),
+                Arguments.of("name", AuthorSortField.NAME.name().toLowerCase())
+        );
+    }
+
     @Test
-    void getOptionalSortField() {
+    void getOptionalSortField_when_sortFieldIsNull() {
+        Optional<AuthorSortField> optionalActual = authorService.getOptionalSortField(null);
+        assertTrue(optionalActual.isEmpty());
+    }
+
+    @Test
+    void getOptionalSortField_when_notFoundSortField() {
+        Optional<AuthorSortField> optionalActual = authorService.getOptionalSortField("not_found_sort_field");
+        assertTrue(optionalActual.isEmpty());
     }
 
     @AfterAll

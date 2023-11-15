@@ -33,8 +33,7 @@ import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorConverter authorConverter;
-    private final PaginationService<AuthorDTO> paginationService;
-    private final PaginationService<AuthorIdWithAmountOfWrittenNewsDTO> amountOfWrittenNewsDTOPagination;
+    private final PaginationService paginationService;
 
     @Transactional
     @Override
@@ -183,15 +182,13 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements,
                                                int page, int size) {
-        Pagination<AuthorDTO> authorDTOPagination = Pagination
+        return Pagination
                 .<AuthorDTO>builder()
                 .entity(elementsOnPage)
                 .size(size)
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();
-        System.out.println(authorDTOPagination.getMaxNumberPage());
-        return authorDTOPagination;
     }
 
     @Override
