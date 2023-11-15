@@ -46,6 +46,7 @@ class AuthorServiceImplTest {
     private static AuthorDTO authorDTOTesting;
     private static AuthorDTO authorDTOExpected;
     private static AuthorDTO authorDTOActual;
+    private static Author authorFromDB;
 
     @Test
     void create_when_authorNotExistsByName() throws ServiceBadRequestParameterException {
@@ -97,7 +98,7 @@ class AuthorServiceImplTest {
     void update_when_foundAuthorByIdAndAuthorNamesEqual() throws ServiceBadRequestParameterException {
         authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
 
-        Author authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
+        authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
         when(authorRepository.findById(authorDTOTesting.getId())).thenReturn(Optional.of(authorFromDB));
 
         authorDTOExpected = AuthorDTO.builder().id(1L).name("author_name_test").countNews(0).build();
@@ -111,7 +112,7 @@ class AuthorServiceImplTest {
     void update_when_foundAuthorById_and_AuthorNamesNotEqual_and_notExistsAuthorByName() throws ServiceBadRequestParameterException {
         authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test_other").build();
 
-        Author authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
+        authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
         when(authorRepository.findById(authorDTOTesting.getId())).thenReturn(Optional.of(authorFromDB));
 
         when(authorRepository.notExistsByName(authorDTOTesting.getName())).thenReturn(true);
@@ -127,7 +128,7 @@ class AuthorServiceImplTest {
     void update_when_foundAuthorById_and_AuthorNamesNotEqual_and_existsAuthorByName() {
         authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test_other").build();
 
-        Author authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
+        authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
         when(authorRepository.findById(authorDTOTesting.getId())).thenReturn(Optional.of(authorFromDB));
 
         when(authorRepository.notExistsByName(authorDTOTesting.getName())).thenReturn(false);
@@ -575,5 +576,6 @@ class AuthorServiceImplTest {
         authorDTOTesting = null;
         authorDTOExpected = null;
         authorDTOActual = null;
+        authorFromDB = null;
     }
 }

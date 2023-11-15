@@ -4,6 +4,7 @@ import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Comment;
+import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.handler.DateHandler;
 import com.mjc.school.repository.NewsRepository;
@@ -20,9 +21,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static com.mjc.school.service.comment.impl.sort.CommentSortField.MODIFIED;
-import static com.mjc.school.service.comment.impl.sort.CommentSortField.getSortField;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -94,7 +95,7 @@ public class CommentServiceImpl implements CommentService {
         Page<Comment> commentPage = commentRepository.findAll(PageRequest.of(
                 paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                        getSortField(sortingField).orElse(MODIFIED.name().toLowerCase()))));
+                        getOptionalSortField(sortingField).orElse(MODIFIED).name().toLowerCase())));
         if (commentPage.getSize() > 0) {
             return commentPage.stream()
                     .map(commentConverter::toDTO)
@@ -125,8 +126,7 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> commentList = commentRepository.findByNewsId(newsId,
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getSortField(sortingField)
-                                        .orElse(MODIFIED.name().toLowerCase()))));
+                                getOptionalSortField(sortingField).orElse(MODIFIED).name().toLowerCase())));
         if (!commentList.isEmpty()) {
             return commentList.stream()
                     .map(commentConverter::toDTO)
@@ -160,5 +160,16 @@ public class CommentServiceImpl implements CommentService {
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();
+    }
+
+    @Override
+    public Optional<CommentSortField> getOptionalSortField(String sortField) {
+        try {
+            return sortField != null ?
+                    Optional.of(CommentSortField.valueOf(sortField.toUpperCase())) :
+                    Optional.empty();
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 }
