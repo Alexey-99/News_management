@@ -14,7 +14,6 @@ import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -92,12 +91,12 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDTO> findAll(int page, int size,
                                     String sortingField, String sortingType) throws ServiceNoContentException {
-        Page<Comment> commentPage = commentRepository.findAll(PageRequest.of(
-                paginationService.calcNumberFirstElement(page, size), size,
-                Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                        getOptionalSortField(sortingField).orElse(MODIFIED).name().toLowerCase())));
-        if (commentPage.getSize() > 0) {
-            return commentPage.stream()
+        List<Comment> commentList = commentRepository.findAllList(PageRequest.of(
+                        paginationService.calcNumberFirstElement(page, size), size,
+                        Sort.by(fromOptionalString(sortingType).orElse(DESC),
+                                getOptionalSortField(sortingField).orElse(MODIFIED).name().toLowerCase())));
+        if (!commentList.isEmpty()) {
+            return commentList.stream()
                     .map(commentConverter::toDTO)
                     .toList();
         } else {

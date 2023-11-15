@@ -12,7 +12,6 @@ import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import com.mjc.school.validation.dto.Pagination;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,14 +42,10 @@ class AuthorServiceImplTest {
     private AuthorConverter authorConverter;
     @Mock
     private PaginationService paginationService;
-    private static AuthorDTO authorDTOTesting;
-    private static AuthorDTO authorDTOExpected;
-    private static AuthorDTO authorDTOActual;
-    private static Author authorFromDB;
 
     @Test
     void create_when_authorNotExistsByName() throws ServiceBadRequestParameterException {
-        authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
+        AuthorDTO authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
         when(authorRepository.notExistsByName(authorDTOTesting.getName())).thenReturn(true);
         boolean actualResult = authorService.create(authorDTOTesting);
         assertTrue(actualResult);
@@ -58,7 +53,7 @@ class AuthorServiceImplTest {
 
     @Test
     void create_when_authorExistsByName() {
-        authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
+        AuthorDTO authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
         when(authorRepository.notExistsByName(authorDTOTesting.getName())).thenReturn(false);
         ServiceBadRequestParameterException exception = assertThrows(ServiceBadRequestParameterException.class,
                 () -> authorService.create(authorDTOTesting)
@@ -84,7 +79,7 @@ class AuthorServiceImplTest {
 
     @Test
     void update_when_notFoundAuthorById() {
-        authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
+        AuthorDTO authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
 
         when(authorRepository.findById(authorDTOTesting.getId())).thenReturn(Optional.empty());
 
@@ -96,39 +91,39 @@ class AuthorServiceImplTest {
 
     @Test
     void update_when_foundAuthorByIdAndAuthorNamesEqual() throws ServiceBadRequestParameterException {
-        authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
+        AuthorDTO authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test").build();
 
-        authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
+        Author authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
         when(authorRepository.findById(authorDTOTesting.getId())).thenReturn(Optional.of(authorFromDB));
 
-        authorDTOExpected = AuthorDTO.builder().id(1L).name("author_name_test").countNews(0).build();
+        AuthorDTO authorDTOExpected = AuthorDTO.builder().id(1L).name("author_name_test").countNews(0).build();
         when(authorConverter.toDTO(authorFromDB)).thenReturn(authorDTOExpected);
 
-        authorDTOActual = authorService.update(authorDTOTesting);
+        AuthorDTO authorDTOActual = authorService.update(authorDTOTesting);
         assertEquals(authorDTOExpected, authorDTOActual);
     }
 
     @Test
     void update_when_foundAuthorById_and_AuthorNamesNotEqual_and_notExistsAuthorByName() throws ServiceBadRequestParameterException {
-        authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test_other").build();
+        AuthorDTO authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test_other").build();
 
-        authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
+        Author authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
         when(authorRepository.findById(authorDTOTesting.getId())).thenReturn(Optional.of(authorFromDB));
 
         when(authorRepository.notExistsByName(authorDTOTesting.getName())).thenReturn(true);
 
-        authorDTOExpected = AuthorDTO.builder().id(1L).name("author_name_test_other").countNews(0).build();
+        AuthorDTO authorDTOExpected = AuthorDTO.builder().id(1L).name("author_name_test_other").countNews(0).build();
         when(authorConverter.toDTO(authorFromDB)).thenReturn(authorDTOExpected);
 
-        authorDTOActual = authorService.update(authorDTOTesting);
+        AuthorDTO authorDTOActual = authorService.update(authorDTOTesting);
         assertEquals(authorDTOExpected, authorDTOActual);
     }
 
     @Test
     void update_when_foundAuthorById_and_AuthorNamesNotEqual_and_existsAuthorByName() {
-        authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test_other").build();
+        AuthorDTO authorDTOTesting = AuthorDTO.builder().id(1L).name("author_name_test_other").build();
 
-        authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
+        Author authorFromDB = Author.builder().id(1L).name("author_name_test").news(List.of()).build();
         when(authorRepository.findById(authorDTOTesting.getId())).thenReturn(Optional.of(authorFromDB));
 
         when(authorRepository.notExistsByName(authorDTOTesting.getName())).thenReturn(false);
@@ -147,6 +142,7 @@ class AuthorServiceImplTest {
         String sortType = "ASC";
         String sortField = "name";
 
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(0);
         when(authorConverter.toDTO(Author.builder().id(1).name("Alex").build()))
                 .thenReturn(AuthorDTO.builder().id(1).name("Alex").build());
         when(authorConverter.toDTO(Author.builder().id(3).name("Bam").build()))
@@ -229,10 +225,10 @@ class AuthorServiceImplTest {
                 .build();
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(authorFromDB));
 
-        authorDTOExpected = AuthorDTO.builder().id(1).name("Alex").countNews(0).build();
+        AuthorDTO authorDTOExpected = AuthorDTO.builder().id(1).name("Alex").countNews(0).build();
         when(authorConverter.toDTO(authorFromDB)).thenReturn(authorDTOExpected);
 
-        authorDTOActual = authorService.findById(authorId);
+        AuthorDTO authorDTOActual = authorService.findById(authorId);
         assertEquals(authorDTOExpected, authorDTOActual);
     }
 
@@ -322,14 +318,14 @@ class AuthorServiceImplTest {
         when(authorRepository.findByNewsId(newsId))
                 .thenReturn(Optional.of(authorFromDB));
 
-        authorDTOExpected = AuthorDTO.builder()
+        AuthorDTO authorDTOExpected = AuthorDTO.builder()
                 .id(1L)
                 .name("author name test")
                 .countNews(1)
                 .build();
         when(authorConverter.toDTO(authorFromDB)).thenReturn(authorDTOExpected);
 
-        authorDTOActual = authorService.findByNewsId(newsId);
+        AuthorDTO authorDTOActual = authorService.findByNewsId(newsId);
         assertEquals(authorDTOExpected, authorDTOActual);
 
     }
@@ -474,7 +470,7 @@ class AuthorServiceImplTest {
     }
 
     @Test
-    void findAllAuthorsIdWithAmountOfWrittenNews_when_sortTypeDESC_and_notFoundAuthors() throws ServiceNoContentException {
+    void findAllAuthorsIdWithAmountOfWrittenNews_when_sortTypeDESC_and_notFoundAuthors() {
         int page = 1;
         int size = 5;
         int numberFirstElement = 0;
@@ -569,13 +565,5 @@ class AuthorServiceImplTest {
     void getOptionalSortField_when_notFoundSortField() {
         Optional<AuthorSortField> optionalActual = authorService.getOptionalSortField("not_found_sort_field");
         assertTrue(optionalActual.isEmpty());
-    }
-
-    @AfterAll
-    static void afterAll() {
-        authorDTOTesting = null;
-        authorDTOExpected = null;
-        authorDTOActual = null;
-        authorFromDB = null;
     }
 }

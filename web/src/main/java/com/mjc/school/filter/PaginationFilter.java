@@ -22,7 +22,7 @@ public class PaginationFilter extends OncePerRequestFilter {
         String size = request.getParameter("size");
         String page = request.getParameter("page");
         size = size != null && size.matches("^\\d+$") && Integer.parseInt(size) > 0 ? size : DEFAULT_SIZE;
-        page = page != null && page.matches("^\\d+$") && Integer.parseInt(size) > 0 ? page : DEFAULT_NUMBER_PAGE;
+        page = page != null && page.matches("^\\d+$") && Integer.parseInt(page) > 0 ? page : DEFAULT_NUMBER_PAGE;
         request.setAttribute("size", size);
         request.setAttribute("page", page);
         filterChain.doFilter(request, response);

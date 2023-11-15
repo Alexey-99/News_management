@@ -44,6 +44,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value = """
             SELECT id, content, news_id, created, modified
             FROM comments
+            """, nativeQuery = true)
+    List<Comment> findAllList(Pageable pageable);
+
+    @Query(value = """
+            SELECT id, content, news_id, created, modified
+            FROM comments
             WHERE news_id = :newsId
             """, nativeQuery = true)
     List<Comment> findByNewsId(@Param("newsId") Long newsId);
