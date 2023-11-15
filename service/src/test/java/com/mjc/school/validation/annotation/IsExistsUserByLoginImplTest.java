@@ -1,8 +1,6 @@
 package com.mjc.school.validation.annotation;
 
-import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.UserRepository;
-import com.mjc.school.validation.annotation.impl.IsExistsAuthorByIdImpl;
 import com.mjc.school.validation.annotation.impl.IsExistsUserByLoginImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
