@@ -1,4 +1,4 @@
-package com.mjc.school.service.author;
+package com.mjc.school.service;
 
 import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;

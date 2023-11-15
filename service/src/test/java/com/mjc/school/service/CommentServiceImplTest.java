@@ -1,4 +1,4 @@
-package com.mjc.school.service.comment;
+package com.mjc.school.service;
 
 import org.junit.jupiter.api.Test;
 
