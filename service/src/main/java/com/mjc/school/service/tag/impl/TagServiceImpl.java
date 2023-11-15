@@ -241,7 +241,7 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    private boolean isNotPresentTagInNews(Tag tag, News news) {
+    protected boolean isNotPresentTagInNews(Tag tag, News news) {
         return news.getTags()
                 .stream()
                 .filter(newsTag -> newsTag.getTag().getId() == tag.getId())
