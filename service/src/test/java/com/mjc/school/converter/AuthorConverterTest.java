@@ -4,7 +4,6 @@ import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
 import com.mjc.school.validation.dto.AuthorDTO;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,23 +20,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AuthorConverterTest {
     @InjectMocks
     private AuthorConverter authorConverter;
-    private static Author authorActual;
-    private static Author authorExpected;
-    private static AuthorDTO authorDTOTesting;
-    private static AuthorDTO authorDTOActual;
 
     @Test
     void fromDTO() {
-        authorDTOTesting = AuthorDTO.builder().id(1).name("Tom").build();
-        authorExpected = Author.builder().id(1).name("Tom").build();
-        authorActual = authorConverter.fromDTO(authorDTOTesting);
+        AuthorDTO authorDTOTesting = AuthorDTO.builder().id(1).name("Tom").build();
+        Author authorExpected = Author.builder().id(1).name("Tom").build();
+        Author authorActual = authorConverter.fromDTO(authorDTOTesting);
         assertEquals(authorExpected, authorActual);
     }
 
     @ParameterizedTest
     @MethodSource(value = "providerAuthorsParams")
     void toDTO(Author author, AuthorDTO authorDTOExpected) {
-        authorDTOActual = authorConverter.toDTO(author);
+        AuthorDTO authorDTOActual = authorConverter.toDTO(author);
         assertEquals(authorDTOExpected, authorDTOActual);
     }
 
@@ -77,13 +72,5 @@ class AuthorConverterTest {
                                 .name("Tom")
                                 .countNews(0)
                                 .build()));
-    }
-
-    @AfterAll
-    static void afterAll() {
-        authorActual = null;
-        authorExpected = null;
-        authorDTOTesting = null;
-        authorDTOActual = null;
     }
 }

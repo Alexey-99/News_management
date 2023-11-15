@@ -5,7 +5,6 @@ import com.mjc.school.model.user.User;
 import com.mjc.school.repository.RoleRepository;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
 import com.mjc.school.validation.dto.user.RegistrationUserDto;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,17 +24,12 @@ class UserConverterTest {
     private UserConverter userConverter;
     @Mock
     private RoleRepository roleRepository;
-    private static User user;
-    private static User userActual;
-    private static CustomUserDetails customUserDetailsExpected;
-    private static CustomUserDetails customUserDetailsActual;
-    private static RegistrationUserDto registrationUserDtoTesting;
 
     @Test
     void toUserDetails() {
-        user = new User(1, "login_test", "password_test", "email_test@gmail.com",
+        User user = new User(1, "login_test", "password_test", "email_test@gmail.com",
                 new Role(1, ROLE_USER));
-        customUserDetailsExpected = CustomUserDetails.builder()
+        CustomUserDetails customUserDetailsExpected = CustomUserDetails.builder()
                 .id(user.getId())
                 .login(user.getLogin())
                 .email(user.getEmail())
@@ -44,16 +38,16 @@ class UserConverterTest {
                         new SimpleGrantedAuthority(user.getRole().getRole().name())))
                 .build();
 
-        customUserDetailsActual = userConverter.toUserDetails(user);
+        CustomUserDetails customUserDetailsActual = userConverter.toUserDetails(user);
         assertEquals(customUserDetailsExpected, customUserDetailsActual);
 
     }
 
     @Test
     void fromRegistrationUserDTO() {
-        registrationUserDtoTesting = new RegistrationUserDto("login_test", "password_test",
+        RegistrationUserDto registrationUserDtoTesting = new RegistrationUserDto("login_test", "password_test",
                 "password_test", "email_test@gmail.com");
-        user = User.builder()
+        User user = User.builder()
                 .login("login_test")
                 .password("password_test")
                 .email("email_test@gmail.com")
@@ -66,16 +60,7 @@ class UserConverterTest {
         when(roleRepository.getByName(ROLE_USER.name()))
                 .thenReturn(Role.builder().id(1).role(ROLE_USER).build());
 
-        userActual = userConverter.fromRegistrationUserDTO(registrationUserDtoTesting);
+        User userActual = userConverter.fromRegistrationUserDTO(registrationUserDtoTesting);
         assertEquals(user, userActual);
-    }
-
-    @AfterAll
-    static void afterAll() {
-        customUserDetailsActual = null;
-        customUserDetailsExpected = null;
-        user = null;
-        userActual = null;
-        registrationUserDtoTesting = null;
     }
 }
