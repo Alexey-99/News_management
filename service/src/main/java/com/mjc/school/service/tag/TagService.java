@@ -2,11 +2,13 @@ package com.mjc.school.service.tag;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
+import com.mjc.school.service.tag.impl.sort.TagSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.validation.dto.TagDTO;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 public interface TagService {
     @Transactional
@@ -43,4 +45,6 @@ public interface TagService {
     long countAllByNewsId(long newsId);
 
     Pagination<TagDTO> getPagination(List<TagDTO> elementsOnPage, long countAllElements, int page, int size);
+
+    Optional<TagSortField> getOptionalSortField(String sortField);
 }

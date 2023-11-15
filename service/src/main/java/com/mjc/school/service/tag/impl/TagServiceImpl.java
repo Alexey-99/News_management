@@ -6,6 +6,7 @@ import com.mjc.school.model.News;
 import com.mjc.school.model.NewsTag;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.repository.NewsTagRepository;
+import com.mjc.school.service.tag.impl.sort.TagSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.model.Tag;
 import com.mjc.school.service.pagination.PaginationService;
@@ -23,9 +24,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static com.mjc.school.service.tag.impl.sort.TagSortField.NAME;
-import static com.mjc.school.service.tag.impl.sort.TagSortField.getSortField;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
@@ -140,7 +141,7 @@ public class TagServiceImpl implements TagService {
         Page<Tag> tagPage = tagRepository.findAll(PageRequest.of(
                 paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortType).orElse(ASC),
-                        getSortField(sortField).orElse(NAME.name().toLowerCase()))));
+                        getOptionalSortField(sortField).orElse(NAME).name().toLowerCase())));
         if (!tagPage.isEmpty()) {
             return tagPage.stream()
                     .map(tagConverter::toDTO)
@@ -179,7 +180,7 @@ public class TagServiceImpl implements TagService {
         List<Tag> tagList = tagRepository.findByPartOfName("%" + partOfName + "%",
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortType).orElse(ASC),
-                                getSortField(sortField).orElse(NAME.name().toLowerCase())))
+                                getOptionalSortField(sortField).orElse(NAME).name().toLowerCase()))
         );
         if (!tagList.isEmpty()) {
             return tagList.stream()
@@ -202,7 +203,7 @@ public class TagServiceImpl implements TagService {
         List<Tag> tagList = tagRepository.findByNewsId(newsId,
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortType).orElse(ASC),
-                                getSortField(sortField).orElse(NAME.name().toLowerCase()))));
+                                getOptionalSortField(sortField).orElse(NAME).name().toLowerCase())));
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)
@@ -227,6 +228,17 @@ public class TagServiceImpl implements TagService {
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();
+    }
+
+    @Override
+    public Optional<TagSortField> getOptionalSortField(String sortField) {
+        try {
+            return sortField != null ?
+                    Optional.of(TagSortField.valueOf(sortField.toUpperCase())) :
+                    Optional.empty();
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     private boolean isNotPresentTagInNews(Tag tag, News news) {
