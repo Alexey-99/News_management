@@ -2,6 +2,7 @@ package com.mjc.school.service;
 
 import com.mjc.school.converter.impl.NewsConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
+import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.handler.DateHandler;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
@@ -22,6 +23,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
 class NewsServiceImplTest {
@@ -344,35 +348,311 @@ class NewsServiceImplTest {
     }
 
     @Test
-    void findAll() {
+    void findAllWithPages_when_notFoundNews() {
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(0);
+
+        when(newsRepository.findAllList(
+                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+                .thenReturn(List.of());
+
+        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+                () -> newsService.findAll(page, size, sortField, sortType));
+
+        assertEquals("service.exception.not_found_news", exceptionActual.getMessage());
     }
 
     @Test
-    void testFindAll() {
+    void findAllWithPages_when_foundNews() throws ServiceNoContentException {
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(0);
+
+        List<News> newsFindAllList = List.of(
+                News.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685").build(),
+                News.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413").build(),
+                News.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413").build());
+        when(newsRepository.findAllList(
+                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+                .thenReturn(newsFindAllList);
+
+        when(newsConverter.toDTO(News.builder().id(1).content("CONTENT 1")
+                .modified("2023-10-20T16:05:38.685").build()))
+                .thenReturn(NewsDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685").build());
+        when(newsConverter.toDTO(News.builder().id(3).content("CONTENT 3")
+                .modified("2023-10-20T16:05:32.413").build()))
+                .thenReturn(NewsDTO.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413").build());
+        when(newsConverter.toDTO(News.builder().id(2).content("CONTENT 2")
+                .modified("2023-10-20T16:05:25.413").build()))
+                .thenReturn(NewsDTO.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413").build());
+
+        List<NewsDTO> newsDTOListExpected = List.of(
+                NewsDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685").build(),
+                NewsDTO.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413").build(),
+                NewsDTO.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413").build());
+
+        List<NewsDTO> newsDTOListActual = newsService.findAll(page, size, sortField, sortType);
+        assertEquals(newsDTOListExpected, newsDTOListActual);
+    }
+
+    @Test
+    void findAllNews_when_notFoundNews() {
+        when(newsRepository.findAll()).thenReturn(List.of());
+        List<NewsDTO> newsDTOListExpected = List.of();
+        List<NewsDTO> newsDTOListActual = newsService.findAll();
+        assertEquals(newsDTOListExpected, newsDTOListActual);
+    }
+
+    @Test
+    void findAllNews_when_foundNews() {
+        List<News> newsFindAllList = List.of(
+                News.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685").build(),
+                News.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413").build(),
+                News.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413").build());
+        when(newsRepository.findAll()).thenReturn(newsFindAllList);
+
+        when(newsConverter.toDTO(News.builder().id(1).content("CONTENT 1")
+                .modified("2023-10-20T16:05:38.685").build()))
+                .thenReturn(NewsDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685").build());
+        when(newsConverter.toDTO(News.builder().id(3).content("CONTENT 3")
+                .modified("2023-10-20T16:05:32.413").build()))
+                .thenReturn(NewsDTO.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413").build());
+        when(newsConverter.toDTO(News.builder().id(2).content("CONTENT 2")
+                .modified("2023-10-20T16:05:25.413").build()))
+                .thenReturn(NewsDTO.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413").build());
+
+        List<NewsDTO> newsDTOListExpected = List.of(
+                NewsDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685").build(),
+                NewsDTO.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413").build(),
+                NewsDTO.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413").build());
+
+        List<NewsDTO> newsDTOListActual = newsService.findAll();
+        assertEquals(newsDTOListExpected, newsDTOListActual);
     }
 
     @Test
     void countAllNews() {
+        when(newsRepository.countAllNews()).thenReturn(3L);
+        long countAllNewsExpected = 3;
+        long countAllNewsActual = newsService.countAllNews();
+        assertEquals(countAllNewsExpected, countAllNewsActual);
     }
 
     @Test
-    void findById() {
+    void findById_when_notFoundNewsById() {
+        long newsId = 1;
+
+        when(newsRepository.findById(newsId)).thenReturn(Optional.empty());
+
+        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+                () -> newsService.findById(newsId));
+        assertEquals("service.exception.not_found_news_by_id", exceptionActual.getMessage());
     }
 
     @Test
-    void findByTagName() {
+    void findById_when_foundNewsById() throws ServiceNoContentException {
+        long newsId = 1;
+
+        News newsFromDB = News.builder().id(newsId).build();
+        when(newsRepository.findById(newsId)).thenReturn(Optional.of(newsFromDB));
+
+        NewsDTO newsDTOExpected = NewsDTO.builder().id(newsId).build();
+        when(newsConverter.toDTO(newsFromDB)).thenReturn(newsDTOExpected);
+
+        NewsDTO newsDTOActual = newsService.findById(newsId);
+        assertEquals(newsDTOExpected, newsDTOActual);
+    }
+
+    @Test
+    void findByTagName_when_foundNewsByTagName() throws ServiceNoContentException {
+        String tagName = "tag_name";
+
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+
+        Tag tagByTagNameFromDB = Tag.builder().id(2).name(tagName).build();
+        List<News> newsFindByTagNameList = List.of(
+                News.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .tags(List.of(
+                                NewsTag.builder()
+                                        .tag(tagByTagNameFromDB)
+                                        .build(),
+                                NewsTag.builder()
+                                        .tag(Tag.builder()
+                                                .name("tag_name_2")
+                                                .build())
+                                        .build()))
+                        .modified("2023-10-20T16:05:38.685")
+                        .build(),
+                News.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .tags(List.of(NewsTag.builder()
+                                .tag(tagByTagNameFromDB)
+                                .build()))
+                        .modified("2023-10-20T16:05:32.413")
+                        .build(),
+                News.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .tags(List.of(NewsTag.builder()
+                                .tag(tagByTagNameFromDB)
+                                .build()))
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
+        when(newsRepository.findByTagName(tagName,
+                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+                .thenReturn(newsFindByTagNameList);
+
+        when(newsConverter.toDTO(News.builder().id(1).content("CONTENT 1")
+                .tags(List.of(
+                        NewsTag.builder()
+                                .tag(tagByTagNameFromDB)
+                                .build(),
+                        NewsTag.builder()
+                                .tag(Tag.builder()
+                                        .name("tag_name_2")
+                                        .build())
+                                .build()))
+                .modified("2023-10-20T16:05:38.685")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .countTags(2)
+                        .modified("2023-10-20T16:05:38.685")
+                        .build());
+        when(newsConverter.toDTO(News.builder()
+                .id(3)
+                .content("CONTENT 3")
+                .tags(List.of(NewsTag.builder()
+                        .tag(tagByTagNameFromDB)
+                        .build()))
+                .modified("2023-10-20T16:05:32.413")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .countTags(1)
+                        .modified("2023-10-20T16:05:32.413")
+                        .build());
+        when(newsConverter.toDTO(News.builder()
+                .id(2)
+                .content("CONTENT 2")
+                .tags(List.of(NewsTag.builder()
+                        .tag(tagByTagNameFromDB)
+                        .build()))
+                .modified("2023-10-20T16:05:25.413")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .countTags(1)
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
+
+        List<NewsDTO> newsDTOListExpected = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .countTags(2)
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .countTags(1)
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .countTags(1)
+                        .build());
+
+        List<NewsDTO> newsDTOListActual = newsService.findByTagName(tagName, page, size, sortField, sortType);
+        assertEquals(newsDTOListExpected, newsDTOListActual);
+    }
+
+    @Test
+    void findByTagName_when_notFoundNewsByTagName() {
+        String tagName = "tag_name";
+
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(newsRepository.findByTagName(tagName,
+                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+                .thenReturn(List.of());
+
+        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByTagName(tagName, page, size, sortField, sortType));
+
+        assertEquals("service.exception.not_found_news_by_tag_name", exceptionActual.getMessage());
     }
 
     @Test
     void countAllNewsByTagName() {
+        String tagName = "tag_name";
+
+        when(newsRepository.countAllNewsByTagName(tagName)).thenReturn(3L);
+        long countAllNewsExpected = 3;
+        long countAllNewsActual = newsService.countAllNewsByTagName(tagName);
+        assertEquals(countAllNewsExpected, countAllNewsActual);
     }
 
     @Test
     void findByTagId() {
+
     }
 
     @Test
     void countAllNewsByTagId() {
+        long tagId = 1;
+
+        when(newsRepository.countAllNewsByTagId(tagId)).thenReturn(2L);
+        long countAllNewsExpected = 2;
+        long countAllNewsActual = newsService.countAllNewsByTagId(tagId);
+        assertEquals(countAllNewsExpected, countAllNewsActual);
     }
 
     @Test

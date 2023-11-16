@@ -168,4 +168,10 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             WHERE title = :title
             """, nativeQuery = true)
     boolean notExistsByTitle(@Param("title") String title);
+
+    @Query(value = """
+            SELECT id, title, content, authors_id, created, modified
+            FROM news
+            """, nativeQuery = true)
+    List<News> findAllList(Pageable pageable);
 }

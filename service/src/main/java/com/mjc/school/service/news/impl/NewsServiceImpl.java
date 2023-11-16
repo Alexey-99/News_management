@@ -14,7 +14,6 @@ import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -126,7 +125,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findAll(int page, int size,
                                  String sortingField, String sortingType) throws ServiceNoContentException {
-        Page<News> newsPage = newsRepository.findAll(PageRequest.of(
+        List<News> newsPage = newsRepository.findAllList(PageRequest.of(
                 paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
                         getOptionalSortField(sortingField)
