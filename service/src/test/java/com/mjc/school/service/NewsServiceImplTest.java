@@ -87,12 +87,26 @@ class NewsServiceImplTest {
     }
 
     @Test
-    void deleteByAuthorId_when_existsAuthorById() {
+    void deleteByAuthorId_when_existsAuthorById() throws ServiceBadRequestParameterException {
         long authorId = 1;
 
         when(authorRepository.existsById(authorId)).thenReturn(true);
 
-        boolean actualResult = newsService.deleteById()
+        boolean actualResult = newsService.deleteByAuthorId(authorId);
+        assertTrue(actualResult);
+    }
+
+    @Test
+    void deleteByAuthorId_when_notExistsAuthorById() {
+        long authorId = 1;
+
+        when(authorRepository.existsById(authorId)).thenReturn(false);
+
+        ServiceBadRequestParameterException exceptionActual =
+                assertThrows(ServiceBadRequestParameterException.class,
+                        () -> newsService.deleteByAuthorId(authorId));
+        assertEquals("service.exception.not_found_author_by_id",
+                exceptionActual.getMessage());
     }
 
     @Test
