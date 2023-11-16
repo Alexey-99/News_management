@@ -17,7 +17,6 @@ import com.mjc.school.validation.dto.TagDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -138,12 +137,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException {
-        Page<Tag> tagPage = tagRepository.findAll(PageRequest.of(
+        List<Tag> tagList = tagRepository.findAllList(PageRequest.of(
                 paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortType).orElse(ASC),
                         getOptionalSortField(sortField).orElse(NAME).name().toLowerCase())));
-        if (!tagPage.isEmpty()) {
-            return tagPage.stream()
+        if (!tagList.isEmpty()) {
+            return tagList.stream()
                     .map(tagConverter::toDTO)
                     .toList();
         } else {
@@ -241,7 +240,7 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    protected boolean isNotPresentTagInNews(Tag tag, News news) {
+    private boolean isNotPresentTagInNews(Tag tag, News news) {
         return news.getTags()
                 .stream()
                 .filter(newsTag -> newsTag.getTag().getId() == tag.getId())

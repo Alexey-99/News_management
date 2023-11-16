@@ -94,6 +94,12 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     Long countAllByNewsId(@Param("news_id") Long newsId);
 
     @Query(value = """
+            SELECT id, name
+            FROM tags
+            """, nativeQuery = true)
+    List<Tag> findAllList( Pageable pageable);
+
+    @Query(value = """
             SELECT COUNT(name) = 0
             FROM tags
             WHERE name = :name
