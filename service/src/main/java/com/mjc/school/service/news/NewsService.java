@@ -2,11 +2,13 @@ package com.mjc.school.service.news;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
+import com.mjc.school.service.news.impl.sort.NewsSortField;
 import com.mjc.school.validation.dto.NewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 public interface NewsService {
     @Transactional
@@ -57,4 +59,6 @@ public interface NewsService {
     long countAllNewsByPartOfContent(String partOfContent);
 
     Pagination<NewsDTO> getPagination(List<NewsDTO> elementsOnPage, long countAllElements, int page, int size);
+
+    Optional<NewsSortField> getOptionalSortField(String sortField);
 }
