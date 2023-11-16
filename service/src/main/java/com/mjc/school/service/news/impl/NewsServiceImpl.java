@@ -194,8 +194,8 @@ public class NewsServiceImpl implements NewsService {
         List<News> newsList = newsRepository.findByTagId(tagId,
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getSortField(sortingField)
-                                        .orElse(MODIFIED.name().toLowerCase()))));
+                                getOptionalSortField(sortingField)
+                                        .orElse(MODIFIED).name().toLowerCase())));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -219,8 +219,8 @@ public class NewsServiceImpl implements NewsService {
                 "%" + partOfAuthorName + "%",
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getSortField(sortingField)
-                                        .orElse(MODIFIED.name().toLowerCase()))));
+                                getOptionalSortField(sortingField)
+                                        .orElse(MODIFIED).name().toLowerCase())));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -243,8 +243,8 @@ public class NewsServiceImpl implements NewsService {
         List<News> newsList = newsRepository.findByAuthorId(authorId,
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getSortField(sortingField)
-                                        .orElse(MODIFIED.name().toLowerCase()))));
+                                getOptionalSortField(sortingField)
+                                        .orElse(MODIFIED).name().toLowerCase())));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -268,8 +268,8 @@ public class NewsServiceImpl implements NewsService {
                 "%" + partOfTitle + "%",
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getSortField(sortingField)
-                                        .orElse(MODIFIED.name().toLowerCase()))));
+                                getOptionalSortField(sortingField)
+                                        .orElse(MODIFIED).name().toLowerCase())));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -293,8 +293,8 @@ public class NewsServiceImpl implements NewsService {
                 "%" + partOfContent + "%",
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getSortField(sortingField)
-                                        .orElse(MODIFIED.name().toLowerCase()))));
+                                getOptionalSortField(sortingField)
+                                        .orElse(MODIFIED).name().toLowerCase())));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
