@@ -1040,20 +1040,207 @@ class NewsServiceImplTest {
     }
 
     @Test
-    void findByPartOfTitle() {
+    void findByPartOfTitle_when_notFoundNews() {
+        String partOfTitle = "partOfTitle";
 
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+
+        when(newsRepository.findByPartOfTitle("%" + partOfTitle + "%",
+                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+                .thenReturn(List.of());
+
+        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByPartOfTitle(partOfTitle, page, size, sortField, sortType));
+        assertEquals("service.exception.not_found_news_by_part_of_title", exceptionActual.getMessage());
+    }
+
+    @Test
+    void findByPartOfTitle_when_foundNews() throws ServiceNoContentException {
+        String partOfTitle = "partOfTitle";
+
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+
+        List<News> newsByAuthorIdList = List.of(
+                News.builder()
+                        .id(1)
+                        .title("title partOfTitle 1")
+                        .build(),
+                News.builder()
+                        .id(3)
+                        .title("title 3 partOfTitle")
+                        .build(),
+                News.builder()
+                        .id(2)
+                        .title("partOfTitle title 2")
+                        .build());
+        when(newsRepository.findByPartOfTitle("%" + partOfTitle + "%",
+                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+                .thenReturn(newsByAuthorIdList);
+
+        when(newsConverter.toDTO(News.builder()
+                .id(1)
+                .title("title partOfTitle 1")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(1)
+                        .title("title partOfTitle 1")
+                        .build());
+        when(newsConverter.toDTO(News.builder()
+                .id(3)
+                .title("title 3 partOfTitle")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(3)
+                        .title("title 3 partOfTitle")
+                        .build());
+        when(newsConverter.toDTO(News.builder()
+                .id(2)
+                .title("partOfTitle title 2")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(2)
+                        .title("partOfTitle title 2")
+                        .build());
+
+        List<NewsDTO> newsDTOListExpected = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .title("title partOfTitle 1")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .title("title 3 partOfTitle")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .title("partOfTitle title 2")
+                        .build());
+
+        List<NewsDTO> newsDTOListActual = newsService.findByPartOfTitle(partOfTitle, page, size, sortField, sortType);
+        assertEquals(newsDTOListExpected, newsDTOListActual);
     }
 
     @Test
     void countAllNewsByPartOfTitle() {
+        String partOfTitle = "partOfTitle";
+
+        when(newsRepository.countAllNewsByPartOfTitle("%" + partOfTitle + "%")).thenReturn(2L);
+        long countAllNewsExpected = 2;
+        long countAllNewsActual = newsService.countAllNewsByPartOfTitle(partOfTitle);
+        assertEquals(countAllNewsExpected, countAllNewsActual);
     }
 
     @Test
-    void findByPartOfContent() {
+    void findByPartOfContent_when_notFoundNews() {
+        String partOfContent = "partOfContent";
+
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+
+        when(newsRepository.findByPartOfContent("%" + partOfContent + "%",
+                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+                .thenReturn(List.of());
+
+        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByPartOfContent(partOfContent, page, size, sortField, sortType));
+        assertEquals("service.exception.not_found_news_by_part_of_content", exceptionActual.getMessage());
+    }
+
+    @Test
+    void findByPartOfContent_when_foundNews() throws ServiceNoContentException {
+        String partOfContent = "partOfContent";
+        int page = 1;
+        int size = 5;
+        int numberFirstElement = 0;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+
+        List<News> newsByAuthorIdList = List.of(
+                News.builder()
+                        .id(1)
+                        .content("content partOfContent 1")
+                        .build(),
+                News.builder()
+                        .id(3)
+                        .content("content 3 partOfContent")
+                        .build(),
+                News.builder()
+                        .id(2)
+                        .content("partOfContent content 2")
+                        .build());
+        when(newsRepository.findByPartOfContent("%" + partOfContent + "%",
+                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+                .thenReturn(newsByAuthorIdList);
+
+        when(newsConverter.toDTO(News.builder()
+                .id(1)
+                .content("content partOfContent 1")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(1)
+                        .content("content partOfContent 1")
+                        .build());
+        when(newsConverter.toDTO(News.builder()
+                .id(3)
+                .content("content 3 partOfContent")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(3)
+                        .content("content 3 partOfContent")
+                        .build());
+        when(newsConverter.toDTO(News.builder()
+                .id(2)
+                .content("partOfContent content 2")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(2)
+                        .content("partOfContent content 2")
+                        .build());
+        List<NewsDTO> newsDTOListExpected = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .content("content partOfContent 1")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("content 3 partOfContent")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("partOfContent content 2")
+                        .build());
+
+        List<NewsDTO> newsDTOListActual = newsService.findByPartOfContent(partOfContent, page, size, sortField, sortType);
+        assertEquals(newsDTOListExpected, newsDTOListActual);
     }
 
     @Test
     void countAllNewsByPartOfContent() {
+        String partOfContent = "partOfContent";
+
+        when(newsRepository.countAllNewsByPartOfContent("%" + partOfContent + "%")).thenReturn(2L);
+        long countAllNewsExpected = 2;
+        long countAllNewsActual = newsService.countAllNewsByPartOfContent(partOfContent);
+        assertEquals(countAllNewsExpected, countAllNewsActual);
     }
 
     @Test
