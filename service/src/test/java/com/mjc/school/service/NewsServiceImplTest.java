@@ -1,6 +1,7 @@
 package com.mjc.school.service;
 
 import com.mjc.school.converter.impl.NewsConverter;
+import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.handler.DateHandler;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -41,15 +43,56 @@ class NewsServiceImplTest {
     private PaginationService paginationService;
 
     @Test
-    void create() {
+    void create_when_notExistsNewsByTitle() throws ServiceBadRequestParameterException {
+        NewsDTO newsDTOTesting = NewsDTO.builder().id(1).title("News_title_test").build();
+
+        when(newsRepository.notExistsByTitle(newsDTOTesting.getTitle())).thenReturn(true);
+
+        boolean actualResult = newsService.create(newsDTOTesting);
+        assertTrue(actualResult);
     }
 
     @Test
-    void deleteById() {
+    void create_when_existsNewsByTitle() {
+        NewsDTO newsDTOTesting = NewsDTO.builder().id(1).title("News_title_test").build();
+
+        when(newsRepository.notExistsByTitle(newsDTOTesting.getTitle())).thenReturn(false);
+
+        ServiceBadRequestParameterException exceptionActual =
+                assertThrows(ServiceBadRequestParameterException.class,
+                        () -> newsService.create(newsDTOTesting));
+
+        assertEquals("news_dto.title.not_valid.exists_news_title",
+                exceptionActual.getMessage());
     }
 
     @Test
-    void deleteByAuthorId() {
+    void deleteById_when_newsExistsById() {
+        long newsId = 1;
+
+        when(newsRepository.existsById(newsId)).thenReturn(true);
+
+        boolean actualResult = newsService.deleteById(newsId);
+        assertTrue(actualResult);
+    }
+
+    @Test
+    void deleteById_when_newsNotExistsById() {
+        long newsId = 1;
+
+        when(newsRepository.existsById(newsId)).thenReturn(false);
+
+        boolean actualResult = newsService.deleteById(newsId);
+        assertTrue(actualResult);
+    }
+
+    @Test
+    void deleteByAuthorId_when_existsAuthorById() {
+        long authorId = 1;
+
+        when(authorRepository.existsById(authorId)).thenReturn(true);
+
+        boolean actualResult = newsService.deleteById()
     }
 
     @Test
@@ -174,7 +217,8 @@ class NewsServiceImplTest {
 
     @Test
     void getOptionalSortField_when_notFoundSortField() {
-        Optional<NewsSortField> optionalActual = newsService.getOptionalSortField("not_found_sort_field");
+        Optional<NewsSortField> optionalActual =
+                newsService.getOptionalSortField("not_found_sort_field");
         assertTrue(optionalActual.isEmpty());
     }
 }
