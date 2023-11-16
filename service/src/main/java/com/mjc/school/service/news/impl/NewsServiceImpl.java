@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.mjc.school.service.news.impl.sort.NewsSortField.MODIFIED;
-import static com.mjc.school.service.news.impl.sort.NewsSortField.getSortField;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
@@ -130,8 +129,8 @@ public class NewsServiceImpl implements NewsService {
         Page<News> newsPage = newsRepository.findAll(PageRequest.of(
                 paginationService.calcNumberFirstElement(page, size), size,
                 Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                        getSortField(sortingField)
-                                .orElse(MODIFIED.name().toLowerCase()))));
+                        getOptionalSortField(sortingField)
+                                .orElse(MODIFIED).name().toLowerCase())));
         if (!newsPage.isEmpty()) {
             return newsPage.stream()
                     .map(newsConverter::toDTO)
@@ -171,8 +170,8 @@ public class NewsServiceImpl implements NewsService {
         List<News> newsList = newsRepository.findByTagName(tagName,
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
                         Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getSortField(sortingField)
-                                        .orElse(MODIFIED.name().toLowerCase()))));
+                                getOptionalSortField(sortingField)
+                                        .orElse(MODIFIED).name().toLowerCase())));
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
