@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.apache.logging.log4j.Level.ERROR;
+import static org.apache.logging.log4j.Level.WARN;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -27,10 +28,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean create(RegistrationUserDto userDto) throws ServiceBadRequestParameterException {
         if (userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            User user = userConverter.fromRegistrationUserDTO(userDto);
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            userRepository.save(user);
-            return true;
+            if (userRepository.notExistsByLogin(userDto.getLogin())) {
+                User user = userConverter.fromRegistrationUserDTO(userDto);
+                user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+                userRepository.save(user);
+                return true;
+            } else {
+                log.log(WARN, "Exists user with login: " + userDto.getLogin());
+                throw new ServiceBadRequestParameterException("service.exception.registration.login.not_valid.exists");
+            }
         } else {
             log.log(ERROR, "The entered passwords do not match.");
             throw new ServiceBadRequestParameterException("service.exception.registration.passwords_not_match");
@@ -43,8 +49,13 @@ public class UserServiceImpl implements UserService {
         String passwordBD = userRepository.getPasswordByLogin(userChangeRoleDto.getAdminLogin());
         String passwordEnteredEncoded = passwordEncoder.encode(userChangeRoleDto.getAdminPassword());
         if (passwordBD.equals(passwordEnteredEncoded)) {
-            userRepository.changeRole(userChangeRoleDto.getUserLogin(), userChangeRoleDto.getRoleId());
-            return true;
+            if (userRepository.existsByLogin(userChangeRoleDto.getUserLogin())) {
+                userRepository.changeRole(userChangeRoleDto.getUserLogin(), userChangeRoleDto.getRoleId());
+                return true;
+            } else {
+                log.log(WARN, "Not found user with login " + userChangeRoleDto.getUserLogin());
+                throw new ServiceBadRequestParameterException("service.exception.change_role.user_login.not_valid.not_exists");
+            }
         } else {
             log.log(ERROR, "The administrator login or password was entered incorrectly.");
             throw new ServiceBadRequestParameterException("service.exception.change_role.incorrect_admin_password_or_login");
