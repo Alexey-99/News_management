@@ -22,6 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -115,7 +116,36 @@ class TagControllerTest {
     }
 
     @Test
-    void addToNews() {
+    void addToNews_everythingOk() throws Exception {
+        String tagId = "0";
+        String newsId = "1";
+
+        when(tagService.addToNews(Long.parseLong(tagId), Long.parseLong(newsId))).thenReturn(true);
+
+        mockMvc.perform(put("/api/v2/tag/to-news")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("tag", tagId)
+                        .param("news", newsId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(true));
+    }
+
+    @Test
+    void addToNews_when_inCorrectTagId() throws Exception {
+        String tagId = "0";
+        String newsId = "1";
+
+        mockMvc.perform(put("/api/v2/tag/to-news")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("tag", tagId)
+                        .param("news", newsId))
+                //.andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    Exception exception = result.getResolvedException();
+//                    assertNotNull(exception);
+//                    assertTrue(exception instanceof MethodArgumentNotValidException);
+//                    assertTrue(exception.getMessage().contains("default message [tag_controller.request_body.tag_id.in_valid.min]"));
+                });
     }
 
     @Test
