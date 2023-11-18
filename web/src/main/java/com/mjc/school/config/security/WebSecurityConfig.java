@@ -33,12 +33,16 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().and().cors().disable()
+                .csrf().disable()
+                .cors().disable()
                 .authorizeRequests()
+                .antMatchers(PUT, "/api/v2/tag/to-news").permitAll()
 //                .antMatchers(GET,"/api/v2/tag/all").authenticated()
                 .antMatchers(POST, "/api/v2/comment", "/api/v2/news").authenticated()
                 .antMatchers(POST, "/api/v2/tag", "/api/v2/author").hasRole(ADMIN_ROLE_NAME)
-                .antMatchers(PUT, "/api/v2/tag/to-news", "/api/v2/tag/{id}",
+                .antMatchers(PUT,
+//                        "/api/v2/tag/to-news",
+                        "/api/v2/tag/{id}",
                         "/api/v2/news/{id}", "api/v2/comment/{id}", "api/v2/author/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(PATCH, "/api/v2/user/role").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(DELETE, "/api/v2/tag/from-news", "/api/v2/tag/{id}", "/api/v2/tag/all-news/{id}",

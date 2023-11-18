@@ -50,9 +50,10 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errorResponse, NO_CONTENT);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(ConstraintViolationException.class) // validation in controllers (@RequestParam (@Min) and other)
     public final ResponseEntity<Object> handleConstraintViolationExceptions(ConstraintViolationException ex) {
-        String details = translator.toLocale(ex.getLocalizedMessage());
+        String message = ex.getConstraintViolations().stream().toList().get(0).getMessage();
+        String details = translator.toLocale(message);
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .errorCode(BAD_REQUEST.value())
                 .errorMessage(details)
@@ -61,7 +62,7 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class) // validation DTO objects
     public final ResponseEntity<Object> handleConstraintViolationExceptions(MethodArgumentNotValidException ex) {
         String details = translator.toLocale(ex.getBindingResult()
                 .getFieldErrors()
