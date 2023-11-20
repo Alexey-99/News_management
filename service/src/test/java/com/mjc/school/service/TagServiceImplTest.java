@@ -593,18 +593,20 @@ class TagServiceImplTest {
         long countAllElements = 10;
         int page = 1;
         int size = 5;
+        int maxNumberPageExpected = 2;
 
-        when(paginationService.calcMaxNumberPage(countAllElements, size)).thenReturn(2);
+        when(paginationService.calcMaxNumberPage(countAllElements, size))
+                .thenReturn(maxNumberPageExpected);
 
-        Pagination<TagDTO> authorDTOPaginationExpected = Pagination.<TagDTO>builder()
+        Pagination<TagDTO> tagDTOPaginationExpected = Pagination.<TagDTO>builder()
                 .entity(tagDTOList)
                 .size(size)
                 .numberPage(page)
-                .maxNumberPage(2)
+                .maxNumberPage(maxNumberPageExpected)
                 .build();
-        Pagination<TagDTO> authorDTOPaginationActual =
+        Pagination<TagDTO> tagDTOPaginationActual =
                 tagService.getPagination(tagDTOList, countAllElements, page, size);
-        assertEquals(authorDTOPaginationExpected, authorDTOPaginationActual);
+        assertEquals(tagDTOPaginationExpected, tagDTOPaginationActual);
     }
 
     @ParameterizedTest

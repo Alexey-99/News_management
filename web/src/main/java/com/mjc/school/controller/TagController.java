@@ -27,6 +27,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -179,10 +181,11 @@ public class TagController {
                                                       String sortingField,
                                                       @RequestParam(value = "sort-type", required = false)
                                                       String sortingType) throws ServiceNoContentException {
-        return new ResponseEntity<>(tagService.getPagination(
+        Pagination<TagDTO> tagDTOPagination = tagService.getPagination(
                 tagService.findAll(page, size, sortingField, sortingType),
                 tagService.countAll(),
-                page, size), OK);
+                page, size);
+        return new ResponseEntity<>(tagDTOPagination, OK);
     }
 
     @ApiResponses(value = {
