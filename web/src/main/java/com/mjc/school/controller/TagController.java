@@ -58,7 +58,7 @@ public class TagController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful added a tag to news"),
+            @ApiResponse(code = 200, message = "Successful added a tag to news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
@@ -80,7 +80,7 @@ public class TagController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful deleted a tag from news"),
+            @ApiResponse(code = 200, message = "Successful deleted a tag from news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
@@ -102,7 +102,7 @@ public class TagController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful deleted a tag"),
+            @ApiResponse(code = 200, message = "Successful deleted a tag"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
@@ -120,7 +120,7 @@ public class TagController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful deleted a tag from all news"),
+            @ApiResponse(code = 200, message = "Successful deleted a tag from all news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
@@ -138,7 +138,7 @@ public class TagController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful update a tag"),
+            @ApiResponse(code = 200, message = "Successful update a tag"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")

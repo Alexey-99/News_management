@@ -17,12 +17,16 @@ import static com.mjc.school.service.pagination.PaginationService.DEFAULT_SIZE;
 @WebFilter(urlPatterns = "api/v2/*")
 public class PaginationFilter extends OncePerRequestFilter {
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
         String size = request.getParameter("size");
         String page = request.getParameter("page");
-        size = size != null && size.matches("^\\d+$") && Integer.parseInt(size) > 0 ? size : DEFAULT_SIZE;
-        page = page != null && page.matches("^\\d+$") && Integer.parseInt(page) > 0 ? page : DEFAULT_NUMBER_PAGE;
+        size = size != null && size.matches("^\\d+$") && Integer.parseInt(size) > 0 ?
+                size : DEFAULT_SIZE;
+        page = page != null && page.matches("^\\d+$") && Integer.parseInt(page) > 0 ?
+                page : DEFAULT_NUMBER_PAGE;
         request.setAttribute("size", size);
         request.setAttribute("page", page);
         filterChain.doFilter(request, response);

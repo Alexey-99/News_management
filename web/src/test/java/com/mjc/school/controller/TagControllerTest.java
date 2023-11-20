@@ -1,8 +1,6 @@
 package com.mjc.school.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.handler.DateHandler;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.TagDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -38,8 +36,6 @@ class TagControllerTest {
     private TagController tagController;
     @Mock
     private TagService tagService;
-    @Mock
-    private DateHandler dateHandler;
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
@@ -51,10 +47,11 @@ class TagControllerTest {
     }
 
     @Test
+    @DisplayName(value = "create(): Return status 201 if transferred in request correct tagDTO.")
     void create_when_everythingOk() throws Exception {
         TagDTO tagDTO = TagDTO.builder().name("tagName").build();
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
-        when(tagService.create(tagDTO)).thenReturn(true);
+        when(tagService.create(any(TagDTO.class))).thenReturn(true);
 
         mockMvc.perform(post("/api/v2/tag")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,7 +63,7 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "throws exception if name of tag is not valid. Tag name is null")
+    @DisplayName(value = "create(): throws exception if name of tag is not valid. Tag name is null")
     void create_when_notCorrectEnteredTagNameByNotNull() throws Exception {
         TagDTO tagDTO = TagDTO.builder().name(null).build();
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
@@ -84,7 +81,7 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "throws exception if name of tag is not valid. Tag name is blank")
+    @DisplayName(value = "create(): throws exception if name of tag is not valid. Tag name is blank")
     void create_when_inCorrectEnteredTagNameByNotBlank() throws Exception {
         String incorrectTagName = "   ";
         TagDTO tagDTO = TagDTO.builder().name(incorrectTagName).build();
@@ -103,7 +100,7 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "throws exception if name size of tag is not valid")
+    @DisplayName(value = "create(): throws exception if name size of tag is not valid")
     void create_when_inCorrectEnteredTagNameBySize() throws Exception {
         String incorrectTagName = "t";
         TagDTO tagDTO = TagDTO.builder().name(incorrectTagName).build();
@@ -122,7 +119,8 @@ class TagControllerTest {
     }
 
     @Test
-    void addToNews_everythingOk() throws Exception {
+    @DisplayName(value = "addToNews(): Return status 200 if correct entered tagId and newsId.")
+    void addToNews_when_everythingOk() throws Exception {
         String tagId = "1";
         String newsId = "1";
 
@@ -136,8 +134,9 @@ class TagControllerTest {
     }
 
     @Test
-    void deleteFromNews_everythingOk() throws Exception {
-        String tagId = "-1";
+    @DisplayName(value = "deleteFromNews(): Return status 200 if entered correct tagId and newsId.")
+    void deleteFromNews_when_everythingOk() throws Exception {
+        String tagId = "1";
         String newsId = "1";
 
         when(tagService.deleteFromNews(anyLong(), anyLong())).thenReturn(true);
@@ -151,23 +150,45 @@ class TagControllerTest {
     }
 
     @Test
+    @DisplayName(value = "deleteById: Return status 200 if correct entered tagId and deleted tag by id")
     void deleteById() throws Exception {
         String tagId = "1";
 
         when(tagService.deleteById(anyLong())).thenReturn(true);
 
-        mockMvc.perform(delete("/api/v2/tag/{id}", tagId)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/api/v2/tag/{id}", tagId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));
     }
 
     @Test
-    void deleteFromAllNews() {
+    @DisplayName(value = "deleteById: Return status 200 if correct entered tagId and deleted tag by id")
+    void deleteFromAllNews() throws Exception {
+        String tagId = "1";
+
+        when(tagService.deleteFromAllNews(anyLong())).thenReturn(true);
+
+        mockMvc.perform(delete("/api/v2/tag/all-news/{id}", tagId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(true));
     }
 
     @Test
-    void update() {
+    void update() throws Exception {
+        String tagId = "1";
+        TagDTO tagDTO = TagDTO.builder().name("tag_name").build();
+        String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
+        TagDTO tagDTOUpdated = TagDTO.builder()
+                .name(tagDTO.getName())
+                .build();
+
+        when(tagService.update(any(TagDTO.class))).thenReturn(tagDTOUpdated);
+
+        mockMvc.perform(put("/api/v2/tag/{id}", tagId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tagDTOJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(tagDTOUpdated));
     }
 
     @Test
