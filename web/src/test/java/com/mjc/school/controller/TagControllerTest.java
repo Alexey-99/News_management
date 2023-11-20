@@ -1,6 +1,7 @@
 package com.mjc.school.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.handler.DateHandler;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.TagDTO;
@@ -10,22 +11,27 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Validated
 @ExtendWith(MockitoExtension.class)
 class TagControllerTest {
     @InjectMocks
@@ -117,12 +123,26 @@ class TagControllerTest {
 
     @Test
     void addToNews_everythingOk() throws Exception {
-        String tagId = "0";
+        String tagId = "1";
         String newsId = "1";
 
-        when(tagService.addToNews(Long.parseLong(tagId), Long.parseLong(newsId))).thenReturn(true);
+        when(tagService.addToNews(anyLong(), anyLong())).thenReturn(true);
 
         mockMvc.perform(put("/api/v2/tag/to-news")
+                        .param("tag", tagId)
+                        .param("news", newsId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(true));
+    }
+
+    @Test
+    void deleteFromNews_everythingOk() throws Exception {
+        String tagId = "-1";
+        String newsId = "1";
+
+        when(tagService.deleteFromNews(anyLong(), anyLong())).thenReturn(true);
+
+        mockMvc.perform(delete("/api/v2/tag/from-news")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("tag", tagId)
                         .param("news", newsId))
@@ -131,29 +151,15 @@ class TagControllerTest {
     }
 
     @Test
-    void addToNews_when_inCorrectTagId() throws Exception {
-        String tagId = "0";
-        String newsId = "1";
+    void deleteById() throws Exception {
+        String tagId = "1";
 
-        mockMvc.perform(put("/api/v2/tag/to-news")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("tag", tagId)
-                        .param("news", newsId))
-                //.andExpect(status().isBadRequest())
-                .andExpect(result -> {
-                    Exception exception = result.getResolvedException();
-//                    assertNotNull(exception);
-//                    assertTrue(exception instanceof MethodArgumentNotValidException);
-//                    assertTrue(exception.getMessage().contains("default message [tag_controller.request_body.tag_id.in_valid.min]"));
-                });
-    }
+        when(tagService.deleteById(anyLong())).thenReturn(true);
 
-    @Test
-    void deleteFromNews() {
-    }
-
-    @Test
-    void deleteById() {
+        mockMvc.perform(delete("/api/v2/tag/{id}", tagId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(true));
     }
 
     @Test

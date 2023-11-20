@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers(PUT, "/api/v2/tag/to-news").permitAll()
+//                .antMatchers(PUT, "/api/v2/tag/to-news").permitAll()
 //                .antMatchers(GET,"/api/v2/tag/all").authenticated()
                 .antMatchers(POST, "/api/v2/comment", "/api/v2/news").authenticated()
                 .antMatchers(POST, "/api/v2/tag", "/api/v2/author").hasRole(ADMIN_ROLE_NAME)

@@ -93,11 +93,11 @@ public class TagController {
     public ResponseEntity<Boolean> deleteFromNews(@RequestParam(value = "tag")
                                                   @Min(value = 1,
                                                           message = "tag_controller.request_body.tag_id.in_valid.min")
-                                                  long tagId,
+                                                  Long tagId,
                                                   @RequestParam(value = "news")
                                                   @Min(value = 1,
                                                           message = "tag_controller.request_body.news_id.in_valid.min")
-                                                  long newsId) throws ServiceBadRequestParameterException {
+                                                  Long newsId) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(tagService.deleteFromNews(tagId, newsId), OK);
     }
 
