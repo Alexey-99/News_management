@@ -47,7 +47,10 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "create(): Return status 201 if transferred in request correct tagDTO.")
+    @DisplayName(value = """
+            create(): Return status 201.
+            If transferred in request correct tagDTO.
+            """)
     void create_when_everythingOk() throws Exception {
         TagDTO tagDTO = TagDTO.builder().name("tagName").build();
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
@@ -63,7 +66,10 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "create(): throws exception if name of tag is not valid. Tag name is null")
+    @DisplayName(value = """
+            create(): throws MethodArgumentNotValidException.
+            If name of tag is not valid. Tag name is null.
+            """)
     void create_when_notCorrectEnteredTagNameByNotNull() throws Exception {
         TagDTO tagDTO = TagDTO.builder().name(null).build();
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
@@ -76,12 +82,16 @@ class TagControllerTest {
                     Exception exception = result.getResolvedException();
                     assertNotNull(exception);
                     assertTrue(exception instanceof MethodArgumentNotValidException);
-                    assertTrue(exception.getMessage().contains("default message [tag_dto.name.not_valid.null]"));
+                    String messageExpected = "default message [tag_dto.name.not_valid.null]";
+                    assertTrue(exception.getMessage().contains(messageExpected));
                 });
     }
 
     @Test
-    @DisplayName(value = "create(): throws exception if name of tag is not valid. Tag name is blank")
+    @DisplayName(value = """
+            create(): throws MethodArgumentNotValidException.
+            If name of tag is not valid. Tag name is blank.
+            """)
     void create_when_inCorrectEnteredTagNameByNotBlank() throws Exception {
         String incorrectTagName = "   ";
         TagDTO tagDTO = TagDTO.builder().name(incorrectTagName).build();
@@ -95,12 +105,16 @@ class TagControllerTest {
                     Exception exception = result.getResolvedException();
                     assertNotNull(exception);
                     assertTrue(exception instanceof MethodArgumentNotValidException);
-                    assertTrue(exception.getMessage().contains("default message [tag_dto.name.not_valid.is_blank]"));
+                    String messageExpected = "default message [tag_dto.name.not_valid.is_blank]";
+                    assertTrue(exception.getMessage().contains(messageExpected));
                 });
     }
 
     @Test
-    @DisplayName(value = "create(): throws exception if name size of tag is not valid")
+    @DisplayName(value = """
+            create(): throws MethodArgumentNotValidException.
+            if size name of tag is not valid.
+            """)
     void create_when_inCorrectEnteredTagNameBySize() throws Exception {
         String incorrectTagName = "t";
         TagDTO tagDTO = TagDTO.builder().name(incorrectTagName).build();
@@ -114,12 +128,16 @@ class TagControllerTest {
                     Exception exception = result.getResolvedException();
                     assertNotNull(exception);
                     assertTrue(exception instanceof MethodArgumentNotValidException);
-                    assertTrue(exception.getMessage().contains("default message [tag_dto.name.not_valid.size]"));
+                    String messageExpected = "default message [tag_dto.name.not_valid.size]";
+                    assertTrue(exception.getMessage().contains(messageExpected));
                 });
     }
 
     @Test
-    @DisplayName(value = "addToNews(): Return status 200 if correct entered tagId and newsId.")
+    @DisplayName(value = """
+            addToNews(): Return status 200.
+            If correct entered tagId and newsId.
+            """)
     void addToNews_when_everythingOk() throws Exception {
         String tagId = "1";
         String newsId = "1";
@@ -134,7 +152,9 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "deleteFromNews(): Return status 200 if entered correct tagId and newsId.")
+    @DisplayName(value = """
+            deleteFromNews(): Return status 200.
+            If entered correct tagId and newsId.""")
     void deleteFromNews_when_everythingOk() throws Exception {
         String tagId = "1";
         String newsId = "1";
@@ -150,7 +170,10 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "deleteById: Return status 200 if correct entered tagId and deleted tag by id")
+    @DisplayName(value = """
+            deleteById: Return status 200.
+            if correct entered tagId and deleted tag by id
+            """)
     void deleteById() throws Exception {
         String tagId = "1";
 
@@ -162,7 +185,10 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "deleteById: Return status 200 if correct entered tagId and deleted tag by id")
+    @DisplayName(value = """
+            deleteById: Return status 200.
+            If correct entered tagId and deleted tag by id
+            """)
     void deleteFromAllNews() throws Exception {
         String tagId = "1";
 
@@ -174,10 +200,16 @@ class TagControllerTest {
     }
 
     @Test
-    void update() throws Exception {
+    @DisplayName(value = """
+            deleteById: Return status 200 and updated tag.
+            If correct entered tagId and tagDTO.
+            """)
+    void update_when_everythingOk() throws Exception {
         String tagId = "1";
+
         TagDTO tagDTO = TagDTO.builder().name("tag_name").build();
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
+
         TagDTO tagDTOUpdated = TagDTO.builder()
                 .name(tagDTO.getName())
                 .build();
@@ -189,6 +221,54 @@ class TagControllerTest {
                         .content(tagDTOJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(tagDTOUpdated));
+    }
+
+    @Test
+    @DisplayName(value = """
+            deleteById: Return status 200 and updated tag.
+            If correct entered tagId and entered name of tag is not valid. Tag name is null.
+            """)
+    void update_when_correctTagId_and_tagNameNull() throws Exception {
+        String tagId = "1";
+
+        TagDTO tagDTO = TagDTO.builder().name(null).build();
+        String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
+
+        mockMvc.perform(put("/api/v2/tag/{id}", tagId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tagDTOJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    Exception exception = result.getResolvedException();
+                    assertNotNull(exception);
+                    assertTrue(exception instanceof MethodArgumentNotValidException);
+                    String messageExpected = "default message [tag_dto.name.not_valid.null]";
+                    assertTrue(exception.getMessage().contains(messageExpected));
+                });
+    }
+
+    @Test
+    @DisplayName(value = """
+            deleteById: Return status 200 and updated tag.
+            If correct entered tagId and entered name of tag is not valid. Tag name is null.
+            """)
+    void update_when_correctTagId_and_tagNameBlank() throws Exception {
+        String tagId = "1";
+
+        TagDTO tagDTO = TagDTO.builder().name(null).build();
+        String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
+
+        mockMvc.perform(put("/api/v2/tag/{id}", tagId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tagDTOJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    Exception exception = result.getResolvedException();
+                    assertNotNull(exception);
+                    assertTrue(exception instanceof MethodArgumentNotValidException);
+                    String messageExpected = "default message [tag_dto.name.not_valid.null]";
+                    assertTrue(exception.getMessage().contains(messageExpected));
+                });
     }
 
     @Test
