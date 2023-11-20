@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -162,6 +161,7 @@ public class TagController {
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 204, message = "Not found content in data base"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
@@ -187,6 +187,7 @@ public class TagController {
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 204, message = "Not found content in data base"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
@@ -205,6 +206,7 @@ public class TagController {
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 204, message = "Not found content in data base"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
@@ -233,6 +235,7 @@ public class TagController {
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 204, message = "Not found content in data base"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
             @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
