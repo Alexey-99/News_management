@@ -371,7 +371,9 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName(value = "")
+    @DisplayName(value = """
+            findById(): Return status 200 and List of tags.
+            """)
     void findById() {
     }
 

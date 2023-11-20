@@ -27,8 +27,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import java.util.List;
-
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -43,7 +41,6 @@ public class TagController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful created a tag"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -61,7 +58,6 @@ public class TagController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful added a tag to news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -83,7 +79,6 @@ public class TagController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful deleted a tag from news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -105,7 +100,6 @@ public class TagController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful deleted a tag"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -123,7 +117,6 @@ public class TagController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful deleted a tag from all news"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -141,7 +134,6 @@ public class TagController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful update a tag"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -165,7 +157,6 @@ public class TagController {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 204, message = "Not found content in data base"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -181,18 +172,16 @@ public class TagController {
                                                       String sortingField,
                                                       @RequestParam(value = "sort-type", required = false)
                                                       String sortingType) throws ServiceNoContentException {
-        Pagination<TagDTO> tagDTOPagination = tagService.getPagination(
+        return new ResponseEntity<>(tagService.getPagination(
                 tagService.findAll(page, size, sortingField, sortingType),
                 tagService.countAll(),
-                page, size);
-        return new ResponseEntity<>(tagDTOPagination, OK);
+                page, size), OK);
     }
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 204, message = "Not found content in data base"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -211,7 +200,6 @@ public class TagController {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 204, message = "Not found content in data base"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
@@ -240,7 +228,6 @@ public class TagController {
             @ApiResponse(code = 200, message = "Successful completed request"),
             @ApiResponse(code = 204, message = "Not found content in data base"),
             @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiOperation(value = """
