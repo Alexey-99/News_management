@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,6 +28,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,7 +63,7 @@ class TagControllerTest {
         when(tagService.create(any(TagDTO.class))).thenReturn(true);
 
         mockMvc.perform(post("/api/v2/tag")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .content(tagDTOJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$").value(true));
@@ -81,7 +81,7 @@ class TagControllerTest {
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
 
         mockMvc.perform(post("/api/v2/tag")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .content(tagDTOJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
@@ -104,7 +104,7 @@ class TagControllerTest {
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
 
         mockMvc.perform(post("/api/v2/tag")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .content(tagDTOJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
@@ -127,7 +127,7 @@ class TagControllerTest {
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
 
         mockMvc.perform(post("/api/v2/tag")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .content(tagDTOJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
@@ -172,7 +172,7 @@ class TagControllerTest {
         when(tagService.deleteFromNews(anyLong(), anyLong())).thenReturn(true);
 
         mockMvc.perform(delete("/api/v2/tag/from-news")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .param("tag", tagId)
                         .param("news", newsId))
                 .andExpect(status().isOk())
@@ -233,15 +233,21 @@ class TagControllerTest {
         TagDTO tagDTOUpdated = TagDTO.builder()
                 .name(tagDTO.getName())
                 .build();
-
         when(tagService.update(any(TagDTO.class))).thenReturn(tagDTOUpdated);
 
         mockMvc.perform(put("/api/v2/tag/{id}", tagId)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .content(tagDTOJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(tagDTOUpdated));
-
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(tagDTOUpdated);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
         long tagIdL = Long.parseLong(tagId);
         tagDTO.setId(tagIdL);
         verify(tagService, times(1)).update(tagDTO);
@@ -259,7 +265,7 @@ class TagControllerTest {
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
 
         mockMvc.perform(put("/api/v2/tag/{id}", tagId)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .content(tagDTOJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
@@ -284,7 +290,7 @@ class TagControllerTest {
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
 
         mockMvc.perform(put("/api/v2/tag/{id}", tagId)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .content(tagDTOJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
@@ -309,7 +315,7 @@ class TagControllerTest {
         String tagDTOJson = objectMapper.writeValueAsString(tagDTO);
 
         mockMvc.perform(put("/api/v2/tag/{id}", tagId)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON_VALUE)
                         .content(tagDTOJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
@@ -354,12 +360,15 @@ class TagControllerTest {
                 .thenReturn(tagDTOPaginationExpected);
 
         mockMvc.perform(get("/api/v2/tag/all")
-                        .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr("size", size)
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
                 .andExpect(result -> {
                     String actualContentJson = result.getResponse().getContentAsString();
                     String expectedContentJson = objectMapper.writeValueAsString(tagDTOPaginationExpected);
@@ -370,16 +379,129 @@ class TagControllerTest {
 
     @Test
     @DisplayName(value = """
-            findById(): Return status 200 and List of tags.
+            findById(): Return status 200 and found tag by entered id.
             """)
-    void findById() {
+    void findById() throws Exception {
+        String tagId = "1";
+
+        TagDTO tagDTOExpected = TagDTO.builder()
+                .id(Long.parseLong(tagId))
+                .name("A_tag_name")
+                .build();
+        when(tagService.findById(anyLong())).thenReturn(tagDTOExpected);
+
+        mockMvc.perform(get("/api/v2/tag/{id}", tagId))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(tagDTOExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
-    void findByPartOfName() {
+    @DisplayName(value = """
+            findByPartOfName(): Return status 200 and found list of tags by entered part of name.
+            """)
+    void findByPartOfName() throws Exception {
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "name";
+        String partOfName = "partOfName";
+        int maxNumberPageExpected = 2;
+
+        List<TagDTO> tagDTOListExpected = List.of(
+                TagDTO.builder().id(1).name("A_tag_partOfName_name").build(),
+                TagDTO.builder().id(3).name("C_tag_name_partOfName").build(),
+                TagDTO.builder().id(2).name("B_tag_partOfName__name").build(),
+                TagDTO.builder().id(4).name("D_partOfName_tag_name").build(),
+                TagDTO.builder().id(5).name("Z_tag_name_partOfName").build());
+        when(tagService.findByPartOfName(anyString(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(tagDTOListExpected);
+
+        long countAllElementsExpected = 10;
+        when(tagService.countAllByPartOfName(partOfName)).thenReturn(countAllElementsExpected);
+
+        Pagination<TagDTO> tagDTOPaginationExpected = Pagination.<TagDTO>builder()
+                .entity(tagDTOListExpected)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(tagService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(tagDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/tag/part-name/{partOfName}", partOfName)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(tagDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
-    void findByNewsId() {
+    @DisplayName(value = """
+            findByNewsId(): Return status 200 and found list of tags by entered newsId.
+            """)
+    void findByNewsId() throws Exception {
+        String newsId = "1";
+        long newsIdL = 1;
+
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "name";
+        int maxNumberPageExpected = 2;
+        long countAllElementsExpected = 10;
+
+        List<TagDTO> tagDTOListExpected = List.of(
+                TagDTO.builder().id(1).countNews(1).name("A_tag_name").build(),
+                TagDTO.builder().id(3).countNews(1).name("C_tag_name").build(),
+                TagDTO.builder().id(2).countNews(1).name("B_tag_name").build(),
+                TagDTO.builder().id(4).countNews(1).name("D_tag_name").build(),
+                TagDTO.builder().id(5).countNews(1).name("Z_tag_name").build());
+        when(tagService.findByNewsId(anyLong(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(tagDTOListExpected);
+
+        when(tagService.countAllByNewsId(newsIdL)).thenReturn(countAllElementsExpected);
+
+        Pagination<TagDTO> tagDTOPaginationExpected = Pagination.<TagDTO>builder()
+                .entity(tagDTOListExpected)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(tagService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(tagDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(tagDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 }

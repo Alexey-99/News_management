@@ -27,6 +27,10 @@ public class AuthController {
     public ResponseEntity<JwtTokenResponse> createAuthToken(@Valid
                                                             @RequestBody
                                                             CreateJwtTokenRequest authRequest) throws ServiceBadRequestParameterException {
-        return new ResponseEntity<>(new JwtTokenResponse(authService.createAuthToken(authRequest)), CREATED);
+        return new ResponseEntity<>(
+                JwtTokenResponse.builder()
+                        .token(authService.createAuthToken(authRequest))
+                        .build(),
+                CREATED);
     }
 }
