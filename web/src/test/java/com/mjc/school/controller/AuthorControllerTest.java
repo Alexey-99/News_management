@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.validation.dto.TagDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -361,8 +360,50 @@ class AuthorControllerTest {
     @DisplayName(value = """
             findByPartOfName(): Return status 200 and found list of authors by entered part of name.
             """)
-    void findByPartOfName() {
+    void findByPartOfName() throws Exception {
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "name";
+        String partOfName = "partOfName";
+        int maxNumberPageExpected = 2;
 
+        List<AuthorDTO> authorDTOListExpected = List.of(
+                AuthorDTO.builder().id(1).name("Alex_partOfName").countNews(4).build(),
+                AuthorDTO.builder().id(3).name("B_partOfName_Bam").countNews(2).build(),
+                AuthorDTO.builder().id(2).name("Se_partOfName_m").countNews(6).build(),
+                AuthorDTO.builder().id(4).name("T_partOfName_om").countNews(0).build(),
+                AuthorDTO.builder().id(5).name("Van_partOfName").countNews(0).build());
+        when(authorService.findByPartOfName(anyString(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(authorDTOListExpected);
+
+        long countAllElementsExpected = 10;
+        when(authorService.countAllByPartOfName(partOfName)).thenReturn(countAllElementsExpected);
+
+        Pagination<AuthorDTO> authorDTOPaginationExpected = Pagination.<AuthorDTO>builder()
+                .entity(authorDTOListExpected)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(authorService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(authorDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/author/part-name/{partOfName}", partOfName)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(authorDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test

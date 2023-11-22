@@ -5,11 +5,11 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Author;
 import com.mjc.school.service.author.impl.sort.AuthorSortField;
+import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.service.author.AuthorService;
-import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -120,8 +120,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDTO> findByPartOfName(String partOfName,
-                                            int page, int size,
-                                            String sortField, String sortingType) throws ServiceNoContentException {
+                                         int page, int size,
+                                         String sortField, String sortingType) throws ServiceNoContentException {
         List<Author> authorsList = authorRepository.findByPartOfName(
                 "%" + partOfName + "%",
                 PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
@@ -181,7 +181,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements,
-                                               int page, int size) {
+                                            int page, int size) {
         return Pagination
                 .<AuthorDTO>builder()
                 .entity(elementsOnPage)
