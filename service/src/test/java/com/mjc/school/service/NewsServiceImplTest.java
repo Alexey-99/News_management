@@ -24,7 +24,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +31,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
 class NewsServiceImplTest {
@@ -54,7 +56,7 @@ class NewsServiceImplTest {
     void create_when_notExistsNewsByTitle() throws ServiceBadRequestParameterException {
         NewsDTO newsDTOTesting = NewsDTO.builder().id(1).title("News_title_test").build();
 
-        when(newsRepository.notExistsByTitle(newsDTOTesting.getTitle())).thenReturn(true);
+        when(newsRepository.notExistsByTitle(anyString())).thenReturn(true);
 
         boolean actualResult = newsService.create(newsDTOTesting);
         assertTrue(actualResult);
@@ -78,7 +80,7 @@ class NewsServiceImplTest {
     void deleteById_when_newsExistsById() {
         long newsId = 1;
 
-        when(newsRepository.existsById(newsId)).thenReturn(true);
+        when(newsRepository.existsById(anyLong())).thenReturn(true);
 
         boolean actualResult = newsService.deleteById(newsId);
         assertTrue(actualResult);
@@ -88,7 +90,7 @@ class NewsServiceImplTest {
     void deleteById_when_newsNotExistsById() {
         long newsId = 1;
 
-        when(newsRepository.existsById(newsId)).thenReturn(false);
+        when(newsRepository.existsById(anyLong())).thenReturn(false);
 
         boolean actualResult = newsService.deleteById(newsId);
         assertTrue(actualResult);
@@ -98,7 +100,7 @@ class NewsServiceImplTest {
     void deleteByAuthorId_when_existsAuthorById() throws ServiceBadRequestParameterException {
         long authorId = 1;
 
-        when(authorRepository.existsById(authorId)).thenReturn(true);
+        when(authorRepository.existsById(anyLong())).thenReturn(true);
 
         boolean actualResult = newsService.deleteByAuthorId(authorId);
         assertTrue(actualResult);
@@ -108,7 +110,7 @@ class NewsServiceImplTest {
     void deleteByAuthorId_when_notExistsAuthorById() {
         long authorId = 1;
 
-        when(authorRepository.existsById(authorId)).thenReturn(false);
+        when(authorRepository.existsById(anyLong())).thenReturn(false);
 
         ServiceBadRequestParameterException exceptionActual =
                 assertThrows(ServiceBadRequestParameterException.class,
@@ -122,9 +124,9 @@ class NewsServiceImplTest {
             throws ServiceBadRequestParameterException {
         long authorId = 1;
 
-        when(authorRepository.existsById(authorId)).thenReturn(true);
+        when(authorRepository.existsById(anyLong())).thenReturn(true);
 
-        when(newsRepository.findByAuthorId(authorId))
+        when(newsRepository.findByAuthorId(anyLong()))
                 .thenReturn(List.of(
                         News.builder().id(1).author(Author.builder().id(3).build()).build(),
                         News.builder().id(2).author(Author.builder().id(2).build()).build(),
@@ -137,7 +139,7 @@ class NewsServiceImplTest {
     void deleteAllTagsFromNews_when_notFoundNewsById() {
         long newsId = 1;
 
-        when(newsRepository.findById(newsId)).thenReturn(Optional.empty());
+        when(newsRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         ServiceBadRequestParameterException exceptionActual =
                 assertThrows(ServiceBadRequestParameterException.class,
@@ -167,10 +169,10 @@ class NewsServiceImplTest {
                         .tag(Tag.builder().id(3).build())
                         .build());
         newsFromDB.setTags(newsTagList);
-        when(newsRepository.findById(newsId)).thenReturn(Optional.of(newsFromDB));
+        when(newsRepository.findById(anyLong())).thenReturn(Optional.of(newsFromDB));
 
         NewsDTO newsDTOExpected = NewsDTO.builder().id(newsId).countTags(0).build();
-        when(newsConverter.toDTO(newsFromDB)).thenReturn(newsDTOExpected);
+        when(newsConverter.toDTO(any(News.class))).thenReturn(newsDTOExpected);
 
         NewsDTO newsDTOActual = newsService.deleteAllTagsFromNews(newsId);
         assertEquals(newsDTOExpected, newsDTOActual);
@@ -184,7 +186,7 @@ class NewsServiceImplTest {
                 .countTags(0)
                 .build();
 
-        when(newsRepository.findById(newsDTOTesting.getId())).thenReturn(Optional.empty());
+        when(newsRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         ServiceBadRequestParameterException exceptionActual =
                 assertThrows(ServiceBadRequestParameterException.class,
@@ -207,9 +209,9 @@ class NewsServiceImplTest {
                 .tags(List.of())
                 .author(Author.builder().id(1).build())
                 .build();
-        when(newsRepository.findById(newsDTOTesting.getId()))
+        when(newsRepository.findById(anyLong()))
                 .thenReturn(Optional.of(newsFromDB));
-        when(authorRepository.findById(newsDTOTesting.getAuthorId()))
+        when(authorRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
         ServiceBadRequestParameterException exceptionActual =
@@ -233,11 +235,11 @@ class NewsServiceImplTest {
                 .tags(List.of())
                 .author(Author.builder().id(1).build())
                 .build();
-        when(newsRepository.findById(newsDTOTesting.getId()))
+        when(newsRepository.findById(anyLong()))
                 .thenReturn(Optional.of(newsFromDB));
 
         Author authorFromDB = Author.builder().id(newsDTOTesting.getAuthorId()).build();
-        when(authorRepository.findById(newsDTOTesting.getAuthorId()))
+        when(authorRepository.findById(anyLong()))
                 .thenReturn(Optional.of(authorFromDB));
 
         String currentDateExpected = "date-time";
@@ -250,7 +252,7 @@ class NewsServiceImplTest {
                 .countTags(0)
                 .authorId(2)
                 .build();
-        when(newsConverter.toDTO(newsFromDB)).thenReturn(newsDTOExpected);
+        when(newsConverter.toDTO(any(News.class))).thenReturn(newsDTOExpected);
 
         NewsDTO newsDTOActual = newsService.update(newsDTOTesting);
         assertEquals(newsDTOActual, newsDTOExpected);
@@ -271,11 +273,11 @@ class NewsServiceImplTest {
                 .tags(List.of())
                 .author(Author.builder().id(1).build())
                 .build();
-        when(newsRepository.findById(newsDTOTesting.getId())).thenReturn(Optional.of(newsFromDB));
+        when(newsRepository.findById(anyLong())).thenReturn(Optional.of(newsFromDB));
 
-        when(newsRepository.notExistsByTitle(newsDTOTesting.getTitle())).thenReturn(true);
+        when(newsRepository.notExistsByTitle(anyString())).thenReturn(true);
 
-        when(authorRepository.findById(newsDTOTesting.getAuthorId())).thenReturn(Optional.empty());
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         ServiceBadRequestParameterException exceptionActual =
                 assertThrows(ServiceBadRequestParameterException.class,
@@ -298,12 +300,12 @@ class NewsServiceImplTest {
                 .tags(List.of())
                 .author(Author.builder().id(1).build())
                 .build();
-        when(newsRepository.findById(newsDTOTesting.getId())).thenReturn(Optional.of(newsFromDB));
+        when(newsRepository.findById(anyLong())).thenReturn(Optional.of(newsFromDB));
 
-        when(newsRepository.notExistsByTitle(newsDTOTesting.getTitle())).thenReturn(true);
+        when(newsRepository.notExistsByTitle(anyString())).thenReturn(true);
 
         Author authorFromDB = Author.builder().id(newsDTOTesting.getAuthorId()).build();
-        when(authorRepository.findById(newsDTOTesting.getAuthorId()))
+        when(authorRepository.findById(anyLong()))
                 .thenReturn(Optional.of(authorFromDB));
 
         String currentDateExpected = "date-time";
@@ -316,7 +318,7 @@ class NewsServiceImplTest {
                 .countTags(0)
                 .authorId(2)
                 .build();
-        when(newsConverter.toDTO(newsFromDB)).thenReturn(newsDTOExpected);
+        when(newsConverter.toDTO(any(News.class))).thenReturn(newsDTOExpected);
 
         NewsDTO newsDTOActual = newsService.update(newsDTOTesting);
         assertEquals(newsDTOActual, newsDTOExpected);
@@ -337,9 +339,9 @@ class NewsServiceImplTest {
                 .tags(List.of())
                 .author(Author.builder().id(1).build())
                 .build();
-        when(newsRepository.findById(newsDTOTesting.getId())).thenReturn(Optional.of(newsFromDB));
+        when(newsRepository.findById(anyLong())).thenReturn(Optional.of(newsFromDB));
 
-        when(newsRepository.notExistsByTitle(newsDTOTesting.getTitle())).thenReturn(false);
+        when(newsRepository.notExistsByTitle(anyString())).thenReturn(false);
 
         ServiceBadRequestParameterException exceptionActual =
                 assertThrows(ServiceBadRequestParameterException.class,
@@ -351,14 +353,12 @@ class NewsServiceImplTest {
     void findAllWithPages_when_notFoundNews() {
         int page = 1;
         int size = 5;
-        int numberFirstElement = 0;
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(0);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(0);
 
-        when(newsRepository.findAllList(
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findAllList(any(PageRequest.class)))
                 .thenReturn(List.of());
 
         ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
@@ -371,11 +371,10 @@ class NewsServiceImplTest {
     void findAllWithPages_when_foundNews() throws ServiceNoContentException {
         int page = 1;
         int size = 5;
-        int numberFirstElement = 0;
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(0);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(0);
 
         List<News> newsFindAllList = List.of(
                 News.builder().id(1).content("CONTENT 1")
@@ -384,30 +383,56 @@ class NewsServiceImplTest {
                         .modified("2023-10-20T16:05:32.413").build(),
                 News.builder().id(2).content("CONTENT 2")
                         .modified("2023-10-20T16:05:25.413").build());
-        when(newsRepository.findAllList(
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findAllList(any(PageRequest.class)))
                 .thenReturn(newsFindAllList);
 
-        when(newsConverter.toDTO(News.builder().id(1).content("CONTENT 1")
-                .modified("2023-10-20T16:05:38.685").build()))
-                .thenReturn(NewsDTO.builder().id(1).content("CONTENT 1")
-                        .modified("2023-10-20T16:05:38.685").build());
-        when(newsConverter.toDTO(News.builder().id(3).content("CONTENT 3")
-                .modified("2023-10-20T16:05:32.413").build()))
-                .thenReturn(NewsDTO.builder().id(3).content("CONTENT 3")
-                        .modified("2023-10-20T16:05:32.413").build());
-        when(newsConverter.toDTO(News.builder().id(2).content("CONTENT 2")
-                .modified("2023-10-20T16:05:25.413").build()))
-                .thenReturn(NewsDTO.builder().id(2).content("CONTENT 2")
-                        .modified("2023-10-20T16:05:25.413").build());
+        when(newsConverter.toDTO(News.builder()
+                .id(1)
+                .content("CONTENT 1")
+                .modified("2023-10-20T16:05:38.685")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .build());
+        when(newsConverter.toDTO(News.builder()
+                .id(3)
+                .content("CONTENT 3")
+                .modified("2023-10-20T16:05:32.413")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .build());
+        when(newsConverter.toDTO(News.builder()
+                .id(2)
+                .content("CONTENT 2")
+                .modified("2023-10-20T16:05:25.413")
+                .build()))
+                .thenReturn(NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
 
         List<NewsDTO> newsDTOListExpected = List.of(
-                NewsDTO.builder().id(1).content("CONTENT 1")
-                        .modified("2023-10-20T16:05:38.685").build(),
-                NewsDTO.builder().id(3).content("CONTENT 3")
-                        .modified("2023-10-20T16:05:32.413").build(),
-                NewsDTO.builder().id(2).content("CONTENT 2")
-                        .modified("2023-10-20T16:05:25.413").build());
+                NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
 
         List<NewsDTO> newsDTOListActual = newsService.findAll(page, size, sortField, sortType);
         assertEquals(newsDTOListExpected, newsDTOListActual);
@@ -469,7 +494,7 @@ class NewsServiceImplTest {
     void findById_when_notFoundNewsById() {
         long newsId = 1;
 
-        when(newsRepository.findById(newsId)).thenReturn(Optional.empty());
+        when(newsRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
                 () -> newsService.findById(newsId));
@@ -481,10 +506,12 @@ class NewsServiceImplTest {
         long newsId = 1;
 
         News newsFromDB = News.builder().id(newsId).build();
-        when(newsRepository.findById(newsId)).thenReturn(Optional.of(newsFromDB));
+        when(newsRepository.findById(anyLong()))
+                .thenReturn(Optional.of(newsFromDB));
 
         NewsDTO newsDTOExpected = NewsDTO.builder().id(newsId).build();
-        when(newsConverter.toDTO(newsFromDB)).thenReturn(newsDTOExpected);
+        when(newsConverter.toDTO(any(News.class)))
+                .thenReturn(newsDTOExpected);
 
         NewsDTO newsDTOActual = newsService.findById(newsId);
         assertEquals(newsDTOExpected, newsDTOActual);
@@ -500,7 +527,8 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
         Tag tagByTagNameFromDB = Tag.builder().id(2).name(tagName).build();
         List<News> newsFindByTagNameList = List.of(
@@ -534,8 +562,7 @@ class NewsServiceImplTest {
                                 .build()))
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByTagName(tagName,
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByTagName(anyString(), any(PageRequest.class)))
                 .thenReturn(newsFindByTagNameList);
 
         when(newsConverter.toDTO(News.builder().id(1).content("CONTENT 1")
@@ -619,9 +646,8 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
-        when(newsRepository.findByTagName(tagName,
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(numberFirstElement);
+        when(newsRepository.findByTagName(anyString(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
         ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
@@ -634,7 +660,7 @@ class NewsServiceImplTest {
     void countAllNewsByTagName() {
         String tagName = "tag_name";
 
-        when(newsRepository.countAllNewsByTagName(tagName)).thenReturn(3L);
+        when(newsRepository.countAllNewsByTagName(anyString())).thenReturn(3L);
         long countAllNewsExpected = 3;
         long countAllNewsActual = newsService.countAllNewsByTagName(tagName);
         assertEquals(countAllNewsExpected, countAllNewsActual);
@@ -650,10 +676,10 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
-        when(newsRepository.findByTagId(tagId,
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByTagId(anyLong(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
         ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
@@ -671,7 +697,8 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
         List<News> newsFindByTagIdList = List.of(
                 News.builder()
@@ -701,8 +728,7 @@ class NewsServiceImplTest {
                                         .build()))
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByTagId(tagId,
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByTagId(anyLong(), any(PageRequest.class)))
                 .thenReturn(newsFindByTagIdList);
 
         when(newsConverter.toDTO(News.builder()
@@ -779,7 +805,7 @@ class NewsServiceImplTest {
     void countAllNewsByTagId() {
         long tagId = 1;
 
-        when(newsRepository.countAllNewsByTagId(tagId)).thenReturn(2L);
+        when(newsRepository.countAllNewsByTagId(anyLong())).thenReturn(2L);
         long countAllNewsExpected = 2;
         long countAllNewsActual = newsService.countAllNewsByTagId(tagId);
         assertEquals(countAllNewsExpected, countAllNewsActual);
@@ -795,10 +821,9 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(numberFirstElement);
 
-        when(newsRepository.findByPartOfAuthorName("%" + partOfAuthorName + "%",
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByPartOfAuthorName(anyString(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
         ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
@@ -816,7 +841,8 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
         List<News> newsFindByPartOfAuthorNameList = List.of(
                 News.builder()
@@ -837,8 +863,7 @@ class NewsServiceImplTest {
                         .author(Author.builder().id(2).name("Sempart").build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByPartOfAuthorName("%" + partOfAuthorName + "%",
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByPartOfAuthorName(anyString(), any(PageRequest.class)))
                 .thenReturn(newsFindByPartOfAuthorNameList);
 
         when(newsConverter.toDTO(News.builder()
@@ -906,7 +931,7 @@ class NewsServiceImplTest {
     void countAllNewsByPartOfAuthorName() {
         String partOfAuthorName = "part";
 
-        when(newsRepository.countAllNewsByPartOfAuthorName("%" + partOfAuthorName + "%")).thenReturn(2L);
+        when(newsRepository.countAllNewsByPartOfAuthorName(anyString())).thenReturn(2L);
         long countAllNewsExpected = 2;
         long countAllNewsActual = newsService.countAllNewsByPartOfAuthorName(partOfAuthorName);
         assertEquals(countAllNewsExpected, countAllNewsActual);
@@ -922,10 +947,10 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
-        when(newsRepository.findByAuthorId(authorId,
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByAuthorId(anyLong(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
         ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
@@ -943,7 +968,8 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
         List<News> newsByAuthorIdList = List.of(
                 News.builder()
@@ -964,8 +990,7 @@ class NewsServiceImplTest {
                         .author(Author.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByAuthorId(authorId,
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByAuthorId(anyLong(), any(PageRequest.class)))
                 .thenReturn(newsByAuthorIdList);
 
         when(newsConverter.toDTO(News.builder()
@@ -1033,7 +1058,7 @@ class NewsServiceImplTest {
     void countAllNewsByAuthorId() {
         long authorId = 1;
 
-        when(newsRepository.countAllNewsByAuthorId(authorId)).thenReturn(2L);
+        when(newsRepository.countAllNewsByAuthorId(anyLong())).thenReturn(2L);
         long countAllNewsExpected = 2;
         long countAllNewsActual = newsService.countAllNewsByAuthorId(authorId);
         assertEquals(countAllNewsExpected, countAllNewsActual);
@@ -1049,10 +1074,9 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(numberFirstElement);
 
-        when(newsRepository.findByPartOfTitle("%" + partOfTitle + "%",
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByPartOfTitle(anyString(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
         ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
@@ -1070,7 +1094,8 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
         List<News> newsByAuthorIdList = List.of(
                 News.builder()
@@ -1085,8 +1110,7 @@ class NewsServiceImplTest {
                         .id(2)
                         .title("partOfTitle title 2")
                         .build());
-        when(newsRepository.findByPartOfTitle("%" + partOfTitle + "%",
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByPartOfTitle(anyString(), any(PageRequest.class)))
                 .thenReturn(newsByAuthorIdList);
 
         when(newsConverter.toDTO(News.builder()
@@ -1136,7 +1160,7 @@ class NewsServiceImplTest {
     void countAllNewsByPartOfTitle() {
         String partOfTitle = "partOfTitle";
 
-        when(newsRepository.countAllNewsByPartOfTitle("%" + partOfTitle + "%")).thenReturn(2L);
+        when(newsRepository.countAllNewsByPartOfTitle(anyString())).thenReturn(2L);
         long countAllNewsExpected = 2;
         long countAllNewsActual = newsService.countAllNewsByPartOfTitle(partOfTitle);
         assertEquals(countAllNewsExpected, countAllNewsActual);
@@ -1152,10 +1176,10 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
-        when(newsRepository.findByPartOfContent("%" + partOfContent + "%",
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByPartOfContent(anyString(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
         ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
@@ -1172,7 +1196,8 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
+        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
+                .thenReturn(numberFirstElement);
 
         List<News> newsByAuthorIdList = List.of(
                 News.builder()
@@ -1187,8 +1212,7 @@ class NewsServiceImplTest {
                         .id(2)
                         .content("partOfContent content 2")
                         .build());
-        when(newsRepository.findByPartOfContent("%" + partOfContent + "%",
-                PageRequest.of(numberFirstElement, size, Sort.by(DESC, sortField))))
+        when(newsRepository.findByPartOfContent(anyString(), any(PageRequest.class)))
                 .thenReturn(newsByAuthorIdList);
 
         when(newsConverter.toDTO(News.builder()
@@ -1237,7 +1261,7 @@ class NewsServiceImplTest {
     void countAllNewsByPartOfContent() {
         String partOfContent = "partOfContent";
 
-        when(newsRepository.countAllNewsByPartOfContent("%" + partOfContent + "%")).thenReturn(2L);
+        when(newsRepository.countAllNewsByPartOfContent(anyString())).thenReturn(2L);
         long countAllNewsExpected = 2;
         long countAllNewsActual = newsService.countAllNewsByPartOfContent(partOfContent);
         assertEquals(countAllNewsExpected, countAllNewsActual);
@@ -1255,7 +1279,8 @@ class NewsServiceImplTest {
         int page = 1;
         int size = 5;
 
-        when(paginationService.calcMaxNumberPage(countAllElements, size)).thenReturn(2);
+        when(paginationService.calcMaxNumberPage(anyLong(), anyInt()))
+                .thenReturn(2);
 
         Pagination<NewsDTO> newsDTOPaginationExpected = Pagination.<NewsDTO>builder()
                 .entity(newsDTOList)
