@@ -2,6 +2,7 @@ package com.mjc.school.validation.annotation.impl;
 
 import com.mjc.school.repository.UserRepository;
 import com.mjc.school.validation.annotation.IsExistsUserByLogin;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

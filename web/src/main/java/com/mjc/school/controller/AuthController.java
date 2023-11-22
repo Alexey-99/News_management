@@ -26,7 +26,8 @@ public class AuthController {
     @PostMapping("/token")
     public ResponseEntity<JwtTokenResponse> createAuthToken(@Valid
                                                             @RequestBody
-                                                            CreateJwtTokenRequest authRequest) throws ServiceBadRequestParameterException {
+                                                            CreateJwtTokenRequest authRequest)
+            throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(
                 JwtTokenResponse.builder()
                         .token(authService.createAuthToken(authRequest))

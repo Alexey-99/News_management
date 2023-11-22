@@ -43,7 +43,6 @@ class TagControllerTest {
     @Mock
     private TagService tagService;
     private MockMvc mockMvc;
-
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -203,7 +202,7 @@ class TagControllerTest {
 
     @Test
     @DisplayName(value = """
-            deleteById: Return status 200.
+            deleteById(): Return status 200.
             If correct entered tagId and deleted tag by id
             """)
     void deleteFromAllNews() throws Exception {
@@ -221,7 +220,7 @@ class TagControllerTest {
 
     @Test
     @DisplayName(value = """
-            deleteById: Return status 200 and updated tag.
+            update(): Return status 200 and updated tag.
             If correct entered tagId and tagDTO.
             """)
     void update_when_everythingOk() throws Exception {
@@ -255,7 +254,7 @@ class TagControllerTest {
 
     @Test
     @DisplayName(value = """
-            deleteById: Return status 200 and updated tag.
+            update(): throws MethodArgumentNotValidException.
             If correct entered tagId and entered name of tag is not valid. Tag name is null.
             """)
     void update_when_correctTagId_and_tagNameNull() throws Exception {
@@ -279,7 +278,7 @@ class TagControllerTest {
 
     @Test
     @DisplayName(value = """
-            deleteById: Return status 200 and updated tag.
+            update(): throws MethodArgumentNotValidException.
             If correct entered tagId and entered name of tag is not valid. Tag name is blank.
             """)
     void update_when_correctTagId_and_tagNameBlank() throws Exception {
@@ -304,7 +303,7 @@ class TagControllerTest {
 
     @Test
     @DisplayName(value = """
-            deleteById: Return status 200 and updated tag.
+            update(): throws MethodArgumentNotValidException.
             If correct entered tagId and entered size name of tag is not valid.
             """)
     void update_when_correctTagId_and_tagNameSize() throws Exception {
