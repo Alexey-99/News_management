@@ -435,7 +435,6 @@ class AuthorControllerTest {
     void selectAllAuthorsIdWithAmountOfWrittenNews() throws Exception {
         int page = 1;
         int size = 5;
-        int numberFirstElement = 0;
         String sortType = "DESC";
         long countAllElementsExpected = 10;
         int maxNumberPageExpected = 2;
