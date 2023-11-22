@@ -3,6 +3,7 @@ package com.mjc.school.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
+import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.validation.dto.TagDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,16 +16,22 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -275,15 +282,87 @@ class AuthorControllerTest {
     }
 
     @Test
-    void findAll() {
+    @DisplayName(value = """
+            findAll(): Return status 200 and List of authors.
+               """)
+    void findAll() throws Exception {
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "name";
+        int maxNumberPageExpected = 2;
+        long countAllElementsExpected = 10;
+
+        List<AuthorDTO> authorDTOListExpected = List.of(
+                AuthorDTO.builder().id(1).name("Alex").countNews(4).build(),
+                AuthorDTO.builder().id(3).name("Bam").countNews(2).build(),
+                AuthorDTO.builder().id(2).name("Sem").countNews(6).build(),
+                AuthorDTO.builder().id(4).name("Tom").countNews(0).build(),
+                AuthorDTO.builder().id(5).name("Van").countNews(0).build());
+
+        when(authorService.findAll(anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(authorDTOListExpected);
+        when(authorService.countAll()).thenReturn(countAllElementsExpected);
+
+        Pagination<AuthorDTO> authorDTOPaginationExpected = Pagination.<AuthorDTO>builder()
+                .entity(authorDTOListExpected)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(authorService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(authorDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/author/all")
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(authorDTOPaginationExpected);
+                    assertNotNull(actualContentJson);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
-    void findById() {
+    @DisplayName(value = """
+            findById(): Return status 200 and found author by entered id.
+            """)
+    void findById() throws Exception {
+        String authorId = "1";
+
+        AuthorDTO authorDTOExpected = AuthorDTO.builder()
+                .id(Long.parseLong(authorId))
+                .name("Author_name")
+                .build();
+        when(authorService.findById(anyLong())).thenReturn(authorDTOExpected);
+
+        mockMvc.perform(get("/api/v2/author/{id}", authorId))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(authorDTOExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
+    @DisplayName(value = """
+            findByPartOfName(): Return status 200 and found list of authors by entered part of name.
+            """)
     void findByPartOfName() {
+
     }
 
     @Test
