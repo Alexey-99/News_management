@@ -1,9 +1,7 @@
 package com.mjc.school.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mjc.school.model.News;
 import com.mjc.school.service.news.NewsService;
-import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.NewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,7 +127,7 @@ class NewsControllerTest {
 
     @Test
     @DisplayName(value = """
-            findAll(): Return status 200 and List of news.
+            findAll(): Return status 200 and Pagination of news.
                """)
     void findAll() throws Exception {
         int maxNumberPageExpected = 2;
@@ -184,6 +182,9 @@ class NewsControllerTest {
     }
 
     @Test
+    @DisplayName(value = """
+            findById(): Return status 200 and found news by id.
+               """)
     void findById() throws Exception {
         String newsId = "1";
 
@@ -206,30 +207,394 @@ class NewsControllerTest {
                     String expectedContentJson = objectMapper.writeValueAsString(newsDTOExpected);
                     assertEquals(expectedContentJson, actualContentJson);
                 });
-
     }
 
     @Test
-    void findNewsByTagName() {
+    @DisplayName(value = """
+            findNewsByTagName(): Return status 200 and pagination of news by tag name.
+               """)
+    void findNewsByTagName() throws Exception {
+        String tagName = "tag_name";
+
+        int page = 1;
+        int size = 5;
+        String sortType = "DESC";
+        String sortField = "modified";
+        int maxNumberPageExpected = 1;
+
+        List<NewsDTO> newsFindByTagNameList = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .countTags(2)
+                        .modified("2023-10-20T16:05:38.685")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .countTags(1)
+                        .modified("2023-10-20T16:05:32.413")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .countTags(1)
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
+        when(newsService.findByTagName(anyString(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(newsFindByTagNameList);
+
+        long countAllNewsByTagNameExpected = 3;
+        when(newsService.countAllNewsByTagName(anyString()))
+                .thenReturn(countAllNewsByTagNameExpected);
+
+        Pagination<NewsDTO> newsDTOPaginationExpected = Pagination.<NewsDTO>builder()
+                .entity(newsFindByTagNameList)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(newsService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(newsDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/news/tag-name/{tagName}", tagName)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(newsDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
-    void findNewsByTagId() {
+    @DisplayName(value = """
+            findNewsByTagId(): Return status 200 and pagination of news by tag id.
+               """)
+    void findNewsByTagId() throws Exception {
+        String tagId = "1";
+
+        int page = 1;
+        int size = 5;
+        String sortType = "DESC";
+        String sortField = "modified";
+        int maxNumberPageExpected = 1;
+
+        List<NewsDTO> newsFindByTagNameList = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .countTags(2)
+                        .modified("2023-10-20T16:05:38.685")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .countTags(1)
+                        .modified("2023-10-20T16:05:32.413")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .countTags(1)
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
+        when(newsService.findByTagId(anyLong(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(newsFindByTagNameList);
+
+        long countAllNewsByTagNameExpected = 3;
+        when(newsService.countAllNewsByTagId(anyLong())).thenReturn(countAllNewsByTagNameExpected);
+
+        Pagination<NewsDTO> newsDTOPaginationExpected = Pagination.<NewsDTO>builder()
+                .entity(newsFindByTagNameList)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(newsService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(newsDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/news/tag/{tagId}", tagId)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(newsDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
-    void findNewsByAuthorName() {
+    @DisplayName(value = """
+            findNewsByAuthorName(): Return status 200 and pagination of news by author name.
+               """)
+    void findNewsByAuthorName() throws Exception {
+        String partOfAuthorName = "partOfAuthorName";
+
+        int page = 1;
+        int size = 5;
+        int maxNumberPageExpected = 1;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        List<NewsDTO> newsByAuthorNameList = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .authorId(1)
+                        .modified("2023-10-20T16:05:38.685")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .authorId(3)
+                        .modified("2023-10-20T16:05:32.413")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .authorId(2)
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
+        when(newsService.findByPartOfAuthorName(anyString(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(newsByAuthorNameList);
+
+        long countAllNewsByPartOfAuthorNameExpected = 3;
+        when(newsService.countAllNewsByPartOfAuthorName(anyString()))
+                .thenReturn(countAllNewsByPartOfAuthorNameExpected);
+
+        Pagination<NewsDTO> newsDTOPaginationExpected = Pagination.<NewsDTO>builder()
+                .entity(newsByAuthorNameList)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(newsService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(newsDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/news/author/part-name/{partOfAuthorName}", partOfAuthorName)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(newsDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
-    void findNewsByAuthorId() {
+    @DisplayName(value = """
+            findNewsByAuthorId(): Return status 200 and pagination of news by author id.
+               """)
+    void findNewsByAuthorId() throws Exception {
+        String authorId = "1";
+
+        int page = 1;
+        int size = 5;
+        int maxNumberPageExpected = 1;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        List<NewsDTO> newsByAuthorIdList = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT 1")
+                        .authorId(1)
+                        .modified("2023-10-20T16:05:38.685")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("CONTENT 3")
+                        .authorId(3)
+                        .modified("2023-10-20T16:05:32.413")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2")
+                        .authorId(2)
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
+        when(newsService.findByAuthorId(anyLong(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(newsByAuthorIdList);
+
+        long countAllNewsByAuthorIdExpected = 3;
+        when(newsService.countAllNewsByAuthorId(anyLong()))
+                .thenReturn(countAllNewsByAuthorIdExpected);
+
+        Pagination<NewsDTO> newsDTOPaginationExpected = Pagination.<NewsDTO>builder()
+                .entity(newsByAuthorIdList)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(newsService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(newsDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/news/author/{authorId}", authorId)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(newsDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
-    void findNewsByPartOfTitle() {
+    @DisplayName(value = """
+            findNewsByPartOfTitle(): Return status 200 and pagination of news by part of title.
+               """)
+    void findNewsByPartOfTitle() throws Exception {
+        String partOfTitle = "partOfTitle";
+
+        int page = 1;
+        int size = 5;
+        int maxNumberPageExpected = 1;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        List<NewsDTO> newsByPartOfTitleList = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT partOfTitle 1")
+                        .authorId(1)
+                        .modified("2023-10-20T16:05:38.685")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("partOfTitle CONTENT 3")
+                        .authorId(3)
+                        .modified("2023-10-20T16:05:32.413")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2 partOfTitle")
+                        .authorId(2)
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
+        when(newsService.findByPartOfTitle(anyString(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(newsByPartOfTitleList);
+
+        long countAllNewsByPartOfTitleExpected = 3;
+        when(newsService.countAllNewsByPartOfTitle(anyString()))
+                .thenReturn(countAllNewsByPartOfTitleExpected);
+
+        Pagination<NewsDTO> newsDTOPaginationExpected = Pagination.<NewsDTO>builder()
+                .entity(newsByPartOfTitleList)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(newsService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(newsDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/news/part-title/{partOfTitle}", partOfTitle)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(newsDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 
     @Test
-    void findNewsByPartOfContent() {
+    @DisplayName(value = """
+            findNewsByPartOfContent(): Return status 200 and pagination of news by part of content.
+               """)
+    void findNewsByPartOfContent() throws Exception {
+        String partOfContent = "partOfContent";
+
+        int page = 1;
+        int size = 5;
+        int maxNumberPageExpected = 1;
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        List<NewsDTO> newsByPartOfContentList = List.of(
+                NewsDTO.builder()
+                        .id(1)
+                        .content("CONTENT partOfTitle 1")
+                        .authorId(1)
+                        .modified("2023-10-20T16:05:38.685")
+                        .build(),
+                NewsDTO.builder()
+                        .id(3)
+                        .content("partOfTitle CONTENT 3")
+                        .authorId(3)
+                        .modified("2023-10-20T16:05:32.413")
+                        .build(),
+                NewsDTO.builder()
+                        .id(2)
+                        .content("CONTENT 2 partOfTitle")
+                        .authorId(2)
+                        .modified("2023-10-20T16:05:25.413")
+                        .build());
+        when(newsService.findByPartOfContent(anyString(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(newsByPartOfContentList);
+
+        long countAllNewsByPartOfContentExpected = 3;
+        when(newsService.countAllNewsByPartOfContent(anyString()))
+                .thenReturn(countAllNewsByPartOfContentExpected);
+
+        Pagination<NewsDTO> newsDTOPaginationExpected = Pagination.<NewsDTO>builder()
+                .entity(newsByPartOfContentList)
+                .size(size)
+                .numberPage(page)
+                .maxNumberPage(maxNumberPageExpected)
+                .build();
+        when(newsService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
+                .thenReturn(newsDTOPaginationExpected);
+
+        mockMvc.perform(get("/api/v2/news/part-content/{partOfContent}", partOfContent)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(newsDTOPaginationExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
     }
 }
