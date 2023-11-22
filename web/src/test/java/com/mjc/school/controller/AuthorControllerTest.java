@@ -408,6 +408,9 @@ class AuthorControllerTest {
     }
 
     @Test
+    @DisplayName(value = """
+            findByNewsId(): Return status 200 and found list of authors by entered newsId.
+            """)
     void findByNewsId() throws Exception {
         String newsId = "1";
 
@@ -432,6 +435,9 @@ class AuthorControllerTest {
     }
 
     @Test
+    @DisplayName(value = """
+            selectAllAuthorsIdWithAmountOfWrittenNews(): Return status 200 and found list of authors with written news.
+            """)
     void selectAllAuthorsIdWithAmountOfWrittenNews() throws Exception {
         int page = 1;
         int size = 5;
