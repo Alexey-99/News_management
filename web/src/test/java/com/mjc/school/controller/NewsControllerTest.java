@@ -184,7 +184,29 @@ class NewsControllerTest {
     }
 
     @Test
-    void findById() {
+    void findById() throws Exception {
+        String newsId = "1";
+
+        long newsIdL = Long.parseLong(newsId);
+        NewsDTO newsDTOExpected = NewsDTO.builder()
+                .id(newsIdL)
+                .content("CONTENT 1")
+                .modified("2023-10-20T16:05:38.685")
+                .build();
+        when(newsService.findById(anyLong())).thenReturn(newsDTOExpected);
+
+        mockMvc.perform(get("/api/v2/news/{id}", newsId))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(newsDTOExpected);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
+
     }
 
     @Test
