@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mjc.school.config.language.Translator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
