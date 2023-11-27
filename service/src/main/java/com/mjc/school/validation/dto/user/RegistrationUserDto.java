@@ -20,18 +20,18 @@ import javax.validation.constraints.Size;
 public class RegistrationUserDto {
     @NotNull(message = "registration_user_dto.login.not_valid.null")
     @NotBlank(message = "registration_user_dto.login.not_valid.is_blank")
-    @Size(min = 3, message = "registration_user_dto.login.not_valid.size")
-    @IsNotExistsUserByLogin(message="registration_user_dto.login.not_valid.exists")
+    @Size(min = 3, max = 30, message = "registration_user_dto.login.not_valid.size")
+    @IsNotExistsUserByLogin(message = "registration_user_dto.login.not_valid.exists")
     private String login;
 
     @NotNull(message = "registration_user_dto.password.not_valid.null")
     @NotBlank(message = "registration_user_dto.password.not_valid.is_blank")
-    @Size(min = 5, message = "registration_user_dto.password.not_valid.size")
+    @Size(min = 4, max = 30, message = "registration_user_dto.password.not_valid.size")
     private String password;
 
     @NotNull(message = "registration_user_dto.confirm_password.not_valid.null")
     @NotBlank(message = "registration_user_dto.confirm_password.not_valid.is_blank")
-    @Size(min = 5, message = "registration_user_dto.confirm_password.not_valid.size")
+    @Size(min = 4, max = 30, message = "registration_user_dto.confirm_password.not_valid.size")
     private String confirmPassword;
 
     @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$",
