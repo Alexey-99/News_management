@@ -2,7 +2,7 @@
 <Configuration status="INFO">
 
 	<Properties>
-		<property name="LOG_FOLDER">logs</property>
+		<property name="LOG_FOLDER">Alexey\git\News_management/logs</property>
 		<property name="LOG_ARCHIVE">archive</property>
 		<property name="pattern_file">%d{yyyy-MM-dd HH:mm:ss:SSSS} %-5level %logger{}.%M - %msg%n</property>
 		<property name="pattern_console">%d{HH:mm:ss} %-5level %logger{}.%M - %msg%n</property>
