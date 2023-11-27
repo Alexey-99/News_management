@@ -101,7 +101,7 @@ public class CommentServiceImpl implements CommentService {
                     .toList();
         } else {
             log.log(WARN, "Not found comments");
-            throw new ServiceNoContentException("service.exception.not_found_comments");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -132,7 +132,7 @@ public class CommentServiceImpl implements CommentService {
                     .toList();
         } else {
             log.log(ERROR, "Not found comments by news ID: " + newsId);
-            throw new ServiceNoContentException("service.exception.not_found_comments_by_news_id");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -145,7 +145,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO findById(long id) throws ServiceNoContentException {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> {
             log.log(WARN, "Not found comment by ID: " + id);
-            return new ServiceNoContentException("service.exception.not_found_comment_by_id");
+            return new ServiceNoContentException();
         });
         return commentConverter.toDTO(comment);
     }

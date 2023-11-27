@@ -41,14 +41,8 @@ public class ApplicationExceptionHandler {
 
     //   Status NO_CONTENT don't have body in response
     @ExceptionHandler(ServiceNoContentException.class)
-    public final ResponseEntity<Object> handleServiceNoContentException(ServiceNoContentException ex) {
-        String details = translator.toLocale(ex.getMessage());
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .errorCode(NO_CONTENT.value())
-                .errorMessage(details)
-                .timestamp(dateHandler.getCurrentDate())
-                .build();
-        return new ResponseEntity<>(errorResponse, NO_CONTENT);
+    public final ResponseEntity<Object> handleServiceNoContentException() {
+        return new ResponseEntity<>(NO_CONTENT);
 
     }
 

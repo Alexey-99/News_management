@@ -147,7 +147,7 @@ public class TagServiceImpl implements TagService {
                     .toList();
         } else {
             log.log(WARN, "Not found tags");
-            throw new ServiceNoContentException("service.exception.not_found_tags");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -168,7 +168,7 @@ public class TagServiceImpl implements TagService {
     public TagDTO findById(long id) throws ServiceNoContentException {
         Tag tag = tagRepository.findById(id).orElseThrow(() -> {
             log.log(WARN, "Not found tag with this ID: " + id);
-            return new ServiceNoContentException("service.exception.not_found_tag_by_id");
+            return new ServiceNoContentException();
         });
         return tagConverter.toDTO(tag);
     }
@@ -187,7 +187,7 @@ public class TagServiceImpl implements TagService {
                     .toList();
         } else {
             log.log(WARN, "Not found tags by part of name: " + partOfName);
-            throw new ServiceNoContentException("service.exception.not_found_tags_by_part_of_name");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -209,7 +209,7 @@ public class TagServiceImpl implements TagService {
                     .toList();
         } else {
             log.log(WARN, "Not found tags by news ID: " + newsId);
-            throw new ServiceNoContentException("service.exception.not_found_tags_by_news_id");
+            throw new ServiceNoContentException();
         }
     }
 

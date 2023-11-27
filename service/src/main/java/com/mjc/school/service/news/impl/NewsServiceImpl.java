@@ -136,7 +136,7 @@ public class NewsServiceImpl implements NewsService {
                     .toList();
         } else {
             log.log(WARN, "Not found news");
-            throw new ServiceNoContentException("service.exception.not_found_news");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -157,7 +157,7 @@ public class NewsServiceImpl implements NewsService {
     public NewsDTO findById(long id) throws ServiceNoContentException {
         News news = newsRepository.findById(id).orElseThrow(() -> {
             log.log(WARN, "Not found news by ID: " + id);
-            return new ServiceNoContentException("service.exception.not_found_news_by_id");
+            return new ServiceNoContentException();
         });
         return newsConverter.toDTO(news);
     }
@@ -177,7 +177,7 @@ public class NewsServiceImpl implements NewsService {
                     .toList();
         } else {
             log.log(WARN, "Not found news with entered tag name: " + tagName);
-            throw new ServiceNoContentException("service.exception.not_found_news_by_tag_name");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -201,7 +201,7 @@ public class NewsServiceImpl implements NewsService {
                     .toList();
         } else {
             log.log(WARN, "Not found news with entered tag ID: " + tagId);
-            throw new ServiceNoContentException("service.exception.not_found_news_by_tag_id");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -226,7 +226,7 @@ public class NewsServiceImpl implements NewsService {
                     .toList();
         } else {
             log.log(WARN, "Not found news with entered part of author name: " + partOfAuthorName);
-            throw new ServiceNoContentException("service.exception.not_found_news_by_part_of_author_name");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -250,7 +250,7 @@ public class NewsServiceImpl implements NewsService {
                     .toList();
         } else {
             log.log(WARN, "Not found news by author id: " + authorId);
-            throw new ServiceNoContentException("service.exception.not_found_news_by_author_id");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -275,7 +275,7 @@ public class NewsServiceImpl implements NewsService {
                     .toList();
         } else {
             log.log(WARN, "Not found news with this part of title: " + partOfTitle);
-            throw new ServiceNoContentException("service.exception.not_found_news_by_part_of_title");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -300,7 +300,7 @@ public class NewsServiceImpl implements NewsService {
                     .toList();
         } else {
             log.log(WARN, "Not found news by part of content: " + partOfContent);
-            throw new ServiceNoContentException("service.exception.not_found_news_by_part_of_content");
+            throw new ServiceNoContentException();
         }
     }
 

@@ -92,7 +92,7 @@ public class AuthorServiceImpl implements AuthorService {
                     .toList();
         } else {
             log.log(WARN, "Not found authors");
-            throw new ServiceNoContentException("service.exception.not_found_authors");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -113,7 +113,7 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDTO findById(long id) throws ServiceNoContentException {
         Author author = authorRepository.findById(id).orElseThrow(() -> {
             log.log(WARN, "Not found author by ID: " + id);
-            return new ServiceNoContentException("service.exception.not_found_author_by_id");
+            return new ServiceNoContentException();
         });
         return authorConverter.toDTO(author);
     }
@@ -133,7 +133,7 @@ public class AuthorServiceImpl implements AuthorService {
                     .toList();
         } else {
             log.log(WARN, "Not found authors by part of name: " + partOfName);
-            throw new ServiceNoContentException("service.exception.not_found_authors_by_part_of_name");
+            throw new ServiceNoContentException();
         }
     }
 
@@ -146,7 +146,7 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDTO findByNewsId(long newsId) throws ServiceNoContentException {
         Author author = authorRepository.findByNewsId(newsId).orElseThrow(() -> {
             log.log(WARN, "Not found authors by news ID: " + newsId);
-            return new ServiceNoContentException("service.exception.not_found_authors_by_news_id");
+            return new ServiceNoContentException();
         });
         return authorConverter.toDTO(author);
     }
@@ -175,7 +175,7 @@ public class AuthorServiceImpl implements AuthorService {
                     .toList();
         } else {
             log.log(WARN, "Not found authors");
-            throw new ServiceNoContentException("service.exception.not_found_authors");
+            throw new ServiceNoContentException();
         }
     }
 
