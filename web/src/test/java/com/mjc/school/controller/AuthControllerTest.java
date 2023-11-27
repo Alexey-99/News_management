@@ -49,10 +49,10 @@ class AuthControllerTest {
         objectMapper = new ObjectMapper();
     }
 
-    @Test
+    @Test// I HAVE PROBLEM WITH ANNOTATION IsExistsUserByLogin
     @DisplayName(value = """
             createAuthToken(): Return status 201 and JWT token.
-            """) // TODO I HAVE PROBLEM WITH ANNOTATION IsExistsUserByLogin
+            """)
     void createAuthToken() throws Exception {
 //        CreateJwtTokenRequest createJwtTokenRequest = CreateJwtTokenRequest.builder()
 //                .userName("userName")
