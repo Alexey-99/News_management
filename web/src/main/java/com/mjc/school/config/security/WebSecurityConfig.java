@@ -35,24 +35,25 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers(POST, "/api/v2/comment", "/api/v2/news").authenticated()
-                .antMatchers(POST, "/api/v2/tag", "/api/v2/author").hasRole(ADMIN_ROLE_NAME)
-                .antMatchers(PUT, "/api/v2/tag/to-news",
-                        "/api/v2/tag/{id}",
-                        "/api/v2/news/{id}",
-                        "api/v2/comment/{id}",
-                        "api/v2/author/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(POST, "/api/v2/comment").authenticated()
+                .antMatchers(POST, "/api/v2/news").authenticated()
+                .antMatchers(POST, "/api/v2/tag").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(POST, "/api/v2/author").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(PUT, "/api/v2/tag/to-news").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(PUT, "/api/v2/tag/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(PUT, "/api/v2/news/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(PUT, "api/v2/comment/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(PUT, "api/v2/author/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(PATCH, "/api/v2/user/role").hasRole(ADMIN_ROLE_NAME)
-                .antMatchers(DELETE, "/api/v2/tag/from-news",
-                        "/api/v2/tag/{id}",
-                        "/api/v2/tag/all-news/{id}",
-                        "/api/v2/news/{id}",
-                        "/api/v2/news/author/{authorId}",
-                        "/api/v2/news/all-tags/{newsId}",
-                        "api/v2/comment/{id}",
-                        "api/v2/comment/news/{newsId}",
-                        "/api/v2/author/{id}"
-                ).hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/tag/from-news").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/tag/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/tag/all-news/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/news/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/news/author/{authorId}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/news/all-tags/{newsId}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "api/v2/comment/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "api/v2/comment/news/{newsId}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/author/{id}").hasRole(ADMIN_ROLE_NAME)
                 .anyRequest().permitAll()
                 .and()
 //                .and()
