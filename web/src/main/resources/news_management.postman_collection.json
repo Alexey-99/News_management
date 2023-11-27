@@ -71,12 +71,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/12",
+							"raw": "http://localhost:8081/api/v2/news/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -93,12 +93,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/author/10",
+							"raw": "http://localhost:8081/api/v2/news/author/10",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -116,12 +116,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/10",
+							"raw": "http://localhost:8081/api/v2/news/10",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -138,12 +138,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/all-tags/12",
+							"raw": "http://localhost:8081/api/v2/news/all-tags/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -203,12 +203,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/12",
+							"raw": "http://localhost:8081/api/v2/news/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -225,12 +225,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/part-title/tit",
+							"raw": "http://localhost:8081/api/v2/news/part-title/tit",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -248,12 +248,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/part-content/onte",
+							"raw": "http://localhost:8081/api/v2/news/part-content/onte",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -271,12 +271,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/author/part-name/ake",
+							"raw": "http://localhost:8081/api/v2/news/author/part-name/ake",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -295,12 +295,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/tag/4",
+							"raw": "http://localhost:8081/api/v2/news/tag/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -318,12 +318,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/tag-name/action tag",
+							"raw": "http://localhost:8081/api/v2/news/tag-name/action tag",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -341,12 +341,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/sort?sorting-field=created&sorting-type=asc",
+							"raw": "http://localhost:8081/api/v2/news/sort?sorting-field=created&sorting-type=asc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -373,12 +373,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/sort?sorting-field=created&sorting-type=desc",
+							"raw": "http://localhost:8081/api/v2/news/sort?sorting-field=created&sorting-type=desc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -405,12 +405,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/sort?sorting-field=modified&sorting-type=asc",
+							"raw": "http://localhost:8081/api/v2/news/sort?sorting-field=modified&sorting-type=asc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -437,12 +437,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/news/sort?sorting-field=modified&sorting-type=desc",
+							"raw": "http://localhost:8081/api/v2/news/sort?sorting-field=modified&sorting-type=desc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -483,12 +483,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment",
+							"raw": "http://localhost:8081/api/v2/comment",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -513,12 +513,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/4",
+							"raw": "http://localhost:8081/api/v2/comment/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -535,12 +535,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/news/12",
+							"raw": "http://localhost:8081/api/v2/comment/news/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -558,12 +558,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/4",
+							"raw": "http://localhost:8081/api/v2/comment/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -580,12 +580,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/all",
+							"raw": "http://localhost:8081/api/v2/comment/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -602,12 +602,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/7",
+							"raw": "http://localhost:8081/api/v2/comment/7",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -624,12 +624,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/news/12",
+							"raw": "http://localhost:8081/api/v2/comment/news/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -647,12 +647,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/sort?field=created&type=asc",
+							"raw": "http://localhost:8081/api/v2/comment/sort?field=created&type=asc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -679,12 +679,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/sort?field=created&type=desc",
+							"raw": "http://localhost:8081/api/v2/comment/sort?field=created&type=desc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -711,12 +711,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/sort?field=created&type=desc",
+							"raw": "http://localhost:8081/api/v2/comment/sort?field=created&type=desc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -743,12 +743,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/comment/sort?field=modified&type=asc",
+							"raw": "http://localhost:8081/api/v2/comment/sort?field=modified&type=asc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -780,12 +780,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/author/9",
+							"raw": "http://localhost:8081/api/v2/author/9",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -802,12 +802,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/author/part-name/k",
+							"raw": "http://localhost:8081/api/v2/author/part-name/k",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -825,12 +825,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/author/news/9",
+							"raw": "http://localhost:8081/api/v2/author/news/9",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -858,12 +858,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/author/all",
+							"raw": "http://localhost:8081/api/v2/author/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -892,12 +892,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/author/amount-news",
+							"raw": "http://localhost:8081/api/v2/author/amount-news",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -921,12 +921,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/author/8",
+							"raw": "http://localhost:8081/api/v2/author/8",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -952,12 +952,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v2/author/6",
+							"raw": "http://localhost:8081/api/v2/author/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1030,12 +1030,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v2/author",
+							"raw": "http://localhost:8081/api/v2/author",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1056,12 +1056,12 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/tag/to-news?tag=5&news=12",
+							"raw": "http://localhost:8081/api/v2/tag/to-news?tag=5&news=12",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1088,12 +1088,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/tag/from-news?tag=4&news=7",
+							"raw": "http://localhost:8081/api/v2/tag/from-news?tag=4&news=7",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1120,12 +1120,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/tag/3",
+							"raw": "http://localhost:8081/api/v2/tag/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1187,12 +1187,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v2/tag/4",
+							"raw": "http://localhost:8081/api/v2/tag/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1209,12 +1209,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/tag/all-news/1",
+							"raw": "http://localhost:8081/api/v2/tag/all-news/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1286,12 +1286,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/tag/5",
+							"raw": "http://localhost:8081/api/v2/tag/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1308,12 +1308,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/tag/news/12",
+							"raw": "http://localhost:8081/api/v2/tag/news/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
@@ -1331,12 +1331,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v2/tag/part-name/tag?sort-field=name&sort-type=desc",
+							"raw": "http://localhost:8081/api/v2/tag/part-name/tag?sort-field=name&sort-type=desc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8081",
 							"path": [
 								"api",
 								"v2",
