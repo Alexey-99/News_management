@@ -434,7 +434,57 @@ class NewsControllerIntegrationTest {
     }
 
     @Test
-    void findNewsByAuthorId() {
+    void findNewsByAuthorName_when_notFoundNews() throws Exception {
+        String partOfAuthorName = "part";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/author/part-name/{partOfAuthorName}", partOfAuthorName)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void findNewsByAuthorId_when_foundNews() throws Exception {
+        String authorId = "1";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/author/{authorId}", authorId)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findNewsByAuthorId_when_notFoundNews() throws Exception {
+        String authorId = "2";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/author/{authorId}", authorId)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
     }
 
     @Test
