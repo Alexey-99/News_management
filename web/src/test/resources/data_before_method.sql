@@ -9,7 +9,7 @@ VALUES ('Tom'),
        ('Mike');
 
 INSERT INTO tags (name)
-VALUES ('tag_name');
+VALUES ('tag_name'), ('tag_action');
 
 INSERT INTO news (title, content, authors_id)
 VALUES ('newsTitle', 'newsContent', 1);

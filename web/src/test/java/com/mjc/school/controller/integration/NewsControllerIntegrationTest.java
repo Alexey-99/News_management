@@ -46,7 +46,6 @@ class NewsControllerIntegrationTest {
     private MockMvc mockMvc;
     private String adminJwtToken;
     private String userJwtToken;
-
     private ObjectMapper objectMapper;
 
     @BeforeEach
