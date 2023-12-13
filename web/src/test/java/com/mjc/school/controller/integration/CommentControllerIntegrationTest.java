@@ -5,6 +5,7 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.service.auth.AuthService;
 import com.mjc.school.validation.dto.CommentDTO;
 import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
@@ -29,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Log4j2
 @SpringBootTest
 @TestPropertySource("/test_application.properties")
 @AutoConfigureMockMvc
@@ -68,7 +71,7 @@ class CommentControllerIntegrationTest {
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken)
                         .content(commentDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isCreated());
     }
 
@@ -84,7 +87,7 @@ class CommentControllerIntegrationTest {
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken)
                         .content(commentDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isCreated());
     }
 
@@ -99,7 +102,7 @@ class CommentControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(commentDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -112,7 +115,7 @@ class CommentControllerIntegrationTest {
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken)
                         .content(commentDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -129,7 +132,7 @@ class CommentControllerIntegrationTest {
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken)
                         .content(commentDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -145,7 +148,7 @@ class CommentControllerIntegrationTest {
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken)
                         .content(commentDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -157,7 +160,7 @@ class CommentControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(commentDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -192,6 +195,7 @@ class CommentControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/comment/{id}", commentId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -201,6 +205,7 @@ class CommentControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/comment/{id}", commentId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -209,6 +214,7 @@ class CommentControllerIntegrationTest {
         String commentId = "1";
 
         mockMvc.perform(delete("/api/v2/comment/{id}", commentId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -218,6 +224,7 @@ class CommentControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/comment/{id}", commentId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -227,6 +234,7 @@ class CommentControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/comment/news/{newsId}", newsId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -236,6 +244,7 @@ class CommentControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/comment/news/{newsId}", newsId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -244,6 +253,7 @@ class CommentControllerIntegrationTest {
         String newsId = "1";
 
         mockMvc.perform(delete("/api/v2/comment/news/{newsId}", newsId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -259,6 +269,7 @@ class CommentControllerIntegrationTest {
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -276,6 +287,7 @@ class CommentControllerIntegrationTest {
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -293,6 +305,7 @@ class CommentControllerIntegrationTest {
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -301,6 +314,7 @@ class CommentControllerIntegrationTest {
         String commentId = "1";
 
         mockMvc.perform(get("/api/v2/comment/{id}", commentId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -309,6 +323,7 @@ class CommentControllerIntegrationTest {
         String commentId = "2";
 
         mockMvc.perform(get("/api/v2/comment/{id}", commentId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 }

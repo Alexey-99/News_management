@@ -5,7 +5,7 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.service.auth.AuthService;
 import com.mjc.school.validation.dto.NewsDTO;
 import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RequiredArgsConstructor
+@Log4j2
 @SpringBootTest
 @TestPropertySource("/test_application.properties")
 @AutoConfigureMockMvc
@@ -71,7 +72,7 @@ class NewsControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken)
                         .content(newsDTOJson))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isCreated());
     }
 
@@ -87,7 +88,7 @@ class NewsControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken)
                         .content(newsDTOJson))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -102,7 +103,7 @@ class NewsControllerIntegrationTest {
         mockMvc.perform(post("/api/v2/news")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(newsDTOJson))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -114,7 +115,7 @@ class NewsControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken)
                         .content(newsDTOJson))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -124,7 +125,7 @@ class NewsControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/news/{authorId}", newsId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -134,7 +135,7 @@ class NewsControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/news/{authorId}", newsId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -143,7 +144,7 @@ class NewsControllerIntegrationTest {
         String newsId = "1";
 
         mockMvc.perform(delete("/api/v2/news/{authorId}", newsId))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -153,7 +154,7 @@ class NewsControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/news/author/{authorId}", authorId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -163,7 +164,7 @@ class NewsControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/news/author/{authorId}", authorId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -172,7 +173,7 @@ class NewsControllerIntegrationTest {
         String authorId = "1";
 
         mockMvc.perform(delete("/api/v2/news/author/{authorId}", authorId))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -182,7 +183,7 @@ class NewsControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/news/all-tags/{newsId}", newsId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -192,7 +193,7 @@ class NewsControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/news/all-tags/{newsId}", newsId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -201,7 +202,7 @@ class NewsControllerIntegrationTest {
         String newsId = "1";
 
         mockMvc.perform(delete("/api/v2/news/all-tags/{newsId}", newsId))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -217,7 +218,7 @@ class NewsControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken)
                         .content(newsDTOJson))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -233,7 +234,7 @@ class NewsControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken)
                         .content(newsDTOJson))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -248,7 +249,7 @@ class NewsControllerIntegrationTest {
         mockMvc.perform(put("/api/v2/news/1")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(newsDTOJson))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -260,7 +261,7 @@ class NewsControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken)
                         .content(newsDTOJson))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -321,7 +322,7 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -330,7 +331,7 @@ class NewsControllerIntegrationTest {
         String newsId = "1";
 
         mockMvc.perform(get("/api/v2/news/{id}", newsId))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -339,7 +340,7 @@ class NewsControllerIntegrationTest {
         String newsId = "2";
 
         mockMvc.perform(get("/api/v2/news/{id}", newsId))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -357,7 +358,7 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -375,7 +376,7 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -393,7 +394,7 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -411,7 +412,7 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -429,7 +430,7 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -447,7 +448,7 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -465,7 +466,7 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -483,15 +484,79 @@ class NewsControllerIntegrationTest {
                         .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    void findNewsByPartOfTitle() {
+    void findNewsByPartOfTitle_when_foundNews() throws Exception {
+        String partOfTitle = "Title";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/part-title/{partOfTitle}", partOfTitle)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void findNewsByPartOfContent() {
+    void findNewsByPartOfTitle_when_notFoundNews() throws Exception {
+        String partOfTitle = "part";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/part-title/{partOfTitle}", partOfTitle)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void findNewsByPartOfContent_when_foundNews() throws Exception {
+        String partOfContent = "Content";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/part-content/{partOfContent}", partOfContent)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findNewsByPartOfContent_when_notFoundNews() throws Exception {
+        String partOfContent = "part";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/part-content/{partOfContent}", partOfContent)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
     }
 }
