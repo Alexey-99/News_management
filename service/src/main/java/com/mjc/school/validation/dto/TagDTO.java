@@ -1,6 +1,5 @@
 package com.mjc.school.validation.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +18,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Validated
 public class TagDTO implements Serializable {
-    @JsonIgnore
     private long id;
 
     @NotNull(message = "tag_dto.name.not_valid.null")

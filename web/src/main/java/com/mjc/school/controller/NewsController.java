@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +35,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v2/news")
 @Api(value = "Operations for news in the application")
 public class NewsController {
@@ -49,6 +52,7 @@ public class NewsController {
             Response: true - if successful created news, if didn't create news - false.
             """, response = Boolean.class)
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
@@ -67,6 +71,7 @@ public class NewsController {
             Response: true - if successful deleted news, if didn't delete news - false.
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteById(@PathVariable
                                               @Min(value = 1,
                                                       message = "news_controller.path_variable.id.in_valid.min")
@@ -85,6 +90,7 @@ public class NewsController {
             Response: true - if successful deleted news, if didn't delete news - false.
             """, response = Boolean.class)
     @DeleteMapping("/author/{authorId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteByAuthorId(@PathVariable
                                                     @Min(value = 1,
                                                             message = "news_controller.path_variable.id.in_valid.min")
@@ -103,6 +109,7 @@ public class NewsController {
             Response: true - if successful deleted all tags from news, if didn't delete all tags from news - false.
             """, response = Boolean.class)
     @DeleteMapping("/all-tags/{newsId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NewsDTO> deleteAllTagsFromNewsByNewsId(@PathVariable
                                                                  @Min(value = 1,
                                                                          message = "news_controller.path_variable.id.in_valid.min")
@@ -121,6 +128,7 @@ public class NewsController {
             Response: true - if successful updated news, if didn't update news - false.
             """, response = Boolean.class)
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NewsDTO> update(@PathVariable
                                           @Min(value = 1,
                                                   message = "news_controller.path_variable.id.in_valid.min")

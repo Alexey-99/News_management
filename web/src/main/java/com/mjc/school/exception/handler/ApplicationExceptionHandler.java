@@ -2,6 +2,8 @@ package com.mjc.school.exception.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mjc.school.config.language.Translator;
+import com.mjc.school.exception.CustomAccessDeniedException;
+import com.mjc.school.exception.CustomAuthenticationException;
 import com.mjc.school.exception.ErrorResponse;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
@@ -18,9 +20,11 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.validation.ConstraintViolationException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -43,7 +47,28 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(ServiceNoContentException.class)
     public final ResponseEntity<Object> handleServiceNoContentException() {
         return new ResponseEntity<>(NO_CONTENT);
+    }
 
+    @ExceptionHandler(CustomAuthenticationException.class)
+    public final ResponseEntity<Object> handleCustomAuthenticationException(CustomAuthenticationException ex) {
+        String details = translator.toLocale(ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .errorCode(UNAUTHORIZED.value())
+                .errorMessage(translator.toLocale(details))
+                .timestamp(dateHandler.getCurrentDate())
+                .build();
+        return new ResponseEntity<>(errorResponse, UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(CustomAccessDeniedException.class)
+    public final ResponseEntity<Object> handleCustomAccessDeniedException(CustomAccessDeniedException ex) {
+        String details = translator.toLocale(ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .errorCode(FORBIDDEN.value())
+                .errorMessage(translator.toLocale(details))
+                .timestamp(dateHandler.getCurrentDate())
+                .build();
+        return new ResponseEntity<>(errorResponse, FORBIDDEN);
     }
 
     @ExceptionHandler(ConstraintViolationException.class) // validation in controllers (@RequestParam (@Min) and other)

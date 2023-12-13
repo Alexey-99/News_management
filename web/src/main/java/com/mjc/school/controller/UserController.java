@@ -7,6 +7,7 @@ import com.mjc.school.validation.dto.user.UserChangeRoleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Validated
 @RestController
 @RequestMapping(value = "/api/v2/user")
+@CrossOrigin
 public class UserController {
     private final UserService userService;
 

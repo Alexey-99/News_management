@@ -17,8 +17,10 @@ public class Pagination<T> implements Serializable {
 
     private transient List<T> entity;
     private int size;
+    private long countAllEntity;
     private int numberPage;
     private int maxNumberPage;
+
 
     public Pagination() {
         this.entity = new ArrayList<>();

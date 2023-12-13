@@ -32,6 +32,8 @@ public interface TagService {
 
     List<TagDTO> findAll();
 
+    List<TagDTO> findAllExc() throws ServiceNoContentException;
+
     long countAll();
 
     TagDTO findById(long id) throws ServiceNoContentException;

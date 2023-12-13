@@ -1,6 +1,7 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mjc.school.controller.CommentController;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
 import com.mjc.school.validation.dto.Pagination;

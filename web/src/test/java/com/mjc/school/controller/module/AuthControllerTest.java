@@ -1,6 +1,7 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mjc.school.controller.AuthController;
 import com.mjc.school.repository.UserRepository;
 import com.mjc.school.service.auth.AuthService;
 import com.mjc.school.validation.annotation.IsExistsUserByLogin;

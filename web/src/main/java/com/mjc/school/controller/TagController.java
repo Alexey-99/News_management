@@ -11,7 +11,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -35,6 +39,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/v2/tag")
 @Api(value = "Operations for tag in the application")
+@CrossOrigin
 public class TagController {
     private final TagService tagService;
 
@@ -65,6 +70,7 @@ public class TagController {
             Response: true - if successful added a tag to news, if didn't add a tag to news - false.
             """, response = Boolean.class)
     @PutMapping("/to-news")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> addToNews(@RequestParam(value = "tag")
                                              @Min(value = 1,
                                                      message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -86,6 +92,7 @@ public class TagController {
             Response: true - if successful deleted a tag from news, if didn't delete a tag from news - false.
             """, response = Boolean.class)
     @DeleteMapping("/from-news")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteFromNews(@RequestParam(value = "tag")
                                                   @Min(value = 1,
                                                           message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -107,6 +114,7 @@ public class TagController {
             Response: true - if successful deleted a tag, if didn't delete a tag - false.
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteById(@PathVariable
                                               @Min(value = 1,
                                                       message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -124,6 +132,7 @@ public class TagController {
             Response: true - if successful deleted a tag from all news, if didn't delete a tag from all news - false.
             """, response = Boolean.class)
     @DeleteMapping("/all-news/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteFromAllNews(@PathVariable
                                                      @Min(value = 1,
                                                              message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -141,6 +150,7 @@ public class TagController {
             Response: true - if successful updated a tag, if didn't update a tag - false.
             """, response = Boolean.class)
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TagDTO> update(@PathVariable
                                          @Min(value = 1,
                                                  message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -163,7 +173,7 @@ public class TagController {
             View all tags.
             Response: pagination of tags.
             """, response = Pagination.class)
-    @GetMapping("/all")
+    @GetMapping("/all/page")
     public ResponseEntity<Pagination<TagDTO>> findAll(@RequestAttribute(value = "size")
                                                       int size,
                                                       @RequestAttribute(value = "page")
@@ -176,6 +186,21 @@ public class TagController {
                 tagService.findAll(page, size, sortingField, sortingType),
                 tagService.countAll(),
                 page, size), OK);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 204, message = "Not found content in data base"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
+    @ApiOperation(value = """
+            View all tags.
+            Response: pagination of tags.
+            """, response = Pagination.class)
+    @GetMapping("/all")
+    public ResponseEntity<List<TagDTO>> findAll() throws ServiceNoContentException {
+        return new ResponseEntity<>(tagService.findAllExc(), OK);
     }
 
     @ApiResponses(value = {

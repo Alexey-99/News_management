@@ -160,6 +160,20 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<TagDTO> findAllExc() throws ServiceNoContentException {
+        List<TagDTO> tagDTOList = tagRepository.findAll()
+                .stream()
+                .map(tagConverter::toDTO)
+                .toList();
+        if (!tagDTOList.isEmpty()) {
+            return tagDTOList;
+        }else {
+            log.log(WARN, "Not found tags");
+            throw new ServiceNoContentException();
+        }
+    }
+
+    @Override
     public long countAll() {
         return tagRepository.countAll();
     }
@@ -224,6 +238,7 @@ public class TagServiceImpl implements TagService {
                 .<TagDTO>builder()
                 .entity(elementsOnPage)
                 .size(size)
+                .countAllEntity(countAllElements)
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();

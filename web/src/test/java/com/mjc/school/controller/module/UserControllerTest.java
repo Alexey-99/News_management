@@ -1,6 +1,7 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mjc.school.controller.UserController;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;

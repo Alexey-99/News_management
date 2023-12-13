@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +33,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v2/comment")
 @Api(value = "Operations for comments in the application")
 public class CommentController {
@@ -45,9 +48,9 @@ public class CommentController {
     @ApiOperation(value = """
             Create a comment.
             Response: true - if successful created comment, if didn't create comment - false.
-            """, response = Boolean.class)
+            """, response = CommentDTO.class)
     @PostMapping
-    public ResponseEntity<Boolean> create(@Valid
+    public ResponseEntity<CommentDTO> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
                                           CommentDTO commentDTO) throws ServiceBadRequestParameterException {
@@ -65,6 +68,7 @@ public class CommentController {
             Response: true - if successful updated comment, if didn't update comment - false.
             """, response = Boolean.class)
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CommentDTO> update(@PathVariable
                                              @Min(value = 1,
                                                      message = "comment_controller.path_variable.id.in_valid.min")
@@ -88,6 +92,7 @@ public class CommentController {
             Response: true - if successful deleted comment, if didn't delete comment - false.
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteById(@PathVariable
                                               @Min(value = 1,
                                                       message = "comment_controller.path_variable.id.in_valid.min")
@@ -106,6 +111,7 @@ public class CommentController {
             Response: true - if successful deleted comment, if didn't delete comment - false.
             """, response = Boolean.class)
     @DeleteMapping("/news/{newsId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable
                                                   @Min(value = 1,
                                                           message = "comment_controller.path_variable.id.in_valid.min")

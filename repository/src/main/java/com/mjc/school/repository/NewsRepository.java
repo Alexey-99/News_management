@@ -48,11 +48,58 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                     ON news.id = news_tags.news_id
                 INNER JOIN tags
                     ON news_tags.tags_id = tags.id
-            WHERE
-                news_tags.tags_id = tags.id
-                AND tags.name = :tag_name
+            WHERE tags.name = :tag_name
+            ORDER BY news.modified
             """, nativeQuery = true)
     List<News> findByTagName(@Param("tag_name") String tagName, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id, news.created, news.modified
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE tags.name = :tag_name
+            ORDER BY news.created ASC
+            """, nativeQuery = true)
+    List<News> findByTagNameCreatedAsc(@Param("tag_name") String tagName, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id, news.created, news.modified
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE tags.name = :tag_name
+            ORDER BY news.created DESC
+            """, nativeQuery = true)
+    List<News> findByTagNameCreatedDesc(@Param("tag_name") String tagName, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id, news.created, news.modified
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE tags.name = :tag_name
+            ORDER BY news.modified ASC
+            """, nativeQuery = true)
+    List<News> findByTagNameModifiedAsc(@Param("tag_name") String tagName, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id, news.created, news.modified
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE tags.name = :tag_name
+            ORDER BY news.modified DESC
+            """, nativeQuery = true)
+    List<News> findByTagNameModifiedDesc(@Param("tag_name") String tagName, Pageable pageable);
 
     @Query(value = """
             SELECT COUNT(news.id)
@@ -61,11 +108,61 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                     ON news.id = news_tags.news_id
                 INNER JOIN tags
                     ON news_tags.tags_id = tags.id
-            WHERE
-                news_tags.tags_id = tags.id
-                AND tags.name = :tag_name
+            WHERE tags.name = :tag_name
             """, nativeQuery = true)
     Long countAllNewsByTagName(@Param("tag_name") String tagName);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id,
+                news.created, news.modified
+            FROM news
+                 INNER JOIN news_tags
+                     ON news.id = news_tags.news_id
+                 INNER JOIN tags
+                     ON news_tags.tags_id = tags.id
+            WHERE news_tags.tags_id = :tag_id
+            ORDER BY news.created ASC
+            """, nativeQuery = true)
+    List<News> findByTagIdCreatedAsc(@Param("tag_id") Long tagId, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id,
+                news.created, news.modified
+            FROM news
+                 INNER JOIN news_tags
+                     ON news.id = news_tags.news_id
+                 INNER JOIN tags
+                     ON news_tags.tags_id = tags.id
+            WHERE news_tags.tags_id = :tag_id
+            ORDER BY news.created DESC
+            """, nativeQuery = true)
+    List<News> findByTagIdCreatedDesc(@Param("tag_id") Long tagId, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id,
+                news.created, news.modified
+            FROM news
+                 INNER JOIN news_tags
+                     ON news.id = news_tags.news_id
+                 INNER JOIN tags
+                     ON news_tags.tags_id = tags.id
+            WHERE news_tags.tags_id = :tag_id
+            ORDER BY news.modified ASC
+            """, nativeQuery = true)
+    List<News> findByTagIdModifiedAsc(@Param("tag_id") Long tagId, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id,
+                news.created, news.modified
+            FROM news
+                 INNER JOIN news_tags
+                     ON news.id = news_tags.news_id
+                 INNER JOIN tags
+                     ON news_tags.tags_id = tags.id
+            WHERE news_tags.tags_id = :tag_id
+            ORDER BY news.modified DESC
+            """, nativeQuery = true)
+    List<News> findByTagIdModifiedDesc(@Param("tag_id") Long tagId, Pageable pageable);
 
     @Query(value = """
             SELECT news.id, news.title, news.content, news.authors_id,
@@ -86,11 +183,53 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                     ON news.id = news_tags.news_id
                 INNER JOIN tags
                     ON news_tags.tags_id = tags.id
-            WHERE
-                news_tags.tags_id = tags.id
-                AND tags.id = :tag_id
+            WHERE tags.id = :tag_id
             """, nativeQuery = true)
     Long countAllNewsByTagId(@Param("tag_id") Long tagId);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id,
+                news.created, news.modified
+            FROM news
+                INNER JOIN authors
+                    ON news.authors_id = authors.id
+            WHERE authors.name LIKE :part_author_name
+            ORDER BY news.created ASC
+            """, nativeQuery = true)
+    List<News> findByPartOfAuthorNameCreatedAsc(@Param("part_author_name") String partOfAuthorName, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id,
+                news.created, news.modified
+            FROM news
+                INNER JOIN authors
+                    ON news.authors_id = authors.id
+            WHERE authors.name LIKE :part_author_name
+            ORDER BY news.created DESC
+            """, nativeQuery = true)
+    List<News> findByPartOfAuthorNameCreatedDesc(@Param("part_author_name") String partOfAuthorName, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id,
+                news.created, news.modified
+            FROM news
+                INNER JOIN authors
+                    ON news.authors_id = authors.id
+            WHERE authors.name LIKE :part_author_name
+            ORDER BY news.modified ASC
+            """, nativeQuery = true)
+    List<News> findByPartOfAuthorNameModifiedAsc(@Param("part_author_name") String partOfAuthorName, Pageable pageable);
+
+    @Query(value = """
+            SELECT news.id, news.title, news.content, news.authors_id,
+                news.created, news.modified
+            FROM news
+                INNER JOIN authors
+                    ON news.authors_id = authors.id
+            WHERE authors.name LIKE :part_author_name
+            ORDER BY news.modified DESC
+            """, nativeQuery = true)
+    List<News> findByPartOfAuthorNameModifiedDesc(@Param("part_author_name") String partOfAuthorName, Pageable pageable);
 
     @Query(value = """
             SELECT news.id, news.title, news.content, news.authors_id,
@@ -150,8 +289,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             SELECT id, title, content, authors_id, created, modified
             FROM news
             WHERE content LIKE :part_of_content
-            ORDER BY :sortField :sortType
-            LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
     List<News> findByPartOfContent(@Param("part_of_content") String partOfContent, Pageable pageable);
 

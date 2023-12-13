@@ -1,6 +1,7 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mjc.school.controller.DefaultHomeController;
 import com.mjc.school.exception.ErrorResponse;
 import com.mjc.school.handler.DateHandler;
 import org.junit.jupiter.api.BeforeEach;

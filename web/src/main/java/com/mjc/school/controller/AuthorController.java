@@ -12,7 +12,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @Validated
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/api/v2/author")
 @Api("Operations for authors in the application")
 public class AuthorController {
@@ -51,6 +54,7 @@ public class AuthorController {
             Response: true - if successful created author, if didn't create author - false.
             """, response = Boolean.class)
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "author_controller.request_body.author_dto.in_valid.null")
@@ -69,6 +73,7 @@ public class AuthorController {
             Response: true - if successful deleted author, if didn't delete author - false.
             """, response = Boolean.class)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteById(@PathVariable
                                               @Min(value = 1,
                                                       message = "author_controller.path_variable.id.in_valid.min")
@@ -87,6 +92,7 @@ public class AuthorController {
             Response: true - if successful updated author, if didn't update author - false.
             """, response = Boolean.class)
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<AuthorDTO> update(@PathVariable
                                             @Min(value = 1,
                                                     message = "author_controller.path_variable.id.in_valid.min")

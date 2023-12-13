@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public boolean create(CommentDTO commentDTO) throws ServiceBadRequestParameterException {
+    public CommentDTO create(CommentDTO commentDTO) throws ServiceBadRequestParameterException {
         Comment comment = commentConverter.fromDTO(commentDTO);
         comment.setNews(newsRepository.findById(comment.getNewsId()).orElseThrow(() -> {
             log.log(WARN, "Not found news by ID: " + commentDTO.getNewsId());
@@ -48,8 +48,7 @@ public class CommentServiceImpl implements CommentService {
         }));
         comment.setCreated(dateHandler.getCurrentDate());
         comment.setModified(dateHandler.getCurrentDate());
-        commentRepository.save(comment);
-        return true;
+        return commentConverter.toDTO(commentRepository.save(comment));
     }
 
     @Transactional
@@ -92,9 +91,9 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> findAll(int page, int size,
                                     String sortingField, String sortingType) throws ServiceNoContentException {
         List<Comment> commentList = commentRepository.findAllList(PageRequest.of(
-                        paginationService.calcNumberFirstElement(page, size), size,
-                        Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getOptionalSortField(sortingField).orElse(MODIFIED).name().toLowerCase())));
+                paginationService.calcNumberFirstElement(page, size), size,
+                Sort.by(fromOptionalString(sortingType).orElse(DESC),
+                        getOptionalSortField(sortingField).orElse(MODIFIED).name().toLowerCase())));
         if (!commentList.isEmpty()) {
             return commentList.stream()
                     .map(commentConverter::toDTO)
@@ -156,6 +155,7 @@ public class CommentServiceImpl implements CommentService {
                 .<CommentDTO>builder()
                 .entity(elementsOnPage)
                 .size(size)
+                .countAllEntity(countAllElements)
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();

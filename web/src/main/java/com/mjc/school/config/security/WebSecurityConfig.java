@@ -1,11 +1,12 @@
 package com.mjc.school.config.security;
 
+import com.mjc.school.exception.handler.CustomAccessDeniedHandlerImpl;
+import com.mjc.school.exception.handler.CustomAuthenticationEntryPointImpl;
 import com.mjc.school.filter.JwtRequestFilter;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -15,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.DELETE;
@@ -30,13 +30,14 @@ import static org.springframework.http.HttpMethod.PUT;
 public class WebSecurityConfig {
     private final CustomUserDetailsServiceImpl customUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
+    private final CustomAuthenticationEntryPointImpl customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandlerImpl customAccessDeniedHandler;
     private static final String ADMIN_ROLE_NAME = "ADMIN";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
-                .cors().disable()
                 .authorizeRequests()
                 .antMatchers(POST, "/api/v2/comment").authenticated()
                 .antMatchers(POST, "/api/v2/news").authenticated()
@@ -62,7 +63,8 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // SessionCreationPolicy.STATELESS doesn't work with oAuth2
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // It doesn't work with oAuth2
+                .authenticationEntryPoint(customAuthenticationEntryPoint)// It doesn't work with oAuth2
+                .accessDeniedHandler(customAccessDeniedHandler)
 //                .and()
 //                .oauth2Login()
                 .and()

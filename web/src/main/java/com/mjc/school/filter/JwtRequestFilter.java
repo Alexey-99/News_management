@@ -16,11 +16,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.apache.logging.log4j.Level.DEBUG;
+import static org.apache.logging.log4j.Level.INFO;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -43,15 +44,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 userName = jwtTokenUtil.getUserName(jwt);
             } catch (ExpiredJwtException ex) {
-                log.log(DEBUG, "Token lifetime has expired. Message: ".concat(ex.getMessage()));
+                log.log(INFO, "Token lifetime has expired. Message: ".concat(ex.getMessage()));
             } catch (SignatureException ex) {
-                log.log(DEBUG, "The signature is not correct. Message: ".concat(ex.getMessage()));
+                log.log(INFO, "The signature is not correct. Message: ".concat(ex.getMessage()));
             } catch (UnsupportedJwtException ex) {
-                log.log(DEBUG, "Unsupported jwt. Message: ".concat(ex.getMessage()));
+                log.log(INFO, "Unsupported jwt. Message: ".concat(ex.getMessage()));
             } catch (MalformedJwtException ex) {
-                log.log(DEBUG, "Malformed jwt. Message: ".concat(ex.getMessage()));
+                log.log(INFO, "Malformed jwt. Message: ".concat(ex.getMessage()));
             } catch (Exception ex) {
-                log.log(DEBUG, "Invalid token. Message: ".concat(ex.getMessage()));
+                log.log(INFO, "Invalid token. Message: ".concat(ex.getMessage()));
             }
         }
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {

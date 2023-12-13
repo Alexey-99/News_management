@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface CommentService {
     @Transactional
-    boolean create(CommentDTO commentDTO) throws ServiceBadRequestParameterException;
+    CommentDTO create(CommentDTO commentDTO) throws ServiceBadRequestParameterException;
 
     @Transactional
     boolean deleteById(long id);

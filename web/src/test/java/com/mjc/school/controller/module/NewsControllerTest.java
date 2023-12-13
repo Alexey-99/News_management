@@ -1,6 +1,7 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mjc.school.controller.NewsController;
 import com.mjc.school.service.news.NewsService;
 import com.mjc.school.validation.dto.NewsDTO;
 import com.mjc.school.validation.dto.Pagination;

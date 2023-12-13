@@ -1,6 +1,5 @@
 package com.mjc.school.validation.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.validation.annotation.IsExistsNewsById;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +20,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Validated
 public class CommentDTO implements Serializable {
-    @JsonIgnore
     private long id;
 
     @NotNull(message = "comment_dto.content.not_valid.null")

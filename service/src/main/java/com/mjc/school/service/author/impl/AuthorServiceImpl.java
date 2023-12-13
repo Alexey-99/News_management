@@ -186,6 +186,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .<AuthorDTO>builder()
                 .entity(elementsOnPage)
                 .size(size)
+                .countAllEntity(countAllElements)
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();
@@ -198,6 +199,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .<AuthorIdWithAmountOfWrittenNewsDTO>builder()
                 .entity(elementsOnPage)
                 .size(size)
+                .countAllEntity(countAllElements)
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();

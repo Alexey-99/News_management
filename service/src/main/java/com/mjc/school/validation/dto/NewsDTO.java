@@ -1,6 +1,5 @@
 package com.mjc.school.validation.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.validation.annotation.IsExistsAuthorById;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -21,7 +21,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Validated
 public class NewsDTO implements Serializable {
-    @JsonIgnore
     private long id;
 
     @NotNull(message = "news_dto.title.not_valid.null")
@@ -34,12 +33,15 @@ public class NewsDTO implements Serializable {
     @Size(min = 5, max = 255, message = "news_dto.content.not_valid.size")
     private String content;
 
+    private AuthorDTO author;
     @Min(value = 1, message = "news_dto.author_id.not_valid.min")
     @IsExistsAuthorById(message = "news_dto.author_id.not_valid.not_exists_author_by_id")
     private long authorId;
 
+    private List<CommentDTO> comments;
     private long countComments;
 
+    private List<TagDTO> tags;
     private long countTags;
 
     private String created;

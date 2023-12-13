@@ -1,6 +1,7 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mjc.school.controller.TagController;
 import com.mjc.school.service.tag.TagService;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.validation.dto.TagDTO;

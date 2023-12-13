@@ -22,8 +22,10 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mjc.school.service.news.impl.sort.NewsSortField.CREATED;
 import static com.mjc.school.service.news.impl.sort.NewsSortField.MODIFIED;
 import static org.apache.logging.log4j.Level.WARN;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
@@ -166,11 +168,24 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> findByTagName(String tagName,
                                        int page, int size,
                                        String sortingField, String sortingType) throws ServiceNoContentException {
-        List<News> newsList = newsRepository.findByTagName(tagName,
-                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
-                        Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getOptionalSortField(sortingField)
-                                        .orElse(MODIFIED).name().toLowerCase())));
+        List<News> newsList;
+        if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
+            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
+                newsList = newsRepository.findByTagNameCreatedAsc(tagName,
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            } else {
+                newsList = newsRepository.findByTagNameCreatedDesc(tagName,
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            }
+        } else {
+            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
+                newsList = newsRepository.findByTagNameModifiedAsc(tagName,
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            } else {
+                newsList = newsRepository.findByTagNameModifiedDesc(tagName,
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            }
+        }
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -190,11 +205,24 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> findByTagId(long tagId,
                                      int page, int size,
                                      String sortingField, String sortingType) throws ServiceNoContentException {
-        List<News> newsList = newsRepository.findByTagId(tagId,
-                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
-                        Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getOptionalSortField(sortingField)
-                                        .orElse(MODIFIED).name().toLowerCase())));
+        List<News> newsList;
+        if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
+            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
+                newsList = newsRepository.findByTagIdCreatedAsc(tagId,
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            } else {
+                newsList = newsRepository.findByTagIdCreatedDesc(tagId,
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            }
+        } else {
+            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
+                newsList = newsRepository.findByTagIdModifiedAsc(tagId,
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            } else {
+                newsList = newsRepository.findByTagIdModifiedDesc(tagId,
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            }
+        }
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -214,12 +242,24 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName,
                                                 int page, int size,
                                                 String sortingField, String sortingType) throws ServiceNoContentException {
-        List<News> newsList = newsRepository.findByPartOfAuthorName(
-                "%" + partOfAuthorName + "%",
-                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
-                        Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getOptionalSortField(sortingField)
-                                        .orElse(MODIFIED).name().toLowerCase())));
+        List<News> newsList;
+        if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
+            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
+                newsList = newsRepository.findByPartOfAuthorNameCreatedAsc("%" + partOfAuthorName + "%",
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            } else {
+                newsList = newsRepository.findByPartOfAuthorNameCreatedDesc("%" + partOfAuthorName + "%",
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            }
+        } else {
+            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
+                newsList = newsRepository.findByPartOfAuthorNameModifiedAsc("%" + partOfAuthorName + "%",
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            } else {
+                newsList = newsRepository.findByPartOfAuthorNameModifiedDesc("%" + partOfAuthorName + "%",
+                        PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            }
+        }
         if (!newsList.isEmpty()) {
             return newsList.stream()
                     .map(newsConverter::toDTO)
@@ -315,6 +355,7 @@ public class NewsServiceImpl implements NewsService {
                 .<NewsDTO>builder()
                 .entity(elementsOnPage)
                 .size(size)
+                .countAllEntity(countAllElements)
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();
