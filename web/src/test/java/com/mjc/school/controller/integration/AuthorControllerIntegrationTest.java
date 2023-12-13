@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = {"/schema.sql"})
 @Sql(value = {"/data_before_method.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @Sql(value = {"/data_after_method.sql"}, executionPhase = AFTER_TEST_METHOD)
-class IntegrationAuthorControllerTest {
+class AuthorControllerIntegrationTest {
     private static final String AUTHORIZATION_HEADER_VALUE_START_WITH = "Bearer ";
     private String adminJwtToken = null;
     private String userJwtToken = null;
