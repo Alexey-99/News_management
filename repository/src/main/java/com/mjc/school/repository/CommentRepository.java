@@ -37,7 +37,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             SELECT id, content, news_id, created, modified
             FROM comments
             WHERE news_id = :newsId
-            LIMIT :size OFFSET :indexFirstElement
             """, nativeQuery = true)
     List<Comment> findByNewsId(@Param("newsId") Long newsId, Pageable pageable);
 

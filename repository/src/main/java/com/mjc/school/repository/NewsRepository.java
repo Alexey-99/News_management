@@ -153,18 +153,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findByTagIdModifiedDesc(@Param("tag_id") Long tagId, Pageable pageable);
 
     @Query(value = """
-            SELECT news.id, news.title, news.content, news.authors_id,
-                news.created, news.modified
-            FROM news
-                 INNER JOIN news_tags
-                     ON news.id = news_tags.news_id
-                 INNER JOIN tags
-                     ON news_tags.tags_id = tags.id
-            WHERE news_tags.tags_id = :tag_id
-            """, nativeQuery = true)
-    List<News> findByTagId(@Param("tag_id") Long tagId, Pageable pageable);
-
-    @Query(value = """
             SELECT COUNT(news.id)
             FROM news
                 INNER JOIN news_tags

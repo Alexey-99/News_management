@@ -42,10 +42,6 @@ class AuthorControllerIntegrationTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
-    @BeforeAll
-    static void beforeAll() throws ServiceBadRequestParameterException {
-    }
-
     @BeforeEach
     void setUp() throws ServiceBadRequestParameterException {
         if (adminJwtToken == null) {

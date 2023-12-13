@@ -47,14 +47,6 @@ class CommentControllerTest {
     }
 
     @Test
-    void create() {
-    }
-
-    @Test
-    void update() {
-    }
-
-    @Test
     void deleteById() throws Exception {
         String commentId = "1";
 

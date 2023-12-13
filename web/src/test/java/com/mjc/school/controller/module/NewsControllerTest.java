@@ -49,14 +49,6 @@ class NewsControllerTest {
 
     @Test
     @DisplayName(value = """
-            create(): Return status 201.
-            If transferred in request correct news.
-            """)
-    void create() {
-    }
-
-    @Test
-    @DisplayName(value = """
             deleteById(): Return status 200.
             if correct entered newsId and deleted news by id
             """)
@@ -116,14 +108,6 @@ class NewsControllerTest {
 
         long newsIdL = Long.parseLong(newsId);
         verify(newsService, times(1)).deleteAllTagsFromNews(newsIdL);
-    }
-
-    @Test
-    @DisplayName(value = """
-            update(): Return status 200 and updated news.
-            If correct entered newsId and newsDTO.
-            """)
-    void update() {
     }
 
     @Test
