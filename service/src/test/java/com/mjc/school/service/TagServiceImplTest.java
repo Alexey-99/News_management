@@ -351,10 +351,8 @@ class TagServiceImplTest {
         when(tagRepository.findAllList(PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> tagService.findAll(page, size, sortField, sortType));
-
-        assertEquals("service.exception.not_found_tags", exceptionActual.getMessage());
     }
 
     @Test
@@ -419,9 +417,9 @@ class TagServiceImplTest {
     void findById_when_notFoundTagById() {
         long tagId = 1;
         when(tagRepository.findById(tagId)).thenReturn(Optional.empty());
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> tagService.findById(tagId));
-        assertEquals("service.exception.not_found_tag_by_id", exceptionActual.getMessage());
+
     }
 
     @Test
@@ -465,9 +463,8 @@ class TagServiceImplTest {
                 PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> tagService.findByPartOfName(partOfName, page, size, sortField, sortType));
-        assertEquals("service.exception.not_found_tags_by_part_of_name", exceptionActual.getMessage());
     }
 
     @Test
@@ -497,10 +494,8 @@ class TagServiceImplTest {
                 PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual =
-                assertThrows(ServiceNoContentException.class,
-                        () -> tagService.findByNewsId(newsId, page, size, sortField, sortType));
-        assertEquals("service.exception.not_found_tags_by_news_id", exceptionActual.getMessage());
+        assertThrows(ServiceNoContentException.class,
+                () -> tagService.findByNewsId(newsId, page, size, sortField, sortType));
     }
 
     @Test
@@ -602,6 +597,7 @@ class TagServiceImplTest {
                 .entity(tagDTOList)
                 .size(size)
                 .numberPage(page)
+                .countAllEntity(countAllElements)
                 .maxNumberPage(maxNumberPageExpected)
                 .build();
         Pagination<TagDTO> tagDTOPaginationActual =

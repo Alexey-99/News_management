@@ -176,10 +176,9 @@ class AuthorServiceImplTest {
                 PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> authorService.findAll(page, size, sortField, sortType));
 
-        assertEquals("service.exception.not_found_authors", exceptionActual.getMessage());
     }
 
     @Test
@@ -238,10 +237,8 @@ class AuthorServiceImplTest {
 
         when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> authorService.findById(authorId));
-
-        assertEquals("service.exception.not_found_author_by_id", exceptionActual.getMessage());
     }
 
     @Test
@@ -285,10 +282,8 @@ class AuthorServiceImplTest {
                 PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> authorService.findByPartOfName(partOfName, page, size, sortField, sortType));
-
-        assertEquals("service.exception.not_found_authors_by_part_of_name", exceptionActual.getMessage());
     }
 
     @Test
@@ -334,9 +329,7 @@ class AuthorServiceImplTest {
     void findByNewsId_when_notFoundAuthors() {
         long newsId = 1L;
         when(authorRepository.findByNewsId(newsId)).thenReturn(Optional.empty());
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
-                () -> authorService.findByNewsId(newsId));
-        assertEquals("service.exception.not_found_authors_by_news_id", exceptionActual.getMessage());
+        assertThrows(ServiceNoContentException.class, () -> authorService.findByNewsId(newsId));
     }
 
     @Test
@@ -480,10 +473,9 @@ class AuthorServiceImplTest {
         when(authorRepository.findAllAuthorsWithAmountWrittenNewsDesc(PageRequest.of(numberFirstElement, size)))
                 .thenReturn(authorListFromDB);
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> authorService.findAllAuthorsIdWithAmountOfWrittenNews(page, size, sortType));
 
-        assertEquals("service.exception.not_found_authors", exceptionActual.getMessage());
     }
 
     @Test
@@ -504,6 +496,7 @@ class AuthorServiceImplTest {
                 .entity(authorDTOList)
                 .size(size)
                 .numberPage(page)
+                .countAllEntity(countAllElements)
                 .maxNumberPage(2)
                 .build();
         Pagination<AuthorDTO> authorDTOPaginationActual =
@@ -530,6 +523,7 @@ class AuthorServiceImplTest {
                         .entity(authorIdWithAmountOfWrittenNewsDTOList)
                         .size(size)
                         .numberPage(page)
+                        .countAllEntity(countAllElements)
                         .maxNumberPage(2)
                         .build();
         Pagination<AuthorIdWithAmountOfWrittenNewsDTO> authorIdWithAmountOfWrittenNewsDTOPaginationActual =

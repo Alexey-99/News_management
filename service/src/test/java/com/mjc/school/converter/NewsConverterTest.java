@@ -1,5 +1,7 @@
 package com.mjc.school.converter;
 
+import com.mjc.school.converter.impl.AuthorConverter;
+import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.converter.impl.NewsConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.model.Author;
@@ -10,7 +12,10 @@ import com.mjc.school.model.Tag;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.repository.NewsTagRepository;
+import com.mjc.school.validation.dto.AuthorDTO;
+import com.mjc.school.validation.dto.CommentDTO;
 import com.mjc.school.validation.dto.NewsDTO;
+import com.mjc.school.validation.dto.TagDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,6 +30,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +43,10 @@ class NewsConverterTest {
     private CommentRepository commentRepository;
     @Mock
     private NewsTagRepository newsTagRepository;
+    @Mock
+    private AuthorConverter authorConverter;
+    @Mock
+    private CommentConverter commentConverter;
 
     @Test()
     void fromDTO_when_notFoundAuthor_throwException() {
@@ -238,171 +248,48 @@ class NewsConverterTest {
     }
 
 
-    @ParameterizedTest
-    @MethodSource(value = "providerNewsParams")
-    void toDTO(News news, NewsDTO newsDTOExpected) {
-        NewsDTO newsDTOActual = newsConverter.toDTO(news);
+    //    @ParameterizedTest
+//    @MethodSource(value = "providerNewsParams")
+    @Test
+    void toDTO() {
+        when(authorConverter.toDTO(any(Author.class)))
+                .thenReturn(AuthorDTO.builder().id(2L).build());
+        when(commentConverter.toDTO(Comment.builder().id(1).build()))
+                .thenReturn(CommentDTO.builder().id(1).build());
+        when(commentConverter.toDTO(Comment.builder().id(2).build()))
+                .thenReturn(CommentDTO.builder().id(2).build());
+        when(commentConverter.toDTO(Comment.builder().id(3).build()))
+                .thenReturn(CommentDTO.builder().id(3).build());
+
+        News newsTest = News.builder()
+                .id(1)
+                .title("news title test")
+                .content("news content test")
+                .author(Author.builder().id(2L).build())
+                .comments(List.of(
+                        Comment.builder().id(1).build(),
+                        Comment.builder().id(2).build(),
+                        Comment.builder().id(3).build()))
+                .tags(List.of())
+                .created("created date-time")
+                .modified("modified date-time")
+                .build();
+
+        NewsDTO newsDTOExpected = NewsDTO.builder()
+                .id(1L)
+                .title("news title test")
+                .content("news content test")
+                .author(AuthorDTO.builder().id(2L).build())
+                .comments(List.of(
+                        CommentDTO.builder().id(1).build(),
+                        CommentDTO.builder().id(2).build(),
+                        CommentDTO.builder().id(3).build()))
+                .tags(List.of())
+                .created("created date-time")
+                .modified("modified date-time")
+                .build();
+
+        NewsDTO newsDTOActual = newsConverter.toDTO(newsTest);
         assertEquals(newsDTOExpected, newsDTOActual);
-    }
-
-    static List<Arguments> providerNewsParams() {
-        return List.of(
-                Arguments.of(
-                        News.builder()
-                                .id(1)
-                                .title("news title test")
-                                .content("news content test")
-                                .author(Author.builder().id(2L).build())
-                                .comments(List.of(
-                                        Comment.builder().id(1).build(),
-                                        Comment.builder().id(2).build(),
-                                        Comment.builder().id(3).build()))
-                                .tags(List.of())
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build(),
-                        NewsDTO.builder()
-                                .id(1L)
-                                .title("news title test")
-                                .content("news content test")
-                                .authorId(2L)
-                                .countComments(3)
-                                .countTags(0)
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build()
-                ),
-                Arguments.of(
-                        News.builder()
-                                .id(1)
-                                .title("news title test")
-                                .content("news content test")
-                                .author(Author.builder().id(2L).build())
-                                .comments(List.of())
-                                .tags(List.of())
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build(),
-                        NewsDTO.builder()
-                                .id(1L)
-                                .title("news title test")
-                                .content("news content test")
-                                .authorId(2L)
-                                .countComments(0)
-                                .countTags(0)
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build()
-                ),
-                Arguments.of(
-                        News.builder()
-                                .id(1)
-                                .title("news title test")
-                                .content("news content test")
-                                .author(Author.builder().id(2L).build())
-                                .comments(null)
-                                .tags(List.of())
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build(),
-                        NewsDTO.builder()
-                                .id(1L)
-                                .title("news title test")
-                                .content("news content test")
-                                .authorId(2L)
-                                .countComments(0)
-                                .countTags(0)
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build()
-                ),
-
-                Arguments.of(
-                        News.builder()
-                                .id(1)
-                                .title("news title test")
-                                .content("news content test")
-                                .author(Author.builder().id(2L).build())
-                                .comments(List.of())
-                                .tags(List.of(
-                                        NewsTag.builder()
-                                                .id(1L)
-                                                .news(News.builder().id(1L).build())
-                                                .tag(Tag.builder().id(1L).build())
-                                                .build(),
-                                        NewsTag.builder()
-                                                .id(2L)
-                                                .news(News.builder().id(1L).build())
-                                                .tag(Tag.builder().id(2L).build())
-                                                .build(),
-                                        NewsTag.builder()
-                                                .id(3L)
-                                                .news(News.builder().id(1L).build())
-                                                .tag(Tag.builder().id(3L).build())
-                                                .build(),
-                                        NewsTag.builder()
-                                                .id(4L)
-                                                .news(News.builder().id(1L).build())
-                                                .tag(Tag.builder().id(4L).build())
-                                                .build()))
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build(),
-                        NewsDTO.builder()
-                                .id(1L)
-                                .title("news title test")
-                                .content("news content test")
-                                .authorId(2L)
-                                .countComments(0)
-                                .countTags(4)
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build()
-                ),
-                Arguments.of(
-                        News.builder()
-                                .id(1)
-                                .title("news title test")
-                                .content("news content test")
-                                .author(Author.builder().id(2L).build())
-                                .comments(List.of())
-                                .tags(List.of())
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build(),
-                        NewsDTO.builder()
-                                .id(1L)
-                                .title("news title test")
-                                .content("news content test")
-                                .authorId(2L)
-                                .countComments(0)
-                                .countTags(0)
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build()
-                ),
-                Arguments.of(
-                        News.builder()
-                                .id(1)
-                                .title("news title test")
-                                .content("news content test")
-                                .author(Author.builder().id(2L).build())
-                                .comments(List.of())
-                                .tags(null)
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build(),
-                        NewsDTO.builder()
-                                .id(1L)
-                                .title("news title test")
-                                .content("news content test")
-                                .authorId(2L)
-                                .countComments(0)
-                                .countTags(0)
-                                .created("created date-time")
-                                .modified("modified date-time")
-                                .build()
-                )
-        );
     }
 }

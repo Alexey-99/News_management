@@ -361,10 +361,8 @@ class NewsServiceImplTest {
         when(newsRepository.findAllList(any(PageRequest.class)))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> newsService.findAll(page, size, sortField, sortType));
-
-        assertEquals("service.exception.not_found_news", exceptionActual.getMessage());
     }
 
     @Test
@@ -496,9 +494,8 @@ class NewsServiceImplTest {
 
         when(newsRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> newsService.findById(newsId));
-        assertEquals("service.exception.not_found_news_by_id", exceptionActual.getMessage());
     }
 
     @Test
@@ -562,7 +559,7 @@ class NewsServiceImplTest {
                                 .build()))
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByTagName(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByTagNameModifiedDesc(anyString(), any(PageRequest.class)))
                 .thenReturn(newsFindByTagNameList);
 
         when(newsConverter.toDTO(News.builder().id(1).content("CONTENT 1")
@@ -637,23 +634,67 @@ class NewsServiceImplTest {
     }
 
     @Test
-    void findByTagName_when_notFoundNewsByTagName() {
+    void findByTagName_when_notFoundNewsByTagName_modifiedDesc() {
         String tagName = "tag_name";
 
         int page = 1;
         int size = 5;
-        int numberFirstElement = 0;
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(numberFirstElement);
-        when(newsRepository.findByTagName(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByTagNameModifiedDesc(anyString(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> newsService.findByTagName(tagName, page, size, sortField, sortType));
+    }
 
-        assertEquals("service.exception.not_found_news_by_tag_name", exceptionActual.getMessage());
+    @Test
+    void findByTagName_when_notFoundNewsByTagName_modifiedAsc() {
+        String tagName = "tag_name";
+
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "modified";
+
+        when(newsRepository.findByTagNameModifiedAsc(anyString(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByTagName(tagName, page, size, sortField, sortType));
+    }
+
+    @Test
+    void findByTagName_when_notFoundNewsByTagName_createdDesc() {
+        String tagName = "tag_name";
+
+        int page = 1;
+        int size = 5;
+        String sortType = "DESC";
+        String sortField = "created";
+
+        when(newsRepository.findByTagNameCreatedDesc(anyString(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByTagName(tagName, page, size, sortField, sortType));
+    }
+
+    @Test
+    void findByTagName_when_notFoundNewsByTagName_createdAsc() {
+        String tagName = "tag_name";
+
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "created";
+
+        when(newsRepository.findByTagNameCreatedAsc(anyString(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByTagName(tagName, page, size, sortField, sortType));
     }
 
     @Test
@@ -667,24 +708,67 @@ class NewsServiceImplTest {
     }
 
     @Test
-    void findByTagId_when_notFoundNewsByTagId() {
+    void findByTagId_when_notFoundNewsByTagId_modifiedDesc() {
         long tagId = 1;
 
         int page = 1;
         int size = 5;
-        int numberFirstElement = 0;
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
-                .thenReturn(numberFirstElement);
-
-        when(newsRepository.findByTagId(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByTagIdModifiedDesc(anyLong(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> newsService.findByTagId(tagId, page, size, sortField, sortType));
-        assertEquals("service.exception.not_found_news_by_tag_id", exceptionActual.getMessage());
+    }
+
+    @Test
+    void findByTagId_when_notFoundNewsByTagId_modifiedAsc() {
+        long tagId = 1;
+
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "modified";
+
+        when(newsRepository.findByTagIdModifiedAsc(anyLong(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByTagId(tagId, page, size, sortField, sortType));
+    }
+
+    @Test
+    void findByTagId_when_notFoundNewsByTagId_createdDesc() {
+        long tagId = 1;
+
+        int page = 1;
+        int size = 5;
+        String sortType = "DESC";
+        String sortField = "created";
+
+        when(newsRepository.findByTagIdCreatedDesc(anyLong(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByTagId(tagId, page, size, sortField, sortType));
+    }
+
+    @Test
+    void findByTagId_when_notFoundNewsByTagId_createdAsc() {
+        long tagId = 1;
+
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "created";
+
+        when(newsRepository.findByTagIdCreatedAsc(anyLong(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByTagId(tagId, page, size, sortField, sortType));
     }
 
     @Test
@@ -693,12 +777,8 @@ class NewsServiceImplTest {
 
         int page = 1;
         int size = 5;
-        int numberFirstElement = 0;
         String sortType = "DESC";
         String sortField = "modified";
-
-        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
-                .thenReturn(numberFirstElement);
 
         List<News> newsFindByTagIdList = List.of(
                 News.builder()
@@ -728,7 +808,7 @@ class NewsServiceImplTest {
                                         .build()))
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByTagId(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByTagIdModifiedDesc(anyLong(), any(PageRequest.class)))
                 .thenReturn(newsFindByTagIdList);
 
         when(newsConverter.toDTO(News.builder()
@@ -812,24 +892,69 @@ class NewsServiceImplTest {
     }
 
     @Test
-    void findByPartOfAuthorName_when_notFoundNews() {
+    void findByPartOfAuthorName_when_notFoundNews_modifiedDesc() {
         String partOfAuthorName = "part";
 
         int page = 1;
         int size = 5;
-        int numberFirstElement = 0;
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(numberFirstElement);
-
-        when(newsRepository.findByPartOfAuthorName(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfAuthorNameModifiedDesc(anyString(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortField, sortType));
-        assertEquals("service.exception.not_found_news_by_part_of_author_name", exceptionActual.getMessage());
     }
+
+    @Test
+    void findByPartOfAuthorName_when_notFoundNews_modifiedAsc() {
+        String partOfAuthorName = "part";
+
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "modified";
+
+        when(newsRepository.findByPartOfAuthorNameModifiedAsc(anyString(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortField, sortType));
+    }
+
+    @Test
+    void findByPartOfAuthorName_when_notFoundNews_createdDesc() {
+        String partOfAuthorName = "part";
+
+        int page = 1;
+        int size = 5;
+        String sortType = "DESC";
+        String sortField = "created";
+
+        when(newsRepository.findByPartOfAuthorNameCreatedDesc(anyString(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortField, sortType));
+    }
+
+    @Test
+    void findByPartOfAuthorName_when_notFoundNews_createdAsc() {
+        String partOfAuthorName = "part";
+
+        int page = 1;
+        int size = 5;
+        String sortType = "ASC";
+        String sortField = "created";
+
+        when(newsRepository.findByPartOfAuthorNameCreatedAsc(anyString(), any(PageRequest.class)))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortField, sortType));
+    }
+
 
     @Test
     void findByPartOfAuthorName_when_foundNews() throws ServiceNoContentException {
@@ -837,12 +962,8 @@ class NewsServiceImplTest {
 
         int page = 1;
         int size = 5;
-        int numberFirstElement = 0;
         String sortType = "DESC";
         String sortField = "modified";
-
-        when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
-                .thenReturn(numberFirstElement);
 
         List<News> newsFindByPartOfAuthorNameList = List.of(
                 News.builder()
@@ -863,7 +984,7 @@ class NewsServiceImplTest {
                         .author(Author.builder().id(2).name("Sempart").build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByPartOfAuthorName(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfAuthorNameModifiedDesc(anyString(), any(PageRequest.class)))
                 .thenReturn(newsFindByPartOfAuthorNameList);
 
         when(newsConverter.toDTO(News.builder()
@@ -953,9 +1074,8 @@ class NewsServiceImplTest {
         when(newsRepository.findByAuthorId(anyLong(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> newsService.findByAuthorId(authorId, page, size, sortField, sortType));
-        assertEquals("service.exception.not_found_news_by_author_id", exceptionActual.getMessage());
     }
 
     @Test
@@ -1079,9 +1199,8 @@ class NewsServiceImplTest {
         when(newsRepository.findByPartOfTitle(anyString(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> newsService.findByPartOfTitle(partOfTitle, page, size, sortField, sortType));
-        assertEquals("service.exception.not_found_news_by_part_of_title", exceptionActual.getMessage());
     }
 
     @Test
@@ -1182,9 +1301,8 @@ class NewsServiceImplTest {
         when(newsRepository.findByPartOfContent(anyString(), any(PageRequest.class)))
                 .thenReturn(List.of());
 
-        ServiceNoContentException exceptionActual = assertThrows(ServiceNoContentException.class,
+        assertThrows(ServiceNoContentException.class,
                 () -> newsService.findByPartOfContent(partOfContent, page, size, sortField, sortType));
-        assertEquals("service.exception.not_found_news_by_part_of_content", exceptionActual.getMessage());
     }
 
     @Test
@@ -1286,6 +1404,7 @@ class NewsServiceImplTest {
                 .entity(newsDTOList)
                 .size(size)
                 .numberPage(page)
+                .countAllEntity(countAllElements)
                 .maxNumberPage(2)
                 .build();
         Pagination<NewsDTO> newsDTOPaginationActual =

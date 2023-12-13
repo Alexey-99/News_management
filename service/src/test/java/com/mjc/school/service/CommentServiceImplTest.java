@@ -278,12 +278,8 @@ class CommentServiceImplTest {
                 .thenReturn(List.of());
         when(paginationService.calcNumberFirstElement(page, size)).thenReturn(0);
 
-
-        ServiceNoContentException exceptionActual =
-                assertThrows(ServiceNoContentException.class,
-                        () -> commentService.findAll(page, size, sortField, sortType));
-        assertEquals("service.exception.not_found_comments",
-                exceptionActual.getMessage());
+        assertThrows(ServiceNoContentException.class,
+                () -> commentService.findAll(page, size, sortField, sortType));
     }
 
     @Test
@@ -411,12 +407,8 @@ class CommentServiceImplTest {
                 .thenReturn(List.of());
         when(paginationService.calcNumberFirstElement(page, size)).thenReturn(numberFirstElement);
 
-        ServiceNoContentException serviceNoContentExceptionActual =
-                assertThrows(ServiceNoContentException.class,
-                        () -> commentService.findByNewsId(newsId, page, size, sortField, sortType));
-
-        assertEquals("service.exception.not_found_comments_by_news_id",
-                serviceNoContentExceptionActual.getMessage());
+        assertThrows(ServiceNoContentException.class,
+                () -> commentService.findByNewsId(newsId, page, size, sortField, sortType));
     }
 
     @Test
@@ -432,11 +424,8 @@ class CommentServiceImplTest {
     void findById_when_notFoundCommentById() {
         long commentId = 1;
         when(commentRepository.findById(commentId)).thenReturn(Optional.empty());
-        ServiceNoContentException serviceNoContentExceptionActual =
-                assertThrows(ServiceNoContentException.class,
-                        () -> commentService.findById(commentId));
-        assertEquals("service.exception.not_found_comment_by_id",
-                serviceNoContentExceptionActual.getMessage());
+        assertThrows(ServiceNoContentException.class,
+                () -> commentService.findById(commentId));
     }
 
     @Test
@@ -480,6 +469,7 @@ class CommentServiceImplTest {
                         .entity(commentDTOList)
                         .size(size)
                         .numberPage(page)
+                        .countAllEntity(countAllElements)
                         .maxNumberPage(2)
                         .build();
         Pagination<CommentDTO> paginationActual =

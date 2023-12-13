@@ -332,6 +332,34 @@ class TagControllerTest {
             findAll(): Return status 200 and List of tags.
                """)
     void findAll() throws Exception {
+        List<TagDTO> tagDTOListExpected = List.of(
+                TagDTO.builder().id(1).name("A_tag_name").build(),
+                TagDTO.builder().id(3).name("C_tag_name").build(),
+                TagDTO.builder().id(2).name("B_tag_name").build(),
+                TagDTO.builder().id(4).name("D_tag_name").build(),
+                TagDTO.builder().id(5).name("Z_tag_name").build());
+        when(tagService.findAllExc()).thenReturn(tagDTOListExpected);
+
+        mockMvc.perform(get("/api/v2/tag/all"))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String actualContentType = result.getResponse().getContentType();
+                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
+                })
+                .andExpect(result -> {
+                    String actualContentJson = result.getResponse().getContentAsString();
+                    String expectedContentJson = objectMapper.writeValueAsString(tagDTOListExpected);
+                    assertNotNull(actualContentJson);
+                    assertEquals(expectedContentJson, actualContentJson);
+                });
+    }
+
+    @Test
+    @DisplayName(value = """
+            findAll(): Return status 200 and List of tags.
+               """)
+    void findAllWithPagination() throws Exception {
         int page = 1;
         int size = 5;
         String sortType = "ASC";
@@ -359,11 +387,12 @@ class TagControllerTest {
         when(tagService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
                 .thenReturn(tagDTOPaginationExpected);
 
-        mockMvc.perform(get("/api/v2/tag/all")
+        mockMvc.perform(get("/api/v2/tag/all/page")
                         .requestAttr("size", size)
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     String actualContentType = result.getResponse().getContentType();

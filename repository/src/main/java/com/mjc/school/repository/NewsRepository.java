@@ -49,18 +49,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                 INNER JOIN tags
                     ON news_tags.tags_id = tags.id
             WHERE tags.name = :tag_name
-            ORDER BY news.modified
-            """, nativeQuery = true)
-    List<News> findByTagName(@Param("tag_name") String tagName, Pageable pageable);
-
-    @Query(value = """
-            SELECT news.id, news.title, news.content, news.authors_id, news.created, news.modified
-            FROM news
-                INNER JOIN news_tags
-                    ON news.id = news_tags.news_id
-                INNER JOIN tags
-                    ON news_tags.tags_id = tags.id
-            WHERE tags.name = :tag_name
             ORDER BY news.created ASC
             """, nativeQuery = true)
     List<News> findByTagNameCreatedAsc(@Param("tag_name") String tagName, Pageable pageable);
@@ -230,16 +218,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             ORDER BY news.modified DESC
             """, nativeQuery = true)
     List<News> findByPartOfAuthorNameModifiedDesc(@Param("part_author_name") String partOfAuthorName, Pageable pageable);
-
-    @Query(value = """
-            SELECT news.id, news.title, news.content, news.authors_id,
-                news.created, news.modified
-            FROM news
-                INNER JOIN authors
-                    ON news.authors_id = authors.id
-            WHERE authors.name LIKE :part_author_name
-            """, nativeQuery = true)
-    List<News> findByPartOfAuthorName(@Param("part_author_name") String partOfAuthorName, Pageable pageable);
 
     @Query(value = """
             SELECT COUNT(news.id)
