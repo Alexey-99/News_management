@@ -68,8 +68,21 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
                 INNER JOIN tags
                     ON news_tags.tags_id = tags.id
             WHERE news_tags.news_id = :news_id
+            ORDER BY tags.name ASC
             """, nativeQuery = true)
-    List<Tag> findByNewsId(@Param("news_id") Long newsId, Pageable pageable);
+    List<Tag> findByNewsIdSortNameAsc(@Param("news_id") Long newsId, Pageable pageable);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM news
+                INNER JOIN news_tags
+                    ON news.id = news_tags.news_id
+                INNER JOIN tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
+            ORDER BY tags.name DESC
+            """, nativeQuery = true)
+    List<Tag> findByNewsIdSortNameDesc(@Param("news_id") Long newsId, Pageable pageable);
 
     @Query(value = """
             SELECT tags.id, tags.name

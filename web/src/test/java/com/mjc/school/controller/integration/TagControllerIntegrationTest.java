@@ -21,12 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.apache.logging.log4j.Level.DEBUG;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -230,45 +230,226 @@ class TagControllerIntegrationTest {
     @Test
     void addToNews_roleAdmin_and_correctTagId_and_notCorrectNewsId() throws Exception {
         String tagId = "1";
-        String newsId = "2";
+        String newsId = "3";
 
         mockMvc.perform(put("/api/v2/tag/to-news")
                         .param("tag", tagId)
                         .param("news", newsId)
-                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void deleteFromNews() {
+    void deleteFromNews_roleAdmin() throws Exception {
+        String tagId = "1";
+        String newsId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/from-news")
+                        .param("tag", tagId)
+                        .param("news", newsId)
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    void deleteById() {
+    void deleteFromNews_roleUser() throws Exception {
+        String tagId = "1";
+        String newsId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/from-news")
+                        .param("tag", tagId)
+                        .param("news", newsId)
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void deleteFromAllNews() {
+    void deleteFromNews_roleGuest() throws Exception {
+        String tagId = "1";
+        String newsId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/from-news")
+                        .param("tag", tagId)
+                        .param("news", newsId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void findAll() {
+    void deleteById_roleAdmin() throws Exception {
+        String tagId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/{id}", tagId)
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testFindAll() {
+    void deleteById_roleUser() throws Exception {
+        String tagId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/{id}", tagId)
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void findById() {
+    void deleteById_roleGuest() throws Exception {
+        String tagId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/{id}", tagId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void findByPartOfName() {
+    void deleteFromAllNews_roleAdmin() throws Exception {
+        String tagId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/all-news/{id}", tagId)
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void findByNewsId() {
+    void deleteFromAllNews_roleUser() throws Exception {
+        String tagId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/all-news/{id}", tagId)
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void deleteFromAllNews_roleGuest() throws Exception {
+        String tagId = "1";
+
+        mockMvc.perform(delete("/api/v2/tag/all-news/{id}", tagId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test
+    void findAllWithoutPagination() throws Exception {
+        mockMvc.perform(get("/api/v2/tag/all"))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findAllWithPagination() throws Exception {
+        String page = "1";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+        mockMvc.perform(get("/api/v2/tag/all/page")
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findById_when_foundTag() throws Exception {
+        String tagId = "1";
+
+        mockMvc.perform(get("/api/v2/tag/{id}", tagId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findById_when_notFoundTag() throws Exception {
+        String tagId = "3";
+
+        mockMvc.perform(get("/api/v2/tag/{id}", tagId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void findByPartOfName_when_foundTag() throws Exception {
+        String partOfName = "g_na";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+
+        mockMvc.perform(get("/api/v2/tag/part-name/{partOfName}", partOfName)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findByPartOfName_when_notFoundTag() throws Exception {
+        String partOfName = "part";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+
+        mockMvc.perform(get("/api/v2/tag/part-name/{partOfName}", partOfName)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void findByNewsId_when_foundTag() throws Exception {
+        String newsId = "1";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findByNewsId_when_notFoundTag() throws Exception {
+        String newsId = "2";
+
+        String page = "1";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
+                        .requestAttr("size", size)
+                        .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
     }
 }

@@ -25,6 +25,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mjc.school.service.news.impl.sort.NewsSortField.CREATED;
 import static com.mjc.school.service.tag.impl.sort.TagSortField.NAME;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -167,7 +168,7 @@ public class TagServiceImpl implements TagService {
                 .toList();
         if (!tagDTOList.isEmpty()) {
             return tagDTOList;
-        }else {
+        } else {
             log.log(WARN, "Not found tags");
             throw new ServiceNoContentException();
         }
@@ -213,10 +214,15 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDTO> findByNewsId(long newsId, int page, int size,
                                      String sortField, String sortType) throws ServiceNoContentException {
-        List<Tag> tagList = tagRepository.findByNewsId(newsId,
-                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
-                        Sort.by(fromOptionalString(sortType).orElse(ASC),
-                                getOptionalSortField(sortField).orElse(NAME).name().toLowerCase())));
+
+        List<Tag> tagList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            tagList = tagRepository.findByNewsIdSortNameAsc(newsId,
+                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+        } else {
+            tagList = tagRepository.findByNewsIdSortNameDesc(newsId,
+                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+        }
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)

@@ -490,8 +490,8 @@ class TagServiceImplTest {
         String sortField = "name";
         long newsId = 1;
 
-        when(tagRepository.findByNewsId(newsId,
-                PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
+        when(tagRepository.findByNewsIdSortNameAsc(newsId,
+                PageRequest.of(numberFirstElement, size)))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -530,8 +530,8 @@ class TagServiceImplTest {
                         .countNews(1)
                         .build());
 
-        when(tagRepository.findByNewsId(newsId,
-                PageRequest.of(numberFirstElement, size, Sort.by(ASC, sortField))))
+        when(tagRepository.findByNewsIdSortNameAsc(newsId,
+                PageRequest.of(numberFirstElement, size)))
                 .thenReturn(List.of(
                         Tag.builder()
                                 .id(1)

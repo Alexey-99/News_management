@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,43 +80,13 @@ class UserServiceImplTest {
     }
 
     @Test
-    void changeRole_when_passwordsNotEqual() {
-        UserChangeRoleDto userChangeRoleDto = UserChangeRoleDto.builder()
-                .adminLogin("adminLogin")
-                .adminPassword("adminPassword")
-                .build();
-
-        String passwordFromDBEncoded = "adminPassword";
-        when(userRepository.getPasswordByLogin(userChangeRoleDto.getAdminLogin()))
-                .thenReturn(passwordFromDBEncoded);
-
-        String passwordEnteredEncoded = "adminPasswordOther";
-        when(passwordEncoder.encode(userChangeRoleDto.getAdminPassword()))
-                .thenReturn(passwordEnteredEncoded);
-
-        ServiceBadRequestParameterException exceptionActual =
-                assertThrows(ServiceBadRequestParameterException.class,
-                        () -> userService.changeRole(userChangeRoleDto));
-        assertEquals("service.exception.change_role.incorrect_admin_password_or_login",
-                exceptionActual.getMessage());
-    }
-
-    @Test
     void changeRole_when_passwordsEqual_and_notExistsUserByLogin() {
         UserChangeRoleDto userChangeRoleDto = UserChangeRoleDto.builder()
-                .adminLogin("adminLogin")
-                .adminPassword("adminPassword")
+                .userLogin("userLogin")
+                .roleId(2)
                 .build();
 
-        String passwordFromDBEncoded = "adminPassword";
-        when(userRepository.getPasswordByLogin(userChangeRoleDto.getAdminLogin()))
-                .thenReturn(passwordFromDBEncoded);
-
-        String passwordEnteredEncoded = "adminPassword";
-        when(passwordEncoder.encode(userChangeRoleDto.getAdminPassword()))
-                .thenReturn(passwordEnteredEncoded);
-
-        when(userRepository.existsByLogin(userChangeRoleDto.getUserLogin())).thenReturn(false);
+        when(userRepository.existsByLogin(anyString())).thenReturn(false);
 
         ServiceBadRequestParameterException exceptionActual =
                 assertThrows(ServiceBadRequestParameterException.class,
@@ -126,19 +98,11 @@ class UserServiceImplTest {
     @Test
     void changeRole_when_passwordsEqual_and_existsUserByLogin() throws ServiceBadRequestParameterException {
         UserChangeRoleDto userChangeRoleDto = UserChangeRoleDto.builder()
-                .adminLogin("adminLogin")
-                .adminPassword("adminPassword")
+                .userLogin("userLogin")
+                .roleId(2)
                 .build();
 
-        String passwordFromDBEncoded = "adminPassword";
-        when(userRepository.getPasswordByLogin(userChangeRoleDto.getAdminLogin()))
-                .thenReturn(passwordFromDBEncoded);
-
-        String passwordEnteredEncoded = "adminPassword";
-        when(passwordEncoder.encode(userChangeRoleDto.getAdminPassword()))
-                .thenReturn(passwordEnteredEncoded);
-
-        when(userRepository.existsByLogin(userChangeRoleDto.getUserLogin())).thenReturn(true);
+        when(userRepository.existsByLogin(anyString())).thenReturn(true);
 
         boolean actualResult = userService.changeRole(userChangeRoleDto);
         assertTrue(actualResult);

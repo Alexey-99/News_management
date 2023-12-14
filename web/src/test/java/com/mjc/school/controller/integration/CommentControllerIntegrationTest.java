@@ -184,7 +184,7 @@ class CommentControllerIntegrationTest {
                         .build()),
                 Arguments.of(CommentDTO.builder()
                         .content("qwerty")
-                        .newsId(2)
+                        .newsId(3)
                         .build())
         );
     }

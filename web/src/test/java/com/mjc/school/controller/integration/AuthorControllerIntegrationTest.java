@@ -5,7 +5,7 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.service.auth.AuthService;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Log4j2
 @SpringBootTest
 @TestPropertySource("/test_application.properties")
 @AutoConfigureMockMvc
@@ -59,7 +61,7 @@ class AuthorControllerIntegrationTest {
                """)
     void getAll() throws Exception {
         mockMvc.perform(get("/api/v2/author/all"))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -75,7 +77,7 @@ class AuthorControllerIntegrationTest {
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken)
                         .content(authorDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isCreated());
     }
 
@@ -91,7 +93,7 @@ class AuthorControllerIntegrationTest {
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken)
                         .content(authorDTOJson)
                 )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -110,7 +112,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -130,7 +132,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -150,7 +152,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -158,6 +160,7 @@ class AuthorControllerIntegrationTest {
     void deleteById_guest() throws Exception {
         String authorId = "1";
         mockMvc.perform(delete("/api/v2/author/{id}", authorId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -166,6 +169,7 @@ class AuthorControllerIntegrationTest {
         String authorId = "1";
         mockMvc.perform(delete("/api/v2/author/{id}", authorId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -175,6 +179,7 @@ class AuthorControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v2/author/{id}", authorId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -190,6 +195,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isForbidden());
     }
 
@@ -205,6 +211,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -219,6 +226,7 @@ class AuthorControllerIntegrationTest {
         mockMvc.perform(put("/api/v2/author/{id}", authorId)
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -239,6 +247,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -260,6 +269,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -281,6 +291,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -301,6 +312,7 @@ class AuthorControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(authorDTOJson)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -319,7 +331,7 @@ class AuthorControllerIntegrationTest {
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -331,6 +343,7 @@ class AuthorControllerIntegrationTest {
         String authorId = "1";
 
         mockMvc.perform(get("/api/v2/author/{id}", authorId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -342,6 +355,7 @@ class AuthorControllerIntegrationTest {
         String authorId = "3";
 
         mockMvc.perform(get("/api/v2/author/{id}", authorId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -361,6 +375,7 @@ class AuthorControllerIntegrationTest {
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -380,6 +395,7 @@ class AuthorControllerIntegrationTest {
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -391,6 +407,7 @@ class AuthorControllerIntegrationTest {
         String newsId = "1";
 
         mockMvc.perform(get("/api/v2/author/news/{newsId}", newsId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
@@ -399,9 +416,10 @@ class AuthorControllerIntegrationTest {
             findByNewsId(): Return status 204 if not found list of authors by entered newsId.
             """)
     void findByNewsId_when_notFoundContent() throws Exception {
-        String newsId = "2";
+        String newsId = "3";
 
         mockMvc.perform(get("/api/v2/author/news/{newsId}", newsId))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -418,6 +436,7 @@ class AuthorControllerIntegrationTest {
                         .requestAttr("size", size)
                         .requestAttr("page", page)
                         .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 }

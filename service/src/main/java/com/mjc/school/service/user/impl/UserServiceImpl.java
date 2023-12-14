@@ -46,19 +46,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean changeRole(UserChangeRoleDto userChangeRoleDto) throws ServiceBadRequestParameterException {
-        String passwordBD = userRepository.getPasswordByLogin(userChangeRoleDto.getAdminLogin());
-        String passwordEnteredEncoded = passwordEncoder.encode(userChangeRoleDto.getAdminPassword());
-        if (passwordBD.equals(passwordEnteredEncoded)) {
-            if (userRepository.existsByLogin(userChangeRoleDto.getUserLogin())) {
-                userRepository.changeRole(userChangeRoleDto.getUserLogin(), userChangeRoleDto.getRoleId());
-                return true;
-            } else {
-                log.log(WARN, "Not found user with login " + userChangeRoleDto.getUserLogin());
-                throw new ServiceBadRequestParameterException("service.exception.change_role.user_login.not_valid.not_exists");
-            }
+        if (userRepository.existsByLogin(userChangeRoleDto.getUserLogin())) {
+            userRepository.changeRole(userChangeRoleDto.getUserLogin(), userChangeRoleDto.getRoleId());
+            return true;
         } else {
-            log.log(ERROR, "The administrator login or password was entered incorrectly.");
-            throw new ServiceBadRequestParameterException("service.exception.change_role.incorrect_admin_password_or_login");
+            log.log(WARN, "Not found user with login " + userChangeRoleDto.getUserLogin());
+            throw new ServiceBadRequestParameterException("service.exception.change_role.user_login.not_valid.not_exists");
         }
     }
 }

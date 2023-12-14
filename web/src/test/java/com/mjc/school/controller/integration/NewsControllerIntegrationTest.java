@@ -336,7 +336,7 @@ class NewsControllerIntegrationTest {
 
     @Test
     void findById_when_notFoundNews() throws Exception {
-        String newsId = "2";
+        String newsId = "3";
 
         mockMvc.perform(get("/api/v2/news/{id}", newsId))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
