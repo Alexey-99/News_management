@@ -30,6 +30,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -52,7 +54,7 @@ public class NewsController {
             Response: true - if successful created news, if didn't create news - false.
             """, response = Boolean.class)
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "news_controller.request_body.news_dto.in_valid.null")
@@ -160,9 +162,19 @@ public class NewsController {
                                                        String sortingField,
                                                        @RequestParam(value = "sort-type", required = false)
                                                        String sortingType) throws ServiceNoContentException {
+        List<NewsDTO> newsDTOList;
+        try {
+            newsDTOList = newsService.findAll(page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                newsDTOList = newsService.findAll(page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findAll(page, size, sortingField, sortingType),
-                newsService.countAllNews(),
+                newsDTOList, newsService.countAllNews(),
                 page, size), OK);
     }
 
@@ -209,9 +221,19 @@ public class NewsController {
                                                                  String sortingField,
                                                                  @RequestParam(value = "sort-type", required = false)
                                                                  String sortingType) throws ServiceNoContentException {
+        List<NewsDTO> newsDTOList;
+        try {
+            newsDTOList = newsService.findByTagName(tagName, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                newsDTOList = newsService.findByTagName(tagName, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByTagName(tagName, page, size, sortingField, sortingType),
-                newsService.countAllNewsByTagName(tagName),
+                newsDTOList, newsService.countAllNewsByTagName(tagName),
                 page, size), OK);
     }
 
@@ -238,9 +260,19 @@ public class NewsController {
                                                                String sortingField,
                                                                @RequestParam(value = "sort-type", required = false)
                                                                String sortingType) throws ServiceNoContentException {
+        List<NewsDTO> newsDTOList;
+        try {
+            newsDTOList = newsService.findByTagId(tagId, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                newsDTOList = newsService.findByTagId(tagId, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByTagId(tagId, page, size, sortingField, sortingType),
-                newsService.countAllNewsByTagId(tagId),
+                newsDTOList, newsService.countAllNewsByTagId(tagId),
                 page, size), OK);
     }
 
@@ -266,9 +298,19 @@ public class NewsController {
                                                                     String sortingField,
                                                                     @RequestParam(value = "sort-type", required = false)
                                                                     String sortingType) throws ServiceNoContentException {
+        List<NewsDTO> newsDTOList;
+        try {
+            newsDTOList = newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                newsDTOList = newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByPartOfAuthorName(partOfAuthorName, page, size, sortingField, sortingType),
-                newsService.countAllNewsByPartOfAuthorName(partOfAuthorName),
+                newsDTOList, newsService.countAllNewsByPartOfAuthorName(partOfAuthorName),
                 page, size), OK);
     }
 
@@ -295,9 +337,19 @@ public class NewsController {
                                                                   String sortingField,
                                                                   @RequestParam(value = "sort-type", required = false)
                                                                   String sortingType) throws ServiceNoContentException {
+        List<NewsDTO> newsDTOList;
+        try {
+            newsDTOList = newsService.findByAuthorId(authorId, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                newsDTOList = newsService.findByAuthorId(authorId, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByAuthorId(authorId, page, size, sortingField, sortingType),
-                newsService.countAllNewsByAuthorId(authorId),
+                newsDTOList, newsService.countAllNewsByAuthorId(authorId),
                 page, size), OK);
     }
 
@@ -323,9 +375,19 @@ public class NewsController {
                                                                      String sortingField,
                                                                      @RequestParam(value = "sort-type", required = false)
                                                                      String sortingType) throws ServiceNoContentException {
+        List<NewsDTO> newsDTOList;
+        try {
+            newsDTOList = newsService.findByPartOfTitle(partOfTitle, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                newsDTOList = newsService.findByPartOfTitle(partOfTitle, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByPartOfTitle(partOfTitle, page, size, sortingField, sortingType),
-                newsService.countAllNewsByPartOfTitle(partOfTitle),
+                newsDTOList, newsService.countAllNewsByPartOfTitle(partOfTitle),
                 page, size), OK);
     }
 
@@ -351,9 +413,19 @@ public class NewsController {
                                                                        String sortingField,
                                                                        @RequestParam(value = "sort-type", required = false)
                                                                        String sortingType) throws ServiceNoContentException {
+        List<NewsDTO> newsDTOList;
+        try {
+            newsDTOList = newsService.findByPartOfContent(partOfContent, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                newsDTOList = newsService.findByPartOfContent(partOfContent, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(newsService.getPagination(
-                newsService.findByPartOfContent(partOfContent, page, size, sortingField, sortingType),
-                newsService.countAllNewsByPartOfContent(partOfContent),
+                newsDTOList, newsService.countAllNewsByPartOfContent(partOfContent),
                 page, size), OK);
     }
 }

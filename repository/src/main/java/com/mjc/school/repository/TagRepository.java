@@ -62,27 +62,81 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 
     @Query(value = """
             SELECT tags.id, tags.name
-            FROM news
+            FROM tags
                 INNER JOIN news_tags
-                    ON news.id = news_tags.news_id
-                INNER JOIN tags
                     ON news_tags.tags_id = tags.id
             WHERE news_tags.news_id = :news_id
             ORDER BY tags.name ASC
+            LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
-    List<Tag> findByNewsIdSortNameAsc(@Param("news_id") Long newsId, Pageable pageable);
+    List<Tag> findByNewsIdSortNameAsc(@Param("news_id") Long newsId,
+                                      @Param("size") Integer size,
+                                      @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
             SELECT tags.id, tags.name
-            FROM news
+            FROM tags
                 INNER JOIN news_tags
-                    ON news.id = news_tags.news_id
-                INNER JOIN tags
                     ON news_tags.tags_id = tags.id
             WHERE news_tags.news_id = :news_id
             ORDER BY tags.name DESC
+            LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
-    List<Tag> findByNewsIdSortNameDesc(@Param("news_id") Long newsId, Pageable pageable);
+    List<Tag> findByNewsIdSortNameDesc(@Param("news_id") Long newsId,
+                                       @Param("size") Integer size,
+                                       @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags
+                INNER JOIN news_tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
+            ORDER BY tags.id ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByNewsIdSortIdAsc(@Param("news_id") Long newsId,
+                                    @Param("size") Integer size,
+                                    @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags
+                INNER JOIN news_tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
+            ORDER BY tags.id DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByNewsIdSortIdDesc(@Param("news_id") Long newsId,
+                                     @Param("size") Integer size,
+                                     @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags
+                INNER JOIN news_tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
+            ORDER BY tags.id ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByNewsIdSortCountNewsAsc(@Param("news_id") Long newsId,
+                                           @Param("size") Integer size,
+                                           @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags
+                INNER JOIN news_tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
+            ORDER BY tags.id DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByNewsIdSortCountNewsDesc(@Param("news_id") Long newsId,
+                                            @Param("size") Integer size,
+                                            @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
             SELECT tags.id, tags.name
@@ -109,8 +163,132 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     @Query(value = """
             SELECT id, name
             FROM tags
+            ORDER BY name ASC
+            LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
-    List<Tag> findAllList( Pageable pageable);
+    List<Tag> findAllSortNameAsc(@Param("size") Integer size,
+                                 @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
+            ORDER BY name DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findAllSortNameDesc(@Param("size") Integer size,
+                                  @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
+            ORDER BY id ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findAllSortIdAsc(@Param("size") Integer size,
+                               @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
+            ORDER BY id DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findAllSortIdDesc(@Param("size") Integer size,
+                                @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags LEFT JOIN news_tags
+            ON tags.id = news_tags.tags_id
+            GROUP BY tags.id
+            ORDER BY COUNT(news_tags.tags_id) ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findAllSortCountNewsAsc(@Param("size") Integer size,
+                                      @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags LEFT JOIN news_tags
+            ON tags.id = news_tags.tags_id
+            GROUP BY tags.id
+            ORDER BY COUNT(news_tags.tags_id) DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findAllSortCountNewsDesc(@Param("size") Integer size,
+                                       @Param("numberFirstElement") Integer numberFirstElement);
+
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
+            WHERE name LIKE :part_name
+            ORDER BY name ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByPartOfNameSortNameAsc(@Param("part_name") String partOfName,
+                                          @Param("size") Integer size,
+                                          @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
+            WHERE name LIKE :part_name
+            ORDER BY name DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByPartOfNameSortNameDesc(@Param("part_name") String partOfName,
+                                           @Param("size") Integer size,
+                                           @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
+            WHERE name LIKE :part_name
+            ORDER BY id ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByPartOfNameSortIdAsc(@Param("part_name") String partOfName,
+                                        @Param("size") Integer size,
+                                        @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
+            WHERE name LIKE :part_name
+            ORDER BY id DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByPartOfNameSortIdDesc(@Param("part_name") String partOfName,
+                                         @Param("size") Integer size,
+                                         @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags LEFT JOIN news_tags
+            ON tags.id = news_tags.tags_id
+            WHERE name LIKE :part_name
+            GROUP BY tags.id
+            ORDER BY COUNT(news_tags.tags_id) ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByPartOfNameSortCountNewsAsc(@Param("part_name") String partOfName,
+                                               @Param("size") Integer size,
+                                               @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags LEFT JOIN news_tags
+            ON tags.id = news_tags.tags_id
+            WHERE name LIKE :part_name
+            GROUP BY tags.id
+            ORDER BY COUNT(news_tags.tags_id) DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Tag> findByPartOfNameSortCountNewsDesc(@Param("part_name") String partOfName,
+                                                @Param("size") Integer size,
+                                                @Param("numberFirstElement") Integer numberFirstElement);
+
 
     @Query(value = """
             SELECT COUNT(name) = 0

@@ -50,6 +50,7 @@ public class CommentController {
             Response: true - if successful created comment, if didn't create comment - false.
             """, response = CommentDTO.class)
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<CommentDTO> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")

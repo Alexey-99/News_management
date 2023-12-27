@@ -4,7 +4,6 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
-import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -124,8 +125,19 @@ public class AuthorController {
                                                          String sortingField,
                                                          @RequestParam(value = "sort-type", required = false)
                                                          String sortingType) throws ServiceNoContentException {
+        List<AuthorDTO> authorDTOList;
+        try {
+            authorDTOList = authorService.findAll(page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                authorDTOList = authorService.findAll(page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(authorService.getPagination(
-                authorService.findAll(page, size, sortingField, sortingType),
+                authorDTOList,
                 authorService.countAll(), page, size), OK);
     }
 
@@ -168,8 +180,19 @@ public class AuthorController {
                                                                   String sortingField,
                                                                   @RequestParam(value = "sort-type", required = false)
                                                                   String sortingType) throws ServiceNoContentException {
+        List<AuthorDTO> authorDTOList;
+        try {
+            authorDTOList = authorService.findByPartOfName(partOfName, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                authorDTOList = authorService.findByPartOfName(partOfName, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(authorService.getPagination(
-                authorService.findByPartOfName(partOfName, page, size, sortingField, sortingType),
+                authorDTOList,
                 authorService.countAllByPartOfName(partOfName),
                 page, size), OK);
     }
@@ -189,28 +212,5 @@ public class AuthorController {
                                                           message = "author_controller.path_variable.id.in_valid.min")
                                                   long newsId) throws ServiceNoContentException {
         return new ResponseEntity<>(authorService.findByNewsId(newsId), OK);
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful completed request"),
-            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
-            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
-            @ApiResponse(code = 500, message = "Application failed to process the request")
-    })
-    @ApiOperation(value = """
-            View all authors with amount of written news.
-            Response: objects with author id and amount written news, with pagination.
-            """, response = Pagination.class)
-    @GetMapping("/amount-news")
-    public ResponseEntity<Pagination<AuthorIdWithAmountOfWrittenNewsDTO>>
-    selectAllAuthorsIdWithAmountOfWrittenNews(@RequestAttribute(value = "size")
-                                              int size,
-                                              @RequestAttribute(value = "page")
-                                              int page,
-                                              @RequestParam(value = "sort-type", required = false)
-                                              String sortingType) throws ServiceNoContentException {
-        return new ResponseEntity<>(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(
-                authorService.findAllAuthorsIdWithAmountOfWrittenNews(page, size, sortingType),
-                authorService.countAll(), page, size), OK);
     }
 }

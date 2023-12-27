@@ -4,7 +4,6 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.service.author.impl.sort.AuthorSortField;
 import com.mjc.school.validation.dto.AuthorDTO;
-import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 
 import javax.transaction.Transactional;
@@ -35,13 +34,7 @@ public interface AuthorService {
 
     AuthorDTO findByNewsId(long newsId) throws ServiceNoContentException;
 
-    List<AuthorIdWithAmountOfWrittenNewsDTO> findAllAuthorsIdWithAmountOfWrittenNews(int page, int size,
-                                                                                     String sortingType) throws ServiceNoContentException;
-
     Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements, int page, int size);
-
-    Pagination<AuthorIdWithAmountOfWrittenNewsDTO> getPaginationAuthorIdWithAmountOfWrittenNews(
-            List<AuthorIdWithAmountOfWrittenNewsDTO> elementsOnPage, long countAllElements, int page, int size);
 
     Optional<AuthorSortField> getOptionalSortField(String sortField);
 }

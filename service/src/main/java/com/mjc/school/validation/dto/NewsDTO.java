@@ -1,13 +1,12 @@
 package com.mjc.school.validation.dto;
 
-import com.mjc.school.validation.annotation.IsExistsAuthorById;
+import com.mjc.school.validation.annotation.IsExistsAuthorByName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -35,9 +34,12 @@ public class NewsDTO implements Serializable {
 
     private AuthorDTO author;
 
-    @Min(value = 1, message = "news_dto.author_id.not_valid.min")
-    @IsExistsAuthorById(message = "news_dto.author_id.not_valid.not_exists_author_by_id")
+    //@Min(value = 1, message = "news_dto.author_id.not_valid.min")
+    //@IsExistsAuthorById(message = "news_dto.author_id.not_valid.not_exists_author_by_id")
     private long authorId;
+
+    @IsExistsAuthorByName(message = "news_dto.author_name.not_valid.not_exists_author_by_name")
+    private String authorName;
 
     private List<CommentDTO> comments;
     private long countComments;

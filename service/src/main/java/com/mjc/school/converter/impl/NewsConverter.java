@@ -35,9 +35,9 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                 .id(newsDTO.getId())
                 .title(newsDTO.getTitle())
                 .content(newsDTO.getContent())
-                .author(authorRepository.findById(newsDTO.getAuthorId()).orElseThrow(() -> {
-                    log.log(WARN, "Not found author by ID: " + newsDTO.getAuthorId());
-                    return new ServiceBadRequestParameterException("service.exception.not_exists_author_by_id");
+                .author(authorRepository.findByName(newsDTO.getAuthorName()).orElseThrow(() -> {
+                    log.log(WARN, "Not found author by name: " + newsDTO.getAuthorName());
+                    return new ServiceBadRequestParameterException("service.exception.not_exists_author_by_name");
                 }))
                 .comments(commentRepository.findByNewsId(newsDTO.getId()))
                 .tags(newsTagRepository.findByNewsId(newsDTO.getId()))
@@ -58,7 +58,7 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                         news.getComments()
                                 .stream()
                                 .map(commentConverter::toDTO)
-                                .toList():
+                                .toList() :
                         List.of())
                 .tags(news.getTags() != null ?
                         news.getTags()

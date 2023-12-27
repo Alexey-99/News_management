@@ -4,6 +4,7 @@ import com.mjc.school.exception.CustomAccessDeniedException;
 import com.mjc.school.exception.CustomAuthenticationException;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.service.auth.AuthService;
+import com.mjc.school.util.JwtTokenUtil;
 import com.mjc.school.validation.JwtTokenValidator;
 import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
 import com.mjc.school.validation.dto.jwt.JwtTokenResponse;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +32,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthController {
     private final AuthService authService;
     private final JwtTokenValidator jwtTokenValidator;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/token")
     public ResponseEntity<JwtTokenResponse> createAuthToken(@Valid
@@ -39,9 +40,11 @@ public class AuthController {
                                                             @NotNull
                                                             CreateJwtTokenRequest authRequest)
             throws ServiceBadRequestParameterException {
+        String token = authService.createAuthToken(authRequest);
         return new ResponseEntity<>(
                 JwtTokenResponse.builder()
-                        .token(authService.createAuthToken(authRequest))
+                        .token(token)
+                        .userRole(jwtTokenUtil.getRoles(token).get(0))
                         .build(),
                 CREATED);
     }

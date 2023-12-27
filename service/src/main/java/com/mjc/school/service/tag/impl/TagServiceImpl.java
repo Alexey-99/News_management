@@ -25,7 +25,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mjc.school.service.news.impl.sort.NewsSortField.CREATED;
+import static com.mjc.school.service.tag.impl.sort.TagSortField.COUNT_NEWS;
+import static com.mjc.school.service.tag.impl.sort.TagSortField.valueOf;
 import static com.mjc.school.service.tag.impl.sort.TagSortField.NAME;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -138,10 +139,32 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException {
-        List<Tag> tagList = tagRepository.findAllList(PageRequest.of(
-                paginationService.calcNumberFirstElement(page, size), size,
-                Sort.by(fromOptionalString(sortType).orElse(ASC),
-                        getOptionalSortField(sortField).orElse(NAME).name().toLowerCase())));
+        List<Tag> tagList;
+        if (NAME.name().equalsIgnoreCase(sortField)) {
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findAllSortNameAsc(size,
+                        paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findAllSortNameDesc(size,
+                        paginationService.calcNumberFirstElement(page, size));
+            }
+        } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findAllSortCountNewsAsc(size,
+                        paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findAllSortCountNewsDesc(size,
+                        paginationService.calcNumberFirstElement(page, size));
+            }
+        } else {
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findAllSortIdAsc(size,
+                        paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findAllSortIdDesc(size,
+                        paginationService.calcNumberFirstElement(page, size));
+            }
+        }
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)
@@ -189,13 +212,35 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findByPartOfName(String partOfName, int page, int size,
+    public List<TagDTO> findByPartOfName(String partOfName,
+                                         int page, int size,
                                          String sortField, String sortType) throws ServiceNoContentException {
-        List<Tag> tagList = tagRepository.findByPartOfName("%" + partOfName + "%",
-                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
-                        Sort.by(fromOptionalString(sortType).orElse(ASC),
-                                getOptionalSortField(sortField).orElse(NAME).name().toLowerCase()))
-        );
+        List<Tag> tagList;
+        if (NAME.name().equalsIgnoreCase(sortField)) {
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findByPartOfNameSortNameAsc("%" + partOfName + "%",
+                        size, paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findByPartOfNameSortNameDesc("%" + partOfName + "%",
+                        size, paginationService.calcNumberFirstElement(page, size));
+            }
+        } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findByPartOfNameSortCountNewsAsc("%" + partOfName + "%", size,
+                        paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findByPartOfNameSortCountNewsDesc("%" + partOfName + "%",
+                        size, paginationService.calcNumberFirstElement(page, size));
+            }
+        } else {
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findByPartOfNameSortIdAsc("%" + partOfName + "%",
+                        size, paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findByPartOfNameSortIdDesc("%" + partOfName + "%",
+                        size, paginationService.calcNumberFirstElement(page, size));
+            }
+        }
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)
@@ -212,17 +257,45 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findByNewsId(long newsId, int page, int size,
+    public List<TagDTO> findByNewsId(long newsId,
+                                     int page, int size,
                                      String sortField, String sortType) throws ServiceNoContentException {
 
         List<Tag> tagList;
-        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
-            tagList = tagRepository.findByNewsIdSortNameAsc(newsId,
-                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+        if (NAME.name().equalsIgnoreCase(sortField)) {
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findByNewsIdSortNameAsc(newsId,
+                        size, paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findByNewsIdSortNameDesc(newsId,
+                        size, paginationService.calcNumberFirstElement(page, size));
+            }
+        } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findByNewsIdSortCountNewsAsc(newsId,
+                        size, paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findByNewsIdSortCountNewsDesc(newsId,
+                        size, paginationService.calcNumberFirstElement(page, size));
+            }
         } else {
-            tagList = tagRepository.findByNewsIdSortNameDesc(newsId,
-                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+            if (ASC.name().equalsIgnoreCase(sortType)) {
+                tagList = tagRepository.findByNewsIdSortIdAsc(newsId,
+                        size, paginationService.calcNumberFirstElement(page, size));
+            } else {
+                tagList = tagRepository.findByNewsIdSortIdDesc(newsId,
+                        size, paginationService.calcNumberFirstElement(page, size));
+            }
         }
+
+
+//        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+//            tagList = tagRepository.findByNewsIdSortNameAsc(newsId,
+//                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+//        } else {
+//            tagList = tagRepository.findByNewsIdSortNameDesc(newsId,
+//                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
+//        }
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)
@@ -254,7 +327,7 @@ public class TagServiceImpl implements TagService {
     public Optional<TagSortField> getOptionalSortField(String sortField) {
         try {
             return sortField != null ?
-                    Optional.of(TagSortField.valueOf(sortField.toUpperCase())) :
+                    Optional.of(valueOf(sortField.toUpperCase())) :
                     Optional.empty();
         } catch (IllegalArgumentException e) {
             return Optional.empty();

@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Builder
@@ -32,9 +31,5 @@ public class RegistrationUserDto {
     @NotNull(message = "registration_user_dto.confirm_password.not_valid.null")
     @NotBlank(message = "registration_user_dto.confirm_password.not_valid.is_blank")
     @Size(min = 4, max = 30, message = "registration_user_dto.confirm_password.not_valid.size")
-    private String confirmPassword;
-
-    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$",
-            message = "registration_user_dto.email.not_valid.format")
-    private String email;
+        private String confirmPassword;
 }

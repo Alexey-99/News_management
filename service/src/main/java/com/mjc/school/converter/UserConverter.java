@@ -21,7 +21,6 @@ public class UserConverter {
         return CustomUserDetails.builder()
                 .id(user.getId())
                 .login(user.getLogin())
-                .email(user.getEmail())
                 .password(user.getPassword())
                 .grantedAuthorities(Collections.singletonList(
                         new SimpleGrantedAuthority(user.getRole().getRole().name())))
@@ -32,7 +31,6 @@ public class UserConverter {
         return User.builder()
                 .login(registrationUserDto.getLogin())
                 .password(registrationUserDto.getPassword())
-                .email(registrationUserDto.getEmail())
                 .role(roleRepository.getByName(ROLE_USER.name()))
                 .build();
     }

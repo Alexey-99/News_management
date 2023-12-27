@@ -1,7 +1,6 @@
 package com.mjc.school.repository;
 
 import com.mjc.school.model.Author;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +18,13 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
             WHERE name = :name
             """, nativeQuery = true)
     boolean notExistsByName(@Param("name") String name);
+
+    @Query(value = """
+            SELECT COUNT(name) > 0
+            FROM authors
+            WHERE name = :name
+            """, nativeQuery = true)
+    boolean existsByName(@Param("name") String name);
 
     @Modifying
     @Query(value = """
@@ -38,8 +44,78 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
             SELECT id, name
             FROM authors
             WHERE name LIKE :partOfName
+            ORDER BY id ASC
+            LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
-    List<Author> findByPartOfName(@Param("partOfName") String partOfName, Pageable pageable);
+    List<Author> findByPartOfNameByIdAsc(@Param("partOfName") String partOfName,
+                                         @Param("size") Integer size,
+                                         @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM authors
+            WHERE name LIKE :partOfName
+            ORDER BY id DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findByPartOfNameByIdDesc(@Param("partOfName") String partOfName,
+                                          @Param("size") Integer size,
+                                          @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM authors
+            WHERE name LIKE :partOfName
+            ORDER BY name ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findByPartOfNameByNameAsc(@Param("partOfName") String partOfName,
+                                           @Param("size") Integer size,
+                                           @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM authors
+            WHERE name LIKE :partOfName
+            ORDER BY name DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findByPartOfNameByNameDesc(@Param("partOfName") String partOfName,
+                                            @Param("size") Integer size,
+                                            @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT authors.id, authors.name
+            FROM authors LEFT JOIN news
+            ON authors.id = news.authors_id
+            WHERE name LIKE :partOfName
+            GROUP BY authors.id
+            ORDER BY COUNT(news.authors_id) ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findByPartOfNameByCountNewsAsc(@Param("partOfName") String partOfName,
+                                                @Param("size") Integer size,
+                                                @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT authors.id, authors.name
+            FROM authors LEFT JOIN news
+            ON authors.id = news.authors_id
+            WHERE name LIKE :partOfName
+            GROUP BY authors.id
+            ORDER BY COUNT(news.authors_id) DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findByPartOfNameByCountNewsDesc(@Param("partOfName") String partOfName,
+                                                 @Param("size") Integer size,
+                                                 @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM authors
+            WHERE name = :name
+            """, nativeQuery = true)
+    Optional<Author> findByName(@Param("name") String name);
 
     @Query(value = """
             SELECT COUNT(id)
@@ -57,26 +133,60 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     Optional<Author> findByNewsId(@Param("newsId") Long newsId);
 
     @Query(value = """
-             SELECT authors.id, authors.name
-             FROM authors LEFT JOIN news
-             ON authors.id = news.authors_id
-             GROUP BY authors.id
-             ORDER BY COUNT(news.authors_id) ASC
+            SELECT id, name
+            FROM authors
+            ORDER BY id ASC
+            LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
-    List<Author> findAllAuthorsWithAmountWrittenNewsAsc(Pageable pageable);
-
-    @Query(value = """
-             SELECT authors.id, authors.name
-             FROM authors LEFT JOIN news
-             ON authors.id = news.authors_id
-             GROUP BY authors.id
-             ORDER BY COUNT(news.authors_id) DESC
-            """, nativeQuery = true)
-    List<Author> findAllAuthorsWithAmountWrittenNewsDesc(Pageable pageable);
+    List<Author> findAllByIdAsc(@Param("size") Integer size,
+                                @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
             SELECT id, name
             FROM authors
+            ORDER BY id DESC
+            limit :size offset :numberFirstElement
             """, nativeQuery = true)
-    List<Author> findAllList(Pageable pageable);
+    List<Author> findAllByIdDesc(@Param("size") Integer size,
+                                 @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM authors
+            ORDER BY name ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findAllByNameAsc(@Param("size") Integer size,
+                                  @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT id, name
+            FROM authors
+            ORDER BY name DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findAllByNameDesc(@Param("size") Integer size,
+                                   @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT authors.id, authors.name
+            FROM authors LEFT JOIN news
+            ON authors.id = news.authors_id
+            GROUP BY authors.id
+            ORDER BY COUNT(news.authors_id) ASC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findAllByCountNewsAsc(@Param("size") Integer size,
+                                       @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT authors.id, authors.name
+            FROM authors LEFT JOIN news
+            ON authors.id = news.authors_id
+            GROUP BY authors.id
+            ORDER BY COUNT(news.authors_id) DESC
+            LIMIT :size OFFSET :numberFirstElement
+            """, nativeQuery = true)
+    List<Author> findAllByCountNewsDesc(@Param("size") Integer size,
+                                        @Param("numberFirstElement") Integer numberFirstElement);
 }

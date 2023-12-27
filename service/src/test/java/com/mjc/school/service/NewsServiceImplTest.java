@@ -358,7 +358,7 @@ class NewsServiceImplTest {
 
         when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(0);
 
-        when(newsRepository.findAllList(any(PageRequest.class)))
+        when(newsRepository.findAllByModifiedDesc(anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -381,7 +381,7 @@ class NewsServiceImplTest {
                         .modified("2023-10-20T16:05:32.413").build(),
                 News.builder().id(2).content("CONTENT 2")
                         .modified("2023-10-20T16:05:25.413").build());
-        when(newsRepository.findAllList(any(PageRequest.class)))
+        when(newsRepository.findAllByModifiedDesc(anyInt(), anyInt()))
                 .thenReturn(newsFindAllList);
 
         when(newsConverter.toDTO(News.builder()
@@ -559,7 +559,7 @@ class NewsServiceImplTest {
                                 .build()))
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByTagNameModifiedDesc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByTagNameModifiedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(newsFindByTagNameList);
 
         when(newsConverter.toDTO(News.builder().id(1).content("CONTENT 1")
@@ -642,7 +642,7 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(newsRepository.findByTagNameModifiedDesc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByTagNameModifiedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -658,7 +658,7 @@ class NewsServiceImplTest {
         String sortType = "ASC";
         String sortField = "modified";
 
-        when(newsRepository.findByTagNameModifiedAsc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByTagNameModifiedAsc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -674,7 +674,7 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "created";
 
-        when(newsRepository.findByTagNameCreatedDesc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByTagNameCreatedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -690,7 +690,7 @@ class NewsServiceImplTest {
         String sortType = "ASC";
         String sortField = "created";
 
-        when(newsRepository.findByTagNameCreatedAsc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByTagNameCreatedAsc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -716,7 +716,7 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(newsRepository.findByTagIdModifiedDesc(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByTagIdModifiedDesc(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -732,7 +732,7 @@ class NewsServiceImplTest {
         String sortType = "ASC";
         String sortField = "modified";
 
-        when(newsRepository.findByTagIdModifiedAsc(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByTagIdModifiedAsc(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -748,7 +748,7 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "created";
 
-        when(newsRepository.findByTagIdCreatedDesc(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByTagIdCreatedDesc(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -764,7 +764,7 @@ class NewsServiceImplTest {
         String sortType = "ASC";
         String sortField = "created";
 
-        when(newsRepository.findByTagIdCreatedAsc(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByTagIdCreatedAsc(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -808,7 +808,7 @@ class NewsServiceImplTest {
                                         .build()))
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByTagIdModifiedDesc(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByTagIdModifiedDesc(anyLong(), anyInt(), anyInt()))
                 .thenReturn(newsFindByTagIdList);
 
         when(newsConverter.toDTO(News.builder()
@@ -900,7 +900,7 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "modified";
 
-        when(newsRepository.findByPartOfAuthorNameModifiedDesc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfAuthorNameModifiedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -916,7 +916,7 @@ class NewsServiceImplTest {
         String sortType = "ASC";
         String sortField = "modified";
 
-        when(newsRepository.findByPartOfAuthorNameModifiedAsc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfAuthorNameModifiedAsc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -932,7 +932,7 @@ class NewsServiceImplTest {
         String sortType = "DESC";
         String sortField = "created";
 
-        when(newsRepository.findByPartOfAuthorNameCreatedDesc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfAuthorNameCreatedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -948,7 +948,7 @@ class NewsServiceImplTest {
         String sortType = "ASC";
         String sortField = "created";
 
-        when(newsRepository.findByPartOfAuthorNameCreatedAsc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfAuthorNameCreatedAsc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -984,7 +984,7 @@ class NewsServiceImplTest {
                         .author(Author.builder().id(2).name("Sempart").build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByPartOfAuthorNameModifiedDesc(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfAuthorNameModifiedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(newsFindByPartOfAuthorNameList);
 
         when(newsConverter.toDTO(News.builder()
@@ -1071,7 +1071,7 @@ class NewsServiceImplTest {
         when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
                 .thenReturn(numberFirstElement);
 
-        when(newsRepository.findByAuthorId(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByAuthorIdByModifiedDesc(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -1110,7 +1110,7 @@ class NewsServiceImplTest {
                         .author(Author.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
-        when(newsRepository.findByAuthorId(anyLong(), any(PageRequest.class)))
+        when(newsRepository.findByAuthorId(anyLong()))
                 .thenReturn(newsByAuthorIdList);
 
         when(newsConverter.toDTO(News.builder()
@@ -1196,7 +1196,7 @@ class NewsServiceImplTest {
 
         when(paginationService.calcNumberFirstElement(anyInt(), anyInt())).thenReturn(numberFirstElement);
 
-        when(newsRepository.findByPartOfTitle(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfTitleByModifiedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -1229,7 +1229,7 @@ class NewsServiceImplTest {
                         .id(2)
                         .title("partOfTitle title 2")
                         .build());
-        when(newsRepository.findByPartOfTitle(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfTitleByModifiedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(newsByAuthorIdList);
 
         when(newsConverter.toDTO(News.builder()
@@ -1298,7 +1298,7 @@ class NewsServiceImplTest {
         when(paginationService.calcNumberFirstElement(anyInt(), anyInt()))
                 .thenReturn(numberFirstElement);
 
-        when(newsRepository.findByPartOfContent(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfContentByModifiedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of());
 
         assertThrows(ServiceNoContentException.class,
@@ -1330,7 +1330,7 @@ class NewsServiceImplTest {
                         .id(2)
                         .content("partOfContent content 2")
                         .build());
-        when(newsRepository.findByPartOfContent(anyString(), any(PageRequest.class)))
+        when(newsRepository.findByPartOfContentByModifiedDesc(anyString(), anyInt(), anyInt()))
                 .thenReturn(newsByAuthorIdList);
 
         when(newsConverter.toDTO(News.builder()
