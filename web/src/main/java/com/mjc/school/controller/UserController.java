@@ -94,12 +94,12 @@ public class UserController {
 
     @GetMapping("/login/{login}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> findById(@PathVariable
-                                            @NotNull(message = "user_controller.path_variable.login.in_valid.null")
-                                            @NotBlank(message = "user_controller.path_variable.login.in_valid.is_blank")
-                                            @Size(min = 3, max = 30,
-                                                    message = "user_controller.path_variable.login.in_valid.size")
-                                            String login) throws ServiceNoContentException {
+    public ResponseEntity<UserDTO> findByLogin(@PathVariable
+                                               @NotNull(message = "user_controller.path_variable.login.in_valid.null")
+                                               @NotBlank(message = "user_controller.path_variable.login.in_valid.is_blank")
+                                               @Size(min = 3, max = 30,
+                                                       message = "user_controller.path_variable.login.in_valid.size")
+                                               String login) throws ServiceNoContentException {
         return new ResponseEntity<>(userService.findByLogin(login), OK);
     }
 

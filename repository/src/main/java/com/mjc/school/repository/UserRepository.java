@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = """
-            SELECT id, email, login, password, roles_id
+            SELECT id, login, password, roles_id
             FROM users
             WHERE login = :login
             """, nativeQuery = true)
@@ -51,7 +51,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     String getPasswordByLogin(@Param("login") String login);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT id, login, password, roles_id
             FROM users
             ORDER BY id ASC
             LIMIT :size OFFSET :numberFirstElement
@@ -60,7 +60,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                 @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT id, login, password, roles_id
             FROM users
             ORDER BY id DESC
             LIMIT :size OFFSET :numberFirstElement
@@ -69,7 +69,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                  @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT id, login, password, roles_id
             FROM users
             ORDER BY login ASC
             LIMIT :size OFFSET :numberFirstElement
@@ -78,7 +78,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                    @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT id, login, password, roles_id
             FROM users
             ORDER BY login DESC
             LIMIT :size OFFSET :numberFirstElement
@@ -87,7 +87,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                     @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT users.id, users.login, users.password, users.roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
@@ -98,7 +98,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                   @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT users.id, users.login, users.password, users.roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
@@ -116,7 +116,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT id, login, password, roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
@@ -129,20 +129,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                    @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
-            FROM users
-                INNER JOIN roles
-                    ON users.roles_id = roles.id
-            WHERE roles.name = :roleName
-            ORDER BY id DESC
-            LIMIT :size OFFSET :numberFirstElement
-            """, nativeQuery = true)
+            SELECT id, login, password, roles_id
+             FROM users
+                 INNER JOIN roles
+                     ON users.roles_id = roles.id
+             WHERE roles.name = :roleName
+             ORDER BY id DESC
+             LIMIT :size OFFSET :numberFirstElement
+             """, nativeQuery = true)
     List<User> findByRoleSortIdDesc(@Param("roleName") String roleName,
                                     @Param("size") Integer size,
                                     @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT id, login, password, roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
@@ -155,7 +155,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                       @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SSELECT id, login, password, roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
@@ -168,7 +168,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                        @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, role_id
+            SELECT id, login, password, roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
