@@ -30,9 +30,7 @@ public interface TagService {
 
     List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException;
 
-    List<TagDTO> findAll();
-
-    List<TagDTO> findAllExc() throws ServiceNoContentException;
+    List<TagDTO> findAll() throws ServiceNoContentException;
 
     long countAll();
 
@@ -47,6 +45,4 @@ public interface TagService {
     long countAllByNewsId(long newsId);
 
     Pagination<TagDTO> getPagination(List<TagDTO> elementsOnPage, long countAllElements, int page, int size);
-
-    Optional<TagSortField> getOptionalSortField(String sortField);
 }

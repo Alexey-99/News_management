@@ -407,7 +407,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public Optional<NewsSortField> getOptionalSortField(String sortField) {
+    public Optional<NewsSortField> getOptionalSortField(String sortField) { // TODO DELETE
         try {
             return sortField != null ?
                     Optional.of(NewsSortField.valueOf(sortField.toUpperCase())) :

@@ -4,6 +4,7 @@ import com.mjc.school.model.user.User;
 import com.mjc.school.repository.RoleRepository;
 import com.mjc.school.validation.dto.user.RegistrationUserDto;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
+import com.mjc.school.validation.dto.user.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,14 @@ public class UserConverter {
                 .login(registrationUserDto.getLogin())
                 .password(registrationUserDto.getPassword())
                 .role(roleRepository.getByName(ROLE_USER.name()))
+                .build();
+    }
+
+    public UserDTO toUserDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .login(user.getLogin())
+                .role(user.getRole().getRole().name())
                 .build();
     }
 }

@@ -6,7 +6,6 @@ import com.mjc.school.model.News;
 import com.mjc.school.model.NewsTag;
 import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.repository.NewsTagRepository;
-import com.mjc.school.service.tag.impl.sort.TagSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.model.Tag;
 import com.mjc.school.service.pagination.PaginationService;
@@ -17,20 +16,15 @@ import com.mjc.school.validation.dto.TagDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 import static com.mjc.school.service.tag.impl.sort.TagSortField.COUNT_NEWS;
-import static com.mjc.school.service.tag.impl.sort.TagSortField.valueOf;
 import static com.mjc.school.service.tag.impl.sort.TagSortField.NAME;
 import static org.apache.logging.log4j.Level.WARN;
 import static org.springframework.data.domain.Sort.Direction.ASC;
-import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -176,15 +170,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findAll() {
-        return tagRepository.findAll()
-                .stream()
-                .map(tagConverter::toDTO)
-                .toList();
-    }
-
-    @Override
-    public List<TagDTO> findAllExc() throws ServiceNoContentException {
+    public List<TagDTO> findAll() throws ServiceNoContentException {
         List<TagDTO> tagDTOList = tagRepository.findAll()
                 .stream()
                 .map(tagConverter::toDTO)
@@ -260,7 +246,6 @@ public class TagServiceImpl implements TagService {
     public List<TagDTO> findByNewsId(long newsId,
                                      int page, int size,
                                      String sortField, String sortType) throws ServiceNoContentException {
-
         List<Tag> tagList;
         if (NAME.name().equalsIgnoreCase(sortField)) {
             if (ASC.name().equalsIgnoreCase(sortType)) {
@@ -272,11 +257,27 @@ public class TagServiceImpl implements TagService {
             }
         } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
             if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findByNewsIdSortCountNewsAsc(newsId,
-                        size, paginationService.calcNumberFirstElement(page, size));
+                tagList = tagRepository.findAllSortCountNewsAsc()
+                        .stream()
+                        .filter(tag -> !tag.getNews()
+                                .stream()
+                                .filter(newsTag -> newsTag.getNews().getId() == newsId)
+                                .toList()
+                                .isEmpty())
+                        .skip(paginationService.calcNumberFirstElement(page, size))
+                        .limit(size)
+                        .toList();
             } else {
-                tagList = tagRepository.findByNewsIdSortCountNewsDesc(newsId,
-                        size, paginationService.calcNumberFirstElement(page, size));
+                tagList = tagRepository.findAllSortCountNewsDesc()
+                        .stream()
+                        .filter(tag -> !tag.getNews()
+                                .stream()
+                                .filter(newsTag -> newsTag.getNews().getId() == newsId)
+                                .toList()
+                                .isEmpty())
+                        .skip(paginationService.calcNumberFirstElement(page, size))
+                        .limit(size)
+                        .toList();
             }
         } else {
             if (ASC.name().equalsIgnoreCase(sortType)) {
@@ -287,15 +288,6 @@ public class TagServiceImpl implements TagService {
                         size, paginationService.calcNumberFirstElement(page, size));
             }
         }
-
-
-//        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
-//            tagList = tagRepository.findByNewsIdSortNameAsc(newsId,
-//                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
-//        } else {
-//            tagList = tagRepository.findByNewsIdSortNameDesc(newsId,
-//                    PageRequest.of(paginationService.calcNumberFirstElement(page, size), size));
-//        }
         if (!tagList.isEmpty()) {
             return tagList.stream()
                     .map(tagConverter::toDTO)
@@ -323,16 +315,6 @@ public class TagServiceImpl implements TagService {
                 .build();
     }
 
-    @Override
-    public Optional<TagSortField> getOptionalSortField(String sortField) {
-        try {
-            return sortField != null ?
-                    Optional.of(valueOf(sortField.toUpperCase())) :
-                    Optional.empty();
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
-    }
 
     private boolean isNotPresentTagInNews(Tag tag, News news) {
         return news.getTags()

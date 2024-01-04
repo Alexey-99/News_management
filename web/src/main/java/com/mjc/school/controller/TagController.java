@@ -53,6 +53,7 @@ public class TagController {
             Response: true - if successful created tag, if didn't create tag - false.
             """, response = Boolean.class)
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> create(@Valid
                                           @RequestBody
                                           @NotNull(message = "tag_controller.request_body.tag_dto.in_valid.null")
@@ -70,7 +71,7 @@ public class TagController {
             Response: true - if successful added a tag to news, if didn't add a tag to news - false.
             """, response = Boolean.class)
     @PutMapping("/to-news")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> addToNews(@RequestParam(value = "tag")
                                              @Min(value = 1,
                                                      message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -92,7 +93,7 @@ public class TagController {
             Response: true - if successful deleted a tag from news, if didn't delete a tag from news - false.
             """, response = Boolean.class)
     @DeleteMapping("/from-news")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> deleteFromNews(@RequestParam(value = "tag")
                                                   @Min(value = 1,
                                                           message = "tag_controller.request_body.tag_id.in_valid.min")
@@ -182,9 +183,19 @@ public class TagController {
                                                       String sortingField,
                                                       @RequestParam(value = "sort-type", required = false)
                                                       String sortingType) throws ServiceNoContentException {
+        List<TagDTO> tagDTOList;
+        try {
+            tagDTOList = tagService.findAll(page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                tagDTOList = tagService.findAll(page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(tagService.getPagination(
-                tagService.findAll(page, size, sortingField, sortingType),
-                tagService.countAll(),
+                tagDTOList, tagService.countAll(),
                 page, size), OK);
     }
 
@@ -200,7 +211,7 @@ public class TagController {
             """, response = Pagination.class)
     @GetMapping("/all")
     public ResponseEntity<List<TagDTO>> findAll() throws ServiceNoContentException {
-        return new ResponseEntity<>(tagService.findAllExc(), OK);
+        return new ResponseEntity<>(tagService.findAll(), OK);
     }
 
     @ApiResponses(value = {
@@ -243,9 +254,21 @@ public class TagController {
                                                                String sortingField,
                                                                @RequestParam(value = "sort-type", required = false)
                                                                String sortingType) throws ServiceNoContentException {
+
+        List<TagDTO> tagDTOList;
+        try {
+            tagDTOList = tagService.findByPartOfName(partOfName, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                tagDTOList = tagService.findByPartOfName(partOfName, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
+
         return new ResponseEntity<>(tagService.getPagination(
-                tagService.findByPartOfName(partOfName, page, size, sortingField, sortingType),
-                tagService.countAllByPartOfName(partOfName),
+                tagDTOList, tagService.countAllByPartOfName(partOfName),
                 page, size), OK);
     }
 
@@ -272,9 +295,19 @@ public class TagController {
                                                            String sortingField,
                                                            @RequestParam(value = "sort-type", required = false)
                                                            String sortingType) throws ServiceNoContentException {
+        List<TagDTO> tagDTOList;
+        try {
+            tagDTOList = tagService.findByNewsId(newsId, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                tagDTOList = tagService.findByNewsId(newsId, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(tagService.getPagination(
-                tagService.findByNewsId(newsId, page, size, sortingField, sortingType),
-                tagService.countAllByNewsId(newsId),
+                tagDTOList, tagService.countAllByNewsId(newsId),
                 page, size), OK);
     }
 }

@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @Setter
 @NoArgsConstructor
-public class AuthorIdWithAmountOfWrittenNewsDTO implements Serializable {
+public class AuthorIdWithAmountOfWrittenNewsDTO implements Serializable { // TODO DELETE
     private long authorId;
     private long amountOfWrittenNews;
 }

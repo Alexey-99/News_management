@@ -1,7 +1,6 @@
 package com.mjc.school.repository;
 
 import com.mjc.school.model.Tag;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -45,13 +44,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             FROM tags
             """, nativeQuery = true)
     Long countAll();
-
-    @Query(value = """
-            SELECT id, name
-            FROM tags
-            WHERE name LIKE :part_name
-            """, nativeQuery = true)
-    List<Tag> findByPartOfName(@Param("part_name") String partOfName, Pageable pageable);
 
     @Query(value = """
             SELECT COUNT(id)
@@ -111,32 +103,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     List<Tag> findByNewsIdSortIdDesc(@Param("news_id") Long newsId,
                                      @Param("size") Integer size,
                                      @Param("numberFirstElement") Integer numberFirstElement);
-
-    @Query(value = """
-            SELECT tags.id, tags.name
-            FROM tags
-                INNER JOIN news_tags
-                    ON news_tags.tags_id = tags.id
-            WHERE news_tags.news_id = :news_id
-            ORDER BY tags.id ASC
-            LIMIT :size OFFSET :numberFirstElement
-            """, nativeQuery = true)
-    List<Tag> findByNewsIdSortCountNewsAsc(@Param("news_id") Long newsId,
-                                           @Param("size") Integer size,
-                                           @Param("numberFirstElement") Integer numberFirstElement);
-
-    @Query(value = """
-            SELECT tags.id, tags.name
-            FROM tags
-                INNER JOIN news_tags
-                    ON news_tags.tags_id = tags.id
-            WHERE news_tags.news_id = :news_id
-            ORDER BY tags.id DESC
-            LIMIT :size OFFSET :numberFirstElement
-            """, nativeQuery = true)
-    List<Tag> findByNewsIdSortCountNewsDesc(@Param("news_id") Long newsId,
-                                            @Param("size") Integer size,
-                                            @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
             SELECT tags.id, tags.name
@@ -217,6 +183,24 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             """, nativeQuery = true)
     List<Tag> findAllSortCountNewsDesc(@Param("size") Integer size,
                                        @Param("numberFirstElement") Integer numberFirstElement);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags LEFT JOIN news_tags
+            ON tags.id = news_tags.tags_id
+            GROUP BY tags.id
+            ORDER BY COUNT(news_tags.tags_id) ASC
+            """, nativeQuery = true)
+    List<Tag> findAllSortCountNewsAsc();
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags LEFT JOIN news_tags
+            ON tags.id = news_tags.tags_id
+            GROUP BY tags.id
+            ORDER BY COUNT(news_tags.tags_id) DESC
+            """, nativeQuery = true)
+    List<Tag> findAllSortCountNewsDesc();
 
 
     @Query(value = """

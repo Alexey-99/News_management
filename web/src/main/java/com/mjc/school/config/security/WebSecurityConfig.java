@@ -19,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PATCH;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
@@ -43,13 +44,13 @@ public class WebSecurityConfig {
                 .antMatchers(POST, "/api/v2/news").authenticated()
                 .antMatchers(POST, "/api/v2/tag").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(POST, "/api/v2/author").hasRole(ADMIN_ROLE_NAME)
-                .antMatchers(PUT, "/api/v2/tag/to-news").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(PUT, "/api/v2/tag/to-news").authenticated()
                 .antMatchers(PUT, "/api/v2/tag/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(PUT, "/api/v2/news/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(PUT, "api/v2/comment/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(PUT, "api/v2/author/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(PATCH, "/api/v2/user/role").hasRole(ADMIN_ROLE_NAME)
-                .antMatchers(DELETE, "/api/v2/tag/from-news").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(DELETE, "/api/v2/tag/from-news").authenticated()
                 .antMatchers(DELETE, "/api/v2/tag/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(DELETE, "/api/v2/tag/all-news/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(DELETE, "/api/v2/news/{id}").hasRole(ADMIN_ROLE_NAME)
@@ -58,9 +59,14 @@ public class WebSecurityConfig {
                 .antMatchers(DELETE, "api/v2/comment/{id}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(DELETE, "api/v2/comment/news/{newsId}").hasRole(ADMIN_ROLE_NAME)
                 .antMatchers(DELETE, "/api/v2/author/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(GET, "/api/v2/user/all").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(GET, "/api/v2/user/{id}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(GET, "/api/v2/user/login/{login}").hasRole(ADMIN_ROLE_NAME)
+                .antMatchers(GET, "/api/v2/user/role/{role}").hasRole(ADMIN_ROLE_NAME)
                 .anyRequest().permitAll()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // SessionCreationPolicy.STATELESS doesn't work with oAuth2
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // SessionCreationPolicy.STATELESS doesn't work with oAuth2
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)// It doesn't work with oAuth2

@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 public class PaginationServiceImpl implements PaginationService {
     @Override
     public int calcNumberFirstElement(int page, int size) {
-        int result = size * (page - 1);
-        return result;
+        return size * (page - 1);
     }
 
     @Override
