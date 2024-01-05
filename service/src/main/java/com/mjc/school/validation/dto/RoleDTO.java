@@ -1,6 +1,5 @@
-package com.mjc.school.validation.dto.user;
+package com.mjc.school.validation.dto;
 
-import com.mjc.school.validation.dto.RoleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class RoleDTO {
     private long id;
-    private String login;
-    private RoleDTO role;
+    private String name;
 }

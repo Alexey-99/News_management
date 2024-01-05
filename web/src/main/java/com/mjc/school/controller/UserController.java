@@ -3,16 +3,20 @@ package com.mjc.school.controller;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.service.user.UserService;
-import com.mjc.school.validation.dto.NewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.validation.dto.user.RegistrationUserDto;
+import com.mjc.school.validation.dto.user.UserChangeLoginDto;
 import com.mjc.school.validation.dto.user.UserChangeRoleDto;
 import com.mjc.school.validation.dto.user.UserDTO;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,9 +46,19 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserController {
     private final UserService userService;
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful registration user"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
+    @ApiOperation(value = """
+            Registration of user.
+            Response: true - if successful created news, if didn't create news - false.
+            """, response = Boolean.class)
     @PostMapping("/registration")
     public ResponseEntity<Boolean> createUser(@Valid
                                               @RequestBody
+                                              @NotNull(message = "user_controller.request_body.news_dto.in_valid.null")
                                               RegistrationUserDto registrationUserDto) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(userService.create(registrationUserDto), CREATED);
     }
@@ -53,8 +67,37 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> changeRole(@Valid
                                               @RequestBody
+                                              @NotNull(message = "user_controller.request_body.news_dto.in_valid.null")
                                               UserChangeRoleDto userChangeRoleDto) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(userService.changeRole(userChangeRoleDto), OK);
+    }
+
+    @PatchMapping("/login")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Boolean> changeLogin(@Valid
+                                               @RequestBody
+                                               @NotNull(message = "user_controller.request_body.news_dto.in_valid.null")
+                                               UserChangeLoginDto userChangeLoginDto) throws ServiceBadRequestParameterException {
+        return new ResponseEntity<>(userService.changeLogin(userChangeLoginDto), OK);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful deleted a user"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
+    @ApiOperation(value = """
+            Delete a user by id.
+            Response: true - if successful deleted user, if didn't delete news - false.
+            """, response = Boolean.class)
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Boolean> deleteById(@PathVariable
+                                              @Min(value = 1,
+                                                      message = "user_controller.path_variable.id.in_valid.min")
+                                              long id) {
+        return new ResponseEntity<>(userService.deleteById(id), OK);
     }
 
     @GetMapping("/all")

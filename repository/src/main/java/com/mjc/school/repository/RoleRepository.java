@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
     @Query(value = """
@@ -14,4 +16,11 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
             WHERE name = :name
             """, nativeQuery = true)
     Role getByName(@Param("name") String name);
+
+    @Query(value = """
+            SELECT id, name
+            FROM roles
+            ORDER BY id ASC
+            """, nativeQuery = true)
+    List<Role> findAllSortIdAsc();
 }

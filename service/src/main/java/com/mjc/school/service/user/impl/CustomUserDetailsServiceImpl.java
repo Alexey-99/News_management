@@ -1,6 +1,6 @@
 package com.mjc.school.service.user.impl;
 
-import com.mjc.school.converter.UserConverter;
+import com.mjc.school.converter.impl.UserConverterImpl;
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import static org.apache.logging.log4j.Level.WARN;
 @Service
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
-    private final UserConverter userConverter;
+    private final UserConverterImpl userConverter;
 
     @Override
     @Transactional

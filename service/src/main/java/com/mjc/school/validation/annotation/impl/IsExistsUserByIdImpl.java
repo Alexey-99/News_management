@@ -1,7 +1,7 @@
 package com.mjc.school.validation.annotation.impl;
 
 import com.mjc.school.repository.UserRepository;
-import com.mjc.school.validation.annotation.IsExistsUserByLogin;
+import com.mjc.school.validation.annotation.IsExistsUserById;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -13,17 +13,17 @@ import static org.apache.logging.log4j.Level.WARN;
 
 @Log4j2
 @RequiredArgsConstructor
-public class IsExistsUserByLoginImpl implements ConstraintValidator<IsExistsUserByLogin, String> {
+public class IsExistsUserByIdImpl implements ConstraintValidator<IsExistsUserById, Long> {
     private final UserRepository userRepository;
 
     @Override
-    public boolean isValid(String login, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Long userId, ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
-        if (userRepository.existsByLogin(login)) {
-            log.log(DEBUG, "Exists user with login " + login);
+        if (userRepository.existsById(userId)) {
+            log.log(DEBUG, "Correct entered user ID: {}", userId);
             result = true;
         } else {
-            log.log(WARN, "Not found user with login " + login);
+            log.log(WARN, "Not found user with ID: {}", userId);
         }
         return result;
     }

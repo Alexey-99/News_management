@@ -1,6 +1,6 @@
 package com.mjc.school.service;
 
-import com.mjc.school.converter.UserConverter;
+import com.mjc.school.converter.impl.UserConverterImpl;
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.UserRepository;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
@@ -26,7 +26,7 @@ class CustomUserDetailsServiceImplTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private UserConverter userConverter;
+    private UserConverterImpl userConverter;
 
     @Test
     void loadUserByUsername_when_notFoundUserByLogin() {

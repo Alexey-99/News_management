@@ -1,6 +1,5 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.model.News;
 import com.mjc.school.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -43,12 +42,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void changeRole(@Param("login") String login,
                     @Param("roles_id") Long roleId);
 
+    @Modifying
     @Query(value = """
-            SELECT password
-            FROM users
-            WHERE login = :login
+            UPDATE users
+                SET login = :newLogin
+            WHERE id = :id
             """, nativeQuery = true)
-    String getPasswordByLogin(@Param("login") String login);
+    void changeLogin(@Param("id") Long userId,
+                     @Param("newLogin") String newLogin);
 
     @Query(value = """
             SELECT id, login, password, roles_id
@@ -116,11 +117,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     @Query(value = """
-            SELECT id, login, password, roles_id
+            SELECT users.id, users.login, users.password, users.roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
-            WHERE roles.name = :roleName
+            WHERE roles.name LIKE UPPER(:roleName)
             ORDER BY users.id ASC
             LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
@@ -129,11 +130,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                    @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, password, roles_id
+            SELECT users.id, users.login, users.password, users.roles_id
              FROM users
                  INNER JOIN roles
                      ON users.roles_id = roles.id
-             WHERE roles.name = :roleName
+             WHERE roles.name LIKE UPPER(:roleName)
              ORDER BY id DESC
              LIMIT :size OFFSET :numberFirstElement
              """, nativeQuery = true)
@@ -142,11 +143,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                     @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, password, roles_id
+           SELECT users.id, users.login, users.password, users.roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
-            WHERE roles.name = :roleName
+           WHERE roles.name LIKE UPPER(:roleName)
             ORDER BY login ASC
             LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
@@ -155,11 +156,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                       @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SSELECT id, login, password, roles_id
+           SELECT users.id, users.login, users.password, users.roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
-            WHERE roles.name = :roleName
+            WHERE roles.name LIKE UPPER(:roleName)
             ORDER BY login DESC
             LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
@@ -168,11 +169,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                        @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT id, login, password, roles_id
+            SELECT users.id, users.login, users.password, users.roles_id
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
-            WHERE roles.name = :roleName
+            WHERE roles.name LIKE UPPER(:roleName)
             LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
     List<User> findByRole(@Param("roleName") String roleName,
@@ -184,7 +185,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             FROM users
                 INNER JOIN roles
                     ON users.roles_id = roles.id
-            WHERE roles.name = :roleName
+            WHERE roles.name LIKE UPPER(:roleName)
             """, nativeQuery = true)
     Long countAllUsersByRole(@Param("roleName") String roleName);
 }
