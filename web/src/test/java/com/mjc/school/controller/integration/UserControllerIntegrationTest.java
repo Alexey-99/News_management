@@ -66,7 +66,6 @@ class UserControllerIntegrationTest {
                 .login("login")
                 .password("987654")
                 .confirmPassword("987654")
-                .email("koroza.alexey99@gmail.com")
                 .build();
         String registrationUserDtoJson = objectMapper.writeValueAsString(registrationUserDto);
         mockMvc.perform(post("/api/v2/user/registration")
@@ -93,67 +92,56 @@ class UserControllerIntegrationTest {
                         .login(null)
                         .password("987654")
                         .confirmPassword("987654")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("   ")
                         .password("987654")
                         .confirmPassword("987654")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("qw")
                         .password("987654")
                         .confirmPassword("987654")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("user")
                         .password("987654")
                         .confirmPassword("987654")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("login")
                         .password(null)
                         .confirmPassword("987654")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("login")
                         .password("   ")
                         .confirmPassword("987654")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("login")
                         .password("qw")
                         .confirmPassword("987654")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("login")
                         .password("987654")
                         .confirmPassword(null)
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("login")
                         .password("987654")
                         .confirmPassword("   ")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("login")
                         .password("987654")
                         .confirmPassword("qw")
-                        .email("koroza.alexey99@gmail.com")
                         .build()),
                 Arguments.of(RegistrationUserDto.builder()
                         .login("login")
                         .password("987654")
                         .confirmPassword("987654")
-                        .email("qwe")
                         .build())
         );
     }

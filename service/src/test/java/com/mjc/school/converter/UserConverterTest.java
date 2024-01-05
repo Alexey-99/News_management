@@ -28,12 +28,11 @@ class UserConverterTest {
 
     @Test
     void toUserDetails() {
-        User user = new User(1, "login_test", "password_test", "email_test@gmail.com",
+        User user = new User(1, "login_test", "password_test",
                 new Role(1, ROLE_USER));
         CustomUserDetails customUserDetailsExpected = CustomUserDetails.builder()
                 .id(user.getId())
                 .login(user.getLogin())
-                .email(user.getEmail())
                 .password(user.getPassword())
                 .grantedAuthorities(Collections.singletonList(
                         new SimpleGrantedAuthority(user.getRole().getRole().name())))
@@ -47,11 +46,10 @@ class UserConverterTest {
     @Test
     void fromRegistrationUserDTO() {
         RegistrationUserDto registrationUserDtoTesting = new RegistrationUserDto("login_test", "password_test",
-                "password_test", "email_test@gmail.com");
+                "password_test");
         User user = User.builder()
                 .login("login_test")
                 .password("password_test")
-                .email("email_test@gmail.com")
                 .role(Role.builder()
                         .id(1)
                         .role(ROLE_USER)
