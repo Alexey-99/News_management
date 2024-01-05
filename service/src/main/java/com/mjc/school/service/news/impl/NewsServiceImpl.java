@@ -8,7 +8,6 @@ import com.mjc.school.model.News;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.news.NewsService;
-import com.mjc.school.service.news.impl.sort.NewsSortField;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.validation.dto.NewsDTO;
 import com.mjc.school.validation.dto.Pagination;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 import static com.mjc.school.service.news.impl.sort.NewsSortField.CREATED;
 import static org.apache.logging.log4j.Level.WARN;
@@ -404,16 +402,5 @@ public class NewsServiceImpl implements NewsService {
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();
-    }
-
-    @Override
-    public Optional<NewsSortField> getOptionalSortField(String sortField) { // TODO DELETE
-        try {
-            return sortField != null ?
-                    Optional.of(NewsSortField.valueOf(sortField.toUpperCase())) :
-                    Optional.empty();
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
     }
 }
