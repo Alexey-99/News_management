@@ -64,7 +64,7 @@ class NewsControllerIntegrationTest {
         NewsDTO newsDTO = NewsDTO.builder()
                 .title("news_title")
                 .content("news_content")
-                .authorId(1)
+                .authorName("Tom")
                 .build();
         String newsDTOJson = objectMapper.writeValueAsString(newsDTO);
         mockMvc.perform(post("/api/v2/news")
@@ -80,7 +80,7 @@ class NewsControllerIntegrationTest {
         NewsDTO newsDTO = NewsDTO.builder()
                 .title("news_title")
                 .content("news_content")
-                .authorId(1)
+                .authorName("Tom")
                 .build();
         String newsDTOJson = objectMapper.writeValueAsString(newsDTO);
         mockMvc.perform(post("/api/v2/news")
@@ -88,7 +88,7 @@ class NewsControllerIntegrationTest {
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken)
                         .content(newsDTOJson))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -210,7 +210,7 @@ class NewsControllerIntegrationTest {
         NewsDTO newsDTO = NewsDTO.builder()
                 .title("news_title_other")
                 .content("news_content_other")
-                .authorId(1)
+                .authorName("Tom")
                 .build();
         String newsDTOJson = objectMapper.writeValueAsString(newsDTO);
         mockMvc.perform(put("/api/v2/news/1")
@@ -310,8 +310,24 @@ class NewsControllerIntegrationTest {
     }
 
     @Test
-    void findAll() throws Exception {
+    void findAll_when_foundObjectsByCurrentPage() throws Exception {
         String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/all")
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findAll_when_notFoundObjectsByCurrentPage() throws Exception {
+        String page = "2";
         String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
@@ -344,10 +360,28 @@ class NewsControllerIntegrationTest {
     }
 
     @Test
-    void findNewsByTagName_when_foundNews() throws Exception {
+    void findNewsByTagName_when_foundNews_foundObjectsByCurrentPage() throws Exception {
         String tagName = "tag_name";
 
         String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/tag-name/{tagName}", tagName)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findNewsByTagName_when_foundNews_notFoundObjectsByCurrentPage() throws Exception {
+        String tagName = "tag_name";
+
+        String page = "2";
         String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
@@ -380,10 +414,28 @@ class NewsControllerIntegrationTest {
     }
 
     @Test
-    void findNewsByTagId_when_foundNews() throws Exception {
+    void findNewsByTagId_when_foundNews_foundObjectsByCurrentPage() throws Exception {
         String tagId = "1";
 
         String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/tag/{tagId}", tagId)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findNewsByTagId_when_foundNews_notFoundObjectsByCurrentPage() throws Exception {
+        String tagId = "1";
+
+        String page = "2";
         String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
@@ -416,10 +468,28 @@ class NewsControllerIntegrationTest {
     }
 
     @Test
-    void findNewsByAuthorName_when_foundNews() throws Exception {
+    void findNewsByAuthorName_when_foundNews_foundObjectsByCurrentPage() throws Exception {
         String partOfAuthorName = "om";
 
         String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/author/part-name/{partOfAuthorName}", partOfAuthorName)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findNewsByAuthorName_when_foundNews_notFoundObjectsByCurrentPage() throws Exception {
+        String partOfAuthorName = "om";
+
+        String page = "2";
         String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
@@ -452,10 +522,28 @@ class NewsControllerIntegrationTest {
     }
 
     @Test
-    void findNewsByAuthorId_when_foundNews() throws Exception {
+    void findNewsByAuthorId_when_foundNews_foundObjectsByCurrentPage() throws Exception {
         String authorId = "1";
 
         String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/author/{authorId}", authorId)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findNewsByAuthorId_when_foundNews_notFoundObjectsByCurrentPage() throws Exception {
+        String authorId = "1";
+
+        String page = "2";
         String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
@@ -488,10 +576,28 @@ class NewsControllerIntegrationTest {
     }
 
     @Test
-    void findNewsByPartOfTitle_when_foundNews() throws Exception {
+    void findNewsByPartOfTitle_when_foundNews_foundObjectsByCurrentPage() throws Exception {
         String partOfTitle = "Title";
 
         String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/part-title/{partOfTitle}", partOfTitle)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findNewsByPartOfTitle_when_foundNews_notFoundObjectsByCurrentPage() throws Exception {
+        String partOfTitle = "Title";
+
+        String page = "2";
         String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
@@ -524,10 +630,28 @@ class NewsControllerIntegrationTest {
     }
 
     @Test
-    void findNewsByPartOfContent_when_foundNews() throws Exception {
+    void findNewsByPartOfContent_when_foundNews_foundObjectsByCurrentPage() throws Exception {
         String partOfContent = "Content";
 
         String page = "1";
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/news/part-content/{partOfContent}", partOfContent)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findNewsByPartOfContent_when_foundNews_notFoundObjectsByCurrentPage() throws Exception {
+        String partOfContent = "Content";
+
+        String page = "2";
         String size = "5";
         String sortType = "DESC";
         String sortField = "modified";

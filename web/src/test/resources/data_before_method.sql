@@ -28,6 +28,6 @@ INSERT INTO roles (id, name)
 VALUES (1, 'ROLE_USER'),
        (2, 'ROLE_ADMIN');
 
-INSERT INTO users (email, login, password, roles_id)
-VALUES ( '', 'user', '$2a$10$sviC7sXLUk172jdQBa62PuTyRcjm8bfRcv7dp.w3q/SOHfAFAXxI.', 2),
-       ( '', 'user_2', '$2a$10$CLKtO8rvEJYg8/CFd3QQrOmcrgB3YmBT3BjtZvo4Wyh0N3aLYkzWe', 1);
+INSERT INTO users ( login, password, roles_id)
+VALUES ( 'user', '$2a$10$sviC7sXLUk172jdQBa62PuTyRcjm8bfRcv7dp.w3q/SOHfAFAXxI.', 2),
+       ( 'user_2', '$2a$10$CLKtO8rvEJYg8/CFd3QQrOmcrgB3YmBT3BjtZvo4Wyh0N3aLYkzWe', 1);

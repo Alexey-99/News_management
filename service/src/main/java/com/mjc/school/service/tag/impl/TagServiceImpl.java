@@ -135,29 +135,11 @@ public class TagServiceImpl implements TagService {
     public List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException {
         List<Tag> tagList;
         if (NAME.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findAllSortNameAsc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            } else {
-                tagList = tagRepository.findAllSortNameDesc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            }
+            tagList = findAllSortName(sortType, page, size);
         } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findAllSortCountNewsAsc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            } else {
-                tagList = tagRepository.findAllSortCountNewsDesc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            }
+            tagList = findAllSortCountNews(sortType, page, size);
         } else {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findAllSortIdAsc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            } else {
-                tagList = tagRepository.findAllSortIdDesc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            }
+            tagList = findAllSortId(sortType, page, size);
         }
         if (!tagList.isEmpty()) {
             return tagList.stream()
@@ -203,29 +185,11 @@ public class TagServiceImpl implements TagService {
                                          String sortField, String sortType) throws ServiceNoContentException {
         List<Tag> tagList;
         if (NAME.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findByPartOfNameSortNameAsc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                tagList = tagRepository.findByPartOfNameSortNameDesc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            tagList = findByPartOfNameSortName(partOfName, sortType, page, size);
         } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findByPartOfNameSortCountNewsAsc("%" + partOfName + "%", size,
-                        paginationService.calcNumberFirstElement(page, size));
-            } else {
-                tagList = tagRepository.findByPartOfNameSortCountNewsDesc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            tagList = findByPartOfNameSortCountNews(partOfName, sortType, page, size);
         } else {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findByPartOfNameSortIdAsc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                tagList = tagRepository.findByPartOfNameSortIdDesc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            tagList = findByPartOfNameSortId(partOfName, sortType, page, size);
         }
         if (!tagList.isEmpty()) {
             return tagList.stream()
@@ -248,45 +212,11 @@ public class TagServiceImpl implements TagService {
                                      String sortField, String sortType) throws ServiceNoContentException {
         List<Tag> tagList;
         if (NAME.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findByNewsIdSortNameAsc(newsId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                tagList = tagRepository.findByNewsIdSortNameDesc(newsId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            tagList = findByNewsIdSortName(newsId, sortType, page, size);
         } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findAllSortCountNewsAsc()
-                        .stream()
-                        .filter(tag -> !tag.getNews()
-                                .stream()
-                                .filter(newsTag -> newsTag.getNews().getId() == newsId)
-                                .toList()
-                                .isEmpty())
-                        .skip(paginationService.calcNumberFirstElement(page, size))
-                        .limit(size)
-                        .toList();
-            } else {
-                tagList = tagRepository.findAllSortCountNewsDesc()
-                        .stream()
-                        .filter(tag -> !tag.getNews()
-                                .stream()
-                                .filter(newsTag -> newsTag.getNews().getId() == newsId)
-                                .toList()
-                                .isEmpty())
-                        .skip(paginationService.calcNumberFirstElement(page, size))
-                        .limit(size)
-                        .toList();
-            }
+            tagList = findByNewsIdSortCountNews(newsId, sortType, page, size);
         } else {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                tagList = tagRepository.findByNewsIdSortIdAsc(newsId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                tagList = tagRepository.findByNewsIdSortIdDesc(newsId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            tagList = findByNewsIdSortId(newsId, sortType, page, size);
         }
         if (!tagList.isEmpty()) {
             return tagList.stream()
@@ -322,5 +252,129 @@ public class TagServiceImpl implements TagService {
                 .filter(newsTag -> newsTag.getTag().getId() == tag.getId())
                 .toList()
                 .isEmpty();
+    }
+
+    private List<Tag> findAllSortName(String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findAllSortNameAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            tagList = tagRepository.findAllSortNameDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findAllSortCountNews(String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findAllSortCountNewsAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            tagList = tagRepository.findAllSortCountNewsDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findAllSortId(String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findAllSortIdAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            tagList = tagRepository.findAllSortIdDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findByPartOfNameSortName(String partOfName, String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findByPartOfNameSortNameAsc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            tagList = tagRepository.findByPartOfNameSortNameDesc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findByPartOfNameSortCountNews(String partOfName, String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findByPartOfNameSortCountNewsAsc("%" + partOfName + "%", size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            tagList = tagRepository.findByPartOfNameSortCountNewsDesc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findByPartOfNameSortId(String partOfName, String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findByPartOfNameSortIdAsc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            tagList = tagRepository.findByPartOfNameSortIdDesc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findByNewsIdSortName(long newsId, String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findByNewsIdSortNameAsc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            tagList = tagRepository.findByNewsIdSortNameDesc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findByNewsIdSortCountNews(long newsId, String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findAllSortCountNewsAsc()
+                    .stream()
+                    .filter(tag -> !tag.getNews()
+                            .stream()
+                            .filter(newsTag -> newsTag.getNews().getId() == newsId)
+                            .toList()
+                            .isEmpty())
+                    .skip(paginationService.calcNumberFirstElement(page, size))
+                    .limit(size)
+                    .toList();
+        } else {
+            tagList = tagRepository.findAllSortCountNewsDesc()
+                    .stream()
+                    .filter(tag -> !tag.getNews()
+                            .stream()
+                            .filter(newsTag -> newsTag.getNews().getId() == newsId)
+                            .toList()
+                            .isEmpty())
+                    .skip(paginationService.calcNumberFirstElement(page, size))
+                    .limit(size)
+                    .toList();
+        }
+        return tagList;
+    }
+
+    private List<Tag> findByNewsIdSortId(long newsId, String sortType, int page, int size) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findByNewsIdSortIdAsc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            tagList = tagRepository.findByNewsIdSortIdDesc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
     }
 }

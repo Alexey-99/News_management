@@ -15,12 +15,8 @@ import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.CommentDTO;
 import com.mjc.school.validation.dto.NewsDTO;
-import com.mjc.school.validation.dto.TagDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,6 +27,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,20 +46,21 @@ class NewsConverterTest {
     @Mock
     private CommentConverter commentConverter;
 
-    @Test()
+    @Test
     void fromDTO_when_notFoundAuthor_throwException() {
         NewsDTO newsDTOTesting = NewsDTO.builder()
                 .id(1)
                 .title("news title test")
-                .authorId(2)
+                .authorName("Tom")
                 .created("created date-time")
                 .modified("modified date-time")
                 .build();
-        when(authorRepository.findById(2L)).thenReturn(Optional.empty());
+        when(authorRepository.findByName(anyString()))
+                .thenReturn(Optional.empty());
         ServiceBadRequestParameterException exception = assertThrows(ServiceBadRequestParameterException.class,
                 () -> newsConverter.fromDTO(newsDTOTesting)
         );
-        assertEquals("service.exception.not_exists_author_by_id", exception.getMessage());
+        assertEquals("service.exception.not_exists_author_by_name", exception.getMessage());
     }
 
     @Test
@@ -70,17 +69,17 @@ class NewsConverterTest {
                 .id(1)
                 .title("news title test")
                 .content("news content test")
-                .authorId(2)
+                .authorName("Tom")
                 .created("created date-time")
                 .modified("modified date-time")
                 .build();
-        when(authorRepository.findById(2L))
-                .thenReturn(Optional.of(Author.builder().id(2L).build()));
+        when(authorRepository.findByName(anyString()))
+                .thenReturn(Optional.of(Author.builder().id(2L).name("Tom").build()));
         News newsExpected = News.builder()
                 .id(newsDTOTesting.getId())
                 .title(newsDTOTesting.getTitle())
                 .content(newsDTOTesting.getContent())
-                .author(Author.builder().id(2L).build())
+                .author(Author.builder().id(2L).name("Tom").build())
                 .created(newsDTOTesting.getCreated())
                 .modified(newsDTOTesting.getModified())
                 .tags(List.of())
@@ -96,12 +95,12 @@ class NewsConverterTest {
                 .id(1)
                 .title("news title test")
                 .content("news content test")
-                .authorId(2)
+                .authorName("Tom")
                 .created("created date-time")
                 .modified("modified date-time")
                 .build();
-        when(authorRepository.findById(2L))
-                .thenReturn(Optional.of(Author.builder().id(2L).build()));
+        when(authorRepository.findByName(anyString()))
+                .thenReturn(Optional.of(Author.builder().id(2L).name("Tom").build()));
         when(commentRepository.findByNewsId(1L))
                 .thenReturn(List.of(
                         Comment.builder().id(1).build(),
@@ -111,7 +110,7 @@ class NewsConverterTest {
                 .id(newsDTOTesting.getId())
                 .title(newsDTOTesting.getTitle())
                 .content(newsDTOTesting.getContent())
-                .author(Author.builder().id(2L).build())
+                .author(Author.builder().id(2L).name("Tom").build())
                 .comments(List.of(
                         Comment.builder().id(1).build(),
                         Comment.builder().id(2).build(),
@@ -130,18 +129,18 @@ class NewsConverterTest {
                 .id(1)
                 .title("news title test")
                 .content("news content test")
-                .authorId(2)
+                .authorName("Tom")
                 .created("created date-time")
                 .modified("modified date-time")
                 .build();
-        when(authorRepository.findById(2L))
-                .thenReturn(Optional.of(Author.builder().id(2L).build()));
-        when(commentRepository.findByNewsId(1L)).thenReturn(List.of());
+        when(authorRepository.findByName(anyString()))
+                .thenReturn(Optional.of(Author.builder().id(2L).name("Tom").build()));
+        when(commentRepository.findByNewsId(anyLong())).thenReturn(List.of());
         News newsExpected = News.builder()
                 .id(newsDTOTesting.getId())
                 .title(newsDTOTesting.getTitle())
                 .content(newsDTOTesting.getContent())
-                .author(Author.builder().id(2L).build())
+                .author(Author.builder().id(2L).name("Tom").build())
                 .comments(List.of())
                 .tags(List.of())
                 .created(newsDTOTesting.getCreated())
@@ -157,36 +156,38 @@ class NewsConverterTest {
                 .id(1)
                 .title("news title test")
                 .content("news content test")
-                .authorId(2)
+                .authorName("Tom")
                 .created("created date-time")
                 .modified("modified date-time")
                 .build();
-        when(authorRepository.findById(2L)).thenReturn(Optional.of(Author.builder().id(2L).build()));
-        when(commentRepository.findByNewsId(1L)).thenReturn(List.of(
+        when(authorRepository.findByName(anyString()))
+                .thenReturn(Optional.of(Author.builder().id(2L).name("Tom").build()));
+        when(commentRepository.findByNewsId(anyLong())).thenReturn(List.of(
                 Comment.builder().id(1).build(),
                 Comment.builder().id(2).build(),
                 Comment.builder().id(3).build()));
-        when(newsTagRepository.findByNewsId(1L)).thenReturn(List.of(
-                NewsTag.builder()
-                        .id(1)
-                        .news(News.builder().id(1L).build())
-                        .tag(Tag.builder().id(1).build())
-                        .build(),
-                NewsTag.builder()
-                        .id(2)
-                        .news(News.builder().id(1L).build())
-                        .tag(Tag.builder().id(2).build())
-                        .build(),
-                NewsTag.builder()
-                        .id(3)
-                        .news(News.builder().id(1L).build())
-                        .tag(Tag.builder().id(3).build())
-                        .build()));
+        when(newsTagRepository.findByNewsId(anyLong()))
+                .thenReturn(List.of(
+                        NewsTag.builder()
+                                .id(1)
+                                .news(News.builder().id(1L).build())
+                                .tag(Tag.builder().id(1).build())
+                                .build(),
+                        NewsTag.builder()
+                                .id(2)
+                                .news(News.builder().id(1L).build())
+                                .tag(Tag.builder().id(2).build())
+                                .build(),
+                        NewsTag.builder()
+                                .id(3)
+                                .news(News.builder().id(1L).build())
+                                .tag(Tag.builder().id(3).build())
+                                .build()));
         News newsExpected = News.builder()
                 .id(newsDTOTesting.getId())
                 .title(newsDTOTesting.getTitle())
                 .content(newsDTOTesting.getContent())
-                .author(Author.builder().id(2L).build())
+                .author(Author.builder().id(2L).name("Tom").build())
                 .comments(List.of(
                         Comment.builder().id(1).build(),
                         Comment.builder().id(2).build(),
@@ -220,21 +221,23 @@ class NewsConverterTest {
                 .id(1)
                 .title("news title test")
                 .content("news content test")
-                .authorId(2)
+                .authorName("Tom")
                 .created("created date-time")
                 .modified("modified date-time")
                 .build();
-        when(authorRepository.findById(2L)).thenReturn(Optional.of(Author.builder().id(2L).build()));
-        when(commentRepository.findByNewsId(1L)).thenReturn(List.of(
-                Comment.builder().id(1).build(),
-                Comment.builder().id(2).build(),
-                Comment.builder().id(3).build()));
+        when(authorRepository.findByName(anyString()))
+                .thenReturn(Optional.of(Author.builder().id(2L).name("Tom").build()));
+        when(commentRepository.findByNewsId(anyLong()))
+                .thenReturn(List.of(
+                        Comment.builder().id(1).build(),
+                        Comment.builder().id(2).build(),
+                        Comment.builder().id(3).build()));
         when(newsTagRepository.findByNewsId(1L)).thenReturn(List.of());
         News newsExpected = News.builder()
                 .id(newsDTOTesting.getId())
                 .title(newsDTOTesting.getTitle())
                 .content(newsDTOTesting.getContent())
-                .author(Author.builder().id(2L).build())
+                .author(Author.builder().id(2L).name("Tom").build())
                 .comments(List.of(
                         Comment.builder().id(1).build(),
                         Comment.builder().id(2).build(),
@@ -247,9 +250,6 @@ class NewsConverterTest {
         assertEquals(newsExpected, newsActual);
     }
 
-
-    //    @ParameterizedTest
-//    @MethodSource(value = "providerNewsParams")
     @Test
     void toDTO() {
         when(authorConverter.toDTO(any(Author.class)))

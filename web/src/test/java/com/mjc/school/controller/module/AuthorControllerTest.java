@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjc.school.controller.AuthorController;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
-import com.mjc.school.validation.dto.AuthorIdWithAmountOfWrittenNewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -431,55 +430,6 @@ class AuthorControllerTest {
                 .andExpect(result -> {
                     String actualContentJson = result.getResponse().getContentAsString();
                     String expectedContentJson = objectMapper.writeValueAsString(authorDTOExpected);
-                    assertEquals(expectedContentJson, actualContentJson);
-                });
-    }
-
-    @Test
-    @DisplayName(value = """
-            selectAllAuthorsIdWithAmountOfWrittenNews(): Return status 200 and found list of authors with written news.
-            """)
-    void selectAllAuthorsIdWithAmountOfWrittenNews() throws Exception {
-        int page = 1;
-        int size = 5;
-        String sortType = "DESC";
-        long countAllElementsExpected = 10;
-        int maxNumberPageExpected = 2;
-
-        List<AuthorIdWithAmountOfWrittenNewsDTO> authorIdWithAmountOfWrittenNewsDTOListExpected = List.of(
-                new AuthorIdWithAmountOfWrittenNewsDTO(2, 6),
-                new AuthorIdWithAmountOfWrittenNewsDTO(1, 4),
-                new AuthorIdWithAmountOfWrittenNewsDTO(3, 2),
-                new AuthorIdWithAmountOfWrittenNewsDTO(4, 0),
-                new AuthorIdWithAmountOfWrittenNewsDTO(5, 0));
-
-        when(authorService.findAllAuthorsIdWithAmountOfWrittenNews(anyInt(), anyInt(), anyString()))
-                .thenReturn(authorIdWithAmountOfWrittenNewsDTOListExpected);
-
-        when(authorService.countAll()).thenReturn(countAllElementsExpected);
-
-        Pagination<AuthorIdWithAmountOfWrittenNewsDTO> authorIdWithAmountOfWrittenNewsDTOPaginationExpected =
-                Pagination.<AuthorIdWithAmountOfWrittenNewsDTO>builder()
-                        .entity(authorIdWithAmountOfWrittenNewsDTOListExpected)
-                        .size(size)
-                        .numberPage(page)
-                        .maxNumberPage(maxNumberPageExpected)
-                        .build();
-        when(authorService.getPaginationAuthorIdWithAmountOfWrittenNews(anyList(), anyLong(), anyInt(), anyInt()))
-                .thenReturn(authorIdWithAmountOfWrittenNewsDTOPaginationExpected);
-
-        mockMvc.perform(get("/api/v2/author/amount-news")
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
-                        .param("sort-type", sortType))
-                .andExpect(status().isOk())
-                .andExpect(result -> {
-                    String actualContentType = result.getResponse().getContentType();
-                    assertEquals(APPLICATION_JSON_VALUE, actualContentType);
-                })
-                .andExpect(result -> {
-                    String actualContentJson = result.getResponse().getContentAsString();
-                    String expectedContentJson = objectMapper.writeValueAsString(authorIdWithAmountOfWrittenNewsDTOPaginationExpected);
                     assertEquals(expectedContentJson, actualContentJson);
                 });
     }

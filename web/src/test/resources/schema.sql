@@ -54,7 +54,6 @@ CREATE TABLE IF NOT EXISTS roles(
 
 CREATE TABLE IF NOT EXISTS users(
     id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    email VARCHAR(255),
     login VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     roles_id BIGINT,

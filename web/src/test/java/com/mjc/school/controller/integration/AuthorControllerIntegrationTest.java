@@ -320,15 +320,34 @@ class AuthorControllerIntegrationTest {
     @DisplayName(value = """
             findAll(): Return status 200 and List of authors.
                """)
-    void findAll() throws Exception {
-        int page = 1;
-        int size = 5;
+    void findAll_foundObjectsByCurrentPage() throws Exception {
+        String page = "1";
+        String size = "5";
         String sortType = "ASC";
         String sortField = "name";
 
         mockMvc.perform(get("/api/v2/author/all")
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName(value = """
+            findAll(): Return status 200 and List of authors.
+               """)
+    void findAll_notFoundObjectsByCurrentPage() throws Exception {
+        String page = "2";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+        mockMvc.perform(get("/api/v2/author/all")
+                        .param("size", size)
+                        .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
@@ -363,16 +382,36 @@ class AuthorControllerIntegrationTest {
     @DisplayName(value = """
             findByPartOfName(): Return status 200 and found list of authors by entered part of name.
             """)
-    void findByPartOfName() throws Exception {
-        int page = 1;
-        int size = 5;
+    void findByPartOfName_foundObjectsByCurrentPage() throws Exception {
+        String page = "1";
+        String size = "5";
         String sortType = "ASC";
         String sortField = "name";
         String partOfName = "ik";
 
         mockMvc.perform(get("/api/v2/author/part-name/{partOfName}", partOfName)
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName(value = """
+            findByPartOfName(): Return status 200 and found list of authors by entered part of name.
+            """)
+    void findByPartOfName_notFoundObjectsByCurrentPage() throws Exception {
+        String page = "2";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+        String partOfName = "ik";
+
+        mockMvc.perform(get("/api/v2/author/part-name/{partOfName}", partOfName)
+                        .param("size", size)
+                        .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
@@ -384,15 +423,15 @@ class AuthorControllerIntegrationTest {
             findByPartOfName(): Return status 204 if not found list of authors by entered part of name.
             """)
     void findByPartOfName_when_notFoundAuthors() throws Exception {
-        int page = 1;
-        int size = 5;
+        String page = "1";
+        String size = "5";
         String sortType = "ASC";
         String sortField = "name";
         String partOfName = "partOfName";
 
         mockMvc.perform(get("/api/v2/author/part-name/{partOfName}", partOfName)
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
+                        .param("size", size)
+                        .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
@@ -421,22 +460,5 @@ class AuthorControllerIntegrationTest {
         mockMvc.perform(get("/api/v2/author/news/{newsId}", newsId))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
-    }
-
-    @Test
-    @DisplayName(value = """
-            selectAllAuthorsIdWithAmountOfWrittenNews(): Return status 200 and found list of authors with written news.
-            """)
-    void selectAllAuthorsIdWithAmountOfWrittenNews() throws Exception {
-        int page = 1;
-        int size = 5;
-        String sortType = "DESC";
-
-        mockMvc.perform(get("/api/v2/author/amount-news")
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
-                        .param("sort-type", sortType))
-                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
-                .andExpect(status().isOk());
     }
 }

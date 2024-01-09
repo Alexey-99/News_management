@@ -102,7 +102,7 @@ public class UserController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Pagination<UserDTO>> findAllUsers(@RequestAttribute(value = "size")
+    public ResponseEntity<Pagination<UserDTO>> findAll(@RequestAttribute(value = "size")
                                                             int size,
                                                             @RequestAttribute(value = "page")
                                                             int page,

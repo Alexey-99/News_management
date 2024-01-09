@@ -9,15 +9,11 @@ import com.mjc.school.model.News;
 import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.comment.impl.CommentServiceImpl;
-import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.validation.dto.CommentDTO;
 import com.mjc.school.validation.dto.Pagination;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -30,6 +26,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -85,19 +83,38 @@ class CommentServiceImplTest {
                 .created("created date-time")
                 .modified("modified date-time")
                 .build();
-        when(dateHandler.getCurrentDate()).thenReturn("date-time");
-        when(commentConverter.fromDTO(commentDTOTesting)).thenReturn(Comment.builder()
+        Comment commentConverted = Comment.builder()
                 .id(commentDTOTesting.getId())
                 .content(commentDTOTesting.getContent())
                 .newsId(commentDTOTesting.getNewsId())
                 .modified(commentDTOTesting.getModified())
                 .created(commentDTOTesting.getCreated())
-                .build());
-        when(newsRepository.findById(commentDTOTesting.getNewsId()))
+                .build();
+        when(commentConverter.fromDTO(any(CommentDTO.class)))
+                .thenReturn(commentConverted);
+
+        when(newsRepository.findById(anyLong()))
                 .thenReturn(Optional.of(News.builder().id(newsId).build()));
 
+        String currentDateTime = "date-time";
+        when(dateHandler.getCurrentDate()).thenReturn(currentDateTime);
+
+        commentConverted.setCreated(currentDateTime);
+        commentConverted.setModified(currentDateTime);
+        when(commentRepository.save(any(Comment.class))).thenReturn(commentConverted);
+
+        CommentDTO commentDTOExpected = CommentDTO.builder()
+                .id(commentConverted.getId())
+                .content(commentConverted.getContent())
+                .newsId(commentConverted.getNewsId())
+                .modified(commentConverted.getModified())
+                .created(commentConverted.getCreated())
+                .build();
+
+        when(commentConverter.toDTO(any(Comment.class))).thenReturn(commentDTOExpected);
+
         CommentDTO resultActual = commentService.create(commentDTOTesting);
-        //assertTrue(resultActual);
+        assertEquals(commentDTOExpected, resultActual);
     }
 
     @Test
@@ -475,35 +492,5 @@ class CommentServiceImplTest {
         Pagination<CommentDTO> paginationActual =
                 commentService.getPagination(commentDTOList, countAllElements, page, size);
         assertEquals(paginationExpected, paginationActual);
-    }
-
-    @Test
-    void getOptionalSortField_when_sortFieldIsNull() {
-        Optional<CommentSortField> optionalActual = commentService.getOptionalSortField(null);
-        assertTrue(optionalActual.isEmpty());
-    }
-
-    @Test
-    void getOptionalSortField_when_notFoundSortField() {
-        Optional<CommentSortField> optionalActual =
-                commentService.getOptionalSortField("not_found_sort_field");
-        assertTrue(optionalActual.isEmpty());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = "providerSortFieldParams_when_foundSortField")
-    void getOptionalSortField_when_foundSortField(String sortField, String sortFieldExpected) {
-        String sortFieldActual = commentService.getOptionalSortField(sortField)
-                .get()
-                .name()
-                .toLowerCase();
-        assertEquals(sortFieldExpected, sortFieldActual);
-    }
-
-    static List<Arguments> providerSortFieldParams_when_foundSortField() {
-        return List.of(
-                Arguments.of("created", CommentSortField.CREATED.name().toLowerCase()),
-                Arguments.of("modified", CommentSortField.MODIFIED.name().toLowerCase())
-        );
     }
 }

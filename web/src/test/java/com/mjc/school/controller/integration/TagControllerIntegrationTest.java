@@ -191,7 +191,7 @@ class TagControllerIntegrationTest {
 
     @Test
     void addToNews_roleUser() throws Exception {
-        String tagId = "1";
+        String tagId = "2";
         String newsId = "1";
 
         mockMvc.perform(put("/api/v2/tag/to-news")
@@ -199,7 +199,7 @@ class TagControllerIntegrationTest {
                         .param("news", newsId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -264,7 +264,7 @@ class TagControllerIntegrationTest {
                         .param("news", newsId)
                         .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + userJwtToken))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -346,8 +346,24 @@ class TagControllerIntegrationTest {
     }
 
     @Test
-    void findAllWithPagination() throws Exception {
+    void findAllWithPagination_foundObjectsByCurrentPage() throws Exception {
         String page = "1";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+        mockMvc.perform(get("/api/v2/tag/all/page")
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findAllWithPagination_notFoundObjectsByCurrentPage() throws Exception {
+        String page = "2";
         String size = "5";
         String sortType = "ASC";
         String sortField = "name";
@@ -380,10 +396,29 @@ class TagControllerIntegrationTest {
     }
 
     @Test
-    void findByPartOfName_when_foundTag() throws Exception {
+    void findByPartOfName_when_foundTag_foundObjectsByCurrentPage() throws Exception {
         String partOfName = "g_na";
 
         String page = "1";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+
+        mockMvc.perform(get("/api/v2/tag/part-name/{partOfName}", partOfName)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findByPartOfName_when_foundTag_notFoundObjectsByCurrentPage() throws Exception {
+        String partOfName = "g_na";
+
+        String page = "2";
         String size = "5";
         String sortType = "ASC";
         String sortField = "name";
@@ -418,7 +453,7 @@ class TagControllerIntegrationTest {
     }
 
     @Test
-    void findByNewsId_when_foundTag() throws Exception {
+    void findByNewsId_when_foundTag_foundObjectsByCurrentPage() throws Exception {
         String newsId = "1";
 
         String page = "1";
@@ -429,6 +464,24 @@ class TagControllerIntegrationTest {
         mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
                         .requestAttr("size", size)
                         .requestAttr("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findByNewsId_when_foundTag_notFoundObjectsByCurrentPage() throws Exception {
+        String newsId = "1";
+
+        String page = "2";
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
+                        .param("size", size)
+                        .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))

@@ -1,4 +1,4 @@
-package com.mjc.school.service;
+package com.mjc.school.service.user;
 
 import com.mjc.school.converter.impl.UserConverterImpl;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
@@ -6,7 +6,6 @@ import com.mjc.school.model.user.User;
 import com.mjc.school.repository.UserRepository;
 import com.mjc.school.service.user.impl.UserServiceImpl;
 import com.mjc.school.validation.dto.user.RegistrationUserDto;
-import com.mjc.school.validation.dto.user.UserChangeRoleDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +20,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class CreateUserTest {
     @InjectMocks
     private UserServiceImpl userService;
     @Mock
@@ -72,38 +71,14 @@ class UserServiceImplTest {
         when(userConverter.fromRegistrationUserDTO(registrationUserDtoTesting))
                 .thenReturn(userConvert);
 
+        String passwordEncoded = "password";
+        when(passwordEncoder.encode(anyString())).thenReturn(passwordEncoded);
+
+        userConvert.setPassword(passwordEncoded);
+
         when(userRepository.save(userConvert)).thenReturn(userConvert);
 
         boolean actualResult = userService.create(registrationUserDtoTesting);
-        assertTrue(actualResult);
-    }
-
-    @Test
-    void changeRole_when_passwordsEqual_and_notExistsUserByLogin() {
-        UserChangeRoleDto userChangeRoleDto = UserChangeRoleDto.builder()
-                .userLogin("userLogin")
-                .roleId(2)
-                .build();
-
-        when(userRepository.existsByLogin(anyString())).thenReturn(false);
-
-        ServiceBadRequestParameterException exceptionActual =
-                assertThrows(ServiceBadRequestParameterException.class,
-                        () -> userService.changeRole(userChangeRoleDto));
-        assertEquals("service.exception.change_role.user_login.not_valid.not_exists",
-                exceptionActual.getMessage());
-    }
-
-    @Test
-    void changeRole_when_passwordsEqual_and_existsUserByLogin() throws ServiceBadRequestParameterException {
-        UserChangeRoleDto userChangeRoleDto = UserChangeRoleDto.builder()
-                .userLogin("userLogin")
-                .roleId(2)
-                .build();
-
-        when(userRepository.existsByLogin(anyString())).thenReturn(true);
-
-        boolean actualResult = userService.changeRole(userChangeRoleDto);
         assertTrue(actualResult);
     }
 }

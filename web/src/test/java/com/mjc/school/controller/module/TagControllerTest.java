@@ -338,7 +338,7 @@ class TagControllerTest {
                 TagDTO.builder().id(2).name("B_tag_name").build(),
                 TagDTO.builder().id(4).name("D_tag_name").build(),
                 TagDTO.builder().id(5).name("Z_tag_name").build());
-        when(tagService.findAllExc()).thenReturn(tagDTOListExpected);
+        when(tagService.findAll()).thenReturn(tagDTOListExpected);
 
         mockMvc.perform(get("/api/v2/tag/all"))
                 .andDo(result -> System.out.println(result.getResponse().getContentAsString()))

@@ -35,6 +35,4 @@ public interface AuthorService {
     AuthorDTO findByNewsId(long newsId) throws ServiceNoContentException;
 
     Pagination<AuthorDTO> getPagination(List<AuthorDTO> elementsOnPage, long countAllElements, int page, int size);
-
-    Optional<AuthorSortField> getOptionalSortField(String sortField);
 }

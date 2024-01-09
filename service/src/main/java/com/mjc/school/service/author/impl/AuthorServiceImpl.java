@@ -4,7 +4,6 @@ import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Author;
-import com.mjc.school.service.author.impl.sort.AuthorSortField;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.service.pagination.PaginationService;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 import static com.mjc.school.service.author.impl.sort.AuthorSortField.COUNT_NEWS;
 import static com.mjc.school.service.author.impl.sort.AuthorSortField.NAME;
@@ -78,23 +76,11 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException {
         List<Author> authorList;
         if (NAME.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                authorList = authorRepository.findAllByNameAsc(size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                authorList = authorRepository.findAllByNameDesc(size, paginationService.calcNumberFirstElement(page, size));
-            }
+            authorList = findAllSortName(sortType, page, size);
         } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                authorList = authorRepository.findAllByCountNewsAsc(size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                authorList = authorRepository.findAllByCountNewsDesc(size, paginationService.calcNumberFirstElement(page, size));
-            }
+            authorList = findAllSortCountNews(sortType, page, size);
         } else {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                authorList = authorRepository.findAllByIdAsc(size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                authorList = authorRepository.findAllByIdDesc(size, paginationService.calcNumberFirstElement(page, size));
-            }
+            authorList = findAllSortId(sortType, page, size);
         }
         if (!authorList.isEmpty()) {
             return authorList
@@ -135,29 +121,11 @@ public class AuthorServiceImpl implements AuthorService {
                                             String sortField, String sortType) throws ServiceNoContentException {
         List<Author> authorList;
         if (NAME.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                authorList = authorRepository.findByPartOfNameByNameAsc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                authorList = authorRepository.findByPartOfNameByNameDesc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            authorList = findByPartOfNameSortName(partOfName, sortType, page, size);
         } else if (COUNT_NEWS.name().equalsIgnoreCase(sortField)) {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                authorList = authorRepository.findByPartOfNameByCountNewsAsc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                authorList = authorRepository.findByPartOfNameByCountNewsDesc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            authorList = findByPartOfNameSortCountNews(partOfName, sortType, page, size);
         } else {
-            if (ASC.name().equalsIgnoreCase(sortType)) {
-                authorList = authorRepository.findByPartOfNameByIdAsc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                authorList = authorRepository.findByPartOfNameByIdDesc("%" + partOfName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            authorList = findByPartOfNameSortId(partOfName, sortType, page, size);
         }
         if (!authorList.isEmpty()) {
             return authorList.stream()
@@ -197,14 +165,75 @@ public class AuthorServiceImpl implements AuthorService {
                 .build();
     }
 
-    @Override
-    public Optional<AuthorSortField> getOptionalSortField(String sortField) {
-        try {
-            return sortField != null ?
-                    Optional.of(AuthorSortField.valueOf(sortField.toUpperCase())) :
-                    Optional.empty();
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
+    private List<Author> findAllSortName(String sortType, int page, int size) {
+        List<Author> authorList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            authorList = authorRepository.findAllByNameAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            authorList = authorRepository.findAllByNameDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
         }
+        return authorList;
+    }
+
+    private List<Author> findAllSortCountNews(String sortType, int page, int size) {
+        List<Author> authorList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            authorList = authorRepository.findAllByCountNewsAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            authorList = authorRepository.findAllByCountNewsDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return authorList;
+    }
+
+    private List<Author> findAllSortId(String sortType, int page, int size) {
+        List<Author> authorList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            authorList = authorRepository.findAllByIdAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            authorList = authorRepository.findAllByIdDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return authorList;
+    }
+
+    private List<Author> findByPartOfNameSortName(String partOfName, String sortType, int page, int size) {
+        List<Author> authorList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            authorList = authorRepository.findByPartOfNameByNameAsc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            authorList = authorRepository.findByPartOfNameByNameDesc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return authorList;
+    }
+
+    private List<Author> findByPartOfNameSortCountNews(String partOfName, String sortType, int page, int size) {
+        List<Author> authorList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            authorList = authorRepository.findByPartOfNameByCountNewsAsc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            authorList = authorRepository.findByPartOfNameByCountNewsDesc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return authorList;
+    }
+
+    private List<Author> findByPartOfNameSortId(String partOfName, String sortType, int page, int size) {
+        List<Author> authorList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            authorList = authorRepository.findByPartOfNameByIdAsc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            authorList = authorRepository.findByPartOfNameByIdDesc("%" + partOfName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return authorList;
     }
 }

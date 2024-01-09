@@ -1,10 +1,9 @@
 package com.mjc.school.controller.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mjc.school.controller.AuthController;
-import com.mjc.school.repository.UserRepository;
 import com.mjc.school.service.auth.AuthService;
 import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
+import com.mjc.school.validation.dto.jwt.ValidationJwtToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private AuthService authService;
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -171,5 +172,103 @@ class AuthControllerIntegrationTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName(value = """
+            createAuthToken(): Return status 200 and true.
+            If correct token for role USER.
+            """)
+    void validAuthTokenUserRole_when_validToken_withRoleUser() throws Exception {
+        CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user_2", "123456");
+        String userJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
+        ValidationJwtToken validationJwtToken = new ValidationJwtToken(userJwtToken);
+        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
+
+        mockMvc.perform(post("/api/v2/auth/token/valid/user")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(validationJwtTokenRequestJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName(value = """
+            createAuthToken(): Return status 200 and true.
+            If correct token for role USER.
+            """)
+    void validAuthTokenUserRole_when_validToken_withRoleAdmin() throws Exception {
+        CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user", "123456");
+        String adminJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
+        ValidationJwtToken validationJwtToken = new ValidationJwtToken(adminJwtToken);
+        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
+
+        mockMvc.perform(post("/api/v2/auth/token/valid/user")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(validationJwtTokenRequestJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName(value = """
+            createAuthToken(): Return status 401 and false.
+            If not correct token for role USER.
+            """)
+    void validAuthTokenUserRole_when_notValidToken() throws Exception {
+        ValidationJwtToken validationJwtToken = new ValidationJwtToken(null);
+        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
+
+        mockMvc.perform(post("/api/v2/auth/token/valid/user")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(validationJwtTokenRequestJson))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName(value = """
+            Return status 200 and true.
+            If correct token for role ADMIN.
+            """)
+    void validAuthTokenAdminRole_when_validToken() throws Exception {
+        CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user", "123456");
+        String adminJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
+        ValidationJwtToken validationJwtToken = new ValidationJwtToken(adminJwtToken);
+        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
+
+        mockMvc.perform(post("/api/v2/auth/token/valid/admin")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(validationJwtTokenRequestJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName(value = """
+            createAuthToken(): Return status 401 and false.
+            If not correct token for role ADMIN.
+            """)
+    void validAuthTokenAdminRole_when_notValidToken_and_enteredTokenNull() throws Exception {
+        ValidationJwtToken validationJwtToken = new ValidationJwtToken(null);
+        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
+
+        mockMvc.perform(post("/api/v2/auth/token/valid/admin")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(validationJwtTokenRequestJson))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName(value = """
+            createAuthToken(): Return status 403 and false.
+            If not correct token for role ADMIN (entered token with role USER).
+            """)
+    void validAuthTokenAdminRole_when_notValidToken_and_enteredTokenWithRoleUser() throws Exception {
+        CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user_2", "123456");
+        String userJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
+        ValidationJwtToken validationJwtToken = new ValidationJwtToken(userJwtToken);
+        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
+
+        mockMvc.perform(post("/api/v2/auth/token/valid/admin")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(validationJwtTokenRequestJson))
+                .andExpect(status().isForbidden());
     }
 }
