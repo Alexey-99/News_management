@@ -34,18 +34,12 @@ public class NewsDTO implements Serializable {
 
     private AuthorDTO author;
 
-    //@Min(value = 1, message = "news_dto.author_id.not_valid.min")
-    //@IsExistsAuthorById(message = "news_dto.author_id.not_valid.not_exists_author_by_id")
-    private long authorId;
-
     @IsExistsAuthorByName(message = "news_dto.author_name.not_valid.not_exists_author_by_name")
     private String authorName;
 
     private List<CommentDTO> comments;
-    private long countComments;
 
     private List<TagDTO> tags;
-    private long countTags;
 
     private String created;
 

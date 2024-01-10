@@ -266,7 +266,6 @@ public class TagController {
                 throw new ServiceNoContentException();
             }
         }
-
         return new ResponseEntity<>(tagService.getPagination(
                 tagDTOList, tagService.countAllByPartOfName(partOfName),
                 page, size), OK);

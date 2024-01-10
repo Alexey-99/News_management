@@ -2,14 +2,11 @@ package com.mjc.school.service.comment;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
-
-import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.validation.dto.CommentDTO;
 import com.mjc.school.validation.dto.Pagination;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 public interface CommentService {
     @Transactional
@@ -38,5 +35,4 @@ public interface CommentService {
 
     Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size);
 
-//    Optional<CommentSortField> getOptionalSortField(String sortField);
 }

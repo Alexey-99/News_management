@@ -2,6 +2,7 @@ package com.mjc.school.controller;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
+import com.mjc.school.validation.dto.NewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
@@ -28,6 +29,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -52,9 +55,9 @@ public class CommentController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<CommentDTO> create(@Valid
-                                          @RequestBody
-                                          @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
-                                          CommentDTO commentDTO) throws ServiceBadRequestParameterException {
+                                             @RequestBody
+                                             @NotNull(message = "comment_controller.request_body.comment_dto.in_valid.null")
+                                             CommentDTO commentDTO) throws ServiceBadRequestParameterException {
         return new ResponseEntity<>(commentService.create(commentDTO), CREATED);
     }
 
@@ -116,7 +119,7 @@ public class CommentController {
     public ResponseEntity<Boolean> deleteByNewsId(@PathVariable
                                                   @Min(value = 1,
                                                           message = "comment_controller.path_variable.id.in_valid.min")
-                                                  long newsId)  {
+                                                  long newsId) {
         return new ResponseEntity<>(commentService.deleteByNewsId(newsId), OK);
     }
 
@@ -139,9 +142,19 @@ public class CommentController {
                                                           String sortingField,
                                                           @RequestParam(value = "sort-type", required = false)
                                                           String sortingType) throws ServiceNoContentException {
+        List<CommentDTO> commentDTOList;
+        try {
+            commentDTOList = commentService.findAll(page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                commentDTOList = commentService.findAll(page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(commentService.getPagination(
-                commentService.findAll(page, size, sortingField, sortingType),
-                commentService.countAllComments(),
+                commentDTOList, commentService.countAllComments(),
                 page, size), OK);
     }
 
@@ -168,9 +181,19 @@ public class CommentController {
                                                                String sortingField,
                                                                @RequestParam(value = "sort-type", required = false)
                                                                String sortingType) throws ServiceNoContentException {
+        List<CommentDTO> commentDTOList;
+        try {
+            commentDTOList = commentService.findByNewsId(newsId, page, size, sortingField, sortingType);
+        } catch (ServiceNoContentException ex) {
+            if (page > 1) {
+                page = 1;
+                commentDTOList = commentService.findByNewsId(newsId, page, size, sortingField, sortingType);
+            } else {
+                throw new ServiceNoContentException();
+            }
+        }
         return new ResponseEntity<>(commentService.getPagination(
-                commentService.findByNewsId(newsId, page, size, sortingField, sortingType),
-                commentService.countAllCommentsByNewsId(newsId),
+                commentDTOList, commentService.countAllCommentsByNewsId(newsId),
                 page, size), OK);
     }
 

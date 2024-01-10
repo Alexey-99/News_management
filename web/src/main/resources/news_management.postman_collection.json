@@ -17,7 +17,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
 									"type": "string"
 								}
 							]
@@ -33,7 +33,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Created title 2\",\r\n    \"content\": \"Created content 2\",\r\n    \"authorId\": 10\r\n}",
+							"raw": "{\r\n    \"title\": \"Created title 5\",\r\n    \"content\": \"Created content 5\",\r\n    \"authorName\": \"Alexey\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,11 +59,21 @@
 				{
 					"name": "update",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"updated title 4\",\r\n    \"content\": \"updated content 4\",\r\n    \"authorId\": 10\r\n}",
+							"raw": "{\r\n    \"title\": \"updated title 4\",\r\n    \"content\": \"updated content 4\",\r\n    \"authorName\": \"Alexey\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -71,7 +81,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/12",
+							"raw": "http://localhost:8081/api/v2/news/32",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -81,7 +91,7 @@
 								"api",
 								"v2",
 								"news",
-								"12"
+								"32"
 							]
 						}
 					},
@@ -90,10 +100,20 @@
 				{
 					"name": "author-id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/author/10",
+							"raw": "http://localhost:8081/api/v2/news/author/11",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -104,7 +124,7 @@
 								"v2",
 								"news",
 								"author",
-								"10"
+								"11"
 							]
 						}
 					},
@@ -113,10 +133,20 @@
 				{
 					"name": "id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/10",
+							"raw": "http://localhost:8081/api/v2/news/33",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -126,7 +156,7 @@
 								"api",
 								"v2",
 								"news",
-								"10"
+								"33"
 							]
 						}
 					},
@@ -135,10 +165,20 @@
 				{
 					"name": "all-tags-by-news-id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/all-tags/12",
+							"raw": "http://localhost:8081/api/v2/news/all-tags/34",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -149,7 +189,7 @@
 								"v2",
 								"news",
 								"all-tags",
-								"12"
+								"34"
 							]
 						}
 					},
@@ -174,7 +214,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/all",
+							"raw": "http://localhost:8081/api/v2/news/all?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -185,6 +225,24 @@
 								"v2",
 								"news",
 								"all"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "modified"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
 							]
 						}
 					},
@@ -203,7 +261,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/12",
+							"raw": "http://localhost:8081/api/v2/news/34",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -213,7 +271,7 @@
 								"api",
 								"v2",
 								"news",
-								"12"
+								"34"
 							]
 						}
 					},
@@ -225,7 +283,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/part-title/tit",
+							"raw": "http://localhost:8081/api/v2/news/part-title/t?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -236,7 +294,25 @@
 								"v2",
 								"news",
 								"part-title",
-								"tit"
+								"t"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "modified"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
 							]
 						}
 					},
@@ -248,7 +324,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/part-content/onte",
+							"raw": "http://localhost:8081/api/v2/news/part-content/onte?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -260,6 +336,24 @@
 								"news",
 								"part-content",
 								"onte"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "modified"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
 							]
 						}
 					},
@@ -271,7 +365,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/author/part-name/ake",
+							"raw": "http://localhost:8081/api/v2/news/author/part-name/lex?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -283,7 +377,25 @@
 								"news",
 								"author",
 								"part-name",
-								"ake"
+								"lex"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "modified"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
 							]
 						}
 					},
@@ -295,7 +407,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/tag/4",
+							"raw": "http://localhost:8081/api/v2/news/tag/6?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -306,7 +418,25 @@
 								"v2",
 								"news",
 								"tag",
-								"4"
+								"6"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "modified"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
 							]
 						}
 					},
@@ -318,7 +448,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/tag-name/action tag",
+							"raw": "http://localhost:8081/api/v2/news/tag-name/action tag_7?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -329,102 +459,24 @@
 								"v2",
 								"news",
 								"tag-name",
-								"action tag"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "asc",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/news/sort?sorting-field=created&sorting-type=asc",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"news",
-								"sort"
+								"action tag_7"
 							],
 							"query": [
 								{
-									"key": "sorting-field",
-									"value": "created"
-								},
-								{
-									"key": "sorting-type",
-									"value": "asc"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "desc",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/news/sort?sorting-field=created&sorting-type=desc",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"news",
-								"sort"
-							],
-							"query": [
-								{
-									"key": "sorting-field",
-									"value": "created"
-								},
-								{
-									"key": "sorting-type",
-									"value": "desc"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "asc",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/news/sort?sorting-field=modified&sorting-type=asc",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"news",
-								"sort"
-							],
-							"query": [
-								{
-									"key": "sorting-field",
+									"key": "sort-field",
 									"value": "modified"
 								},
 								{
-									"key": "sorting-type",
-									"value": "asc"
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
 								}
 							]
 						}
@@ -432,12 +484,12 @@
 					"response": []
 				},
 				{
-					"name": "desc",
+					"name": "author-id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/news/sort?sorting-field=modified&sorting-type=desc",
+							"raw": "http://localhost:8081/api/v2/news/author/11?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -447,16 +499,25 @@
 								"api",
 								"v2",
 								"news",
-								"sort"
+								"author",
+								"11"
 							],
 							"query": [
 								{
-									"key": "sorting-field",
+									"key": "sort-field",
 									"value": "modified"
 								},
 								{
-									"key": "sorting-type",
+									"key": "sort-type",
 									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
 								}
 							]
 						}
@@ -471,11 +532,27 @@
 				{
 					"name": "create",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJleHAiOjE3MDIwNjAxMTAsImlhdCI6MTcwMjA1ODMxMH0.3amsvmyYJWtrV9qzTybxDqBj40L9EwaFri7Cec-UADg",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"content\": \"comment content 2\",\r\n    \"newsId\": 12\r\n}",
+							"raw": "{\r\n    \"content\": \"comment content 2\",\r\n    \"newsId\": 34\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -501,11 +578,27 @@
 				{
 					"name": "update",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJleHAiOjE3MDE5NTU3NTMsImlhdCI6MTcwMTk1Mzk1M30.Gb4zrppxlG7VBR6HaM73A1dghycr2afHd4CyLuYytoU",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": " {\r\n    \"content\": \"updated content\",\r\n    \"newsId\": 12\r\n}",
+							"raw": " {\r\n    \"content\": \"updated content qwe\",\r\n    \"newsId\": 34\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -513,7 +606,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/4",
+							"raw": "http://localhost:8081/api/v2/comment/43",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -523,7 +616,7 @@
 								"api",
 								"v2",
 								"comment",
-								"4"
+								"43"
 							]
 						}
 					},
@@ -532,10 +625,20 @@
 				{
 					"name": "news-id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/news/12",
+							"raw": "http://localhost:8081/api/v2/comment/news/34",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -546,7 +649,7 @@
 								"v2",
 								"comment",
 								"news",
-								"12"
+								"34"
 							]
 						}
 					},
@@ -555,10 +658,26 @@
 				{
 					"name": "id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA1ODc2LCJpYXQiOjE3MDQ5MDQwNzZ9.v6v3-I0PsTTzZEGnSi1EEnmqPrlVuT4G-juzxwlAFMg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyXzIiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiZXhwIjoxNzAyMDUyOTQyLCJpYXQiOjE3MDIwNTExNDJ9.rhyoHCZan_EUtac3Uxrgg_Hev4d08FTLOt-YAxOFWG4",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/4",
+							"raw": "http://localhost:8081/api/v2/comment/44",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -568,7 +687,7 @@
 								"api",
 								"v2",
 								"comment",
-								"4"
+								"44"
 							]
 						}
 					},
@@ -580,7 +699,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/all",
+							"raw": "http://localhost:8081/api/v2/comment/all?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -591,6 +710,24 @@
 								"v2",
 								"comment",
 								"all"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "modified"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
 							]
 						}
 					},
@@ -602,7 +739,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/7",
+							"raw": "http://localhost:8081/api/v2/comment/45",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -612,7 +749,7 @@
 								"api",
 								"v2",
 								"comment",
-								"7"
+								"45"
 							]
 						}
 					},
@@ -624,7 +761,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/news/12",
+							"raw": "http://localhost:8081/api/v2/comment/news/34?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -635,134 +772,24 @@
 								"v2",
 								"comment",
 								"news",
-								"12"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "asc",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/sort?field=created&type=asc",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"comment",
-								"sort"
+								"34"
 							],
 							"query": [
 								{
-									"key": "field",
-									"value": "created"
-								},
-								{
-									"key": "type",
-									"value": "asc"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "desc",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/sort?field=created&type=desc",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"comment",
-								"sort"
-							],
-							"query": [
-								{
-									"key": "field",
-									"value": "created"
-								},
-								{
-									"key": "type",
-									"value": "desc"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "desc",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/sort?field=created&type=desc",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"comment",
-								"sort"
-							],
-							"query": [
-								{
-									"key": "field",
-									"value": "created"
-								},
-								{
-									"key": "type",
-									"value": "desc"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "asc",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/sort?field=modified&type=asc",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"comment",
-								"sort"
-							],
-							"query": [
-								{
-									"key": "field",
+									"key": "sort-field",
 									"value": "modified"
 								},
 								{
-									"key": "type",
-									"value": "asc"
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "5"
 								}
 							]
 						}
@@ -780,7 +807,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/author/9",
+							"raw": "http://localhost:8081/api/v2/author/16",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -790,7 +817,7 @@
 								"api",
 								"v2",
 								"author",
-								"9"
+								"16"
 							]
 						}
 					},
@@ -802,7 +829,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/author/part-name/k",
+							"raw": "http://localhost:8081/api/v2/author/part-name/i?sort-field=id&sort-type=desc&page=2&size=2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -813,7 +840,25 @@
 								"v2",
 								"author",
 								"part-name",
-								"k"
+								"i"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "id"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -825,7 +870,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/author/news/9",
+							"raw": "http://localhost:8081/api/v2/author/news/34",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -836,7 +881,7 @@
 								"v2",
 								"author",
 								"news",
-								"9"
+								"34"
 							]
 						}
 					},
@@ -858,7 +903,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/author/all",
+							"raw": "http://localhost:8081/api/v2/author/all?sort-field=id&sort-type=desc&page=2&size=2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -872,43 +917,20 @@
 							],
 							"query": [
 								{
+									"key": "sort-field",
+									"value": "id"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
 									"key": "page",
-									"value": "-1",
-									"disabled": true
+									"value": "2"
 								},
 								{
 									"key": "size",
-									"value": "-1",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "amount-news",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/author/amount-news",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"author",
-								"amount-news"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "2",
-									"disabled": true
+									"value": "2"
 								}
 							]
 						}
@@ -918,10 +940,20 @@
 				{
 					"name": "id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/author/8",
+							"raw": "http://localhost:8081/api/v2/author/17",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -931,7 +963,7 @@
 								"api",
 								"v2",
 								"author",
-								"8"
+								"17"
 							]
 						}
 					},
@@ -940,6 +972,16 @@
 				{
 					"name": "update",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -952,7 +994,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/v2/author/6",
+							"raw": "http://localhost:8081/api/v2/author/17",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -962,7 +1004,7 @@
 								"api",
 								"v2",
 								"author",
-								"6"
+								"17"
 							]
 						}
 					},
@@ -972,41 +1014,11 @@
 					"name": "create",
 					"request": {
 						"auth": {
-							"type": "jwt",
-							"jwt": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "algorithm",
-									"value": "HS256",
-									"type": "string"
-								},
-								{
-									"key": "isSecretBase64Encoded",
-									"value": false,
-									"type": "boolean"
-								},
-								{
-									"key": "payload",
-									"value": "{}",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "headerPrefix",
-									"value": "Bearer",
-									"type": "string"
-								},
-								{
-									"key": "queryParamKey",
-									"value": "token",
-									"type": "string"
-								},
-								{
-									"key": "header",
-									"value": "{}",
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
 									"type": "string"
 								}
 							]
@@ -1022,7 +1034,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Alex\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Tom\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1053,10 +1065,20 @@
 				{
 					"name": "add-to-news",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/to-news?tag=5&news=12",
+							"raw": "http://localhost:8081/api/v2/tag/to-news?tag=6&news=34",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1071,11 +1093,11 @@
 							"query": [
 								{
 									"key": "tag",
-									"value": "5"
+									"value": "6"
 								},
 								{
 									"key": "news",
-									"value": "12"
+									"value": "34"
 								}
 							]
 						}
@@ -1085,10 +1107,20 @@
 				{
 					"name": "remove-from-news",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/from-news?tag=4&news=7",
+							"raw": "http://localhost:8081/api/v2/tag/from-news?tag=8&news=34",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1103,11 +1135,11 @@
 							"query": [
 								{
 									"key": "tag",
-									"value": "4"
+									"value": "8"
 								},
 								{
 									"key": "news",
-									"value": "7"
+									"value": "34"
 								}
 							]
 						}
@@ -1117,10 +1149,20 @@
 				{
 					"name": "id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/3",
+							"raw": "http://localhost:8081/api/v2/tag/11",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1130,7 +1172,7 @@
 								"api",
 								"v2",
 								"tag",
-								"3"
+								"11"
 							]
 						}
 					},
@@ -1139,6 +1181,16 @@
 				{
 					"name": "create",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -1149,7 +1201,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{        \r\n    \"name\": \"action tag\"\r\n}\r\n",
+							"raw": "{        \r\n    \"name\": \"sport tag\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1175,6 +1227,16 @@
 				{
 					"name": "update",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -1187,7 +1249,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/4",
+							"raw": "http://localhost:8081/api/v2/tag/11",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1197,7 +1259,7 @@
 								"api",
 								"v2",
 								"tag",
-								"4"
+								"11"
 							]
 						}
 					},
@@ -1206,10 +1268,20 @@
 				{
 					"name": "all-news",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA3MDQwLCJpYXQiOjE3MDQ5MDUyNDB9.PNrrJ8YZM9pvbRXCrXydOKlxju5SrFHH5ydSG2cZMDg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/all-news/1",
+							"raw": "http://localhost:8081/api/v2/tag/all-news/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1220,7 +1292,111 @@
 								"v2",
 								"tag",
 								"all-news",
-								"1"
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/tag/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"tag",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "news-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/tag/news/34?sort-field=name&sort-type=desc&page=1&size=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"tag",
+								"news",
+								"34"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "name"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "part-of-name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/tag/part-name/t?sort-field=name&sort-type=desc&page=2&size=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"tag",
+								"part-name",
+								"t"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "name"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -1230,26 +1406,11 @@
 					"name": "all",
 					"request": {
 						"auth": {
-							"type": "oauth2",
-							"oauth2": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "addTokenTo",
-									"value": "queryParams",
-									"type": "string"
-								},
-								{
-									"key": "useBrowser",
-									"value": true,
-									"type": "boolean"
-								},
-								{
-									"key": "redirect_uri",
+									"key": "token",
 									"value": "",
-									"type": "string"
-								},
-								{
-									"key": "tokenName",
-									"value": "GitHub OAuth token",
 									"type": "string"
 								}
 							]
@@ -1281,12 +1442,12 @@
 					"response": []
 				},
 				{
-					"name": "id",
+					"name": "all-pagin",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/5",
+							"raw": "http://localhost:8081/api/v2/tag/all/page?sort-field=name&sort-type=desc&page=2&size=2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1296,53 +1457,8 @@
 								"api",
 								"v2",
 								"tag",
-								"5"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "news-id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/news/12",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"tag",
-								"news",
-								"12"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "part-of-name",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/part-name/tag?sort-field=name&sort-type=desc",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"v2",
-								"tag",
-								"part-name",
-								"tag"
+								"all",
+								"page"
 							],
 							"query": [
 								{
@@ -1352,6 +1468,14 @@
 								{
 									"key": "sort-type",
 									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "2"
 								}
 							]
 						}
@@ -1393,6 +1517,72 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "token/valid/admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"jwtToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5MjIxLCJpYXQiOjE3MDQ5MDc0MjF9.Zjt09OxnWxmzUsngi6OwUbU3cgwCTiJeU7USJI1s9i4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v2/auth/token/valid/admin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"token",
+								"valid",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "token/valid/user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"jwtToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwNDkwOTMzMywiaWF0IjoxNzA0OTA3NTMzfQ.srQ2ZgbeOR4l-drn8CbiluZ20P_xkdbhi2UOneVZtfk\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v2/auth/token/valid/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"token",
+								"valid",
+								"user"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1406,7 +1596,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"login\": \"user\",\r\n    \"password\": \"123456\",\r\n    \"confirmPassword\": \"123456\"\r\n}",
+							"raw": "{\r\n    \"login\": \"Alex@99\",\r\n    \"password\": \"qwerty\",\r\n    \"confirmPassword\": \"qwerty\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1414,7 +1604,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/v2/auth/registration",
+							"raw": "http://localhost:8081/api/v2/user/registration",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1423,7 +1613,7 @@
 							"path": [
 								"api",
 								"v2",
-								"auth",
+								"user",
 								"registration"
 							]
 						}
@@ -1433,10 +1623,29 @@
 				{
 					"name": "role",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5NDQxLCJpYXQiOjE3MDQ5MDc2NDF9.lHbmU9ipsymzpk41BfTyUo0xadifJoVMCnBbwP4hdk8",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userLogin\": \"Alex@99\",\r\n    \"roleId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8081/api/v2/auth/role",
+							"raw": "http://localhost:8081/api/v2/user/role",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1445,8 +1654,247 @@
 							"path": [
 								"api",
 								"v2",
-								"auth",
+								"user",
 								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5NDQxLCJpYXQiOjE3MDQ5MDc2NDF9.lHbmU9ipsymzpk41BfTyUo0xadifJoVMCnBbwP4hdk8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 9,\r\n    \"newLogin\": \"updateL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v2/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5NDQxLCJpYXQiOjE3MDQ5MDc2NDF9.lHbmU9ipsymzpk41BfTyUo0xadifJoVMCnBbwP4hdk8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/user/all?sort-field=id&sort-type=desc&page=2&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"user",
+								"all"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "id"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5NDQxLCJpYXQiOjE3MDQ5MDc2NDF9.lHbmU9ipsymzpk41BfTyUo0xadifJoVMCnBbwP4hdk8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/user/9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"user",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5NDQxLCJpYXQiOjE3MDQ5MDc2NDF9.lHbmU9ipsymzpk41BfTyUo0xadifJoVMCnBbwP4hdk8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/user/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"user",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5NDQxLCJpYXQiOjE3MDQ5MDc2NDF9.lHbmU9ipsymzpk41BfTyUo0xadifJoVMCnBbwP4hdk8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/user/login/Mark_85",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"user",
+								"login",
+								"Mark_85"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5NDQxLCJpYXQiOjE3MDQ5MDc2NDF9.lHbmU9ipsymzpk41BfTyUo0xadifJoVMCnBbwP4hdk8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/user/role/user?sort-field=id&sort-type=desc&page=2&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"user",
+								"role",
+								"user"
+							],
+							"query": [
+								{
+									"key": "sort-field",
+									"value": "id"
+								},
+								{
+									"key": "sort-type",
+									"value": "desc"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
 							]
 						}
 					},
@@ -1455,338 +1903,17 @@
 			]
 		},
 		{
-			"name": "test",
+			"name": "role",
 			"item": [
 				{
-					"name": "oauth2",
-					"item": [
-						{
-							"name": "https://github.com/login/oauth/authorize",
-							"request": {
-								"auth": {
-									"type": "oauth2",
-									"oauth2": [
-										{
-											"key": "authUrl",
-											"value": "https://github.com/login/oauth/authorize",
-											"type": "string"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "https://github.com/login/oauth/authorize",
-											"type": "string"
-										},
-										{
-											"key": "scope",
-											"value": "read",
-											"type": "string"
-										},
-										{
-											"key": "state",
-											"value": "",
-											"type": "string"
-										},
-										{
-											"key": "clientSecret",
-											"value": "{{clientSecret}}",
-											"type": "string"
-										},
-										{
-											"key": "clientId",
-											"value": "{{clientId}}",
-											"type": "string"
-										},
-										{
-											"key": "refreshTokenUrl",
-											"value": "",
-											"type": "string"
-										},
-										{
-											"key": "accessTokenUrl",
-											"value": "https://github.com/login/oauth/access_token",
-											"type": "string"
-										},
-										{
-											"key": "useBrowser",
-											"value": false,
-											"type": "boolean"
-										},
-										{
-											"key": "addTokenTo",
-											"value": "queryParams",
-											"type": "string"
-										},
-										{
-											"key": "tokenName",
-											"value": "GitHub OAuth token",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://github.com/oauth/authorize?client_id=Iv1.10cd0d4a9dd023d0&scope=read:user&client_secret=8e5eec6b3f4286c970e81e9a6375c24db7790560",
-									"protocol": "https",
-									"host": [
-										"github",
-										"com"
-									],
-									"path": [
-										"oauth",
-										"authorize"
-									],
-									"query": [
-										{
-											"key": "client_id",
-											"value": "Iv1.10cd0d4a9dd023d0"
-										},
-										{
-											"key": "scope",
-											"value": "read:user"
-										},
-										{
-											"key": "client_secret",
-											"value": "8e5eec6b3f4286c970e81e9a6375c24db7790560"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "https://github.com/login/oauth/authorize?client_id=6a112c69fa88b2457544&scope=read:user&login=Alexey-99",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://github.com/login/oauth/authorize?client_id=6a112c69fa88b2457544&scope=read:user&login=Alexey-99",
-									"protocol": "https",
-									"host": [
-										"github",
-										"com"
-									],
-									"path": [
-										"login",
-										"oauth",
-										"authorize"
-									],
-									"query": [
-										{
-											"key": "response_type",
-											"value": "code",
-											"disabled": true
-										},
-										{
-											"key": "client_id",
-											"value": "6a112c69fa88b2457544"
-										},
-										{
-											"key": "scope",
-											"value": "read:user"
-										},
-										{
-											"key": "state",
-											"value": "A_eC2zC0hlmDcK64b-GTRm2V8TPwvBbaNwSFSYkr-3c=",
-											"disabled": true
-										},
-										{
-											"key": "redirect_uri",
-											"value": "https://github.com/login/oauth/access_token",
-											"disabled": true
-										},
-										{
-											"key": "login",
-											"value": "Alexey-99"
-										},
-										{
-											"key": "password",
-											"value": "8201499Al",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "https://github.com/login/oauth/access_token?client_id=6a112c69fa88b2457544&code=abdc1760b4377b785646&client_secret=02f4f9ecea5cf935423195a867bc26bf7eecaebb",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "https://github.com/login/oauth/access_token?client_id=6a112c69fa88b2457544&code=abdc1760b4377b785646&client_secret=02f4f9ecea5cf935423195a867bc26bf7eecaebb",
-									"protocol": "https",
-									"host": [
-										"github",
-										"com"
-									],
-									"path": [
-										"login",
-										"oauth",
-										"access_token"
-									],
-									"query": [
-										{
-											"key": "client_id",
-											"value": "6a112c69fa88b2457544"
-										},
-										{
-											"key": "code",
-											"value": "abdc1760b4377b785646"
-										},
-										{
-											"key": "client_secret",
-											"value": "02f4f9ecea5cf935423195a867bc26bf7eecaebb"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "New Request",
-							"request": {
-								"auth": {
-									"type": "oauth2",
-									"oauth2": [
-										{
-											"key": "useBrowser",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "addTokenTo",
-											"value": "header",
-											"type": "string"
-										},
-										{
-											"key": "authUrl",
-											"value": "https://github.com/login/oauth/authorize",
-											"type": "string"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "https://github.com/login/oauth/authorize",
-											"type": "string"
-										},
-										{
-											"key": "scope",
-											"value": "read",
-											"type": "string"
-										},
-										{
-											"key": "state",
-											"value": "",
-											"type": "string"
-										},
-										{
-											"key": "clientSecret",
-											"value": "{{clientSecret}}",
-											"type": "string"
-										},
-										{
-											"key": "clientId",
-											"value": "{{clientId}}",
-											"type": "string"
-										},
-										{
-											"key": "refreshTokenUrl",
-											"value": "",
-											"type": "string"
-										},
-										{
-											"key": "accessTokenUrl",
-											"value": "https://github.com/login/oauth/access_token",
-											"type": "string"
-										},
-										{
-											"key": "tokenName",
-											"value": "GitHub OAuth token",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8081/api/v2/tag/all",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8081",
-									"path": [
-										"api",
-										"v2",
-										"tag",
-										"all"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "github",
+					"name": "all",
 					"request": {
 						"auth": {
-							"type": "oauth2",
-							"oauth2": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "refreshTokenUrl",
-									"value": "",
-									"type": "string"
-								},
-								{
-									"key": "state",
-									"value": "",
-									"type": "string"
-								},
-								{
-									"key": "redirect_uri",
-									"value": "http://localhost:8081/oauth2/authorization/github",
-									"type": "string"
-								},
-								{
-									"key": "scope",
-									"value": "",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "02f4f9ecea5cf935423195a867bc26bf7eecaebb",
-									"type": "string"
-								},
-								{
-									"key": "clientId",
-									"value": "6a112c69fa88b2457544",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "https://github.com/login/oauth/access_token",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "https://github.com/login/oauth/authorize",
-									"type": "string"
-								},
-								{
-									"key": "useBrowser",
-									"value": false,
-									"type": "boolean"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "queryParams",
-									"type": "string"
-								},
-								{
-									"key": "tokenName",
-									"value": "GitHub OAuth token",
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNzA0OTA5NDQxLCJpYXQiOjE3MDQ5MDc2NDF9.lHbmU9ipsymzpk41BfTyUo0xadifJoVMCnBbwP4hdk8",
 									"type": "string"
 								}
 							]
@@ -1794,33 +1921,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:8081/api/v2/role/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"role",
+								"all"
+							]
 						}
 					},
 					"response": []
-				}
-			],
-			"auth": {
-				"type": "noauth"
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
 				}
 			]
 		}

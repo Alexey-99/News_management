@@ -103,13 +103,13 @@ public class UserController {
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Pagination<UserDTO>> findAll(@RequestAttribute(value = "size")
-                                                            int size,
-                                                            @RequestAttribute(value = "page")
-                                                            int page,
-                                                            @RequestParam(value = "sort-field", required = false)
-                                                            String sortingField,
-                                                            @RequestParam(value = "sort-type", required = false)
-                                                            String sortingType) throws ServiceNoContentException {
+                                                       int size,
+                                                       @RequestAttribute(value = "page")
+                                                       int page,
+                                                       @RequestParam(value = "sort-field", required = false)
+                                                       String sortingField,
+                                                       @RequestParam(value = "sort-type", required = false)
+                                                       String sortingType) throws ServiceNoContentException {
         List<UserDTO> userDTOList;
         try {
             userDTOList = userService.findAll(page, size, sortingField, sortingType);
