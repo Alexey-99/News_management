@@ -53,7 +53,7 @@ public class AuthController {
     public ResponseEntity<Boolean> isValidAuthTokenUser(@RequestBody
                                                         ValidationJwtToken jwtToken)
             throws CustomAuthenticationException, CustomAccessDeniedException {
-        boolean result = jwtTokenValidator.isUserRoleUser(jwtToken);
+        boolean result = jwtTokenValidator.isFitsRoleUser(jwtToken);
         return new ResponseEntity<>(result, OK);
     }
 
@@ -61,7 +61,7 @@ public class AuthController {
     public ResponseEntity<Boolean> isValidAuthTokenAdmin(@RequestBody
                                                          ValidationJwtToken jwtToken)
             throws CustomAuthenticationException, CustomAccessDeniedException {
-        boolean result = jwtTokenValidator.isUserRoleAdmin(jwtToken);
+        boolean result = jwtTokenValidator.isFitsRoleAdmin(jwtToken);
         return new ResponseEntity<>(result, OK);
     }
 }

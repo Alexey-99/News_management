@@ -38,5 +38,5 @@ public interface CommentService {
 
     Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size);
 
-    Optional<CommentSortField> getOptionalSortField(String sortField);
+//    Optional<CommentSortField> getOptionalSortField(String sortField);
 }

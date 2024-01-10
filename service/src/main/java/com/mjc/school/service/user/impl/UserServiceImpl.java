@@ -146,9 +146,6 @@ public class UserServiceImpl implements UserService {
         List<User> userList;
         if (sortField != null && sortField.equalsIgnoreCase(LOGIN.name())) {
             userList = findByRoleSortLogin(role, page, size, sortType);
-        } else if (sortField != null && sortField.equalsIgnoreCase(ROLE.name())) {
-            userList = userRepository.findByRole("%" + role + "%",
-                    size, paginationService.calcNumberFirstElement(page, size));
         } else {
             userList = findByRoleSortId(role, page, size, sortType);
         }

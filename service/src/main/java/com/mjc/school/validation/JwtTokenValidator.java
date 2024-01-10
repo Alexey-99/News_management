@@ -5,9 +5,9 @@ import com.mjc.school.exception.CustomAuthenticationException;
 import com.mjc.school.validation.dto.jwt.ValidationJwtToken;
 
 public interface JwtTokenValidator {
-    boolean isUserRoleUser(ValidationJwtToken token)
+    boolean isFitsRoleUser(ValidationJwtToken token)
             throws CustomAuthenticationException, CustomAccessDeniedException;
 
-    boolean isUserRoleAdmin(ValidationJwtToken token)
+    boolean isFitsRoleAdmin(ValidationJwtToken token)
             throws CustomAuthenticationException, CustomAccessDeniedException;
 }

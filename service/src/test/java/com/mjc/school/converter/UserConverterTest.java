@@ -4,8 +4,10 @@ import com.mjc.school.converter.impl.UserConverterImpl;
 import com.mjc.school.model.user.Role;
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.RoleRepository;
+import com.mjc.school.validation.dto.RoleDTO;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
 import com.mjc.school.validation.dto.user.RegistrationUserDto;
+import com.mjc.school.validation.dto.user.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +19,7 @@ import java.util.Collections;
 
 import static com.mjc.school.model.user.User.UserRole.ROLE_USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +28,8 @@ class UserConverterTest {
     private UserConverterImpl userConverter;
     @Mock
     private RoleRepository roleRepository;
+    @Mock
+    private RoleConverter roleConverter;
 
     @Test
     void toUserDetails() {
@@ -40,7 +45,6 @@ class UserConverterTest {
 
         CustomUserDetails customUserDetailsActual = userConverter.toUserDetails(user);
         assertEquals(customUserDetailsExpected, customUserDetailsActual);
-
     }
 
     @Test
@@ -61,5 +65,19 @@ class UserConverterTest {
 
         User userActual = userConverter.fromRegistrationUserDTO(registrationUserDtoTesting);
         assertEquals(user, userActual);
+    }
+
+    @Test
+    void toUserDTO() {
+        User user = new User(1, "login_test", "password_test",
+                new Role(1, ROLE_USER));
+
+        RoleDTO roleDTO = new RoleDTO(user.getRole().getId(), user.getRole().getRole().name());
+        when(roleConverter.toDTO(any(Role.class))).thenReturn(roleDTO);
+
+        UserDTO userDTOExpected = new UserDTO(user.getId(), user.getLogin(), roleDTO);
+
+        UserDTO userDTOActual = userConverter.toUserDTO(user);
+        assertEquals(userDTOExpected, userDTOActual);
     }
 }

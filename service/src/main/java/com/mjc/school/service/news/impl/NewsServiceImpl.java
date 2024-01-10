@@ -119,24 +119,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> findAll(int page, int size,
-                                 String sortingField, String sortingType) throws ServiceNoContentException {
+                                 String sortField, String sortType) throws ServiceNoContentException {
         List<News> newsList;
-        if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findAllByCreatedAsc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findAllByCreatedDesc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            }
+        if (sortField != null && sortField.equalsIgnoreCase(CREATED.name())) {
+            newsList = findAllSortCreated(sortType, page, size);
         } else {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findAllByModifiedAsc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findAllByModifiedDesc(size,
-                        paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findAllSortModified(sortType, page, size);
         }
         if (!newsList.isEmpty()) {
             return newsList.stream()
@@ -173,24 +161,12 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findByTagName(String tagName,
                                        int page, int size,
-                                       String sortingField, String sortingType) throws ServiceNoContentException {
+                                       String sortField, String sortType) throws ServiceNoContentException {
         List<News> newsList;
-        if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByTagNameCreatedAsc(tagName, size,
-                        paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByTagNameCreatedDesc(tagName,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+        if (sortField != null && sortField.equalsIgnoreCase(CREATED.name())) {
+            newsList = findByTagNameSortCreated(tagName, sortType, page, size);
         } else {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByTagNameModifiedAsc(tagName,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByTagNameModifiedDesc(tagName,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findByTagNameSortModified(tagName, sortType, page, size);
         }
         if (!newsList.isEmpty()) {
             return newsList.stream()
@@ -210,24 +186,12 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findByTagId(long tagId,
                                      int page, int size,
-                                     String sortingField, String sortingType) throws ServiceNoContentException {
+                                     String sortField, String sortType) throws ServiceNoContentException {
         List<News> newsList;
-        if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByTagIdCreatedAsc(tagId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByTagIdCreatedDesc(tagId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+        if (sortField != null && sortField.equalsIgnoreCase(CREATED.name())) {
+            newsList = findByTagIdSortCreated(tagId, sortType, page, size);
         } else {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByTagIdModifiedAsc(tagId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByTagIdModifiedDesc(tagId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findByTagIdSortModified(tagId, sortType, page, size);
         }
         if (!newsList.isEmpty()) {
             return newsList.stream()
@@ -247,24 +211,12 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findByPartOfAuthorName(String partOfAuthorName,
                                                 int page, int size,
-                                                String sortingField, String sortingType) throws ServiceNoContentException {
+                                                String sortField, String sortType) throws ServiceNoContentException {
         List<News> newsList;
-        if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByPartOfAuthorNameCreatedAsc("%" + partOfAuthorName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByPartOfAuthorNameCreatedDesc("%" + partOfAuthorName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+        if (sortField != null && sortField.equalsIgnoreCase(CREATED.name())) {
+            newsList = findByPartOfAuthorNameSortCreated(partOfAuthorName, sortType, page, size);
         } else {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByPartOfAuthorNameModifiedAsc("%" + partOfAuthorName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByPartOfAuthorNameModifiedDesc("%" + partOfAuthorName + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findByPartOfAuthorNameSortModified(partOfAuthorName, sortType, page, size);
         }
         if (!newsList.isEmpty()) {
             return newsList.stream()
@@ -284,24 +236,12 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findByAuthorId(long authorId,
                                         int page, int size,
-                                        String sortingField, String sortingType) throws ServiceNoContentException {
+                                        String sortingField, String sortType) throws ServiceNoContentException {
         List<News> newsList;
         if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByAuthorIdByCreatedAsc(authorId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByAuthorIdByCreatedDesc(authorId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findByAuthorIdSortCreated(authorId, sortType, page, size);
         } else {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByAuthorIdByModifiedAsc(authorId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByAuthorIdByModifiedDesc(authorId,
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findByAuthorIdSortModified(authorId, sortType, page, size);
         }
         if (!newsList.isEmpty()) {
             return newsList.stream()
@@ -321,24 +261,12 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findByPartOfTitle(String partOfTitle,
                                            int page, int size,
-                                           String sortingField, String sortingType) throws ServiceNoContentException {
+                                           String sortingField, String sortType) throws ServiceNoContentException {
         List<News> newsList;
         if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByPartOfTitleByCreatedAsc("%" + partOfTitle + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByPartOfTitleByCreatedDesc("%" + partOfTitle + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findByPartOfTitleSortCreated(partOfTitle, sortType, page, size);
         } else {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByPartOfTitleByModifiedAsc("%" + partOfTitle + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByPartOfTitleByModifiedDesc("%" + partOfTitle + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findByPartOfTitleSortModified(partOfTitle, sortType, page, size);
         }
         if (!newsList.isEmpty()) {
             return newsList.stream()
@@ -358,24 +286,12 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> findByPartOfContent(String partOfContent,
                                              int page, int size,
-                                             String sortingField, String sortingType) throws ServiceNoContentException {
+                                             String sortField, String sortType) throws ServiceNoContentException {
         List<News> newsList;
-        if (sortingField != null && sortingField.equalsIgnoreCase(CREATED.name())) {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByPartOfContentByCreatedAsc("%" + partOfContent + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByPartOfContentByCreatedDesc("%" + partOfContent + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+        if (sortField != null && sortField.equalsIgnoreCase(CREATED.name())) {
+            newsList = findByPartOfContentSortCreated(partOfContent, sortType, page, size);
         } else {
-            if (sortingType != null && sortingType.equalsIgnoreCase(ASC.name())) {
-                newsList = newsRepository.findByPartOfContentByModifiedAsc("%" + partOfContent + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            } else {
-                newsList = newsRepository.findByPartOfContentByModifiedDesc("%" + partOfContent + "%",
-                        size, paginationService.calcNumberFirstElement(page, size));
-            }
+            newsList = findByPartOfContentSortModified(partOfContent, sortType, page, size);
         }
         if (!newsList.isEmpty()) {
             return newsList.stream()
@@ -402,5 +318,173 @@ public class NewsServiceImpl implements NewsService {
                 .numberPage(page)
                 .maxNumberPage(paginationService.calcMaxNumberPage(countAllElements, size))
                 .build();
+    }
+
+    private List<News> findAllSortCreated(String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findAllByCreatedAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findAllByCreatedDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findAllSortModified(String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findAllByModifiedAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findAllByModifiedDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByTagNameSortCreated(String tagName, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByTagNameCreatedAsc(tagName, size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByTagNameCreatedDesc(tagName,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByTagNameSortModified(String tagName, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByTagNameModifiedAsc(tagName,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByTagNameModifiedDesc(tagName,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByTagIdSortCreated(long tagId, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByTagIdCreatedAsc(tagId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByTagIdCreatedDesc(tagId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByTagIdSortModified(long tagId, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByTagIdModifiedAsc(tagId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByTagIdModifiedDesc(tagId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByPartOfAuthorNameSortCreated(String partOfAuthorName, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByPartOfAuthorNameCreatedAsc("%" + partOfAuthorName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByPartOfAuthorNameCreatedDesc("%" + partOfAuthorName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByPartOfAuthorNameSortModified(String partOfAuthorName, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByPartOfAuthorNameModifiedAsc("%" + partOfAuthorName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByPartOfAuthorNameModifiedDesc("%" + partOfAuthorName + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByAuthorIdSortCreated(long authorId, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByAuthorIdByCreatedAsc(authorId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByAuthorIdByCreatedDesc(authorId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByAuthorIdSortModified(long authorId, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByAuthorIdByModifiedAsc(authorId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByAuthorIdByModifiedDesc(authorId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByPartOfTitleSortCreated(String partOfTitle, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByPartOfTitleByCreatedAsc("%" + partOfTitle + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByPartOfTitleByCreatedDesc("%" + partOfTitle + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByPartOfTitleSortModified(String partOfTitle, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByPartOfTitleByModifiedAsc("%" + partOfTitle + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByPartOfTitleByModifiedDesc("%" + partOfTitle + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByPartOfContentSortCreated(String partOfContent, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByPartOfContentByCreatedAsc("%" + partOfContent + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByPartOfContentByCreatedDesc("%" + partOfContent + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
+    }
+
+    private List<News> findByPartOfContentSortModified(String partOfContent, String sortType, int page, int size) {
+        List<News> newsList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            newsList = newsRepository.findByPartOfContentByModifiedAsc("%" + partOfContent + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            newsList = newsRepository.findByPartOfContentByModifiedDesc("%" + partOfContent + "%",
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return newsList;
     }
 }

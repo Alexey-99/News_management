@@ -39,7 +39,7 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                     log.log(WARN, "Not found author by name: " + newsDTO.getAuthorName());
                     return new ServiceBadRequestParameterException("service.exception.not_exists_author_by_name");
                 }))
-                .comments(commentRepository.findByNewsId(newsDTO.getId()))
+                .comments(commentRepository.findByNewsIdSortModifiedDesc(newsDTO.getId()))
                 .tags(newsTagRepository.findByNewsId(newsDTO.getId()))
                 .created(newsDTO.getCreated())
                 .modified(newsDTO.getModified())

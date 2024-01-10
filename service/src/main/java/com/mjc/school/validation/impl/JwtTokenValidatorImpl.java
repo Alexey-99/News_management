@@ -24,7 +24,7 @@ public class JwtTokenValidatorImpl implements JwtTokenValidator {
     private final JwtTokenUtil jwtTokenUtil;
 
     @Override
-    public boolean isUserRoleUser(ValidationJwtToken validationJwtToken)
+    public boolean isFitsRoleUser(ValidationJwtToken validationJwtToken)
             throws CustomAuthenticationException, CustomAccessDeniedException {
         if (validationJwtToken != null && isCorrectJwtToken(validationJwtToken.getJwtToken())) {
             boolean result = !jwtTokenUtil.getRoles(validationJwtToken.getJwtToken())
@@ -44,7 +44,7 @@ public class JwtTokenValidatorImpl implements JwtTokenValidator {
     }
 
     @Override
-    public boolean isUserRoleAdmin(ValidationJwtToken validationJwtToken)
+    public boolean isFitsRoleAdmin(ValidationJwtToken validationJwtToken)
             throws CustomAuthenticationException, CustomAccessDeniedException {
         if (validationJwtToken != null && isCorrectJwtToken(validationJwtToken.getJwtToken())) {
             boolean result = !jwtTokenUtil.getRoles(validationJwtToken.getJwtToken())

@@ -143,42 +143,30 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                     @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-           SELECT users.id, users.login, users.password, users.roles_id
-            FROM users
-                INNER JOIN roles
-                    ON users.roles_id = roles.id
-           WHERE roles.name LIKE UPPER(:roleName)
-            ORDER BY login ASC
-            LIMIT :size OFFSET :numberFirstElement
-            """, nativeQuery = true)
+            SELECT users.id, users.login, users.password, users.roles_id
+             FROM users
+                 INNER JOIN roles
+                     ON users.roles_id = roles.id
+            WHERE roles.name LIKE UPPER(:roleName)
+             ORDER BY login ASC
+             LIMIT :size OFFSET :numberFirstElement
+             """, nativeQuery = true)
     List<User> findByRoleSortLoginAsc(@Param("roleName") String roleName,
                                       @Param("size") Integer size,
                                       @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-           SELECT users.id, users.login, users.password, users.roles_id
-            FROM users
-                INNER JOIN roles
-                    ON users.roles_id = roles.id
-            WHERE roles.name LIKE UPPER(:roleName)
-            ORDER BY login DESC
-            LIMIT :size OFFSET :numberFirstElement
-            """, nativeQuery = true)
+            SELECT users.id, users.login, users.password, users.roles_id
+             FROM users
+                 INNER JOIN roles
+                     ON users.roles_id = roles.id
+             WHERE roles.name LIKE UPPER(:roleName)
+             ORDER BY login DESC
+             LIMIT :size OFFSET :numberFirstElement
+             """, nativeQuery = true)
     List<User> findByRoleSortLoginDesc(@Param("roleName") String roleName,
                                        @Param("size") Integer size,
                                        @Param("numberFirstElement") Integer numberFirstElement);
-
-    @Query(value = """
-            SELECT users.id, users.login, users.password, users.roles_id
-            FROM users
-                INNER JOIN roles
-                    ON users.roles_id = roles.id
-            WHERE roles.name LIKE UPPER(:roleName)
-            LIMIT :size OFFSET :numberFirstElement
-            """, nativeQuery = true)
-    List<User> findByRole(@Param("roleName") String roleName,
-                          @Param("size") Integer size,
-                          @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
             SELECT COUNT(users.id)

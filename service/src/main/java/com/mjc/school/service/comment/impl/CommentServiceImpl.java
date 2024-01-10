@@ -4,7 +4,6 @@ import com.mjc.school.converter.impl.CommentConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Comment;
-import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.handler.DateHandler;
 import com.mjc.school.repository.NewsRepository;
@@ -14,19 +13,16 @@ import com.mjc.school.service.comment.CommentService;
 import com.mjc.school.validation.dto.CommentDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
-import static com.mjc.school.service.comment.impl.sort.CommentSortField.MODIFIED;
+import static com.mjc.school.service.comment.impl.sort.CommentSortField.ID;
+import static com.mjc.school.service.news.impl.sort.NewsSortField.CREATED;
 import static org.apache.logging.log4j.Level.ERROR;
 import static org.apache.logging.log4j.Level.WARN;
-import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.springframework.data.domain.Sort.Direction.fromOptionalString;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -89,11 +85,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> findAll(int page, int size,
-                                    String sortingField, String sortingType) throws ServiceNoContentException {
-        List<Comment> commentList = commentRepository.findAllList(PageRequest.of(
-                paginationService.calcNumberFirstElement(page, size), size,
-                Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                        getOptionalSortField(sortingField).orElse(MODIFIED).name().toLowerCase())));
+                                    String sortField, String sortType) throws ServiceNoContentException {
+        List<Comment> commentList;
+        if (sortField != null && sortField.equalsIgnoreCase(CREATED.name())) {
+            commentList = findAllSortCreated(sortType, page, size);
+        } else if (sortField != null && sortField.equalsIgnoreCase(ID.name())) {
+            commentList = findAllSortId(sortType, page, size);
+        } else {
+            commentList = findAllSortModified(sortType, page, size);
+        }
         if (!commentList.isEmpty()) {
             return commentList.stream()
                     .map(commentConverter::toDTO)
@@ -120,11 +120,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDTO> findByNewsId(long newsId,
                                          int page, int size,
-                                         String sortingField, String sortingType) throws ServiceNoContentException {
-        List<Comment> commentList = commentRepository.findByNewsId(newsId,
-                PageRequest.of(paginationService.calcNumberFirstElement(page, size), size,
-                        Sort.by(fromOptionalString(sortingType).orElse(DESC),
-                                getOptionalSortField(sortingField).orElse(MODIFIED).name().toLowerCase())));
+                                         String sortField, String sortType) throws ServiceNoContentException {
+        List<Comment> commentList;
+        if (sortField != null && sortField.equalsIgnoreCase(CREATED.name())) {
+            commentList = findByNewsIdSortCreated(newsId, sortType, page, size);
+        } else if (sortField != null && sortField.equalsIgnoreCase(ID.name())) {
+            commentList = findByNewsIdSortId(newsId, sortType, page, size);
+        } else {
+            commentList = findByNewsIdSortModified(newsId, sortType, page, size);
+        }
         if (!commentList.isEmpty()) {
             return commentList.stream()
                     .map(commentConverter::toDTO)
@@ -161,14 +165,75 @@ public class CommentServiceImpl implements CommentService {
                 .build();
     }
 
-    @Override
-    public Optional<CommentSortField> getOptionalSortField(String sortField) {
-        try {
-            return sortField != null ?
-                    Optional.of(CommentSortField.valueOf(sortField.toUpperCase())) :
-                    Optional.empty();
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
+    private List<Comment> findAllSortCreated(String sortType, int page, int size) {
+        List<Comment> commentList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            commentList = commentRepository.findAllSortCreatedAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            commentList = commentRepository.findAllSortCreatedDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
         }
+        return commentList;
+    }
+
+    private List<Comment> findAllSortId(String sortType, int page, int size) {
+        List<Comment> commentList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            commentList = commentRepository.findAllSortIdAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            commentList = commentRepository.findAllSortIdDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return commentList;
+    }
+
+    private List<Comment> findAllSortModified(String sortType, int page, int size) {
+        List<Comment> commentList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            commentList = commentRepository.findAllSortModifiedAsc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        } else {
+            commentList = commentRepository.findAllSortModifiedDesc(size,
+                    paginationService.calcNumberFirstElement(page, size));
+        }
+        return commentList;
+    }
+
+    private List<Comment> findByNewsIdSortCreated(long newsId, String sortType, int page, int size) {
+        List<Comment> commentList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            commentList = commentRepository.findByNewsIdSortCreatedAsc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            commentList = commentRepository.findByNewsIdSortCreatedDesc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return commentList;
+    }
+
+    private List<Comment> findByNewsIdSortId(long newsId, String sortType, int page, int size) {
+        List<Comment> commentList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            commentList = commentRepository.findByNewsIdSortIdAsc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            commentList = commentRepository.findByNewsIdSortIdDesc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return commentList;
+    }
+
+    private List<Comment> findByNewsIdSortModified(long newsId, String sortType, int page, int size) {
+        List<Comment> commentList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            commentList = commentRepository.findByNewsIdSortModifiedAsc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        } else {
+            commentList = commentRepository.findByNewsIdSortModifiedDesc(newsId,
+                    size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return commentList;
     }
 }

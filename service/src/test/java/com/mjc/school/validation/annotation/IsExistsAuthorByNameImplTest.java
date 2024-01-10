@@ -1,7 +1,7 @@
 package com.mjc.school.validation.annotation;
 
 import com.mjc.school.repository.AuthorRepository;
-import com.mjc.school.validation.annotation.impl.IsExistsAuthorByIdImpl;
+import com.mjc.school.validation.annotation.impl.IsExistsAuthorByNameImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,29 +12,31 @@ import javax.validation.ConstraintValidatorContext;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class IsExistsAuthorByIdImplTest {
+class IsExistsAuthorByNameImplTest {
     @InjectMocks
-    private IsExistsAuthorByIdImpl isExistsAuthorById;
+    private IsExistsAuthorByNameImpl isExistsAuthorByName;
     @Mock
     private AuthorRepository authorRepository;
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
+
     @Test
-    void isValid_when_existsAuthor() {
-        long authorId = 1L;
-        when(authorRepository.existsById(authorId)).thenReturn(true);
-        boolean actualResult = isExistsAuthorById.isValid(authorId, constraintValidatorContext);
+    void isValid_when_existsAuthorByName() {
+        String authorName = "authorName_test";
+        when(authorRepository.existsByName(anyString())).thenReturn(true);
+        boolean actualResult = isExistsAuthorByName.isValid(authorName, constraintValidatorContext);
         assertTrue(actualResult);
     }
 
     @Test
-    void isValid_when_notExistsAuthor() {
-        long authorId = 1L;
-        when(authorRepository.existsById(authorId)).thenReturn(false);
-        boolean actualResult = isExistsAuthorById.isValid(authorId, constraintValidatorContext);
+    void isValid_when_notExistsAuthorByName() {
+        String authorName = "authorName_test";
+        when(authorRepository.existsByName(anyString())).thenReturn(false);
+        boolean actualResult = isExistsAuthorByName.isValid(authorName, constraintValidatorContext);
         assertFalse(actualResult);
     }
 }

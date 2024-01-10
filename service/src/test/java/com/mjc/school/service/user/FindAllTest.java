@@ -39,7 +39,7 @@ class FindAllTest {
     private UserConverterImpl userConverter;
 
     @Test
-    void findAllWithPages_when_foundTags_and_sortLoginAsc() throws ServiceNoContentException {
+    void findAllWithPages_when_foundUsers_and_sortLoginAsc() throws ServiceNoContentException {
         int page = 1;
         int size = 5;
         String sortType = "ASC";
@@ -74,7 +74,7 @@ class FindAllTest {
 
     @ParameterizedTest
     @MethodSource(value = "providerSortFieldAndType_when_sortLoginDesc")
-    void findAllWithPages_when_foundTags_and_sortLoginDesc(String sortField, String sortType) throws ServiceNoContentException {
+    void findAllWithPages_when_foundUsers_and_sortLoginDesc(String sortField, String sortType) throws ServiceNoContentException {
         int page = 1;
         int size = 5;
 
@@ -113,7 +113,7 @@ class FindAllTest {
     }
 
     @Test
-    void findAllWithPages_when_foundTags_and_sortRoleAsc() throws ServiceNoContentException {
+    void findAllWithPages_when_foundUsers_and_sortRoleAsc() throws ServiceNoContentException {
         int page = 1;
         int size = 5;
         String sortType = "ASC";
@@ -170,7 +170,7 @@ class FindAllTest {
 
     @ParameterizedTest
     @MethodSource(value = "providerSortFieldAndType_when_sortRoleDesc")
-    void findAllWithPages_when_foundTags_and_sortRoleDesc(String sortField, String sortType) throws ServiceNoContentException {
+    void findAllWithPages_when_foundUsers_and_sortRoleDesc(String sortField, String sortType) throws ServiceNoContentException {
         int page = 1;
         int size = 5;
 
@@ -231,7 +231,7 @@ class FindAllTest {
 
     @ParameterizedTest
     @MethodSource(value = "providerSortFieldAndType_when_sortIdAsc")
-    void findAllWithPages_when_foundTags_and_sortIdAsc(String sortField, String sortType) throws ServiceNoContentException {
+    void findAllWithPages_when_foundUsers_and_sortIdAsc(String sortField, String sortType) throws ServiceNoContentException {
         int page = 1;
         int size = 5;
 
@@ -271,7 +271,7 @@ class FindAllTest {
 
     @ParameterizedTest
     @MethodSource(value = "providerSortFieldAndType_when_sortIdDesc")
-    void findAllWithPages_when_foundTags_and_sortIdDesc(String sortField, String sortType) throws ServiceNoContentException {
+    void findAllWithPages_when_foundUsers_and_sortIdDesc(String sortField, String sortType) throws ServiceNoContentException {
         int page = 1;
         int size = 5;
 
@@ -312,7 +312,7 @@ class FindAllTest {
     }
 
     @Test
-    void findAllWithPages_when_notFoundTags() {
+    void findAllWithPages_when_notFoundUsers() {
         int page = 1;
         int size = 5;
         String sortType = "ASC";

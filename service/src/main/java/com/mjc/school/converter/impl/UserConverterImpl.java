@@ -4,7 +4,6 @@ import com.mjc.school.converter.RoleConverter;
 import com.mjc.school.converter.UserConverter;
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.RoleRepository;
-import com.mjc.school.validation.dto.RoleDTO;
 import com.mjc.school.validation.dto.user.RegistrationUserDto;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
 import com.mjc.school.validation.dto.user.UserDTO;
