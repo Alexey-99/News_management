@@ -152,13 +152,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findAll() throws ServiceNoContentException {
-        List<TagDTO> tagDTOList = tagRepository.findAll()
-                .stream()
-                .map(tagConverter::toDTO)
-                .toList();
-        if (!tagDTOList.isEmpty()) {
-            return tagDTOList;
+    public List<TagDTO> findAll(String sortType) throws ServiceNoContentException {
+        List<Tag> tagList = findAllSortName(sortType);
+        if (!tagList.isEmpty()) {
+            return tagList.stream()
+                    .map(tagConverter::toDTO)
+                    .toList();
         } else {
             log.log(WARN, "Not found tags");
             throw new ServiceNoContentException();
@@ -229,6 +228,19 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<TagDTO> findByNewsId(long newsId, String sortType) throws ServiceNoContentException {
+        List<Tag> tagList = findByNewsIdSortName(newsId, sortType);
+        if (!tagList.isEmpty()) {
+            return tagList.stream()
+                    .map(tagConverter::toDTO)
+                    .toList();
+        } else {
+            log.log(WARN, "Not found tags by news ID: " + newsId);
+            throw new ServiceNoContentException();
+        }
+    }
+
+    @Override
     public long countAllByNewsId(long newsId) {
         return tagRepository.countAllByNewsId(newsId);
     }
@@ -262,6 +274,16 @@ public class TagServiceImpl implements TagService {
         } else {
             tagList = tagRepository.findAllSortNameDesc(size,
                     paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findAllSortName(String sortType) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = tagRepository.findAllSortNameAsc();
+        } else {
+            tagList = tagRepository.findAllSortNameDesc();
         }
         return tagList;
     }
@@ -334,6 +356,20 @@ public class TagServiceImpl implements TagService {
         } else {
             tagList = tagRepository.findByNewsIdSortNameDesc(newsId,
                     size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return tagList;
+    }
+
+    private List<Tag> findByNewsIdSortName(long newsId, String sortType) {
+        List<Tag> tagList;
+        if (ASC.name().equalsIgnoreCase(sortType)) {
+            tagList = newsTagRepository.findByNewsIdSortNameAsc(newsId).stream()
+                    .map(NewsTag::getTag)
+                    .toList();
+        } else {
+            tagList = newsTagRepository.findByNewsIdSortNameDesc(newsId).stream()
+                    .map(NewsTag::getTag)
+                    .toList();
         }
         return tagList;
     }

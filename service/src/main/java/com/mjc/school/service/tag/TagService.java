@@ -2,13 +2,11 @@ package com.mjc.school.service.tag;
 
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
-import com.mjc.school.service.tag.impl.sort.TagSortField;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.validation.dto.TagDTO;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 public interface TagService {
     @Transactional
@@ -30,7 +28,7 @@ public interface TagService {
 
     List<TagDTO> findAll(int page, int size, String sortField, String sortType) throws ServiceNoContentException;
 
-    List<TagDTO> findAll() throws ServiceNoContentException;
+    List<TagDTO> findAll(String sortType) throws ServiceNoContentException;
 
     long countAll();
 
@@ -41,6 +39,8 @@ public interface TagService {
     long countAllByPartOfName(String partOfName);
 
     List<TagDTO> findByNewsId(long newsId, int page, int size, String sortField, String sortType) throws ServiceNoContentException;
+
+    List<TagDTO> findByNewsId(long newsId, String sortType) throws ServiceNoContentException;
 
     long countAllByNewsId(long newsId);
 

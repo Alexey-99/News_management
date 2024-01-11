@@ -119,6 +119,22 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             SELECT id, content, news_id, created, modified
             FROM comments
             WHERE news_id = :newsId
+            ORDER BY created ASC
+            """, nativeQuery = true)
+    List<Comment> findByNewsIdSortCreatedAsc(@Param("newsId") Long newsId);
+
+    @Query(value = """
+            SELECT id, content, news_id, created, modified
+            FROM comments
+            WHERE news_id = :newsId
+            ORDER BY created DESC
+            """, nativeQuery = true)
+    List<Comment> findByNewsIdSortCreatedDesc(@Param("newsId") Long newsId);
+
+    @Query(value = """
+            SELECT id, content, news_id, created, modified
+            FROM comments
+            WHERE news_id = :newsId
             ORDER BY id ASC
             LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
@@ -160,11 +176,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                                                @Param("numberFirstElement") Integer numberFirstElement);
 
     @Query(value = """
-            SELECT COUNT(id)
+            SELECT id, content, news_id, created, modified
             FROM comments
             WHERE news_id = :newsId
+            ORDER BY modified ASC
             """, nativeQuery = true)
-    Long countAllCommentsByNewsId(@Param("newsId") Long newsId);
+    List<Comment> findByNewsIdSortModifiedAsc(@Param("newsId") Long newsId);
 
     @Query(value = """
             SELECT id, content, news_id, created, modified
@@ -173,4 +190,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             ORDER BY modified DESC
             """, nativeQuery = true)
     List<Comment> findByNewsIdSortModifiedDesc(@Param("newsId") Long newsId);
+
+    @Query(value = """
+            SELECT COUNT(id)
+            FROM comments
+            WHERE news_id = :newsId
+            """, nativeQuery = true)
+    Long countAllCommentsByNewsId(@Param("newsId") Long newsId);
 }

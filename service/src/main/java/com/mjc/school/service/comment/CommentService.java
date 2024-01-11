@@ -31,6 +31,8 @@ public interface CommentService {
 
     List<CommentDTO> findByNewsId(long newsId, int page, int size, String sortingField, String sortingType) throws ServiceNoContentException;
 
+    List<CommentDTO> findByNewsId(long newsId, String sortingType) throws ServiceNoContentException;
+
     long countAllCommentsByNewsId(long newsId);
 
     Pagination<CommentDTO> getPagination(List<CommentDTO> elementsOnPage, long countAllElements, int page, int size);

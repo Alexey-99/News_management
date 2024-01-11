@@ -140,6 +140,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<CommentDTO> findByNewsId(long newsId, String sortType) throws ServiceNoContentException {
+        List<Comment> commentList = findByNewsIdSortModified(newsId, sortType);
+        if (!commentList.isEmpty()) {
+            return commentList.stream()
+                    .map(commentConverter::toDTO)
+                    .toList();
+        } else {
+            log.log(ERROR, "Not found comments by news ID: " + newsId);
+            throw new ServiceNoContentException();
+        }
+    }
+
+    @Override
     public long countAllCommentsByNewsId(long newsId) {
         return commentRepository.countAllCommentsByNewsId(newsId);
     }
@@ -233,6 +246,16 @@ public class CommentServiceImpl implements CommentService {
         } else {
             commentList = commentRepository.findByNewsIdSortModifiedDesc(newsId,
                     size, paginationService.calcNumberFirstElement(page, size));
+        }
+        return commentList;
+    }
+
+    private List<Comment> findByNewsIdSortModified(long newsId, String sortType) {
+        List<Comment> commentList;
+        if (sortType != null && sortType.equalsIgnoreCase(ASC.name())) {
+            commentList = commentRepository.findByNewsIdSortModifiedAsc(newsId);
+        } else {
+            commentList = commentRepository.findByNewsIdSortModifiedDesc(newsId);
         }
         return commentList;
     }

@@ -207,11 +207,12 @@ public class TagController {
     })
     @ApiOperation(value = """
             View all tags.
-            Response: pagination of tags.
-            """, response = Pagination.class)
+            Response: list of tags.
+            """, response = List.class)
     @GetMapping("/all")
-    public ResponseEntity<List<TagDTO>> findAll() throws ServiceNoContentException {
-        return new ResponseEntity<>(tagService.findAll(), OK);
+    public ResponseEntity<List<TagDTO>> findAll(@RequestParam(value = "sort-type", required = false)
+                                                String sortType) throws ServiceNoContentException {
+        return new ResponseEntity<>(tagService.findAll(sortType), OK);
     }
 
     @ApiResponses(value = {
@@ -281,7 +282,7 @@ public class TagController {
             View tag by news id.
             Response: pagination of tags.
             """, response = Pagination.class)
-    @GetMapping("/news/{newsId}")
+    @GetMapping("/news/page/{newsId}")
     public ResponseEntity<Pagination<TagDTO>> findByNewsId(@PathVariable
                                                            @Min(value = 1,
                                                                    message = "tag_controller.request_body.news_id.in_valid.min")
@@ -308,5 +309,26 @@ public class TagController {
         return new ResponseEntity<>(tagService.getPagination(
                 tagDTOList, tagService.countAllByNewsId(newsId),
                 page, size), OK);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 204, message = "Not found content in data base"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
+    @ApiOperation(value = """
+            View all tag by news id.
+            Response: list of tags.
+            """, response = List.class)
+    @GetMapping("/news/{newsId}")
+    public ResponseEntity<List<TagDTO>> findByNewsId(@PathVariable
+                                                     @Min(value = 1,
+                                                             message = "tag_controller.request_body.news_id.in_valid.min")
+                                                     long newsId,
+                                                     @RequestParam(value = "sort-type", required = false)
+                                                     String sortingType) throws ServiceNoContentException {
+        List<TagDTO> tagDTOList = tagService.findByNewsId(newsId, sortingType);
+        return new ResponseEntity<>(tagDTOList, OK);
     }
 }

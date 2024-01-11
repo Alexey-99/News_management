@@ -168,7 +168,7 @@ public class CommentController {
             View comments by news id.
             Response: pagination of comments.
             """, response = Pagination.class)
-    @GetMapping("/news/{newsId}")
+    @GetMapping("/news/page/{newsId}")
     public ResponseEntity<Pagination<CommentDTO>> findByNewsId(@PathVariable
                                                                @Min(value = 1,
                                                                        message = "comment_controller.path_variable.id.in_valid.min")
@@ -195,6 +195,27 @@ public class CommentController {
         return new ResponseEntity<>(commentService.getPagination(
                 commentDTOList, commentService.countAllCommentsByNewsId(newsId),
                 page, size), OK);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful completed request"),
+            @ApiResponse(code = 400, message = "You are entered request parameters incorrectly"),
+            @ApiResponse(code = 404, message = "Entity not found with entered parameters"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    })
+    @ApiOperation(value = """
+            View comments by news id.
+            Response: list of comments.
+            """, response = Pagination.class)
+    @GetMapping("/news/{newsId}")
+    public ResponseEntity<List<CommentDTO>> findByNewsId(@PathVariable
+                                                         @Min(value = 1,
+                                                                 message = "comment_controller.path_variable.id.in_valid.min")
+                                                         long newsId,
+                                                         @RequestParam(value = "sort-type", required = false)
+                                                         String sortingType) throws ServiceNoContentException {
+        List<CommentDTO> commentDTOList = commentService.findByNewsId(newsId, sortingType);
+        return new ResponseEntity<>(commentDTOList, OK);
     }
 
     @ApiResponses(value = {

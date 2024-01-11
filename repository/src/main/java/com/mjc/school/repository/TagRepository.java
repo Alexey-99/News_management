@@ -147,6 +147,20 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     @Query(value = """
             SELECT id, name
             FROM tags
+            ORDER BY name ASC
+            """, nativeQuery = true)
+    List<Tag> findAllSortNameAsc();
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
+            ORDER BY name DESC
+            """, nativeQuery = true)
+    List<Tag> findAllSortNameDesc();
+
+    @Query(value = """
+            SELECT id, name
+            FROM tags
             ORDER BY id ASC
             LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
