@@ -2,7 +2,6 @@ package com.mjc.school.controller.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjc.school.controller.AuthorController;
-import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.service.author.AuthorService;
 import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.Pagination;
