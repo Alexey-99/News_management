@@ -53,6 +53,79 @@ class FindByNewsIdTest {
     }
 
     @Test
+    void findByNewsId_when_notFoundTags_and_withoutPage() {
+        String sortType = "asc";
+        long newsId = 1;
+
+        when(tagRepository.findByNewsIdSortNameAsc(anyLong()))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class, () -> tagService.findByNewsId(newsId, sortType));
+    }
+
+    @Test
+    void findByNewsId_when_foundTags_and_sortNameAsc_and_withoutPage() throws ServiceNoContentException {
+        String sortType = "ASC";
+        long newsId = 1;
+
+        News news = News.builder().id(newsId).build();
+
+        List<Tag> tagListByNewsId = List.of(
+                Tag.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .news(List.of(NewsTag.builder()
+                                .news(news)
+                                .build()))
+                        .build(),
+                Tag.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .news(List.of(NewsTag.builder()
+                                .news(news)
+                                .build()))
+                        .build());
+
+        when(tagRepository.findByNewsIdSortNameAsc(anyLong())).thenReturn(tagListByNewsId);
+
+        when(tagConverter.toDTO(Tag.builder()
+                .id(1)
+                .name("A_tag_name")
+                .news(List.of(NewsTag.builder().news(news).build()))
+                .build()))
+                .thenReturn(TagDTO.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .countNews(1)
+                        .build());
+        when(tagConverter.toDTO(Tag.builder()
+                .id(3)
+                .name("C_tag_name")
+                .news(List.of(NewsTag.builder().news(news).build()))
+                .build()))
+                .thenReturn(TagDTO.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .countNews(1)
+                        .build());
+
+        List<TagDTO> tagDTOListExpected = List.of(
+                TagDTO.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .countNews(1)
+                        .build(),
+                TagDTO.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .countNews(1)
+                        .build());
+
+        List<TagDTO> tagDTOListActual = tagService.findByNewsId(newsId, sortType);
+        assertEquals(tagDTOListExpected, tagDTOListActual);
+    }
+
+    @Test
     void findByNewsId_when_foundTags_and_sortNameAsc() throws ServiceNoContentException {
         int page = 1;
         int size = 5;
@@ -192,6 +265,139 @@ class FindByNewsIdTest {
         return List.of(
                 Arguments.of("name", "DESC"),
                 Arguments.of("name", null));
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "providerSortType_when_sortNameDesc")
+    void findByNewsId_when_foundTags_and_sortNameDesc(String sortType) throws ServiceNoContentException {
+        long newsId = 1;
+
+        News news = News.builder().id(newsId).build();
+
+        List<Tag> tagListByNewsId = List.of(
+                Tag.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .news(List.of(NewsTag.builder()
+                                .news(news)
+                                .build()))
+                        .build(),
+                Tag.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .news(List.of(NewsTag.builder()
+                                .news(news)
+                                .build()))
+                        .build());
+
+        when(tagRepository.findByNewsIdSortNameDesc(anyLong()))
+                .thenReturn(tagListByNewsId);
+
+        when(tagConverter.toDTO(Tag.builder()
+                .id(1)
+                .name("A_tag_name")
+                .news(List.of(NewsTag.builder().news(news).build()))
+                .build()))
+                .thenReturn(TagDTO.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .countNews(1)
+                        .build());
+        when(tagConverter.toDTO(Tag.builder()
+                .id(3)
+                .name("C_tag_name")
+                .news(List.of(NewsTag.builder().news(news).build()))
+                .build()))
+                .thenReturn(TagDTO.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .countNews(1)
+                        .build());
+
+        List<TagDTO> tagDTOListExpected = List.of(
+                TagDTO.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .countNews(1)
+                        .build(),
+                TagDTO.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .countNews(1)
+                        .build());
+
+        List<TagDTO> tagDTOListActual = tagService.findByNewsId(newsId, sortType);
+        assertEquals(tagDTOListExpected, tagDTOListActual);
+    }
+
+    static List<Arguments> providerSortType_when_sortNameDesc() {
+        return List.of(
+                Arguments.of("DESC"),
+                Arguments.of("type"));
+    }
+
+    @Test
+    void findByNewsId_when_foundTags_and_sortNameDesc_and_sortTypeNull() throws ServiceNoContentException {
+        long newsId = 1;
+
+        String sortType = null;
+
+        News news = News.builder().id(newsId).build();
+
+        List<Tag> tagListByNewsId = List.of(
+                Tag.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .news(List.of(NewsTag.builder()
+                                .news(news)
+                                .build()))
+                        .build(),
+                Tag.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .news(List.of(NewsTag.builder()
+                                .news(news)
+                                .build()))
+                        .build());
+
+        when(tagRepository.findByNewsIdSortNameDesc(anyLong()))
+                .thenReturn(tagListByNewsId);
+
+        when(tagConverter.toDTO(Tag.builder()
+                .id(1)
+                .name("A_tag_name")
+                .news(List.of(NewsTag.builder().news(news).build()))
+                .build()))
+                .thenReturn(TagDTO.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .countNews(1)
+                        .build());
+        when(tagConverter.toDTO(Tag.builder()
+                .id(3)
+                .name("C_tag_name")
+                .news(List.of(NewsTag.builder().news(news).build()))
+                .build()))
+                .thenReturn(TagDTO.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .countNews(1)
+                        .build());
+
+        List<TagDTO> tagDTOListExpected = List.of(
+                TagDTO.builder()
+                        .id(3)
+                        .name("C_tag_name")
+                        .countNews(1)
+                        .build(),
+                TagDTO.builder()
+                        .id(1)
+                        .name("A_tag_name")
+                        .countNews(1)
+                        .build());
+
+        List<TagDTO> tagDTOListActual = tagService.findByNewsId(newsId, sortType);
+        assertEquals(tagDTOListExpected, tagDTOListActual);
     }
 
     @ParameterizedTest

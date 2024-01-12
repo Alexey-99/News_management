@@ -363,13 +363,9 @@ public class TagServiceImpl implements TagService {
     private List<Tag> findByNewsIdSortName(long newsId, String sortType) {
         List<Tag> tagList;
         if (ASC.name().equalsIgnoreCase(sortType)) {
-            tagList = newsTagRepository.findByNewsIdSortNameAsc(newsId).stream()
-                    .map(NewsTag::getTag)
-                    .toList();
+            tagList = tagRepository.findByNewsIdSortNameAsc(newsId);
         } else {
-            tagList = newsTagRepository.findByNewsIdSortNameDesc(newsId).stream()
-                    .map(NewsTag::getTag)
-                    .toList();
+            tagList = tagRepository.findByNewsIdSortNameDesc(newsId);
         }
         return tagList;
     }

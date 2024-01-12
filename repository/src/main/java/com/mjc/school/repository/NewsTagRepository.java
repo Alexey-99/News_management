@@ -18,13 +18,4 @@ public interface NewsTagRepository extends JpaRepository<NewsTag, Long> {
             """, nativeQuery = true)
     List<NewsTag> findByNewsIdSortNameAsc(@Param("news_id") Long newsId);
 
-    @Query(value = """
-            SELECT news_tags.id, news_tags.news_id, news_tags.tags_id
-            FROM news_tags
-                INNER JOIN tags
-                    ON  news_tags.tags_id = tags.id
-            WHERE news_tags.news_id = :news_id
-            ORDER BY tags.name DESC
-            """, nativeQuery = true)
-    List<NewsTag> findByNewsIdSortNameDesc(@Param("news_id") Long newsId);
 }

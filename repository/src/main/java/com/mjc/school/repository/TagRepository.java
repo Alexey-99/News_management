@@ -84,6 +84,26 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
                 INNER JOIN news_tags
                     ON news_tags.tags_id = tags.id
             WHERE news_tags.news_id = :news_id
+            ORDER BY tags.name ASC
+            """, nativeQuery = true)
+    List<Tag> findByNewsIdSortNameAsc(@Param("news_id") Long newsId);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags
+                INNER JOIN news_tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
+            ORDER BY tags.name DESC
+            """, nativeQuery = true)
+    List<Tag> findByNewsIdSortNameDesc(@Param("news_id") Long newsId);
+
+    @Query(value = """
+            SELECT tags.id, tags.name
+            FROM tags
+                INNER JOIN news_tags
+                    ON news_tags.tags_id = tags.id
+            WHERE news_tags.news_id = :news_id
             ORDER BY tags.id ASC
             LIMIT :size OFFSET :numberFirstElement
             """, nativeQuery = true)
@@ -104,16 +124,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
                                      @Param("size") Integer size,
                                      @Param("numberFirstElement") Integer numberFirstElement);
 
-    @Query(value = """
-            SELECT tags.id, tags.name
-            FROM news
-                INNER JOIN news_tags
-                    ON news.id = news_tags.news_id
-                INNER JOIN tags
-                    ON news_tags.tags_id = tags.id
-            WHERE news_tags.news_id = :news_id
-            """, nativeQuery = true)
-    List<Tag> findByNewsId(@Param("news_id") Long newsId);
 
     @Query(value = """
             SELECT COUNT(news.id)

@@ -461,7 +461,7 @@ class TagControllerIntegrationTest {
         String sortType = "ASC";
         String sortField = "name";
 
-        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
+        mockMvc.perform(get("/api/v2/tag/news/page/{newsId}", newsId)
                         .requestAttr("size", size)
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
@@ -479,7 +479,7 @@ class TagControllerIntegrationTest {
         String sortType = "ASC";
         String sortField = "name";
 
-        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
+        mockMvc.perform(get("/api/v2/tag/news/page/{newsId}", newsId)
                         .param("size", size)
                         .param("page", page)
                         .param("sort-field", sortField)
@@ -492,17 +492,36 @@ class TagControllerIntegrationTest {
     void findByNewsId_when_notFoundTag() throws Exception {
         String newsId = "2";
 
-        String page = "1";
+        String sortType = "ASC";
+
+        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "providerNumberPages")
+    void findByNewsId_when_notFoundTag(String page) throws Exception {
+        String newsId = "2";
+
         String size = "5";
         String sortType = "ASC";
         String sortField = "name";
 
-        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
+        mockMvc.perform(get("/api/v2/tag/news/page/{newsId}", newsId)
+                        .param("size", size)
+                        .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isNoContent());
+    }
+
+    static List<Arguments> providerNumberPages() {
+        return List.of(
+                Arguments.of("1"),
+                Arguments.of("2"),
+                Arguments.of("3"));
     }
 }

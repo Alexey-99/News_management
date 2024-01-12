@@ -257,52 +257,77 @@ class CommentControllerIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Test
-    void findAll() throws Exception {
-        int page = 1;
-        int size = 5;
+    @ParameterizedTest
+    @MethodSource(value = "providerNumberPages")
+    void findAll(String page) throws Exception {
+        String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
 
         mockMvc.perform(get("/api/v2/comment/all")
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
+                        .param("size", size)
+                        .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void findByNewsId_when_foundComments() throws Exception {
+    @ParameterizedTest
+    @MethodSource(value = "providerNumberPages")
+    void findByNewsIdWithPage_when_foundComments(String page) throws Exception {
         String newsId = "1";
 
-        int page = 1;
-        int size = 5;
+        String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
 
-        mockMvc.perform(get("/api/v2/comment/news/{newsId}", newsId)
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
+        mockMvc.perform(get("/api/v2/comment/news/page/{newsId}", newsId)
+                        .param("size", size)
+                        .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "providerNumberPages")
+    void findByNewsIdWithPage_when_notFoundComments(String page) throws Exception {
+        String newsId = "2";
+
+        String size = "5";
+        String sortType = "DESC";
+        String sortField = "modified";
+
+        mockMvc.perform(get("/api/v2/comment/news/page/{newsId}", newsId)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
+    }
+
+    static List<Arguments> providerNumberPages() {
+        return List.of(
+                Arguments.of("1"),
+                Arguments.of("2"),
+                Arguments.of("3"));
     }
 
     @Test
     void findByNewsId_when_notFoundComments() throws Exception {
         String newsId = "2";
 
-        int page = 1;
-        int size = 5;
+        String page = "2";
+        String size = "5";
         String sortType = "DESC";
         String sortField = "modified";
 
         mockMvc.perform(get("/api/v2/comment/news/{newsId}", newsId)
-                        .requestAttr("size", size)
-                        .requestAttr("page", page)
+                        .param("size", size)
+                        .param("page", page)
                         .param("sort-field", sortField)
                         .param("sort-type", sortType))
                 .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))

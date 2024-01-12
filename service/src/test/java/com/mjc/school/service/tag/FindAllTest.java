@@ -23,7 +23,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -432,6 +431,67 @@ class FindAllTest {
                 TagDTO.builder().id(1).name("A_tag_name").build(),
                 TagDTO.builder().id(2).name("B_tag_name").build(),
                 TagDTO.builder().id(3).name("C_tag_name").build());
+
+        List<TagDTO> tagDTOListActual = tagService.findAll(sortType);
+        assertEquals(tagDTOListExpected, tagDTOListActual);
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "providerSortType_when_sortNameDesc")
+    void findAll_when_foundTags_and_sortNameDesc(String sortType) throws ServiceNoContentException {
+
+        List<Tag> tagList = List.of(
+                Tag.builder().id(3).name("C_tag_name").build(),
+                Tag.builder().id(2).name("B_tag_name").build(),
+                Tag.builder().id(1).name("A_tag_name").build());
+
+        when(tagRepository.findAllSortNameDesc())
+                .thenReturn(tagList);
+
+        when(tagConverter.toDTO(Tag.builder().id(1).name("A_tag_name").build()))
+                .thenReturn(TagDTO.builder().id(1).name("A_tag_name").build());
+        when(tagConverter.toDTO(Tag.builder().id(3).name("C_tag_name").build()))
+                .thenReturn(TagDTO.builder().id(3).name("C_tag_name").build());
+        when(tagConverter.toDTO(Tag.builder().id(2).name("B_tag_name").build()))
+                .thenReturn(TagDTO.builder().id(2).name("B_tag_name").build());
+
+        List<TagDTO> tagDTOListExpected = List.of(
+                TagDTO.builder().id(3).name("C_tag_name").build(),
+                TagDTO.builder().id(2).name("B_tag_name").build(),
+                TagDTO.builder().id(1).name("A_tag_name").build());
+
+        List<TagDTO> tagDTOListActual = tagService.findAll(sortType);
+        assertEquals(tagDTOListExpected, tagDTOListActual);
+    }
+
+    static List<Arguments> providerSortType_when_sortNameDesc() {
+        return List.of(
+                Arguments.of("DESC"),
+                Arguments.of("type"));
+    }
+
+    @Test
+    void findAll_when_foundTags_and_sortNameDesc_and_sortTypeNull() throws ServiceNoContentException {
+        String sortType = null;
+        List<Tag> tagList = List.of(
+                Tag.builder().id(3).name("C_tag_name").build(),
+                Tag.builder().id(2).name("B_tag_name").build(),
+                Tag.builder().id(1).name("A_tag_name").build());
+
+        when(tagRepository.findAllSortNameDesc())
+                .thenReturn(tagList);
+
+        when(tagConverter.toDTO(Tag.builder().id(1).name("A_tag_name").build()))
+                .thenReturn(TagDTO.builder().id(1).name("A_tag_name").build());
+        when(tagConverter.toDTO(Tag.builder().id(3).name("C_tag_name").build()))
+                .thenReturn(TagDTO.builder().id(3).name("C_tag_name").build());
+        when(tagConverter.toDTO(Tag.builder().id(2).name("B_tag_name").build()))
+                .thenReturn(TagDTO.builder().id(2).name("B_tag_name").build());
+
+        List<TagDTO> tagDTOListExpected = List.of(
+                TagDTO.builder().id(3).name("C_tag_name").build(),
+                TagDTO.builder().id(2).name("B_tag_name").build(),
+                TagDTO.builder().id(1).name("A_tag_name").build());
 
         List<TagDTO> tagDTOListActual = tagService.findAll(sortType);
         assertEquals(tagDTOListExpected, tagDTOListActual);

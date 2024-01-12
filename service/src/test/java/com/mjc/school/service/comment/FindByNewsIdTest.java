@@ -472,4 +472,192 @@ class FindByNewsIdTest {
         long countAllCommentsActual = commentService.countAllCommentsByNewsId(newsId);
         assertEquals(countAllCommentsExpected, countAllCommentsActual);
     }
+
+    @ParameterizedTest
+    @MethodSource(value = "providerSortType_when_sortModifiedDesc")
+    void findByNewsId_when_foundComments_and_sortModifiedDesc(String sortType) throws ServiceNoContentException {
+        long newsId = 2;
+
+        List<Comment> commentList = List.of(
+                Comment.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .news(News.builder().id(newsId).build())
+                        .build(),
+                Comment.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .news(News.builder().id(newsId).build())
+                        .build(),
+                Comment.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .news(News.builder().id(newsId).build())
+                        .build());
+        when(commentRepository.findByNewsIdSortModifiedDesc(anyLong()))
+                .thenReturn(commentList);
+
+        when(commentConverter.toDTO(Comment.builder().id(1).content("CONTENT 1")
+                .modified("2023-10-20T16:05:38.685")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .newsId(newsId).build());
+        when(commentConverter.toDTO(Comment.builder().id(3).content("CONTENT 3")
+                .modified("2023-10-20T16:05:32.413")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(3).content("CONTENT 3")
+                        .newsId(newsId).modified("2023-10-20T16:05:32.413").build());
+        when(commentConverter.toDTO(Comment.builder().id(2).content("CONTENT 2")
+                .modified("2023-10-20T16:05:25.413")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(2).content("CONTENT 2")
+                        .newsId(newsId).modified("2023-10-20T16:05:25.413").build());
+
+        List<CommentDTO> commentDTOListExpected = List.of(
+                CommentDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .newsId(newsId).build(),
+                CommentDTO.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .newsId(newsId).build(),
+                CommentDTO.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .newsId(newsId).build());
+
+        List<CommentDTO> commentDTOListActual = commentService.findByNewsId(newsId, sortType);
+        assertEquals(commentDTOListExpected, commentDTOListActual);
+    }
+
+    @Test
+    void findByNewsId_when_foundComments_and_sortModifiedDesc_and_sortTypeNull() throws ServiceNoContentException {
+        long newsId = 2;
+
+        String sortType = null;
+
+        List<Comment> commentList = List.of(
+                Comment.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .news(News.builder().id(newsId).build())
+                        .build(),
+                Comment.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .news(News.builder().id(newsId).build())
+                        .build(),
+                Comment.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .news(News.builder().id(newsId).build())
+                        .build());
+        when(commentRepository.findByNewsIdSortModifiedDesc(anyLong()))
+                .thenReturn(commentList);
+
+        when(commentConverter.toDTO(Comment.builder().id(1).content("CONTENT 1")
+                .modified("2023-10-20T16:05:38.685")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .newsId(newsId).build());
+        when(commentConverter.toDTO(Comment.builder().id(3).content("CONTENT 3")
+                .modified("2023-10-20T16:05:32.413")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(3).content("CONTENT 3")
+                        .newsId(newsId).modified("2023-10-20T16:05:32.413").build());
+        when(commentConverter.toDTO(Comment.builder().id(2).content("CONTENT 2")
+                .modified("2023-10-20T16:05:25.413")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(2).content("CONTENT 2")
+                        .newsId(newsId).modified("2023-10-20T16:05:25.413").build());
+
+        List<CommentDTO> commentDTOListExpected = List.of(
+                CommentDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .newsId(newsId).build(),
+                CommentDTO.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .newsId(newsId).build(),
+                CommentDTO.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .newsId(newsId).build());
+
+        List<CommentDTO> commentDTOListActual = commentService.findByNewsId(newsId, sortType);
+        assertEquals(commentDTOListExpected, commentDTOListActual);
+    }
+
+    static List<Arguments> providerSortType_when_sortModifiedDesc() {
+        return List.of(
+                Arguments.of("DESC"),
+                Arguments.of("type"));
+    }
+
+    @Test
+    void findByNewsId_when_foundComments_and_sortModifiedAsc() throws ServiceNoContentException {
+        long newsId = 2;
+
+        String sortType = "asc";
+
+        List<Comment> commentList = List.of(
+                Comment.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .news(News.builder().id(newsId).build())
+                        .build(),
+                Comment.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .news(News.builder().id(newsId).build())
+                        .build(),
+                Comment.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .news(News.builder().id(newsId).build())
+                        .build());
+        when(commentRepository.findByNewsIdSortModifiedAsc(anyLong()))
+                .thenReturn(commentList);
+
+        when(commentConverter.toDTO(Comment.builder().id(1).content("CONTENT 1")
+                .modified("2023-10-20T16:05:38.685")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .newsId(newsId).build());
+        when(commentConverter.toDTO(Comment.builder().id(3).content("CONTENT 3")
+                .modified("2023-10-20T16:05:32.413")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(3).content("CONTENT 3")
+                        .newsId(newsId).modified("2023-10-20T16:05:32.413").build());
+        when(commentConverter.toDTO(Comment.builder().id(2).content("CONTENT 2")
+                .modified("2023-10-20T16:05:25.413")
+                .news(News.builder().id(newsId).build())
+                .build()))
+                .thenReturn(CommentDTO.builder().id(2).content("CONTENT 2")
+                        .newsId(newsId).modified("2023-10-20T16:05:25.413").build());
+
+        List<CommentDTO> commentDTOListExpected = List.of(
+                CommentDTO.builder().id(2).content("CONTENT 2")
+                        .modified("2023-10-20T16:05:25.413")
+                        .newsId(newsId).build(),
+                CommentDTO.builder().id(3).content("CONTENT 3")
+                        .modified("2023-10-20T16:05:32.413")
+                        .newsId(newsId).build(),
+                CommentDTO.builder().id(1).content("CONTENT 1")
+                        .modified("2023-10-20T16:05:38.685")
+                        .newsId(newsId).build());
+
+        List<CommentDTO> commentDTOListActual = commentService.findByNewsId(newsId, sortType);
+        assertEquals(commentDTOListExpected, commentDTOListActual);
+    }
+
+    @Test
+    void findByNewsId_when_notFoundCommentsByNewsId_and_withoutPage() {
+        long newsId = 2;
+        String sortType = "asc";
+
+        when(commentRepository.findByNewsIdSortModifiedAsc(anyLong()))
+                .thenReturn(List.of());
+
+        assertThrows(ServiceNoContentException.class,
+                () -> commentService.findByNewsId(newsId, sortType));
+    }
 }

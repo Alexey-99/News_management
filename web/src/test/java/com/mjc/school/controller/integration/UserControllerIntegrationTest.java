@@ -448,6 +448,32 @@ class UserControllerIntegrationTest {
                 .andExpect(status().isOk());
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "providerNumberPages")
+    void findByRole_roleAdmin_and_notFoundObject_and_notFoundObjectsByCurrentPage(String page) throws Exception {
+        String size = "5";
+        String sortType = "ASC";
+        String sortField = "name";
+
+        String role = "alex";
+
+        mockMvc.perform(get("/api/v2/user/role/{role}", role)
+                        .param("size", size)
+                        .param("page", page)
+                        .param("sort-field", sortField)
+                        .param("sort-type", sortType)
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER_VALUE_START_WITH + adminJwtToken))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
+                .andExpect(status().isNoContent());
+    }
+
+    static List<Arguments> providerNumberPages() {
+        return List.of(
+                Arguments.of("1"),
+                Arguments.of("2"),
+                Arguments.of("3"));
+    }
+
     @Test
     void findByRole_roleUser() throws Exception {
         String page = "2";
