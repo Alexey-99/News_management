@@ -8,6 +8,7 @@ import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.service.news.impl.NewsServiceImpl;
 import com.mjc.school.service.pagination.PaginationService;
+import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.NewsDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -92,7 +93,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).name("Alpartex").build())
                         .modified("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -104,7 +105,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).name("partBam").build())
                         .modified("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -116,7 +117,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).name("Sempart").build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
 
@@ -124,19 +125,19 @@ class FindByPartOfAuthorNameNewsTest {
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).name("Alpartex").build())
                         .modified("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).name("partBam").build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).name("Sempart").build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
 
@@ -191,7 +192,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).name("Alpartex").build())
                         .modified("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -203,7 +204,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).name("partBam").build())
                         .modified("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -215,7 +216,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).name("Sempart").build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
 
@@ -223,19 +224,19 @@ class FindByPartOfAuthorNameNewsTest {
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).name("Alpartex").build())
                         .modified("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).name("partBam").build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).name("Sempart").build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
 
@@ -289,7 +290,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).name("Alpartex").build())
                         .created("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -301,7 +302,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).name("partBam").build())
                         .created("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -313,7 +314,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).name("Sempart").build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
 
@@ -321,19 +322,19 @@ class FindByPartOfAuthorNameNewsTest {
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).name("Alpartex").build())
                         .created("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).name("partBam").build())
                         .created("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).name("Sempart").build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
 
@@ -388,7 +389,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).name("Alpartex").build())
                         .created("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -400,7 +401,7 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).name("partBam").build())
                         .created("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -412,26 +413,26 @@ class FindByPartOfAuthorNameNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).name("Sempart").build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
         List<NewsDTO> newsDTOListExpected = List.of(
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).name("Alpartex").build())
                         .created("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).name("partBam").build())
                         .created("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).name("Sempart").build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
 

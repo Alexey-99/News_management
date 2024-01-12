@@ -3,6 +3,7 @@ package com.mjc.school.controller.module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjc.school.controller.NewsController;
 import com.mjc.school.service.news.NewsService;
+import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.NewsDTO;
 import com.mjc.school.validation.dto.Pagination;
 import org.junit.jupiter.api.BeforeEach;
@@ -336,23 +337,25 @@ class NewsControllerTest {
         String sortType = "DESC";
         String sortField = "modified";
 
+
+        AuthorDTO authorDTO = AuthorDTO.builder().id(1).name(partOfAuthorName + "z").build();
         List<NewsDTO> newsByAuthorNameList = List.of(
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(authorDTO)
                         .modified("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(authorDTO)
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(authorDTO)
                         .modified("2023-10-20T16:05:25.413")
                         .build());
         when(newsService.findByPartOfAuthorName(anyString(), anyInt(), anyInt(), anyString(), anyString()))
@@ -401,23 +404,25 @@ class NewsControllerTest {
         String sortType = "DESC";
         String sortField = "modified";
 
+
+        AuthorDTO authorDTO = AuthorDTO.builder().id(Long.parseLong(authorId)).build();
         List<NewsDTO> newsByAuthorIdList = List.of(
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(1)
+                        .author(authorDTO)
                         .modified("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
         when(newsService.findByAuthorId(anyLong(), anyInt(), anyInt(), anyString(), anyString()))
@@ -470,19 +475,19 @@ class NewsControllerTest {
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT partOfTitle 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("partOfTitle CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2 partOfTitle")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
         when(newsService.findByPartOfTitle(anyString(), anyInt(), anyInt(), anyString(), anyString()))
@@ -535,19 +540,19 @@ class NewsControllerTest {
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT partOfTitle 1")
-                        .authorId(1)
+                        .author(AuthorDTO.builder().id(1).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("partOfTitle CONTENT 3")
-                        .authorId(3)
+                        .author(AuthorDTO.builder().id(3).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2 partOfTitle")
-                        .authorId(2)
+                        .author(AuthorDTO.builder().id(2).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
         when(newsService.findByPartOfContent(anyString(), anyInt(), anyInt(), anyString(), anyString()))

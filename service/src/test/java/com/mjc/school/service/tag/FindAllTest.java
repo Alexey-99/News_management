@@ -23,6 +23,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -414,30 +415,33 @@ class FindAllTest {
 
     @Test
     void findAll_when_foundTags() throws ServiceNoContentException {
+        String sortType = "ASC";
+
         when(tagConverter.toDTO(Tag.builder().id(1).name("A_tag_name").build()))
                 .thenReturn(TagDTO.builder().id(1).name("A_tag_name").build());
         when(tagConverter.toDTO(Tag.builder().id(3).name("C_tag_name").build()))
                 .thenReturn(TagDTO.builder().id(3).name("C_tag_name").build());
         when(tagConverter.toDTO(Tag.builder().id(2).name("B_tag_name").build()))
                 .thenReturn(TagDTO.builder().id(2).name("B_tag_name").build());
-        when(tagRepository.findAll()).thenReturn(List.of(
+        when(tagRepository.findAllSortNameAsc()).thenReturn(List.of(
                 Tag.builder().id(1).name("A_tag_name").build(),
-                Tag.builder().id(3).name("C_tag_name").build(),
-                Tag.builder().id(2).name("B_tag_name").build()));
+                Tag.builder().id(2).name("B_tag_name").build(),
+                Tag.builder().id(3).name("C_tag_name").build()));
 
         List<TagDTO> tagDTOListExpected = List.of(
                 TagDTO.builder().id(1).name("A_tag_name").build(),
-                TagDTO.builder().id(3).name("C_tag_name").build(),
-                TagDTO.builder().id(2).name("B_tag_name").build());
+                TagDTO.builder().id(2).name("B_tag_name").build(),
+                TagDTO.builder().id(3).name("C_tag_name").build());
 
-        List<TagDTO> tagDTOListActual = tagService.findAll();
+        List<TagDTO> tagDTOListActual = tagService.findAll(sortType);
         assertEquals(tagDTOListExpected, tagDTOListActual);
     }
 
     @Test
     void findAll_when_notFoundTags() {
-        when(tagRepository.findAll()).thenReturn(List.of());
-        assertThrows(ServiceNoContentException.class, () -> tagService.findAll());
+        String sortType = "ASC";
+        when(tagRepository.findAllSortNameAsc()).thenReturn(List.of());
+        assertThrows(ServiceNoContentException.class, () -> tagService.findAll(sortType));
     }
 
     @Test

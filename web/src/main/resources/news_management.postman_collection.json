@@ -756,12 +756,12 @@
 					"response": []
 				},
 				{
-					"name": "news-id",
+					"name": "news-id/page",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/comment/news/34?sort-field=modified&sort-type=desc&page=2&size=5",
+							"raw": "http://localhost:8081/api/v2/comment/news/page/34?sort-field=modified&sort-type=desc&page=2&size=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -772,6 +772,7 @@
 								"v2",
 								"comment",
 								"news",
+								"page",
 								"34"
 							],
 							"query": [
@@ -790,6 +791,35 @@
 								{
 									"key": "size",
 									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "news-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/comment/news/34?sort-type=asc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"comment",
+								"news",
+								"34"
+							],
+							"query": [
+								{
+									"key": "sort-type",
+									"value": "asc"
 								}
 							]
 						}
@@ -1321,12 +1351,12 @@
 					"response": []
 				},
 				{
-					"name": "news-id",
+					"name": "news-id/page",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/news/34?sort-field=name&sort-type=desc&page=1&size=2",
+							"raw": "http://localhost:8081/api/v2/tag/news/page/34?sort-field=name&sort-type=desc&page=1&size=2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1337,6 +1367,7 @@
 								"v2",
 								"tag",
 								"news",
+								"page",
 								"34"
 							],
 							"query": [
@@ -1425,7 +1456,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8081/api/v2/tag/all",
+							"raw": "http://localhost:8081/api/v2/tag/all?sort-type=asc",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1436,6 +1467,12 @@
 								"v2",
 								"tag",
 								"all"
+							],
+							"query": [
+								{
+									"key": "sort-type",
+									"value": "asc"
+								}
 							]
 						}
 					},
@@ -1476,6 +1513,35 @@
 								{
 									"key": "size",
 									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "news-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v2/tag/news/34?sort-type=asc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v2",
+								"tag",
+								"news",
+								"34"
+							],
+							"query": [
+								{
+									"key": "sort-type",
+									"value": "asc"
 								}
 							]
 						}

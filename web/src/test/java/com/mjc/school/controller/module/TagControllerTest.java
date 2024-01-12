@@ -334,13 +334,15 @@ class TagControllerTest {
     void findAll() throws Exception {
         List<TagDTO> tagDTOListExpected = List.of(
                 TagDTO.builder().id(1).name("A_tag_name").build(),
-                TagDTO.builder().id(3).name("C_tag_name").build(),
                 TagDTO.builder().id(2).name("B_tag_name").build(),
+                TagDTO.builder().id(3).name("C_tag_name").build(),
                 TagDTO.builder().id(4).name("D_tag_name").build(),
                 TagDTO.builder().id(5).name("Z_tag_name").build());
-        when(tagService.findAll()).thenReturn(tagDTOListExpected);
+        when(tagService.findAll(anyString())).thenReturn(tagDTOListExpected);
 
-        mockMvc.perform(get("/api/v2/tag/all"))
+        String sortType = "asc";
+        mockMvc.perform(get("/api/v2/tag/all")
+                        .param("sort-type", sortType))
                 .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
@@ -517,7 +519,7 @@ class TagControllerTest {
         when(tagService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
                 .thenReturn(tagDTOPaginationExpected);
 
-        mockMvc.perform(get("/api/v2/tag/news/{newsId}", newsId)
+        mockMvc.perform(get("/api/v2/tag/news/page/{newsId}", newsId)
                         .requestAttr("size", size)
                         .requestAttr("page", page)
                         .param("sort-field", sortField)

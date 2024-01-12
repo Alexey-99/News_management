@@ -7,6 +7,7 @@ import com.mjc.school.model.News;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.news.impl.NewsServiceImpl;
 import com.mjc.school.service.pagination.PaginationService;
+import com.mjc.school.validation.dto.AuthorDTO;
 import com.mjc.school.validation.dto.NewsDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -97,7 +98,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -109,7 +110,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -121,7 +122,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
 
@@ -129,19 +130,19 @@ class FindByAuthorIdNewsTest {
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
 
@@ -193,7 +194,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -205,7 +206,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -217,7 +218,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
 
@@ -225,19 +226,19 @@ class FindByAuthorIdNewsTest {
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
 
@@ -291,7 +292,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -303,7 +304,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -315,26 +316,26 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
         List<NewsDTO> newsDTOListExpected = List.of(
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build());
 
@@ -388,7 +389,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -400,7 +401,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -412,26 +413,26 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build());
         List<NewsDTO> newsDTOListExpected = List.of(
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:25.413")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .modified("2023-10-20T16:05:38.685")
                         .build());
 
@@ -484,7 +485,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -496,7 +497,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -508,26 +509,26 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
         List<NewsDTO> newsDTOListExpected = List.of(
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
 
@@ -579,7 +580,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -591,7 +592,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -603,26 +604,26 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
         List<NewsDTO> newsDTOListExpected = List.of(
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:38.685")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
 
@@ -675,7 +676,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:38.685")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -687,7 +688,7 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:32.413")
                         .build());
         when(newsConverter.toDTO(News.builder()
@@ -699,26 +700,26 @@ class FindByAuthorIdNewsTest {
                 .thenReturn(NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:25.413")
                         .build());
         List<NewsDTO> newsDTOListExpected = List.of(
                 NewsDTO.builder()
                         .id(2)
                         .content("CONTENT 2")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:25.413")
                         .build(),
                 NewsDTO.builder()
                         .id(3)
                         .content("CONTENT 3")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:32.413")
                         .build(),
                 NewsDTO.builder()
                         .id(1)
                         .content("CONTENT 1")
-                        .authorId(authorId)
+                        .author(AuthorDTO.builder().id(authorId).build())
                         .created("2023-10-20T16:05:38.685")
                         .build());
 

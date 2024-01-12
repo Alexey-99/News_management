@@ -157,7 +157,7 @@ class ConvertFromDtoTest {
                 Comment.builder().id(1).build(),
                 Comment.builder().id(2).build(),
                 Comment.builder().id(3).build()));
-        when(newsTagRepository.findByNewsId(anyLong()))
+        when(newsTagRepository.findByNewsIdSortNameAsc(anyLong()))
                 .thenReturn(List.of(
                         NewsTag.builder()
                                 .id(1)
@@ -223,7 +223,7 @@ class ConvertFromDtoTest {
                         Comment.builder().id(1).build(),
                         Comment.builder().id(2).build(),
                         Comment.builder().id(3).build()));
-        when(newsTagRepository.findByNewsId(1L)).thenReturn(List.of());
+        when(newsTagRepository.findByNewsIdSortNameAsc(1L)).thenReturn(List.of());
         News newsExpected = News.builder()
                 .id(newsDTOTesting.getId())
                 .title(newsDTOTesting.getTitle())

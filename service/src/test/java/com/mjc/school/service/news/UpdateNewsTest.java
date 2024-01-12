@@ -62,7 +62,6 @@ class UpdateNewsTest {
                 .title("news title test")
                 .authorName("Max")
                 .countTags(0)
-                .authorId(2)
                 .build();
 
         News newsFromDB = News.builder()
@@ -89,7 +88,6 @@ class UpdateNewsTest {
                 .title("news title test")
                 .authorName("Max")
                 .countTags(0)
-                .authorId(2)
                 .build();
 
         News newsFromDB = News.builder()
@@ -101,7 +99,7 @@ class UpdateNewsTest {
         when(newsRepository.findById(anyLong()))
                 .thenReturn(Optional.of(newsFromDB));
 
-        Author authorFromDB = Author.builder().id(newsDTOTesting.getAuthorId()).build();
+        Author authorFromDB = Author.builder().name(newsDTOTesting.getAuthorName()).build();
         when(authorRepository.findByName(anyString()))
                 .thenReturn(Optional.of(authorFromDB));
 
@@ -114,7 +112,6 @@ class UpdateNewsTest {
                 .title("news title test")
                 .countTags(0)
                 .author(AuthorDTO.builder().id(2).name("Max").build())
-                .authorId(2)
                 .build();
         when(newsConverter.toDTO(any(News.class))).thenReturn(newsDTOExpected);
 
@@ -129,7 +126,6 @@ class UpdateNewsTest {
                 .title("news title test other")
                 .countTags(0)
                 .authorName("Max")
-                .authorId(2)
                 .build();
 
         News newsFromDB = News.builder()
@@ -157,7 +153,6 @@ class UpdateNewsTest {
                 .title("news title test other")
                 .countTags(0)
                 .authorName("Max")
-                .authorId(2)
                 .build();
 
         News newsFromDB = News.builder()
@@ -171,7 +166,6 @@ class UpdateNewsTest {
         when(newsRepository.notExistsByTitle(anyString())).thenReturn(true);
 
         Author authorFromDB = Author.builder()
-                .id(newsDTOTesting.getAuthorId())
                 .name(newsDTOTesting.getAuthorName())
                 .build();
         when(authorRepository.findByName(anyString()))
@@ -185,7 +179,6 @@ class UpdateNewsTest {
                 .id(1)
                 .title("news title test other")
                 .countTags(0)
-                .authorId(2)
                 .build();
         when(newsConverter.toDTO(any(News.class))).thenReturn(newsDTOExpected);
 
@@ -199,7 +192,6 @@ class UpdateNewsTest {
                 .id(1)
                 .title("news title test other")
                 .countTags(0)
-                .authorId(2)
                 .build();
 
         News newsFromDB = News.builder()

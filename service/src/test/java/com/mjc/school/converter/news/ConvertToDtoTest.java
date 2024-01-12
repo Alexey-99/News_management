@@ -60,33 +60,14 @@ class ConvertToDtoTest {
 
         when(authorConverter.toDTO(any(Author.class)))
                 .thenReturn(AuthorDTO.builder().id(2L).build());
-        when(commentConverter.toDTO(Comment.builder().id(1).build()))
-                .thenReturn(CommentDTO.builder().id(1).build());
-        when(commentConverter.toDTO(Comment.builder().id(2).build()))
-                .thenReturn(CommentDTO.builder().id(2).build());
-        when(commentConverter.toDTO(Comment.builder().id(3).build()))
-                .thenReturn(CommentDTO.builder().id(3).build());
-
-        when(tagConverter.toDTO(Tag.builder().id(1).build()))
-                .thenReturn(TagDTO.builder().id(1).build());
-        when(tagConverter.toDTO(Tag.builder().id(2).build()))
-                .thenReturn(TagDTO.builder().id(2).build());
-        when(tagConverter.toDTO(Tag.builder().id(3).build()))
-                .thenReturn(TagDTO.builder().id(3).build());
 
         NewsDTO newsDTOExpected = NewsDTO.builder()
                 .id(1L)
                 .title("news title test")
                 .content("news content test")
                 .author(AuthorDTO.builder().id(2L).build())
-                .comments(List.of(
-                        CommentDTO.builder().id(1).build(),
-                        CommentDTO.builder().id(2).build(),
-                        CommentDTO.builder().id(3).build()))
-                .tags(List.of(
-                        TagDTO.builder().id(1).build(),
-                        TagDTO.builder().id(2).build(),
-                        TagDTO.builder().id(3).build()))
+                .countComments(3)
+                .countTags(3)
                 .created("created date-time")
                 .modified("modified date-time")
                 .build();
@@ -123,8 +104,8 @@ class ConvertToDtoTest {
                                 .title("news title test")
                                 .content("news content test")
                                 .author(AuthorDTO.builder().id(2L).build())
-                                .comments(List.of())
-                                .tags(List.of())
+                                .countComments(0)
+                                .countTags(0)
                                 .created("created date-time")
                                 .modified("modified date-time")
                                 .build()),
@@ -144,8 +125,8 @@ class ConvertToDtoTest {
                                 .title("news title test")
                                 .content("news content test")
                                 .author(AuthorDTO.builder().id(2L).build())
-                                .comments(List.of())
-                                .tags(List.of())
+                                .countComments(0)
+                                .countTags(0)
                                 .created("created date-time")
                                 .modified("modified date-time")
                                 .build()));
@@ -179,8 +160,8 @@ class ConvertToDtoTest {
                                 .title("news title test")
                                 .content("news content test")
                                 .author(AuthorDTO.builder().id(2L).build())
-                                .comments(List.of())
-                                .tags(List.of())
+                                .countComments(0)
+                                .countTags(0)
                                 .created("created date-time")
                                 .modified("modified date-time")
                                 .build()),
@@ -200,8 +181,8 @@ class ConvertToDtoTest {
                                 .title("news title test")
                                 .content("news content test")
                                 .author(AuthorDTO.builder().id(2L).build())
-                                .comments(List.of())
-                                .tags(List.of())
+                                .countComments(0)
+                                .countTags(0)
                                 .created("created date-time")
                                 .modified("modified date-time")
                                 .build()));

@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -41,7 +40,6 @@ public class NewsDTO implements Serializable {
     private String authorName;
 
     private long countComments;
-    private List<CommentDTO> comments;
 
     private long countTags;
 

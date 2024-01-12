@@ -160,7 +160,7 @@ class CommentControllerTest {
         when(commentService.getPagination(anyList(), anyLong(), anyInt(), anyInt()))
                 .thenReturn(newsDTOPaginationExpected);
 
-        mockMvc.perform(get("/api/v2/comment/news/{newsId}", newsId)
+        mockMvc.perform(get("/api/v2/comment/news/page/{newsId}", newsId)
                         .requestAttr("size", size)
                         .requestAttr("page", page)
                         .param("sort-field", sortField)
