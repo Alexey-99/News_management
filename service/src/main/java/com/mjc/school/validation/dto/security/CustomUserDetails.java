@@ -20,8 +20,6 @@ public class CustomUserDetails implements UserDetails {
     @Getter
     private long id;
     private String login;
-    @Getter
-    private String email;
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 

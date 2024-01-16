@@ -1,11 +1,11 @@
 package com.mjc.school.service.comment.impl;
 
-import com.mjc.school.converter.impl.CommentConverter;
+import com.mjc.school.converter.CommentConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Comment;
 import com.mjc.school.validation.dto.Pagination;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.repository.CommentRepository;
@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final NewsRepository newsRepository;
     private final CommentConverter commentConverter;
-    private final DateHandler dateHandler;
+    private final DateFormatter dateHandler;
     private final PaginationService paginationService;
 
     @Transactional

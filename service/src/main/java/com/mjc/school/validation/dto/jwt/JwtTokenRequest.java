@@ -3,16 +3,16 @@ package com.mjc.school.validation.dto.jwt;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import javax.validation.Valid;
 
+@Valid
 @Builder
 @Data
 @AllArgsConstructor
-public class JwtTokenResponse {
+@NoArgsConstructor
+public class JwtTokenRequest {
     private static final String TYPE = "Bearer";
     private String accessToken;
-    private Date expiredDate;
-    private String login;
-    private String userRole;
 }

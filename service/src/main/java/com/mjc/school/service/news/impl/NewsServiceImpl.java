@@ -1,9 +1,9 @@
 package com.mjc.school.service.news.impl;
 
-import com.mjc.school.converter.impl.NewsConverter;
+import com.mjc.school.converter.NewsConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
@@ -29,7 +29,7 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
     private final AuthorRepository authorRepository;
     private final NewsConverter newsConverter;
-    private final DateHandler dateHandler;
+    private final DateFormatter dateHandler;
     private final PaginationService paginationService;
 
     @Transactional

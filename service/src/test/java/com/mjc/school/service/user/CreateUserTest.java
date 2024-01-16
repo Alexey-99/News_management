@@ -1,6 +1,6 @@
 package com.mjc.school.service.user;
 
-import com.mjc.school.converter.impl.UserConverterImpl;
+import com.mjc.school.converter.UserConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.UserRepository;
@@ -24,7 +24,7 @@ class CreateUserTest {
     @InjectMocks
     private UserServiceImpl userService;
     @Mock
-    private UserConverterImpl userConverter;
+    private UserConverter userConverter;
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock

@@ -4,18 +4,14 @@ import com.mjc.school.exception.CustomAccessDeniedException;
 import com.mjc.school.exception.CustomAuthenticationException;
 import com.mjc.school.util.JwtTokenUtil;
 import com.mjc.school.validation.dto.jwt.ValidationJwtToken;
-import com.mjc.school.validation.impl.JwtTokenValidatorImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.internal.matchers.Null;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.mjc.school.model.user.User.UserRole.ROLE_ADMIN;
@@ -29,8 +25,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class IsFItsRoleUserTest {
     @InjectMocks
-    private JwtTokenValidatorImpl jwtTokenValidator;
-    @Mock
     private JwtTokenUtil jwtTokenUtil;
 
     @Test
@@ -38,7 +32,7 @@ class IsFItsRoleUserTest {
         ValidationJwtToken validationJwtToken = null;
 
         CustomAuthenticationException exception = assertThrows(CustomAuthenticationException.class,
-                () -> jwtTokenValidator.isFitsRoleUser(validationJwtToken));
+                () -> jwtTokenUtil.isUser(validationJwtToken));
         assertEquals("exception.access_without_authorization", exception.getMessage());
     }
 
@@ -46,7 +40,7 @@ class IsFItsRoleUserTest {
     @MethodSource(value = "providerValidationJwtToken_when_throwCustomAuthenticationException")
     void isFitsRoleUser_when_throwCustomAuthenticationException(ValidationJwtToken validationJwtToken) {
         CustomAuthenticationException exception = assertThrows(CustomAuthenticationException.class,
-                () -> jwtTokenValidator.isFitsRoleUser(validationJwtToken));
+                () -> jwtTokenUtil.isUser(validationJwtToken));
         assertEquals("exception.access_without_authorization", exception.getMessage());
     }
 
@@ -61,13 +55,13 @@ class IsFItsRoleUserTest {
         ValidationJwtToken validationJwtToken = new ValidationJwtToken("user");
 
         String userName = "userName";
-        when(jwtTokenUtil.getUserName(anyString())).thenReturn(userName);
+        when(jwtTokenUtil.getUserNameAccessToken(anyString())).thenReturn(userName);
 
         List<String> roles = List.of();
         when(jwtTokenUtil.getRoles(anyString())).thenReturn(roles);
 
         CustomAccessDeniedException exception = assertThrows(CustomAccessDeniedException.class,
-                () -> jwtTokenValidator.isFitsRoleUser(validationJwtToken));
+                () -> jwtTokenUtil.isUser(validationJwtToken));
         assertEquals("exception.access_denied", exception.getMessage());
     }
 
@@ -76,28 +70,27 @@ class IsFItsRoleUserTest {
         ValidationJwtToken validationJwtToken = new ValidationJwtToken("user");
 
         String userName = "userName";
-        when(jwtTokenUtil.getUserName(anyString())).thenReturn(userName);
+        when(jwtTokenUtil.getUserNameAccessToken(anyString())).thenReturn(userName);
 
         List<String> roles = List.of("role");
         when(jwtTokenUtil.getRoles(anyString())).thenReturn(roles);
 
         CustomAccessDeniedException exception = assertThrows(CustomAccessDeniedException.class,
-                () -> jwtTokenValidator.isFitsRoleUser(validationJwtToken));
+                () -> jwtTokenUtil.isUser(validationJwtToken));
         assertEquals("exception.access_denied", exception.getMessage());
     }
 
     @ParameterizedTest
     @MethodSource(value = "providerCorrectRoleList")
-    void isFitsRoleUser_when_validationJwtTokenNotNull_and_correctToken_and_foundUserName_and_foundRoleCorrect(List<String> roles)
-            throws CustomAuthenticationException, CustomAccessDeniedException {
+    void isFitsRoleUser_when_validationJwtTokenNotNull_and_correctToken_and_foundUserName_and_foundRoleCorrect(List<String> roles) throws CustomAuthenticationException, CustomAccessDeniedException {
         ValidationJwtToken validationJwtToken = new ValidationJwtToken("user");
 
         String userName = "userName";
-        when(jwtTokenUtil.getUserName(anyString())).thenReturn(userName);
+        when(jwtTokenUtil.getUserNameAccessToken(anyString())).thenReturn(userName);
 
         when(jwtTokenUtil.getRoles(anyString())).thenReturn(roles);
 
-        boolean result = jwtTokenValidator.isFitsRoleUser(validationJwtToken);
+        boolean result = jwtTokenUtil.isUser(validationJwtToken);
         assertTrue(result);
     }
 

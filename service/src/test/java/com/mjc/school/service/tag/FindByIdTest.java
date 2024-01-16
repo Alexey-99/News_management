@@ -1,6 +1,6 @@
 package com.mjc.school.service.tag;
 
-import com.mjc.school.converter.impl.TagConverter;
+import com.mjc.school.converter.TagConverter;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Tag;
 import com.mjc.school.repository.TagRepository;

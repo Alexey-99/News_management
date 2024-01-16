@@ -1,8 +1,8 @@
 package com.mjc.school.service.news;
 
-import com.mjc.school.converter.impl.NewsConverter;
+import com.mjc.school.converter.NewsConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.AuthorRepository;
@@ -37,7 +37,7 @@ class UpdateNewsTest {
     @Mock
     private NewsConverter newsConverter;
     @Mock
-    private DateHandler dateHandler;
+    private DateFormatter dateHandler;
 
     @Test
     void update_when_notFoundNewsById() {

@@ -3,7 +3,7 @@ package com.mjc.school.exception.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjc.school.config.language.Translator;
 import com.mjc.school.exception.ErrorResponse;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @RequiredArgsConstructor
 public class CustomAccessDeniedHandlerImpl implements AccessDeniedHandler {
     private final Translator translator;
-    private final DateHandler dateHandler;
+    private final DateFormatter dateHandler;
 
     @Override
     public void handle(HttpServletRequest request,

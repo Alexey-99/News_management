@@ -4,7 +4,7 @@ import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.News;
 import com.mjc.school.model.NewsTag;
-import com.mjc.school.converter.impl.TagConverter;
+import com.mjc.school.converter.TagConverter;
 import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.validation.dto.Pagination;
 import com.mjc.school.model.Tag;

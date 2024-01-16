@@ -1,6 +1,5 @@
 package com.mjc.school.converter;
 
-import com.mjc.school.converter.impl.UserConverterImpl;
 import com.mjc.school.model.user.Role;
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.RoleRepository;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserConverterTest {
     @InjectMocks
-    private UserConverterImpl userConverter;
+    private UserConverter userConverter;
     @Mock
     private RoleRepository roleRepository;
     @Mock

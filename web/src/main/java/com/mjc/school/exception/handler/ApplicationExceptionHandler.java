@@ -7,7 +7,7 @@ import com.mjc.school.exception.CustomAuthenticationException;
 import com.mjc.school.exception.ErrorResponse;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -30,7 +30,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
     private final Translator translator;
-    private final DateHandler dateHandler;
+    private final DateFormatter dateHandler;
 
     @ExceptionHandler(ServiceBadRequestParameterException.class)
     public final ResponseEntity<Object> handleServiceBadRequestParameterException(ServiceBadRequestParameterException ex) {
@@ -98,7 +98,7 @@ public class ApplicationExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class, JsonProcessingException.class})
-    public final ResponseEntity<Object> handleBadRequestExceptions() {
+    public final ResponseEntity<Object> handleBadRequestExceptions(Exception exception) {
         String details = translator.toLocale("exception.badRequest");
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .errorCode(BAD_REQUEST.value())

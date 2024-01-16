@@ -9,25 +9,21 @@ import java.util.Locale;
 @AllArgsConstructor
 @Getter
 public enum LanguageLocale {
-    RU(new Locale[]{new Locale("ru"), new Locale("ru-Ru")}),
-    EN(new Locale[]{new Locale("en"), new Locale("en-US")});
+    RU(new Locale("ru")),
+    EN(new Locale("en"));
 
 
-    private final Locale[] locales;
+    private final Locale locale;
 
     public static Locale getLocale(String locale) {
         Locale currentLocale = null;
         if (locale != null && !locale.isBlank()) {
             for (LanguageLocale languageLocale : LanguageLocale.values()) {
-                boolean isFoundLocale = !Arrays.stream(languageLocale.getLocales())
-                        .filter(localeItem -> localeItem.getLanguage().equalsIgnoreCase(locale))
-                        .toList()
-                        .isEmpty();
-                if (isFoundLocale) {
-                    currentLocale = languageLocale.getLocales()[0];
+                if (languageLocale.getLocale().getLanguage().equalsIgnoreCase(locale)) {
+                    currentLocale = languageLocale.getLocale();
                 }
             }
         }
-        return currentLocale != null ? currentLocale : EN.getLocales()[0];
+        return currentLocale != null ? currentLocale : EN.getLocale();
     }
 }

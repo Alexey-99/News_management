@@ -1,6 +1,6 @@
 package com.mjc.school.service.user;
 
-import com.mjc.school.converter.impl.UserConverterImpl;
+import com.mjc.school.converter.UserConverter;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.user.Role;
 import com.mjc.school.model.user.User;
@@ -36,7 +36,7 @@ class FindAllTest {
     @Mock
     private PaginationService paginationService;
     @Mock
-    private UserConverterImpl userConverter;
+    private UserConverter userConverter;
 
     @Test
     void findAllWithPages_when_foundUsers_and_sortLoginAsc() throws ServiceNoContentException {

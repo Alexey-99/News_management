@@ -1,5 +1,6 @@
 package com.mjc.school.handler;
 
+import com.mjc.school.util.DateFormatter;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 class DateHandlerTest {
     @InjectMocks
-    private DateHandler dateHandler;
+    private DateFormatter dateHandler;
 
     @ParameterizedTest
     @MethodSource(value = "providerDateTimeFormatterParams")

@@ -1,6 +1,6 @@
 package com.mjc.school.service.user;
 
-import com.mjc.school.converter.impl.UserConverterImpl;
+import com.mjc.school.converter.UserConverter;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.user.Role;
 import com.mjc.school.model.user.User;
@@ -20,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.mjc.school.model.user.User.UserRole.ROLE_ADMIN;
 import static com.mjc.school.model.user.User.UserRole.ROLE_USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,7 +36,7 @@ class FindByRoleTest {
     @Mock
     private PaginationService paginationService;
     @Mock
-    private UserConverterImpl userConverter;
+    private UserConverter userConverter;
 
     @Test
     void findByRole_when_foundUsers_and_sortLoginAsc() throws ServiceNoContentException {

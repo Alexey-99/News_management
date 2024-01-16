@@ -1,8 +1,8 @@
 package com.mjc.school.service.news;
 
-import com.mjc.school.converter.impl.NewsConverter;
+import com.mjc.school.converter.NewsConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.service.news.impl.NewsServiceImpl;
 import com.mjc.school.validation.dto.NewsDTO;
@@ -25,7 +25,7 @@ class CreateNewsTest {
     @Mock
     private NewsRepository newsRepository;
     @Mock
-    private DateHandler dateHandler;
+    private DateFormatter dateHandler;
     @Mock
     private NewsConverter newsConverter;
 

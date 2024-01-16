@@ -1,13 +1,11 @@
-package com.mjc.school.converter.impl;
+package com.mjc.school.converter;
 
-import com.mjc.school.converter.Converter;
 import com.mjc.school.model.Comment;
 import com.mjc.school.validation.dto.CommentDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentConverter implements Converter<CommentDTO, Comment> {
-    @Override
+public class CommentConverter {
     public Comment fromDTO(CommentDTO commentDTO) {
         return Comment
                 .builder()
@@ -19,7 +17,6 @@ public class CommentConverter implements Converter<CommentDTO, Comment> {
                 .build();
     }
 
-    @Override
     public CommentDTO toDTO(Comment comment) {
         return CommentDTO
                 .builder()

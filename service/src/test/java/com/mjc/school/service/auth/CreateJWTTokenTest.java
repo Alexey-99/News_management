@@ -1,17 +1,12 @@
 package com.mjc.school.service.auth;
 
 import com.mjc.school.converter.UserConverter;
-import com.mjc.school.converter.impl.UserConverterImpl;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.model.user.User;
-import com.mjc.school.repository.UserRepository;
 import com.mjc.school.service.auth.impl.AuthServiceImpl;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
-import com.mjc.school.service.user.impl.UserServiceImpl;
 import com.mjc.school.util.JwtTokenUtil;
 import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
-import com.mjc.school.validation.dto.user.RegistrationUserDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,9 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -40,7 +32,7 @@ class CreateJWTTokenTest {
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock
-    private UserConverterImpl userConverter;
+    private UserConverter userConverter;
     @Mock
     private JwtTokenUtil jwtTokenUtil;
 
@@ -70,7 +62,7 @@ class CreateJWTTokenTest {
                 .thenReturn(customUserDetails);
 
         String jwtTokenExpected = "token";
-        when(jwtTokenUtil.generateToken(any(CustomUserDetails.class)))
+        when(jwtTokenUtil.generateAccessToken(any(CustomUserDetails.class)))
                 .thenReturn(jwtTokenExpected);
 
         String tokenActual = authService.createAuthToken(createJwtTokenRequest);

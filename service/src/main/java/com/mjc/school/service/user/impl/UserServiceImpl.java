@@ -1,6 +1,6 @@
 package com.mjc.school.service.user.impl;
 
-import com.mjc.school.converter.impl.UserConverterImpl;
+import com.mjc.school.converter.UserConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.user.User;
@@ -32,7 +32,7 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserConverterImpl userConverter;
+    private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
     private final PaginationService paginationService;
 

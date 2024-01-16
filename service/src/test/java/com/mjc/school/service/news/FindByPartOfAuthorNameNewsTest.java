@@ -1,11 +1,10 @@
 package com.mjc.school.service.news;
 
-import com.mjc.school.converter.impl.NewsConverter;
+import com.mjc.school.converter.NewsConverter;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.NewsRepository;
-import com.mjc.school.service.comment.impl.sort.CommentSortField;
 import com.mjc.school.service.news.impl.NewsServiceImpl;
 import com.mjc.school.service.pagination.PaginationService;
 import com.mjc.school.validation.dto.AuthorDTO;

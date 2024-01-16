@@ -1,13 +1,12 @@
-package com.mjc.school.converter.impl;
+package com.mjc.school.converter;
 
-import com.mjc.school.converter.Converter;
 import com.mjc.school.model.Author;
 import com.mjc.school.validation.dto.AuthorDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthorConverter implements Converter<AuthorDTO, Author> {
-    @Override
+public class AuthorConverter {
+
     public Author fromDTO(AuthorDTO authorDTO) {
         return Author
                 .builder()
@@ -16,7 +15,6 @@ public class AuthorConverter implements Converter<AuthorDTO, Author> {
                 .build();
     }
 
-    @Override
     public AuthorDTO toDTO(Author author) {
         return AuthorDTO
                 .builder()

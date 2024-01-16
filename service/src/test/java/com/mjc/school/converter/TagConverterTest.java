@@ -1,6 +1,5 @@
 package com.mjc.school.converter;
 
-import com.mjc.school.converter.impl.TagConverter;
 import com.mjc.school.model.News;
 import com.mjc.school.model.NewsTag;
 import com.mjc.school.model.Tag;

@@ -1,6 +1,6 @@
-package com.mjc.school.converter.impl;
+package com.mjc.school.converter;
 
-import com.mjc.school.converter.Converter;
+import com.mjc.school.converter.AuthorConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.AuthorRepository;
@@ -16,13 +16,12 @@ import static org.apache.logging.log4j.Level.WARN;
 @Log4j2
 @RequiredArgsConstructor
 @Component
-public class NewsConverter implements Converter<NewsDTO, News> {
+public class NewsConverter {
     private final AuthorRepository authorRepository;
     private final CommentRepository commentRepository;
     private final NewsTagRepository newsTagRepository;
     private final AuthorConverter authorConverter;
 
-    @Override
     public News fromDTO(NewsDTO newsDTO) throws ServiceBadRequestParameterException {
         return News
                 .builder()
@@ -40,7 +39,6 @@ public class NewsConverter implements Converter<NewsDTO, News> {
                 .build();
     }
 
-    @Override
     public NewsDTO toDTO(News news) {
         return NewsDTO
                 .builder()

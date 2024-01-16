@@ -1,6 +1,6 @@
 package com.mjc.school.service.author;
 
-import com.mjc.school.converter.impl.AuthorConverter;
+import com.mjc.school.converter.AuthorConverter;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Author;
 import com.mjc.school.repository.AuthorRepository;

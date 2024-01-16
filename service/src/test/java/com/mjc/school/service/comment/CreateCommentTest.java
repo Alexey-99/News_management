@@ -1,8 +1,8 @@
 package com.mjc.school.service.comment;
 
-import com.mjc.school.converter.impl.CommentConverter;
+import com.mjc.school.converter.CommentConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import com.mjc.school.model.Comment;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.CommentRepository;
@@ -34,7 +34,7 @@ class CreateCommentTest {
     @Mock
     private CommentConverter commentConverter;
     @Mock
-    private DateHandler dateHandler;
+    private DateFormatter dateHandler;
 
     @Test
     void create_when_newsNotFoundById() {

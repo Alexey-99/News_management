@@ -1,7 +1,7 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.exception.ErrorResponse;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestController
 @CrossOrigin
 public class DefaultHomeController {
-    private final DateHandler dateHandler;
+    private final DateFormatter dateHandler;
 
     @GetMapping
     public ResponseEntity<ErrorResponse> error404() {

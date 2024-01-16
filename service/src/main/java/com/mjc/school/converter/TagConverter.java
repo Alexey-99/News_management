@@ -1,13 +1,11 @@
-package com.mjc.school.converter.impl;
+package com.mjc.school.converter;
 
-import com.mjc.school.converter.Converter;
 import com.mjc.school.model.Tag;
 import com.mjc.school.validation.dto.TagDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TagConverter implements Converter<TagDTO, Tag> {
-    @Override
+public class TagConverter {
     public Tag fromDTO(TagDTO tagDTO) {
         return Tag.builder()
                 .id(tagDTO.getId())
@@ -15,7 +13,6 @@ public class TagConverter implements Converter<TagDTO, Tag> {
                 .build();
     }
 
-    @Override
     public TagDTO toDTO(Tag tag) {
         return TagDTO.builder()
                 .id(tag.getId())

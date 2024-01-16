@@ -1,6 +1,6 @@
 package com.mjc.school.service.user;
 
-import com.mjc.school.converter.impl.UserConverterImpl;
+import com.mjc.school.converter.UserConverter;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.user.User;
 import com.mjc.school.repository.UserRepository;
@@ -27,7 +27,7 @@ class FindByLoginTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private UserConverterImpl userConverter;
+    private UserConverter userConverter;
 
     @Test
     void findById_when_foundUserByLogin() throws ServiceNoContentException {

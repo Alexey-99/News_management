@@ -1,6 +1,5 @@
 package com.mjc.school.converter;
 
-import com.mjc.school.converter.impl.AuthorConverter;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
 import com.mjc.school.validation.dto.AuthorDTO;

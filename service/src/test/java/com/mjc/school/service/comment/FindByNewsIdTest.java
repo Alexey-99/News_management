@@ -1,6 +1,6 @@
 package com.mjc.school.service.comment;
 
-import com.mjc.school.converter.impl.CommentConverter;
+import com.mjc.school.converter.CommentConverter;
 import com.mjc.school.exception.ServiceNoContentException;
 import com.mjc.school.model.Comment;
 import com.mjc.school.model.News;

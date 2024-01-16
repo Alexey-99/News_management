@@ -3,7 +3,7 @@ package com.mjc.school.controller.module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjc.school.controller.DefaultHomeController;
 import com.mjc.school.exception.ErrorResponse;
-import com.mjc.school.handler.DateHandler;
+import com.mjc.school.util.DateFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ class DefaultHomeControllerTest {
     @InjectMocks
     private DefaultHomeController homeController;
     @Mock
-    private DateHandler dateHandler;
+    private DateFormatter dateHandler;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 

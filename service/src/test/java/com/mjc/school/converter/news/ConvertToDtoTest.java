@@ -1,18 +1,16 @@
 package com.mjc.school.converter.news;
 
-import com.mjc.school.converter.impl.AuthorConverter;
-import com.mjc.school.converter.impl.CommentConverter;
-import com.mjc.school.converter.impl.NewsConverter;
-import com.mjc.school.converter.impl.TagConverter;
+import com.mjc.school.converter.AuthorConverter;
+import com.mjc.school.converter.CommentConverter;
+import com.mjc.school.converter.NewsConverter;
+import com.mjc.school.converter.TagConverter;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.Comment;
 import com.mjc.school.model.News;
 import com.mjc.school.model.NewsTag;
 import com.mjc.school.model.Tag;
 import com.mjc.school.validation.dto.AuthorDTO;
-import com.mjc.school.validation.dto.CommentDTO;
 import com.mjc.school.validation.dto.NewsDTO;
-import com.mjc.school.validation.dto.TagDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

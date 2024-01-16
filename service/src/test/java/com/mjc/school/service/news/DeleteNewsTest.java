@@ -1,6 +1,6 @@
 package com.mjc.school.service.news;
 
-import com.mjc.school.converter.impl.NewsConverter;
+import com.mjc.school.converter.NewsConverter;
 import com.mjc.school.exception.ServiceBadRequestParameterException;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
