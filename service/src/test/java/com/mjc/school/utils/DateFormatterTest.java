@@ -1,4 +1,4 @@
-package com.mjc.school.handler;
+package com.mjc.school.utils;
 
 import com.mjc.school.util.DateFormatter;
 import org.junit.jupiter.api.extension.ExtendWith;
