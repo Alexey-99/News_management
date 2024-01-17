@@ -55,8 +55,8 @@ class TagControllerIntegrationTest {
                     new CreateJwtTokenRequest("user", "123456");
             CreateJwtTokenRequest createJwtTokenRequestUser =
                     new CreateJwtTokenRequest("user_2", "123456");
-            adminJwtToken = authService.createAuthToken(createJwtTokenRequestAdmin);
-            userJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
+            adminJwtToken = authService.createAuthToken(createJwtTokenRequestAdmin).getAccessToken();
+            userJwtToken = authService.createAuthToken(createJwtTokenRequestUser).getAccessToken();
         }
         objectMapper = new ObjectMapper();
     }

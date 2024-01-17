@@ -6,6 +6,7 @@ import com.mjc.school.service.auth.impl.AuthServiceImpl;
 import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import com.mjc.school.util.JwtTokenUtil;
 import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
+import com.mjc.school.validation.dto.jwt.JwtTokenResponse;
 import com.mjc.school.validation.dto.security.CustomUserDetails;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +17,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import java.util.Date;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -64,60 +67,22 @@ class CreateJWTTokenTest {
         String jwtTokenExpected = "token";
         when(jwtTokenUtil.generateAccessToken(any(CustomUserDetails.class)))
                 .thenReturn(jwtTokenExpected);
+        Date expiredDate = new Date();
+        when(jwtTokenUtil.getExpirationAccessToken(anyString()))
+                .thenReturn(expiredDate);
 
-        String tokenActual = authService.createAuthToken(createJwtTokenRequest);
-        assertEquals(jwtTokenExpected, tokenActual);
+        List<String> roles = List.of("ROLE_ADMIN");
+        when(jwtTokenUtil.getRoles(anyString()))
+                .thenReturn(roles);
+
+        JwtTokenResponse jwtTokenResponseExpected = JwtTokenResponse.builder()
+                .accessToken(jwtTokenExpected)
+                .expiredDate(expiredDate)
+                .login(createJwtTokenRequest.getUserName())
+                .userRole(roles.get(0))
+                .build();
+
+        JwtTokenResponse jwtTokenResponseActual = authService.createAuthToken(createJwtTokenRequest);
+        assertEquals(jwtTokenResponseExpected, jwtTokenResponseActual);
     }
-
-//    @Test
-//    void create_when_passwordsNotEqual() {
-//        RegistrationUserDto registrationUserDtoTesting = RegistrationUserDto.builder()
-//                .password("user_password")
-//                .password("user_password_other")
-//                .build();
-//
-//        ServiceBadRequestParameterException exceptionActual = assertThrows(ServiceBadRequestParameterException.class,
-//                () -> userService.create(registrationUserDtoTesting));
-//        assertEquals("service.exception.registration.passwords_not_match", exceptionActual.getMessage());
-//    }
-//
-//    @Test
-//    void create_when_passwordsEqual_and_existsUserByLogin() {
-//        RegistrationUserDto registrationUserDtoTesting = RegistrationUserDto.builder()
-//                .password("user_password")
-//                .confirmPassword("user_password")
-//                .build();
-//
-//        when(userRepository.notExistsByLogin(registrationUserDtoTesting.getLogin()))
-//                .thenReturn(false);
-//
-//        ServiceBadRequestParameterException exceptionActual = assertThrows(ServiceBadRequestParameterException.class,
-//                () -> userService.create(registrationUserDtoTesting));
-//        assertEquals("service.exception.registration.login.not_valid.exists", exceptionActual.getMessage());
-//    }
-//
-//    @Test
-//    void create_when_passwordsEqual_and_notExistsUserByLogin() throws ServiceBadRequestParameterException {
-//        RegistrationUserDto registrationUserDtoTesting = RegistrationUserDto.builder()
-//                .password("user_password")
-//                .confirmPassword("user_password")
-//                .build();
-//
-//        when(userRepository.notExistsByLogin(registrationUserDtoTesting.getLogin()))
-//                .thenReturn(true);
-//
-//        User userConvert = User.builder().password(registrationUserDtoTesting.getPassword()).build();
-//        when(userConverter.fromRegistrationUserDTO(registrationUserDtoTesting))
-//                .thenReturn(userConvert);
-//
-//        String passwordEncoded = "password";
-//        when(passwordEncoder.encode(anyString())).thenReturn(passwordEncoded);
-//
-//        userConvert.setPassword(passwordEncoded);
-//
-//        when(userRepository.save(userConvert)).thenReturn(userConvert);
-//
-//        boolean actualResult = userService.create(registrationUserDtoTesting);
-//        assertTrue(actualResult);
-//    }
 }

@@ -6,6 +6,7 @@ import com.mjc.school.service.user.impl.CustomUserDetailsServiceImpl;
 import com.mjc.school.validation.dto.jwt.ValidationJwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -89,6 +90,7 @@ public class JwtTokenUtil {
     }
 
     public boolean validateAccessToken(String accessToken) {
+        System.out.println("validateAccessToken");
         return validateToken(accessToken, jwtAccessSecret);
     }
 
@@ -107,11 +109,13 @@ public class JwtTokenUtil {
                     .isEmpty();
             if (!result) {
                 throw new CustomAccessDeniedException("exception.access_denied");
+            } else {
+                return true;
             }
         } else {
             throw new CustomAuthenticationException("exception.access_without_authorization");
         }
-        return true;
+
     }
 
     public boolean isAdmin(ValidationJwtToken validationJwtToken) throws CustomAuthenticationException, CustomAccessDeniedException {
@@ -123,11 +127,12 @@ public class JwtTokenUtil {
                     .isEmpty();
             if (!result) {
                 throw new CustomAccessDeniedException("exception.access_denied");
+            } else {
+                return true;
             }
         } else {
             throw new CustomAuthenticationException("exception.access_without_authorization");
         }
-        return true;
     }
 
     private boolean validateToken(String token, String secret) {

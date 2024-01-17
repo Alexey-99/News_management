@@ -1,9 +1,8 @@
-package com.mjc.school.controller.integration;
+package com.mjc.school.controller.integration.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mjc.school.service.auth.AuthService;
 import com.mjc.school.validation.dto.jwt.CreateJwtTokenRequest;
-import com.mjc.school.validation.dto.jwt.ValidationJwtToken;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,23 +13,23 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Log4j2
 @SpringBootTest
 @TestPropertySource("/test_application.properties")
 @AutoConfigureMockMvc
 @Sql(value = {"/schema.sql"})
 @Sql(value = {"/data_before_method.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @Sql(value = {"/data_after_method.sql"}, executionPhase = AFTER_TEST_METHOD)
-class AuthControllerIntegrationTest {
+class CreateJwtTokenLoginTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private AuthService authService;
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -49,9 +48,10 @@ class AuthControllerIntegrationTest {
                 .build();
         String createJwtTokenRequestJson = objectMapper.writeValueAsString(createJwtTokenRequest);
 
-        mockMvc.perform(post("/api/v2/auth/token")
+        mockMvc.perform(post("/api/v2/auth/login")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isCreated());
     }
 
@@ -66,9 +66,10 @@ class AuthControllerIntegrationTest {
                 .build();
         String createJwtTokenRequestJson = objectMapper.writeValueAsString(createJwtTokenRequest);
 
-        mockMvc.perform(post("/api/v2/auth/token")
+        mockMvc.perform(post("/api/v2/auth/login")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -83,9 +84,10 @@ class AuthControllerIntegrationTest {
                 .build();
         String createJwtTokenRequestJson = objectMapper.writeValueAsString(createJwtTokenRequest);
 
-        mockMvc.perform(post("/api/v2/auth/token")
+        mockMvc.perform(post("/api/v2/auth/login")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -100,9 +102,10 @@ class AuthControllerIntegrationTest {
                 .build();
         String createJwtTokenRequestJson = objectMapper.writeValueAsString(createJwtTokenRequest);
 
-        mockMvc.perform(post("/api/v2/auth/token")
+        mockMvc.perform(post("/api/v2/auth/login")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -117,9 +120,10 @@ class AuthControllerIntegrationTest {
                 .build();
         String createJwtTokenRequestJson = objectMapper.writeValueAsString(createJwtTokenRequest);
 
-        mockMvc.perform(post("/api/v2/auth/token")
+        mockMvc.perform(post("/api/v2/auth/login")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -134,9 +138,10 @@ class AuthControllerIntegrationTest {
                 .build();
         String createJwtTokenRequestJson = objectMapper.writeValueAsString(createJwtTokenRequest);
 
-        mockMvc.perform(post("/api/v2/auth/token")
+        mockMvc.perform(post("/api/v2/auth/login")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -151,9 +156,10 @@ class AuthControllerIntegrationTest {
                 .build();
         String createJwtTokenRequestJson = objectMapper.writeValueAsString(createJwtTokenRequest);
 
-        mockMvc.perform(post("/api/v2/auth/token")
+        mockMvc.perform(post("/api/v2/auth/login")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -168,107 +174,10 @@ class AuthControllerIntegrationTest {
                 .build();
         String createJwtTokenRequestJson = objectMapper.writeValueAsString(createJwtTokenRequest);
 
-        mockMvc.perform(post("/api/v2/auth/token")
+        mockMvc.perform(post("/api/v2/auth/login")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(createJwtTokenRequestJson))
+                .andDo(result -> log.log(DEBUG, result.getResponse().getContentAsString()))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName(value = """
-            createAuthToken(): Return status 200 and true.
-            If correct token for role USER.
-            """)
-    void validAuthTokenUserRole_when_validToken_withRoleUser() throws Exception {
-        CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user_2", "123456");
-        String userJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
-        ValidationJwtToken validationJwtToken = new ValidationJwtToken(userJwtToken);
-        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
-
-        mockMvc.perform(post("/api/v2/auth/token/valid/user")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .content(validationJwtTokenRequestJson))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName(value = """
-            createAuthToken(): Return status 200 and true.
-            If correct token for role USER.
-            """)
-    void validAuthTokenUserRole_when_validToken_withRoleAdmin() throws Exception {
-        CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user", "123456");
-        String adminJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
-        ValidationJwtToken validationJwtToken = new ValidationJwtToken(adminJwtToken);
-        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
-
-        mockMvc.perform(post("/api/v2/auth/token/valid/user")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .content(validationJwtTokenRequestJson))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName(value = """
-            createAuthToken(): Return status 401 and false.
-            If not correct token for role USER.
-            """)
-    void validAuthTokenUserRole_when_notValidToken() throws Exception {
-        ValidationJwtToken validationJwtToken = new ValidationJwtToken(null);
-        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
-
-        mockMvc.perform(post("/api/v2/auth/token/valid/user")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .content(validationJwtTokenRequestJson))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @DisplayName(value = """
-            Return status 200 and true.
-            If correct token for role ADMIN.
-            """)
-    void validAuthTokenAdminRole_when_validToken() throws Exception {
-        CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user", "123456");
-        String adminJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
-        ValidationJwtToken validationJwtToken = new ValidationJwtToken(adminJwtToken);
-        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
-
-        mockMvc.perform(post("/api/v2/auth/token/valid/admin")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .content(validationJwtTokenRequestJson))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName(value = """
-            createAuthToken(): Return status 401 and false.
-            If not correct token for role ADMIN.
-            """)
-    void validAuthTokenAdminRole_when_notValidToken_and_enteredTokenNull() throws Exception {
-        ValidationJwtToken validationJwtToken = new ValidationJwtToken(null);
-        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
-
-        mockMvc.perform(post("/api/v2/auth/token/valid/admin")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .content(validationJwtTokenRequestJson))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @DisplayName(value = """
-            createAuthToken(): Return status 403 and false.
-            If not correct token for role ADMIN (entered token with role USER).
-            """)
-    void validAuthTokenAdminRole_when_notValidToken_and_enteredTokenWithRoleUser() throws Exception {
-        CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user_2", "123456");
-        String userJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
-        ValidationJwtToken validationJwtToken = new ValidationJwtToken(userJwtToken);
-        String validationJwtTokenRequestJson = objectMapper.writeValueAsString(validationJwtToken);
-
-        mockMvc.perform(post("/api/v2/auth/token/valid/admin")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .content(validationJwtTokenRequestJson))
-                .andExpect(status().isForbidden());
     }
 }

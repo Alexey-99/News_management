@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.logging.log4j.Level.ERROR;
+import static org.apache.logging.log4j.Level.WARN;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -55,14 +57,20 @@ public class AuthServiceImpl implements AuthService {
     public JwtTokenResponse getAccessToken(String accessToken) throws ServiceBadRequestParameterException {
         if (jwtTokenUtil.validateAccessToken(accessToken)) {
             String login = jwtTokenUtil.getUserNameAccessToken(accessToken);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(login);
-            accessToken = jwtTokenUtil.generateAccessToken(userDetails);
-            return JwtTokenResponse.builder()
-                    .accessToken(accessToken)
-                    .expiredDate(jwtTokenUtil.getExpirationAccessToken(accessToken))
-                    .build();
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+                accessToken = jwtTokenUtil.generateAccessToken(userDetails);
+                return JwtTokenResponse.builder()
+                        .accessToken(accessToken)
+                        .expiredDate(jwtTokenUtil.getExpirationAccessToken(accessToken))
+                        .build();
+            } catch (UsernameNotFoundException e) {
+                log.log(WARN, "Not found user with login: {}", login);
+                throw new ServiceBadRequestParameterException("service.exception.user_not_exists");
+            }
         } else {
-            throw new ServiceBadRequestParameterException("Невалидный JWT токен");
+            log.log(WARN, "Jwt token not valid: token = {}", accessToken);
+            throw new ServiceBadRequestParameterException("service.exception.create_new_access_jwt_token.incorrect_access_jwt_token");
         }
     }
 }

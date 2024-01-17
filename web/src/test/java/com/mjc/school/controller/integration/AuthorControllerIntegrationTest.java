@@ -36,8 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = {"/data_after_method.sql"}, executionPhase = AFTER_TEST_METHOD)
 class AuthorControllerIntegrationTest {
     private static final String AUTHORIZATION_HEADER_VALUE_START_WITH = "Bearer ";
-    private String adminJwtToken = null;
-    private String userJwtToken = null;
+    private String adminJwtToken;
+    private String userJwtToken;
     @Autowired
     private AuthService authService;
     @Autowired
@@ -49,8 +49,8 @@ class AuthorControllerIntegrationTest {
         if (adminJwtToken == null) {
             CreateJwtTokenRequest createJwtTokenRequestAdmin = new CreateJwtTokenRequest("user", "123456");
             CreateJwtTokenRequest createJwtTokenRequestUser = new CreateJwtTokenRequest("user_2", "123456");
-            adminJwtToken = authService.createAuthToken(createJwtTokenRequestAdmin);
-            userJwtToken = authService.createAuthToken(createJwtTokenRequestUser);
+            adminJwtToken = authService.createAuthToken(createJwtTokenRequestAdmin).getAccessToken();
+            userJwtToken = authService.createAuthToken(createJwtTokenRequestUser).getAccessToken();
         }
         objectMapper = new ObjectMapper();
     }

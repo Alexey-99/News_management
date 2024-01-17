@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -54,8 +53,7 @@ public class AuthController {
 
     @PostMapping("/token/valid/user")
     public ResponseEntity<Boolean> isValidAuthTokenUser(@RequestBody
-                                                        ValidationJwtToken jwtToken)
-            throws CustomAuthenticationException, CustomAccessDeniedException {
+                                                        ValidationJwtToken jwtToken) throws CustomAuthenticationException, CustomAccessDeniedException {
         boolean result = jwtTokenUtil.isUser(jwtToken);
         return new ResponseEntity<>(result, OK);
     }

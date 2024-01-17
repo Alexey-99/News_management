@@ -23,7 +23,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "users")
 public class User {
     public enum UserRole {
-        ROLE_USER, ROLE_ADMIN;
+        ROLE_USER, ROLE_ADMIN
     }
 
     @Id
